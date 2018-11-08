@@ -1,0 +1,6 @@
+pandas
+simplejson
+protobuf
+PyCryptodome
+
+

@@ -1,0 +1,66 @@
+syntax = "proto2";
+package Qot_GetHistoryKLPoints;
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+ //当请求时间点数据为空时，如何返回数据
+enum NoDataMode
+{
+	NoDataMode_Null = 0; //直接返回空数据
+	NoDataMode_Forward = 1; //往前取值，返回前一个时间点数据
+	NoDataMode_Backward = 2; //向后取值，返回后一个时间点数据
+}
+
+ //这个时间点返回数据的状态以及来源
+enum DataStatus
+{
+	DataStatus_Null = 0; //空数据
+	DataStatus_Current = 1; //当前时间点数据
+	DataStatus_Previous = 2; //前一个时间点数据
+	DataStatus_Back = 3; //后一个时间点数据
+}
+
+message C2S
+{
+	required int32 rehabType = 1; //Qot_Common.RehabType,复权类型
+	required int32 klType = 2; //Qot_Common.KLType,K线类型
+	required int32 noDataMode = 3; //NoDataMode,当请求时间点数据为空时，如何返回数据
+	repeated Qot_Common.Security securityList = 4; //股票市场以及股票代码
+	repeated string timeList = 5; //时间字符串
+	optional int32 maxReqSecurityNum = 6; //最多返回多少只股票的数据，如果未指定表示不限制
+	optional int64 needKLFieldsFlag = 7; //指定返回K线结构体特定某几项数据，KLFields枚举值或组合，如果未指定返回全部字段
+}
+
+message HistoryPointsKL
+{
+	required int32 status = 1; //DataStatus,数据状态
+	required string reqTime = 2; //请求的时间
+	required Qot_Common.KLine kl = 3; //K线数据
+}
+
+message SecurityHistoryKLPoints
+{
+	required Qot_Common.Security security = 1; //股票	
+	repeated HistoryPointsKL klList = 2; //K线数据
+}
+
+message S2C
+{
+	repeated SecurityHistoryKLPoints klPointList = 1; //多只股票的多点历史K线点
+	optional bool hasNext = 2; //如请求不指定maxReqSecurityNum值，则不会返回该字段，该字段表示请求是否还有超过指定限制的数据
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

@@ -1,0 +1,21 @@
+syntax = "proto2";
+package Qot_UpdateOrderBook;
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+message S2C
+{
+	required Qot_Common.Security security = 1; //股票
+	repeated Qot_Common.OrderBook orderBookAskList = 2; //卖盘
+	repeated Qot_Common.OrderBook orderBookBidList = 3; //买盘
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

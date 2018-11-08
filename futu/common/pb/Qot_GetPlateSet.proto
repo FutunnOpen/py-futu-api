@@ -1,0 +1,30 @@
+syntax = "proto2";
+package Qot_GetPlateSet;
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+message C2S
+{
+	required int32 market = 1; //Qot_Common.QotMarket,股票市场
+	required int32 plateSetType = 2; //Qot_Common.PlateSetType,板块集合的类型
+}
+
+message S2C
+{
+	repeated Qot_Common.PlateInfo plateInfoList = 1; //板块集合下的板块信息
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

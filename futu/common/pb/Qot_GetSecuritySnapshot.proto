@@ -1,0 +1,110 @@
+syntax = "proto2";
+package Qot_GetSecuritySnapshot;
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+message C2S
+{
+	repeated Qot_Common.Security securityList = 1; //股票
+}
+
+ // 正股类型额外数据
+message EquitySnapshotExData
+{
+    required int64 issuedShares = 1; // 发行股本,即总股本
+	required double issuedMarketVal = 2; // 总市值 =总股本*当前价格
+    required double netAsset = 3; // 资产净值
+    required double netProfit = 4; // 盈利（亏损）
+    required double earningsPershare = 5; // 每股盈利
+    required int64 outstandingShares = 6; // 流通股本
+	required double outstandingMarketVal = 7; // 流通市值 =流通股本*当前价格
+    required double netAssetPershare = 8; // 每股净资产
+    required double eyRate = 9; // 收益率
+    required double peRate = 10; // 市盈率
+    required double pbRate = 11; // 市净率
+	required double peTTMRate = 12; // 市盈率TTM
+}
+
+ // 涡轮类型额外数据
+message WarrantSnapshotExData
+{
+    required double conversionRate = 1; //换股比率
+    required int32 warrantType = 2; //Qot_Common.WarrantType,涡轮类型
+    required double strikePrice = 3; //行使价
+    required string maturityTime = 4; //到期日时间字符串
+    required string endTradeTime = 5; //最后交易日时间字符串
+    required Qot_Common.Security owner = 6; //所属正股 
+    required double recoveryPrice = 7; //回收价
+    required int64 streetVolumn = 8; //街货量
+    required int64 issueVolumn = 9; //发行量
+    required double streetRate = 10; //街货占比
+    required double delta = 11; //对冲值
+    required double impliedVolatility = 12; //引申波幅
+    required double premium = 13; //溢价
+}
+
+ // 期权类型额外数据
+message OptionSnapshotExData
+{
+	required int32 type = 1; //Qot_Common.OptionType,期权
+	required Qot_Common.Security owner = 2; //标的股
+	required string strikeTime = 3; //行权日
+    required double strikePrice = 4; //行权价
+	required int32 contractSize = 5; //每份合约数
+	required int32 openInterest = 6; //未平仓合约数
+	required double impliedVolatility = 7; //隐含波动率
+	required double premium = 8; //溢价
+	required double delta = 9; //希腊值 Delta
+    required double gamma = 10; //希腊值 Gamma
+	required double vega = 11; //希腊值 Vega
+    required double theta = 12; //希腊值 Theta
+    required double rho = 13; //希腊值 Rho  
+}
+
+ //基本快照数据
+message SnapshotBasicData
+{
+	required Qot_Common.Security security = 1; //股票
+	required int32 type = 2; //Qot_Common.SecurityType,股票类型
+	required bool isSuspend = 3; //是否停牌
+	required string listTime = 4; //上市时间字符串
+	required int32 lotSize = 5; //每手数量
+	required double priceSpread = 6; //价差
+	required string updateTime = 7; //更新时间字符串
+	required double highPrice = 8; //最新价
+	required double openPrice = 9; //开盘价
+	required double lowPrice = 10; //最低价
+	required double lastClosePrice = 11; //昨收价
+	required double curPrice = 12; //最新价
+	required int64 volume = 13; //成交量
+	required double turnover = 14; //成交额
+	required double turnoverRate = 15; //换手率
+}
+
+message Snapshot
+{
+	required SnapshotBasicData basic = 1; //快照基本数据
+	optional EquitySnapshotExData equityExData = 2; //正股快照额外数据
+	optional WarrantSnapshotExData warrantExData = 3; //窝轮快照额外数据
+	optional OptionSnapshotExData optionExData = 4; //期权快照额外数据
+}
+
+message S2C
+{
+	repeated Snapshot snapshotList = 1; //股票快照
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

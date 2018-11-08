@@ -1,0 +1,51 @@
+syntax = "proto2";
+package Notify;
+
+import "Common.proto";
+
+enum NotifyType
+{
+	NotifyType_None = 0; //无
+	NotifyType_GtwEvent = 1; //OpenD运行事件通知
+}
+
+enum GtwEventType
+{
+	GtwEventType_None = 0; //正常无错
+	GtwEventType_LocalCfgLoadFailed	= 1; //加载本地配置失败
+	GtwEventType_APISvrRunFailed = 2; //服务器启动失败
+	GtwEventType_ForceUpdate = 3; //客户端版本过低
+	GtwEventType_LoginFailed = 4; //登录失败
+	GtwEventType_UnAgreeDisclaimer = 5; //未同意免责声明
+	GtwEventType_NetCfgMissing = 6; //缺少必要网络配置信息;例如控制订阅额度
+	GtwEventType_KickedOut = 7; //牛牛帐号在别处登录
+	GtwEventType_LoginPwdChanged = 8; //登录密码被修改
+	GtwEventType_BanLogin = 9; //用户被禁止登录
+	GtwEventType_NeedPicVerifyCode = 10; //需要图形验证码
+	GtwEventType_NeedPhoneVerifyCode = 11; //需要手机验证码
+	GtwEventType_AppDataNotExist = 12; //程序自带数据不存在
+	GtwEventType_NessaryDataMissing = 13; //缺少必要数据
+	GtwEventType_TradePwdChanged = 14; //交易密码被修改
+	GtwEventType_EnableDeviceLock = 15; //启用设备锁
+}
+
+message GtwEvent
+{
+	required int32 eventType = 1; //GtwEventType,事件类型
+	required string desc = 2; //事件描述
+}
+
+message S2C
+{
+	required int32 type = 1; //通知类型
+	optional GtwEvent event = 2; //事件通息
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

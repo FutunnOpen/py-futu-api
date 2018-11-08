@@ -1,0 +1,18 @@
+syntax = "proto2";
+package Common;
+
+//返回结果
+enum RetType
+{
+	RetType_Succeed = 0; //成功
+	RetType_Failed = -1; //失败
+	RetType_TimeOut = -100; //超时
+	RetType_Unknown = -400; //未知结果
+}
+
+//包的唯一标识，用于回放攻击的识别和保护
+message PacketID
+{
+	required uint64 connID = 1; //当前TCP连接的连接ID，一条连接的唯一标识，InitConnect协议会返回
+	required uint32 serialNo = 2; //包头中的包自增序列号
+}

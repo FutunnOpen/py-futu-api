@@ -1,0 +1,215 @@
+syntax = "proto2";
+package Trd_Common;
+
+import "Common.proto";
+
+//交易环境
+enum TrdEnv
+{
+	TrdEnv_Simulate = 0; //仿真环境(模拟环境)
+	TrdEnv_Real = 1; //真实环境
+}
+
+//交易市场，是大的市场，不是具体品种
+enum TrdMarket
+{
+	TrdMarket_Unknown = 0; //未知市场
+	TrdMarket_HK = 1; //香港市场
+	TrdMarket_US = 2; //美国市场
+	TrdMarket_CN = 3; //大陆市场
+	TrdMarket_HKCC = 4; //香港A股通市场
+}
+
+//可交易证券所属市场，目前主要是区分A股的沪市和深市，香港和美国暂不需要细分
+enum TrdSecMarket
+{
+	TrdSecMarket_Unknown = 0; //未知市场
+	TrdSecMarket_HK = 1; //香港的(正股、窝轮等)
+	TrdSecMarket_US = 2; //美国的(正股、期权等)
+	TrdSecMarket_CN_SH = 31; //沪市的(正股)
+	TrdSecMarket_CN_SZ = 32; //深市的(正股)
+}
+
+//交易方向
+enum TrdSide
+{
+	//客户端下单只传Buy或Sell即可，SellShort是美股订单时服务器返回有此方向，BuyBack目前不存在，但也不排除服务器会传
+	TrdSide_Unknown = 0; //未知方向
+	TrdSide_Buy = 1; //买入
+	TrdSide_Sell = 2; //卖出
+	TrdSide_SellShort = 3; //卖空
+	TrdSide_BuyBack = 4; //买回
+}
+
+//订单类型
+enum OrderType
+{
+	OrderType_Unknown = 0; //未知类型
+	OrderType_Normal = 1; //普通订单(港股的增强限价订单、A股的限价委托、美股的限价订单)
+	OrderType_Market = 2; //市价订单(目前仅美股)
+	
+	OrderType_AbsoluteLimit = 5; //绝对限价订单(目前仅港股)，只有价格完全匹配才成交，比如你下价格为5元的买单，卖单价格必须也要是5元才能成交，低于5元也不能成交。卖出同理
+	OrderType_Auction = 6; //竞价订单(目前仅港股)，A股的早盘竞价订单类型不变还是OrderType_Normal
+	OrderType_AuctionLimit = 7; //竞价限价订单(目前仅港股)
+	OrderType_SpecialLimit = 8; //特别限价订单(目前仅港股)，成交规则同增强限价订单，且部分成交后，交易所自动撤销订单
+}
+
+//订单状态
+enum OrderStatus
+{
+	OrderStatus_Unsubmitted = 0; //未提交
+	OrderStatus_Unknown = -1; //未知状态
+	OrderStatus_WaitingSubmit = 1; //等待提交
+	OrderStatus_Submitting = 2; //提交中
+	OrderStatus_SubmitFailed = 3; //提交失败，下单失败
+	OrderStatus_TimeOut = 4; //处理超时，结果未知
+	OrderStatus_Submitted = 5; //已提交，等待成交
+	OrderStatus_Filled_Part = 10; //部分成交
+	OrderStatus_Filled_All = 11; //全部已成
+	OrderStatus_Cancelling_Part = 12; //正在撤单_部分(部分已成交，正在撤销剩余部分)
+	OrderStatus_Cancelling_All = 13; //正在撤单_全部
+	OrderStatus_Cancelled_Part = 14; //部分成交，剩余部分已撤单
+	OrderStatus_Cancelled_All = 15; //全部已撤单，无成交
+	OrderStatus_Failed = 21; //下单失败，服务拒绝
+	OrderStatus_Disabled = 22; //已失效
+	OrderStatus_Deleted = 23; //已删除，无成交的订单才能删除
+};
+
+//持仓方向类型
+enum PositionSide
+{
+	PositionSide_Long = 0; //多仓，默认情况是多仓
+	PositionSide_Unknown = -1; //未知方向
+	PositionSide_Short = 1; //空仓
+};
+
+//修改订单的操作类型
+enum ModifyOrderOp
+{
+	//港股支持全部操作，美股目前仅支持ModifyOrderOp_Normal和ModifyOrderOp_Cancel
+	ModifyOrderOp_Unknown = 0; //未知操作
+	ModifyOrderOp_Normal = 1; //修改订单的价格、数量等，即以前的改单
+	ModifyOrderOp_Cancel = 2; //撤单
+	ModifyOrderOp_Disable = 3; //失效
+	ModifyOrderOp_Enable = 4; //生效
+	ModifyOrderOp_Delete = 5; //删除
+};
+
+//需要再次确认订单的原因枚举
+enum ReconfirmOrderReason
+{
+	ReconfirmOrderReason_Unknown = 0; //未知原因
+	ReconfirmOrderReason_QtyTooLarge = 1; //订单数量太大，确认继续下单并否拆分成多个小订单
+	ReconfirmOrderReason_PriceAbnormal = 2; //价格异常，偏离当前价太大，确认继续下单
+};
+
+//交易协议公共参数头
+message TrdHeader
+{
+	required int32 trdEnv = 1; //交易环境, 参见TrdEnv的枚举定义
+	required uint64 accID = 2; //业务账号, 业务账号与交易环境、市场权限需要匹配，否则会返回错误
+	required int32 trdMarket = 3; //交易市场, 参见TrdMarket的枚举定义
+}
+
+//交易业务账户结构
+message TrdAcc
+{
+	required int32 trdEnv = 1; //交易环境，参见TrdEnv的枚举定义
+	required uint64 accID = 2; //业务账号
+	repeated int32 trdMarketAuthList = 3; //业务账户支持的交易市场权限，即此账户能交易那些市场, 可拥有多个交易市场权限，目前仅单个，取值参见TrdMarket的枚举定义
+	//后续根据需要再添加其他属性
+}
+
+//账户资金结构
+message Funds
+{
+	required double power = 1; //购买力，3位精度，下同
+	required double totalAssets = 2; //资产净值
+	required double cash = 3; //现金
+	required double marketVal = 4; //证券市值
+	required double frozenCash = 5; //冻结金额
+	required double debtCash = 6; //欠款金额
+	required double avlWithdrawalCash = 7; //可提金额
+}
+
+//账户持仓结构
+message Position
+{
+	required uint64 positionID = 1; //持仓ID，一条持仓的唯一标识
+	required int32 positionSide = 2; //持仓方向，参见PositionSide的枚举定义
+    required string code = 3; //代码
+	required string name = 4; //名称
+    required double qty = 5; //持有数量，2位精度，期权单位是"张"，下同
+    required double canSellQty = 6; //可卖数量
+    required double price = 7; //市价，3位精度
+    optional double costPrice = 8; //成本价，无精度限制，如果没传，代表此时此值无效
+	required double val = 9; //市值，3位精度
+    required double plVal = 10; //盈亏金额，3位精度
+    optional double plRatio = 11; //盈亏比例，无精度限制，如果没传，代表此时此值无效
+	optional int32 secMarket = 12; //（2018/07/17新增）证券所属市场，参见TrdSecMarket的枚举定义
+	//以下是此持仓今日统计
+	optional double td_plVal = 21; //今日盈亏金额，3位精度，下同
+	optional double td_trdVal = 22; //今日交易额
+	optional double td_buyVal = 23; //今日买入总额
+	optional double td_buyQty = 24; //今日买入总量
+	optional double td_sellVal = 25; //今日卖出总额
+	optional double td_sellQty = 26; //今日卖出总量
+}
+
+//订单结构
+message Order
+{
+	required int32 trdSide = 1; //交易方向, 参见TrdSide的枚举定义
+	required int32 orderType = 2; //订单类型, 参见OrderType的枚举定义
+	required int32 orderStatus = 3; //订单状态, 参见OrderStatus的枚举定义
+	required uint64 orderID = 4; //订单号
+	required string orderIDEx = 5; //扩展订单号(仅查问题时备用)
+	required string code = 6; //代码
+	required string name = 7; //名称
+	required double qty = 8; //订单数量，2位精度，期权单位是"张"
+	optional double price = 9; //订单价格，3位精度
+	required string createTime = 10; //创建时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传
+	required string updateTime = 11; //最后更新时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传
+	optional double fillQty = 12; //成交数量，2位精度，期权单位是"张"
+	optional double fillAvgPrice = 13; //成交均价，无精度限制
+	optional string lastErrMsg = 14; //最后的错误描述，如果有错误，会有此描述最后一次错误的原因，无错误为空
+	optional int32 secMarket = 15; //（2018/07/17新增）证券所属市场，参见TrdSecMarket的枚举定义
+}
+
+//成交结构
+message OrderFill
+{
+	required int32 trdSide = 1; //交易方向, 参见TrdSide的枚举定义
+	required uint64 fillID = 2; //成交号
+	required string fillIDEx = 3; //扩展成交号(仅查问题时备用)
+	optional uint64 orderID = 4; //订单号
+	optional string orderIDEx = 5; //扩展订单号(仅查问题时备用)
+	required string code = 6; //代码
+	required string name = 7; //名称
+	required double qty = 8; //成交数量，2位精度，期权单位是"张"
+	required double price = 9; //成交价格，3位精度
+	required string createTime = 10; //创建时间（成交时间），严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传
+	optional int32 counterBrokerID = 11; //对手经纪号，港股有效
+	optional string counterBrokerName = 12; //对手经纪名称，港股有效
+	optional int32 secMarket = 13; //（2018/07/17新增）证券所属市场，参见TrdSecMarket的枚举定义
+}
+
+//最大可交易数量
+message MaxTrdQtys
+{
+	//因目前服务器实现的问题，卖空需要先卖掉持仓才能再卖空，是分开两步卖的，买回来同样是逆向两步；而看多的买是可以现金加融资一起一步买的，请注意这个差异
+	required double maxCashBuy = 1; //不使用融资，仅自己的现金最大可买整手股数
+	optional double maxCashAndMarginBuy = 2; //使用融资，自己的现金 + 融资资金总共的最大可买整手股数
+	required double maxPositionSell = 3; //不使用融券(卖空)，仅自己的持仓最大可卖整手股数
+	optional double maxSellShort = 4; //使用融券(卖空)，最大可卖空整手股数，不包括多仓
+	optional double maxBuyBack = 5; //卖空后，需要买回的最大整手股数。因为卖空后，必须先买回已卖空的股数，还掉股票，才能再继续买多。
+}
+
+//过滤条件，条件组合是"与"不是"或"，用于获取订单、成交、持仓等时二次过滤
+message TrdFilterConditions
+{
+	repeated string codeList = 1; //代码过滤，只返回包含这些代码的数据，没传不过滤
+	repeated uint64 idList = 2; //ID主键过滤，只返回包含这些ID的数据，没传不过滤，订单是orderID、成交是fillID、持仓是positionID
+	optional string beginTime = 3; //开始时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传，对持仓无效，拉历史数据必须填
+	optional string endTime = 4; //结束时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传，对持仓无效，拉历史数据必须填
+}

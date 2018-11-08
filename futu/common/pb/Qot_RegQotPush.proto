@@ -1,0 +1,32 @@
+syntax = "proto2";
+package Qot_RegQotPush;
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+message C2S
+{
+	repeated Qot_Common.Security securityList = 1; //股票
+	repeated int32 subTypeList = 2; //Qot_Common.SubType,要注册到该连接的订阅类型
+	repeated int32 rehabTypeList = 3; //Qot_Common.RehabType,复权类型,注册K线类型才生效,其他订阅类型忽略该参数,注册K线时该参数不指定默认前复权
+	required bool isRegOrUnReg = 4; //注册或取消
+	optional bool isFirstPush = 5; //注册后如果本地已有数据是否首推一次已存在数据,该参数不指定则默认true
+}
+
+message S2C
+{
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+
+	optional S2C s2c = 4;
+}

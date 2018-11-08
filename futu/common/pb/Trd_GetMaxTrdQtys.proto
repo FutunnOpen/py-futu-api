@@ -1,0 +1,39 @@
+syntax = "proto2";
+package Trd_GetMaxTrdQtys;
+
+import "Common.proto";
+import "Trd_Common.proto";
+
+message C2S
+{
+	required Trd_Common.TrdHeader header = 1; //交易公共参数头
+	required int32 orderType = 2; //订单类型, 参见Trd_Common.OrderType的枚举定义
+	required string code = 3; //代码，港股必须是5位数字，A股必须是6位数字，美股没限制
+	required double price = 4; //价格，3位精度。如果是竞价、市价单，请也填入一个当前价格，服务器才好计算
+	optional uint64 orderID = 5; //订单号，新下订单不需要，如果是修改订单就需要把原订单号带上才行，因为改单的最大买卖数量会包含原订单数量。
+	//为保证与下单的价格同步，也提供调整价格选项，以下2个为调整价格使用，对港、A股有意义，因为港股有价位，A股2位精度，美股可不传
+	optional bool adjustPrice = 6; //是否调整价格，如果价格不合法，是否调整到合法价位，true调整，false不调整
+	optional double adjustSideAndLimit = 7; //调整方向和调整幅度百分比限制，正数代表向上调整，负数代表向下调整，具体值代表调整幅度限制，如：0.015代表向上调整且幅度不超过1.5%；-0.01代表向下调整且幅度不超过1%
+	optional int32 secMarket = 8; //（2018/07/17新增）证券所属市场，参见TrdSecMarket的枚举定义
+}
+
+message S2C
+{
+	required Trd_Common.TrdHeader header = 1; //交易公共参数头
+	optional Trd_Common.MaxTrdQtys maxTrdQtys = 2; //最大可交易数量结构
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	//以下3个字段每条协议都有，注释说明在InitConnect.proto中
+	required int32 retType = 1 [default = -400];
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

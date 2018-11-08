@@ -1,0 +1,30 @@
+syntax = "proto2";
+package Trd_GetAccList;
+
+import "Common.proto";
+import "Trd_Common.proto";
+
+message C2S
+{
+	required uint64 userID = 1; //需要跟FutuOpenD登陆的牛牛用户ID一致，否则会返回失败
+}
+
+message S2C
+{
+	repeated Trd_Common.TrdAcc accList = 1; //交易业务账户列表
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	//以下3个字段每条协议都有，注释说明在InitConnect.proto中
+	required int32 retType = 1 [default = -400];
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

@@ -1,0 +1,22 @@
+syntax = "proto2";
+package Qot_UpdateKL;
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+message S2C
+{
+	required int32 rehabType = 1; //Qot_Common.RehabType,复权类型
+	required int32 klType = 2; //Qot_Common.KLType,K线类型
+	required Qot_Common.Security security = 3; //股票
+	repeated Qot_Common.KLine klList = 4; //推送的k线点
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

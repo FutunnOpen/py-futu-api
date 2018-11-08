@@ -1,0 +1,42 @@
+syntax = "proto2";
+package Qot_GetSuspend;
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+message C2S
+{
+	repeated Qot_Common.Security securityList = 1; //股票
+	required string beginTime = 2; //开始时间字符串
+	required string endTime = 3; //结束时间字符串
+}
+
+message Suspend
+{
+	required string time = 1; //时间字符串
+}
+
+message SecuritySuspend
+{
+    required Qot_Common.Security security = 1; //股票
+	repeated Suspend suspendList = 2; //交易日
+}
+
+message S2C
+{
+	repeated SecuritySuspend SecuritySuspendList = 1; //多支股票的交易日
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

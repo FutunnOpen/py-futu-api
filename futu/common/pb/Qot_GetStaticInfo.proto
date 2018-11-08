@@ -1,0 +1,31 @@
+syntax = "proto2";
+package Qot_GetStaticInfo;
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+message C2S
+{
+	optional int32 market = 1; //Qot_Common.QotMarket,股票市场
+	optional int32 secType = 2; //Qot_Common.SecurityType,股票类型
+	repeated Qot_Common.Security securityList = 3; //股票，若该字段存在，忽略其他字段，只返回该字段股票的静态信息
+}
+
+message S2C
+{
+	repeated Qot_Common.SecurityStaticInfo staticInfoList = 1; //静态信息
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

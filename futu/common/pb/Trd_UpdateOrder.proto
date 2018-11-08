@@ -1,0 +1,23 @@
+syntax = "proto2";
+package Trd_UpdateOrder;
+
+import "Common.proto";
+import "Trd_Common.proto";
+
+//推送协议，无C2S和Request结构，retType始终是RetType_Succeed
+
+message S2C
+{
+	required Trd_Common.TrdHeader header = 1; //交易公共参数头
+	required Trd_Common.Order order = 2; //订单结构
+}
+
+message Response
+{
+	//以下3个字段每条协议都有，注释说明在InitConnect.proto中
+	required int32 retType = 1 [default = -400];
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

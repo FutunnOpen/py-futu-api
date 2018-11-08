@@ -1,0 +1,47 @@
+{
+    "help":
+    {
+      "1" :"frame 中设置框架础信息",
+        "1.1":"_api_ip - futu api socket ip",
+        "1.2":"_api_port - futu api socket port",
+        "1.3":"_market - 下单交易的市场 'HK'-港股 'US'-美股",
+        "1.4":"_env_type - REAL=真实环境 SIMULATE=模拟环境 (模拟环境3.0后续支持",
+        "1.5":"_trade_password - 交易密码，港股模拟环境不需要",
+
+        "1.6":"logLevel - log的级别，一般不用修改",
+        "1.7":"logConsole - log是否输出到控制台",
+        "1.8":"logFile - log是否输出到文件（在当前目录的'temp'子目录下)",
+
+       "2": "tiny_strate_base基类策略设置， 暂无用",
+        "2.1":"tiny_strate_sample - TinyStrateSample.py中的策略类参数设置",
+
+       "3": "实现自己的策略类",
+        "3.1": "请参考TinyStrateSample, 修改'name'名称，并在该配置文件中增加'name'对应的配置项",
+        "3.2": "continue",
+
+       "x": "常见配置问题:",
+        "x.1":"由于json格式的限制，主键（如frame)对应的最后一个配置项key(如logfile)最后不要添加逗号!",
+        "x.1":"由于json格式的限制, 配置项中不支持注释，且key,val信息必须用双引号包含",
+        "x.2":"continue"
+    },
+    "frame":
+    {
+        "_api_ip": "127.0.0.1",
+        "_api_port": 11111,
+        "_market": "HK",
+        "_env_type": "SIMULATE",
+        "_trade_password":"000000",
+
+        "logLevel": "info",
+        "logConsole": 1,
+        "logFile": 1
+    },
+    "tiny_strate_base":
+    {
+    },
+    "tiny_strate_sample":
+    {
+        "param1": 1,
+        "param2": 2
+    }
+}

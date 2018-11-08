@@ -1,0 +1,36 @@
+syntax = "proto2";
+package Qot_GetTradeDate;
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+message C2S
+{
+	required int32 market = 1; //Qot_Common.QotMarket,股票市场
+	required string beginTime = 2; //开始时间字符串
+	required string endTime = 3; //结束时间字符串
+}
+
+message TradeDate
+{
+	required string time = 1; //时间字符串
+}
+
+message S2C
+{
+	repeated TradeDate tradeDateList = 1; //交易日
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

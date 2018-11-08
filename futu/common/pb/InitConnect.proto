@@ -1,0 +1,34 @@
+syntax = "proto2";
+package InitConnect;
+
+import "Common.proto";
+
+message C2S
+{
+	required int32 clientVer = 1; //客户端版本号，clientVer = "."以前的数 * 100 + "."以后的，举例：1.1版本的clientVer为1 * 100 + 1 = 101，2.21版本为2 * 100 + 21 = 221
+	required string clientID = 2; //客户端唯一标识，无生具体生成规则，客户端自己保证唯一性即可
+	optional bool recvNotify = 3; //此连接是否接收市场状态、交易需要重新解锁等等事件通知，true代表接收，FutuOpenD就会向此连接推送这些通知，反之false代表不接收不推送
+}
+
+message S2C
+{
+	required int32 serverVer = 1; //FutuOpenD的版本号
+	required uint64 loginUserID = 2; //FutuOpenD登陆的牛牛用户ID
+	required uint64 connID = 3; //此连接的连接ID，连接的唯一标识
+	required string connAESKey = 4; //此连接后续AES加密通信的Key，固定为16字节长字符串
+	required int32 keepAliveInterval = 5; //心跳保活间隔
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //返回结果，参见Common.RetType的枚举定义
+	optional string retMsg = 2; //返回结果描述
+	optional int32 errCode = 3; //错误码，客户端一般通过retType和retMsg来判断结果和详情，errCode只做日志记录，仅在个别协议失败时对账用
+	
+	optional S2C s2c = 4;
+}

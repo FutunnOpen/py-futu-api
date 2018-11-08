@@ -1,0 +1,33 @@
+syntax = "proto2";
+package Qot_GetHoldingChangeList;
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+message C2S
+{
+	required Qot_Common.Security security = 1; //股票
+	required int32 holderCategory = 2; //持有者类别（1机构、2基金、3高管）
+	//以下是发布时间筛选，不传返回所有数据，传了返回发布时间属于开始时间到结束时间段内的数据
+	optional string beginTime = 3; //开始时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传
+	optional string endTime = 4; //结束时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传
+}
+
+message S2C
+{
+    required Qot_Common.Security security = 1; //股票
+	repeated Qot_Common.ShareHoldingChange holdingChangeList = 2; //对应类别的持股变化列表（最多返回前100大股东的变化）
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	optional S2C s2c = 4;
+}

@@ -1,0 +1,23 @@
+syntax = "proto2";
+package Trd_Notify;
+
+import "Common.proto";
+import "Trd_Common.proto";
+
+//推送协议，无C2S和Request结构，retType始终是RetType_Succeed
+
+message S2C
+{
+	required Trd_Common.TrdHeader header = 1; //交易公共参数头
+	required int32 type = 2; //通知类型，后边再补充
+}
+
+message Response
+{
+	//以下3个字段每条协议都有，注释说明在InitConnect.proto中
+	required int32 retType = 1 [default = -400];
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}
