@@ -16,7 +16,7 @@
 --------------
 
 
-`InitConnect.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/InitConnect.proto>`_ - 1001初始化连接
+`InitConnect.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/InitConnect.proto>`_ - 1001初始化连接
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -61,7 +61,7 @@
 ------------------------------------------------------
 
 
-`GetGlobalState.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/GetGlobalState.proto>`_ - 1002获取全局状态
+`GetGlobalState.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/GetGlobalState.proto>`_ - 1002获取全局状态
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -109,7 +109,7 @@
 --------------------------------------------------
 
 
-`Notify.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Notify.proto>`_ - 1003系统推送通知
+`Notify.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Notify.proto>`_ - 1003系统推送通知
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -170,7 +170,7 @@
 ---------------------------------------------
 	
 	
-`KeepAlive.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/KeepAlive.proto>`_ - 1004保活心跳
+`KeepAlive.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/KeepAlive.proto>`_ - 1004保活心跳
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -207,7 +207,7 @@
 -----------------------------------
 
 
-`Common.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Common.proto>`_ - 通用定义
+`Common.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Common.proto>`_ - 通用定义
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 RetType - 协议返回值
@@ -251,7 +251,7 @@ PacketID - 请求包标识
 -------------------------------------
 
 
-`Qot_Common.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Qot_Common.proto>`_ - 行情通用定义
+`Qot_Common.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Qot_Common.proto>`_ - 行情通用定义
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 QotMarket - 行情市场
@@ -832,7 +832,7 @@ PlateInfo - 单条连接定阅信息
 -----------------------------------------------
 
 
-`Trd_Common.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_Common.proto>`_ - 交易通用定义
+`Trd_Common.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_Common.proto>`_ - 交易通用定义
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 OrderStatus - 订单状态

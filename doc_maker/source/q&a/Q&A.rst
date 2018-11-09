@@ -9,7 +9,7 @@ Q&A
 
 Q: 入门指引及接口文档获取方式： 
 
-A: https://futunnopen.github.io/futuquant/index.html
+A: https://futunnopen.github.io/py-futu-api/index.html
 
 --------------------
 
@@ -59,7 +59,7 @@ A:返回的逐笔是订阅以后的数据，订阅时间之前的数据是不会
 ----------------
 Q: 历史K线怎么下载？ 
 
-A: `详见历史K线下载指引 <https://futunnopen.github.io/futuquant/setup/Hist_KLine_Download_Intro.html>`_ ，历史K线下载暂时不支持恒指期货。
+A: `详见历史K线下载指引 <https://futunnopen.github.io/py-futu-api/setup/Hist_KLine_Download_Intro.html>`_ ，历史K线下载暂时不支持恒指期货。
 
 ----------------
 

@@ -278,7 +278,7 @@ data             回应数据，实际根据协议定义
  
 .. note::
 
-	*  包体格式类型请求包由协议头 nProtoFmtType_ 指定， FutuOPenD主动推送格式参见 `FutuOpenD配置 <https://futunnopen.github.io/futuquant/setup/FutuOpenDGuide.html#id5>`_ 约定的 “push_proto_type“ 配置项
+	*  包体格式类型请求包由协议头 nProtoFmtType_ 指定， FutuOPenD主动推送格式参见 `FutuOpenD配置 <https://futunnopen.github.io/py-futu-api/setup/FutuOpenDGuide.html#id5>`_ 约定的 “push_proto_type“ 配置项
 	*  原始协议文件格式是以Protobuf格式定义，若需要json格式传输，建议使用protobuf3的接口直接转换成json
 	*  枚举值字段定义使用有符号整形，注释指明对应枚举，枚举一般定义于Common.proto，Qot_Common.proto，Trd_Common.proto文件中
 	*  **协议中价格、百分比等数据用浮点类型来传输，直接使用会有精度问题，需要根据精度（如协议中未指明，默认小数点后三位）做四舍五入之后再使用**
@@ -290,7 +290,7 @@ data             回应数据，实际根据协议定义
 
   * 若FutuOpenD配置了加密, InitConnect_ 初始化连接协议必须使用RSA公钥加密，后续其他协议使用 InitConnect_ 返回的随机密钥进行AES加密通信。
   * FutuOpenD的加密流程借鉴了SSL协议，但考虑到一般是本地部署服务和应用，简化了相关流程，FutuOpenD与接入Client共用了同一个RSA 私钥文件，请妥善保存和分发私钥文件。
-  * 可到"http://web.chacuo.net/netrsakeypair"这个网址在线生成随机RSA密钥对，密钥格式必须为PCKS#1，密钥长度512，1024都可以，不要设置密码，将生成的私钥复制保存到文件中，然后将私钥文件路径配置到 `FutuOpenD配置 <https://futunnopen.github.io/futuquant/setup/FutuOpenDGuide.html#id5>`_ 约定的 “rsa_private_key”配置项中 
+  * 可到"http://web.chacuo.net/netrsakeypair"这个网址在线生成随机RSA密钥对，密钥格式必须为PCKS#1，密钥长度512，1024都可以，不要设置密码，将生成的私钥复制保存到文件中，然后将私钥文件路径配置到 `FutuOpenD配置 <https://futunnopen.github.io/py-futu-api/setup/FutuOpenDGuide.html#id5>`_ 约定的 “rsa_private_key”配置项中 
   * 
   * **强烈建议有实盘交易的用户配置加密，避免账户和交易信息泄露**
   
@@ -301,11 +301,11 @@ data             回应数据，实际根据协议定义
 
 RSA加解密
 ~~~~~~~~~~~~~~~~~~~
-	* `FutuOpenD配置 <https://futunnopen.github.io/futuquant/setup/FutuOpenDGuide.html#id5>`_ 约定"rsa_private_key"为私钥文件路径
+	* `FutuOpenD配置 <https://futunnopen.github.io/py-futu-api/setup/FutuOpenDGuide.html#id5>`_ 约定"rsa_private_key"为私钥文件路径
 	* FutuOpenD 与接入客户端共用相同的私钥文件
 	* RSA加解密仅用于 InitConnect_ 请求，用于安全获取其它请求协议的对称加密Key
 	* FutuOpenD的RSA密钥为1024位, 填充方式PKCS1, 公钥加密，私钥解密，公钥可通过私钥生成
-	* Python API 参考实现: `RsaCrypt <https://github.com/FutunnOpen/futuquant/tree/master/futuquant/common/sys_config.py>`_  类的encrypt / decrypt 接口
+	* Python API 参考实现: `RsaCrypt <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/sys_config.py>`_  类的encrypt / decrypt 接口
 	
 
  **发送数据加密**
@@ -328,7 +328,7 @@ AES加解密
 ~~~~~~~~~~~~~~~~~~~
 	* 加密key由 InitConnect_ 协议返回
 	* 使用的是AES的ecb加密模式。
-	* Python API 参考实现: `FutuConnMng <https://github.com/FutunnOpen/futuquant/tree/master/futuquant/common/conn_mng.py>`_  类的encrypt_conn_data / decrypt_conn_data 接口
+	* Python API 参考实现: `FutuConnMng <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/conn_mng.py>`_  类的encrypt_conn_data / decrypt_conn_data 接口
 	
  **发送数据加密**
 

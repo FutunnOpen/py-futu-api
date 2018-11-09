@@ -11,7 +11,7 @@
 
 --------------
 
-`Trd_GetAccList.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetAccList.proto>`_ - 2001获取交易账户列表
+`Trd_GetAccList.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_GetAccList.proto>`_ - 2001获取交易账户列表
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -53,7 +53,7 @@
 	
 -------------------------------------
 
-`Trd_UnlockTrade.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_UnlockTrade.proto>`_ - 2005解锁或锁定交易
+`Trd_UnlockTrade.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_UnlockTrade.proto>`_ - 2005解锁或锁定交易
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -100,7 +100,7 @@
 -------------------------------------
 
 
-`Trd_SubAccPush.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_SubAccPush.proto>`_ - 2008订阅接收交易账户的推送数据
+`Trd_SubAccPush.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_SubAccPush.proto>`_ - 2008订阅接收交易账户的推送数据
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -141,7 +141,7 @@
 
 -------------------------------------
 
-`Trd_GetFunds.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetFunds.proto>`_ - 2101获取账户资金
+`Trd_GetFunds.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_GetFunds.proto>`_ - 2101获取账户资金
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -185,7 +185,7 @@
 	
 -------------------------------------
 
-`Trd_GetPositionList.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetPositionList.proto>`_ - 2102获取持仓列表
+`Trd_GetPositionList.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_GetPositionList.proto>`_ - 2102获取持仓列表
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -233,7 +233,7 @@
 	
 -------------------------------------
 
-`Trd_GetMaxTrdQtys.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetMaxTrdQtys.proto>`_ - 2111获取最大交易数量
+`Trd_GetMaxTrdQtys.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_GetMaxTrdQtys.proto>`_ - 2111获取最大交易数量
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -284,7 +284,7 @@
 	
 -------------------------------------
 
-`Trd_GetOrderList.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetOrderList.proto>`_ - 2201获取订单列表
+`Trd_GetOrderList.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_GetOrderList.proto>`_ - 2201获取订单列表
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -331,7 +331,7 @@
 	
 -------------------------------------
 
-`Trd_PlaceOrder.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_PlaceOrder.proto>`_ - 2202下单
+`Trd_PlaceOrder.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_PlaceOrder.proto>`_ - 2202下单
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -402,7 +402,7 @@
 	
 -------------------------------------
 
-`Trd_ModifyOrder.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_ModifyOrder.proto>`_ - 2205修改订单(改价、改量、改状态等)
+`Trd_ModifyOrder.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_ModifyOrder.proto>`_ - 2205修改订单(改价、改量、改状态等)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -459,7 +459,7 @@
 	
 -------------------------------------
 
-`Trd_UpdateOrder.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_UpdateOrder.proto>`_ - 2208推送订单更新
+`Trd_UpdateOrder.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_UpdateOrder.proto>`_ - 2208推送订单更新
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -495,7 +495,7 @@
 	
 -------------------------------------
 
-`Trd_GetOrderFillList.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetOrderFillList.proto>`_ - 2211获取成交列表
+`Trd_GetOrderFillList.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_GetOrderFillList.proto>`_ - 2211获取成交列表
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -541,7 +541,7 @@
 	
 -------------------------------------
 
-`Trd_UpdateOrderFill.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_UpdateOrderFill.proto>`_ - 2218推送新成交
+`Trd_UpdateOrderFill.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_UpdateOrderFill.proto>`_ - 2218推送新成交
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -577,7 +577,7 @@
 	
 -------------------------------------
 
-`Trd_GetHistoryOrderList.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetHistoryOrderList.proto>`_ - 2221获取历史订单列表
+`Trd_GetHistoryOrderList.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_GetHistoryOrderList.proto>`_ - 2221获取历史订单列表
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
@@ -626,7 +626,7 @@
 	
 -------------------------------------
 
-`Trd_GetHistoryOrderFillList.proto <https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetHistoryOrderFillList.proto>`_ - 2222获取历史成交列表
+`Trd_GetHistoryOrderFillList.proto <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb/Trd_GetHistoryOrderFillList.proto>`_ - 2222获取历史成交列表
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: protobuf
