@@ -1,6 +1,6 @@
 介绍
 ====
-`富途开放接口 <https://futunnopen.github.io/futuquant/>`_ 提供了基于Python的交易和行情API接口，可以满足您使用富途牛牛软件进行量化投资的需求。
+`富途开放接口 <https://futunnopen.github.io/py-futu-api/>`_ 提供了基于Python的交易和行情API接口，可以满足您使用富途牛牛软件进行量化投资的需求。
 
 Futu Open API 项目，涵盖了常规交易品种（证券、衍生品）：
 ::
@@ -29,11 +29,11 @@ Futu Open API 项目，涵盖了常规交易品种（证券、衍生品）：
 
 ------------
 
-futuquant安装
+futu-api安装
 -------------
 .. code-block:: bash
 
-    $ pip install futuquant
+    $ pip install futu-api
 
 .. note::
 

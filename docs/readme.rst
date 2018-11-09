@@ -1,8 +1,8 @@
 ﻿==================
-FutuQuant 文档指南
+futu-api 文档指南
 ==================
 
-FutuQuant使用Sphinx进行文档编写。
+futu-api使用Sphinx进行文档编写。
 
 Requirements
 ------------

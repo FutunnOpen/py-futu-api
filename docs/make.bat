@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=source
 set BUILDDIR=build
-set SPHINXPROJ=futuquant
+set SPHINXPROJ=futu-api
 
 if "%1" == "" goto help
 

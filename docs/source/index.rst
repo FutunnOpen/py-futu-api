@@ -1,13 +1,13 @@
-.. futuquant documentation master file, created by
+.. futu-api documentation master file, created by
    sphinx-quickstart on Thu Aug 31 10:00:54 2017.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
 =================================
-FutuQuant |version| 指南
+futu-api |version| 指南
 =================================
 
-futuquant documentation
+futuapi documentation
 
 .. toctree::
 	:caption: 基础

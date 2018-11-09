@@ -1,6 +1,6 @@
 协议接口指南
 ====================
-`FutuQuant <https://github.com/FutunnOpen/futuquant/>`_ 开源项目是基于FutuOpenD开放协议实现的Python交易和行情接口，如果对接口的执行效率和灵活性有更高要求，您也可以选择用其它语言直接对接原始协议。
+`futu-api <https://github.com/FutunnOpen/py-futu-api/>`_ 开源项目是基于FutuOpenD开放协议实现的Python交易和行情接口，如果对接口的执行效率和灵活性有更高要求，您也可以选择用其它语言直接对接原始协议。
 
 --------------
 
@@ -143,7 +143,7 @@
 
 .. note::
 
-    * 所有 Protobuf 文件可从 `FutuQuant <https://github.com/FutunnOpen/futuquant/tree/master/futuquant/common/pb>`_ Python开源项目下获取
+    * 所有 Protobuf 文件可从 `futu-api <https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb>`_ Python开源项目下获取
 
 ---------------------------------------------------
 

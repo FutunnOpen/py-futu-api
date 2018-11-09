@@ -1,8 +1,8 @@
-# FutuQuant - 富途量化投资平台 (Futu Quant Trading API)
+# futu-api - 富途量化投资平台 (Futu Quant Trading API)
 
 ### 简介
 
-[​**FutuQuant**](https://futunnopen.github.io/futuquant/intro/intro.html)开源项目可以满足使用[**富途Open API**](https://www.futunn.com/)软件进行量化投资的需求, 提供包括Python接口、Json和Protobuf接口的行情及交易的API。
+[​**futu-api**](https://futunnopen.github.io/futuquant/intro/intro.html)开源项目可以满足使用[**富途Open API**](https://www.futunn.com/)软件进行量化投资的需求, 提供包括Python接口、Json和Protobuf接口的行情及交易的API。
 
 - [官方在线文档](https://futunnopen.github.io/futuquant/intro/intro.html)
 
@@ -10,7 +10,7 @@
 
 ### 安装
 ```
-pip install futuquant
+pip install futu-api
 ```
 
 ###### 注: 本API当前仅支持Python3, 推荐安装anaconda3环境，方便快捷。
@@ -20,7 +20,7 @@ pip install futuquant
 ### 快速上手
 ```
 
-# 导入futuquant api
+# 导入futu-api
 import futu as ft
 
 # 实例化行情上下文对象
@@ -76,7 +76,7 @@ trade_hk_ctx.close()
 
 ### 示例策略
 
-- 示例策略文件位于目录: (futuquant包安装目录)/futuquant/examples 下，用户可参考实例策略来学习API的使用。
+- 示例策略文件位于目录: (futu-api包安装目录)/py-futu-api/examples 下，用户可参考实例策略来学习API的使用。
 
 ---
 
@@ -99,16 +99,6 @@ trade_hk_ctx.close()
 
 ***
 
----
-
-### 历史数据及除权除息下载问题
-###### [历史K线下载指引](https://futunnopen.github.io/futuquant/setup/Hist_KLine_Download_Intro.html)
-
-- 在Open API文件夹内有历史数据下载配置文件(FutuHistData.xml)，请先详细阅读再进行操作。
-- 如果不想下载新数据、可以将是否开启下载设置为0。
-- 如果选择下载的数据越大，下载所需时间越长。如果中途退出，下次开启时将重新下载。请勿在下载过程中关闭FutuHistData。
-
-***
 
 ### API及FutuOpenD客户端交流方式
 

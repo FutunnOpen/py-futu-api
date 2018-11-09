@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# futuquant documentation build configuration file, created by
+# futu-api documentation build configuration file, created by
 # sphinx-quickstart on Thu Aug 31 10:00:54 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -144,7 +144,7 @@ html_show_copyright = True
 
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'futuquantdoc'
+htmlhelp_basename = 'futuapidoc'
 
 # Use this kernel instead of the one stored in the notebook metadata:
 nbsphinx_kernel_name = 'python3'
@@ -177,7 +177,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'futuquant.tex', 'futuquant Documentation',
+    (master_doc, 'futu-api.tex', 'utu-api Documentation',
      'futu', 'manual'),
 ]
 
@@ -187,7 +187,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'futuquant', 'futuquant Documentation',
+    (master_doc, 'utu-api', 'utu-api Documentation',
      [author], 1)
 ]
 
@@ -198,8 +198,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'futuquant', 'futuquant Documentation',
-     author, 'futuquant', 'One line description of project.',
+    (master_doc, 'utu-api', 'utu-api Documentation',
+     author, 'utu-api', 'One line description of project.',
      'Miscellaneous'),
 ]
 

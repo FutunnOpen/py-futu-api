@@ -55,13 +55,13 @@ Anaconda python是Python科学技术包的合集，提供了很多用于科学�
     conda -V
     
 
-* 安装 futuquant 库
+* 安装 futu-api 库
 
 方式1：
 
 .. code-block:: bash
 
-    $ pip install futuquant
+    $ pip install futu-api
     
     
 方式2：直接在GitHub下面下载FutunnOpen包，进行安装
@@ -69,7 +69,7 @@ Anaconda python是Python科学技术包的合集，提供了很多用于科学�
 
 .. note::
 
-    *   下载地址：https://github.com/FutunnOpen/futuquant
+    *   下载地址：https://github.com/FutunnOpen/py-futu-api
        .. image:: ../_static/git-download.png    
     *   解压，在解压文件夹按住Shift右键打开PowerShell或命令窗口，执行 :code:`pip install .` 进行安装
        .. image:: ../_static/powershell-install-futuquant.png
