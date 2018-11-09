@@ -35,7 +35,7 @@ class SysConfig(object):
         .. code:: python
 
          from futu import *
-         SysConfig.set_client_info("MyFutuQuant", 0)
+         SysConfig.set_client_info("MyFutuAPI", 0)
          quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
          quote_ctx.close()
 

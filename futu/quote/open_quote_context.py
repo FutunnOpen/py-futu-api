@@ -140,8 +140,8 @@ class OpenQuoteContext(OpenContextBase):
     def get_stock_basicinfo(self, market, stock_type=SecurityType.STOCK, code_list=None):
         """
         获取指定市场中特定类型的股票基本信息
-        :param market: 市场类型，futuquant.common.constant.Market
-        :param stock_type: 股票类型， futuquant.common.constant.SecurityType
+        :param market: 市场类型，futu.common.constant.Market
+        :param stock_type: 股票类型， futu.common.constant.SecurityType
         :param code_list: 如果不为None，应该是股票code的iterable类型，将只返回指定的股票信息
         :return: (ret_code, content)
                 ret_code 等于RET_OK时， content为Pandas.DataFrame数据, 否则为错误原因字符串, 数据列格式如下
@@ -1617,7 +1617,7 @@ class OpenQuoteContext(OpenContextBase):
                 code                    str            证券代码
                 plate_code              str            板块代码
                 plate_name              str            板块名字
-                plate_type              str            板块类型（行业板块或概念板块），futuquant.common.constant.Plate
+                plate_type              str            板块类型（行业板块或概念板块），futu.common.constant.Plate
                 =====================   ===========   ==============================================================
         """
         if is_str(code_list):
@@ -1738,8 +1738,8 @@ class OpenQuoteContext(OpenContextBase):
                  str            None          end为start往后30天
                  None           None          start为当前日期，end往后30天
                 ==========    ==========    ========================================
-        :param option_type: 期权类型,默认全部，全部/看涨/看跌，futuquant.common.constant.OptionType
-        :param option_cond_type: 默认全部，全部/价内/价外，futuquant.common.constant.OptionCondType
+        :param option_type: 期权类型,默认全部，全部/看涨/看跌，futu.common.constant.OptionType
+        :param option_cond_type: 默认全部，全部/价内/价外，futu.common.constant.OptionCondType
         :return: (ret, data)
 
                 ret == RET_OK 返回pd dataframe数据，数据列格式如下

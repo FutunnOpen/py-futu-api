@@ -60,7 +60,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'futuquant'
+project = 'futu-api'
 copyright = '2018, futu'
 author = 'futu'
 

@@ -278,7 +278,7 @@ def trade_hk_test():
 
 if __name__ =="__main__":
     '''
-    默认rsa密钥在futuquant.common下的conn_key.txt
+    默认rsa密钥在futu.common下的conn_key.txt
     注意同步配置FutuOpenD的FTGateway.xml中的 rsa_private_key 字段
     '''
     # SysConfig.set_init_rsa_file()
