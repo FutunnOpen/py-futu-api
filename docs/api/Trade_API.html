@@ -1,0 +1,1398 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>交易API &mdash; futu-api 3.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="协议接口指南" href="../protocol/intro.html" />
+    <link rel="prev" title="行情API" href="Quote_API.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> futu-api
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">基础</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/intro.html">介绍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup/setup.html">安装指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup/FutuOpenDGuide.html">FutuOpenD使用说明</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Base_API.html">基础API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quote_API.html">行情API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">交易API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">一分钟上手</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">接口类对象</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#openhktradecontextopenustradecontextopenhkcctradecontext-a-opencntradecontext">OpenHKTradeContext、OpenUSTradeContext、OpenHKCCTradeContext(A股通)、OpenCNTradeContext - 交易接口类</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#close">close</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#get-acc-list">get_acc_list - 获取交易业务账户列表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unlock-trade">unlock_trade - 解锁交易</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#accinfo-query">accinfo_query - 获取账户资金数据</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#position-list-query">position_list_query - 获取账户持仓列表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#place-order">place_order - 下单</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">order_list_query - 获取订单列表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#modify-order">modify_order - 修改订单</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#change-order">change_order - 改单(老接口，兼容以前)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">deal_list_query - 获取成交列表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#history-order-list-query">history_order_list_query - 获取历史订单列表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#history-deal-list-query">history_deal_list_query - 获取历史成交列表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#acctradinginfo-query">acctradinginfo_query - 查询账户下最大可买卖数量</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tradeorderhandlerbase">TradeOrderHandlerBase - 响应订单推送基类</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#on-recv-rsp">on_recv_rsp - 响应订单推送</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tradedealhandlerbase">TradeDealHandlerBase - 响应成交推送基类</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id5">on_recv_rsp - 响应成交推送</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">暗盘交易</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">模拟交易</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">真实交易</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id11">接口频率限制</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">PROTOCOL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../protocol/intro.html">协议接口指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocol/base_define.html">基础定义</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocol/quote_protocol.html">行情协议</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocol/trade_protocol.html">交易协议</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Q&amp;A</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../q&amp;a/Q&amp;A.html">Q&amp;A</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">futu-api</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>交易API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/Trade_API.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="api">
+<h1>交易API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div></div></blockquote>
+<div class="section" id="id1">
+<h2>一分钟上手<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>如下范例，创建api交易对象，先调用unlock_trade对交易解锁，然后调用place_order下单，以700.0价格，买100股腾讯00700，最后关闭对象。</p>
+<p>注意交易对象区分港股美股。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">place_order</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mf">700.0</span><span class="p">,</span> <span class="n">qty</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;HK.00700&quot;</span><span class="p">,</span> <span class="n">trd_side</span><span class="o">=</span><span class="n">TrdSide</span><span class="o">.</span><span class="n">BUY</span><span class="p">))</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>接口类对象<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="openhktradecontextopenustradecontextopenhkcctradecontext-a-opencntradecontext">
+<h3>OpenHKTradeContext、OpenUSTradeContext、OpenHKCCTradeContext(A股通)、OpenCNTradeContext - 交易接口类<a class="headerlink" href="#openhktradecontextopenustradecontextopenhkcctradecontext-a-opencntradecontext" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="close">
+<h4>close<a class="headerlink" href="#close" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt>
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<p>关闭上下文对象。默认情况下，futuquant内部创建的线程会阻止进程退出，只有当所有context都close后，进程才能正常退出。但通过SysConfig.set_all_thread_daemon可以设置所有内部线程为daemon线程，这时即使没有调用context的close，进程也可以正常退出。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">quote_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="n">quote_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-acc-list">
+<h4>get_acc_list - 获取交易业务账户列表<a class="headerlink" href="#get-acc-list" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="get_acc_list">
+<code class="descname">get_acc_list</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#get_acc_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取交易业务账户列表。要调用交易接口前，必须先获取此列表，后续交易接口根据不同市场传入不同的交易业务账户ID，传0默认第一个账户</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">ret_code为RET_OK时，ret_data为DataFrame数据，否则为错误原因字符串，DataFrame数据如下：</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="12%" />
+<col width="73%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">参数</th>
+<th class="head">类型</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>acc_id</td>
+<td>int</td>
+<td>交易业务账户</td>
+</tr>
+<tr class="row-odd"><td>trd_env</td>
+<td>str</td>
+<td>交易环境，TrdEnv.REAL(真实环境)或TrdEnv.SIMULATE(仿真环境)</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">get_acc_list</span><span class="p">())</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="unlock-trade">
+<h4>unlock_trade - 解锁交易<a class="headerlink" href="#unlock-trade" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="unlock_trade">
+<code class="descname">unlock_trade</code><span class="sig-paren">(</span><em>self</em>, <em>password</em>, <em>password_md5=None</em>, <em>is_unlock=True</em><span class="sig-paren">)</span><a class="headerlink" href="#unlock_trade" title="Permalink to this definition">¶</a></dt>
+<dd><p>解锁交易。</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>password</strong> – str，交易密码，如果password_md5不为空就使用传入的password_md5解锁，否则使用password转MD5得到password_md5再解锁</li>
+<li><strong>password_md5</strong> – str，交易密码的32位MD5加密16进制字符串(全小写)，解锁交易必须要填密码，锁定交易忽略</li>
+<li><strong>is_unlock</strong> – bool，解锁或锁定，True解锁，False锁定</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">ret == RET_OK时, data为None，如果之前已经解锁过了，data为提示字符串，指示出已经解锁</p>
+<p>ret != RET_OK时， data为错误字符串</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">))</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="accinfo-query">
+<h4>accinfo_query - 获取账户资金数据<a class="headerlink" href="#accinfo-query" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="accinfo_query">
+<code class="descname">accinfo_query</code><span class="sig-paren">(</span><em>self</em>, <em>trd_env=TrdEnv.REAL</em>, <em>acc_id=0</em>, <em>acc_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#accinfo_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取账户资金数据。获取账户的资产净值、证券市值、现金、购买力等资金数据。</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>trd_env</strong> – str，交易环境 <a class="reference external" href="Base_API.html#trdenv">TrdEnv</a> ，TrdEnv.REAL(真实环境)或TrdEnv.SIMULATE(仿真环境)</li>
+<li><strong>acc_id</strong> – int，交易业务账户ID，acc_id为ID号时以acc_id为准，传0使用acc_index所对应的账户</li>
+<li><strong>acc_index</strong> – int，交易业务子账户ID列表所对应的下标，默认0，表示第1个业务ID</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">ret_code为RET_OK时，ret_data为DataFrame数据，否则为错误原因字符串，DataFrame数据如下：</p>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="11%" />
+<col width="68%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">参数</th>
+<th class="head">类型</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>power</td>
+<td>float</td>
+<td>购买力，即可使用用于买入的资金</td>
+</tr>
+<tr class="row-odd"><td>total_assets</td>
+<td>float</td>
+<td>资产净值</td>
+</tr>
+<tr class="row-even"><td>cash</td>
+<td>float</td>
+<td>现金</td>
+</tr>
+<tr class="row-odd"><td>market_val</td>
+<td>float</td>
+<td>证券市值</td>
+</tr>
+<tr class="row-even"><td>frozen_cash</td>
+<td>float</td>
+<td>冻结金额</td>
+</tr>
+<tr class="row-odd"><td>avl_withdrawal_cash</td>
+<td>float</td>
+<td>可提金额</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">accinfo_query</span><span class="p">())</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="position-list-query">
+<h4>position_list_query - 获取账户持仓列表<a class="headerlink" href="#position-list-query" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="position_list_query">
+<code class="descname">position_list_query</code><span class="sig-paren">(</span><em>self</em>, <em>code=''</em>, <em>pl_ratio_min=None</em>, <em>pl_ratio_max=None</em>, <em>trd_env=TrdEnv.REAL</em>, <em>acc_id=0</em>, <em>acc_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#position_list_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取账户持仓列表。获取账户的证券持仓列表。</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>code</strong> – str，代码过滤，只返回包含这个代码的数据，没传不过滤，返回所有</li>
+<li><strong>pl_ratio_min</strong> – float，过滤盈亏比例下限，高于此比例的会返回，如0.1，返回盈亏比例大于10%的持仓</li>
+<li><strong>pl_ratio_max</strong> – float，过滤盈亏比例上限，低于此比例的会返回，如0.2，返回盈亏比例小于20%的持仓</li>
+<li><strong>trd_env</strong> – str，交易环境，TrdEnv.REAL(真实环境)或TrdEnv.SIMULATE(仿真环境)</li>
+<li><strong>acc_id</strong> – int，交易业务账户ID，acc_id为ID号时以acc_id为准，传0使用acc_index所对应的账户</li>
+<li><strong>acc_index</strong> – int，交易业务子账户ID列表所对应的下标，默认0，表示第1个业务ID</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">ret_code为RET_OK时，ret_data为DataFrame数据，否则为错误原因字符串，DataFrame数据如下：</p>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="11%" />
+<col width="68%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">参数</th>
+<th class="head">类型</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>position_side</td>
+<td>str</td>
+<td>持仓方向，PositionSide.LONG(多仓)或PositionSide.SHORT(空仓)</td>
+</tr>
+<tr class="row-odd"><td>code</td>
+<td>str</td>
+<td>代码</td>
+</tr>
+<tr class="row-even"><td>stock_name</td>
+<td>str</td>
+<td>名称</td>
+</tr>
+<tr class="row-odd"><td>qty</td>
+<td>float</td>
+<td>持有数量，2位精度，期权单位是”张”，下同</td>
+</tr>
+<tr class="row-even"><td>can_sell_qty</td>
+<td>float</td>
+<td>可卖数量</td>
+</tr>
+<tr class="row-odd"><td>nominal_price</td>
+<td>float</td>
+<td>市价，3位精度(A股2位)</td>
+</tr>
+<tr class="row-even"><td>cost_price</td>
+<td>float</td>
+<td>成本价，无精度限制</td>
+</tr>
+<tr class="row-odd"><td>cost_price_valid</td>
+<td>bool</td>
+<td>成本价是否有效，True有效，False无效</td>
+</tr>
+<tr class="row-even"><td>market_val</td>
+<td>float</td>
+<td>市值，3位精度(A股2位)</td>
+</tr>
+<tr class="row-odd"><td>pl_ratio</td>
+<td>float</td>
+<td>盈亏比例，无精度限制</td>
+</tr>
+<tr class="row-even"><td>pl_ratio_valid</td>
+<td>bool</td>
+<td>盈亏比例是否有效，True有效，False无效</td>
+</tr>
+<tr class="row-odd"><td>pl_val</td>
+<td>float</td>
+<td>盈亏金额，3位精度(A股2位)</td>
+</tr>
+<tr class="row-even"><td>pl_val_valid</td>
+<td>bool</td>
+<td>盈亏金额是否有效，True有效，False无效</td>
+</tr>
+<tr class="row-odd"><td>today_pl_val</td>
+<td>float</td>
+<td>今日盈亏金额，3位精度(A股2位)，下同</td>
+</tr>
+<tr class="row-even"><td>today_buy_qty</td>
+<td>float</td>
+<td>今日买入总量</td>
+</tr>
+<tr class="row-odd"><td>today_buy_val</td>
+<td>float</td>
+<td>今日买入总额</td>
+</tr>
+<tr class="row-even"><td>today_sell_qty</td>
+<td>float</td>
+<td>今日卖出总量</td>
+</tr>
+<tr class="row-odd"><td>today_sell_val</td>
+<td>float</td>
+<td>今日卖出总额</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">position_list_query</span><span class="p">())</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="place-order">
+<h4>place_order - 下单<a class="headerlink" href="#place-order" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="place_order">
+<code class="descname">place_order</code><span class="sig-paren">(</span><em>self</em>, <em>price</em>, <em>qty</em>, <em>code</em>, <em>trd_side</em>, <em>order_type=OrderType.NORMAL</em>, <em>adjust_limit=0</em>, <em>trd_env=TrdEnv.REAL</em>, <em>acc_id=0</em>, <em>acc_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#place_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>下单交易。</p>
+<p>注意，由于python api是同步的，但网络收发是异步的，当place_order对应的应答数据包与订单成交推送（TradeDealHandlerBase）或订单状态变化推送（TradeOrderHandlerBase）间隔很短时，就可能出现虽然是place_order的数据包先返回，但推送的回调会先被调用的情况。例如可能先调用了TradeOrderHandlerBase，然后place_order这个接口才返回。</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>price</strong> – float，订单价格，3位精度(A股2位)，当订单是市价单或竞价单类型，忽略该参数传值</li>
+<li><strong>qty</strong> – float，订单数量，2位精度，期权单位是”张”</li>
+<li><strong>code</strong> – str，代码</li>
+<li><strong>trd_side</strong> – str，交易方向，参考TrdSide类的定义</li>
+<li><strong>order_type</strong> – str，订单类型，参考OrderType类的定义</li>
+<li><strong>adjust_limit</strong> – folat，港股有价位表，订单价格必须在规定的价位上，OpenD会对传入价格自动调整到合法价位上，此参数指定价格调整方向和调整幅度百分比限制，正数代表向上调整，负数代表向下调整，具体值代表调整幅度限制，如：0.015代表向上调整且幅度不超过1.5%；-0.01代表向下调整且幅度不超过1%</li>
+<li><strong>trd_env</strong> – str，交易环境，TrdEnv.REAL(真实环境)或TrdEnv.SIMULATE(仿真环境)</li>
+<li><strong>acc_id</strong> – int，交易业务账户ID，acc_id为ID号时以acc_id为准，传0使用acc_index所对应的账户</li>
+<li><strong>acc_index</strong> – int，交易业务子账户ID列表所对应的下标，默认0，表示第1个业务ID</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">ret_code为RET_OK时，ret_data为DataFrame数据，否则为错误原因字符串，DataFrame数据跟下面的 <a class="reference external" href="#id3">order-list-query</a> (获取订单列表)相同。</p>
+<p>如果是OpenHKCCTradeContext，返回数据中order_type仅有OrderType.NORMAL</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">place_order</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mf">700.0</span><span class="p">,</span> <span class="n">qty</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;HK.00700&quot;</span><span class="p">,</span> <span class="n">trd_side</span><span class="o">=</span><span class="n">TrdSide</span><span class="o">.</span><span class="n">SELL</span><span class="p">))</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="id3">
+<h4>order_list_query - 获取订单列表<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="order_list_query">
+<code class="descname">order_list_query</code><span class="sig-paren">(</span><em>self</em>, <em>order_id=&quot;&quot;</em>, <em>status_filter_list=[]</em>, <em>code=''</em>, <em>start=''</em>, <em>end=''</em>, <em>trd_env=TrdEnv.REAL</em>, <em>acc_id=0</em><span class="sig-paren">)</span><a class="headerlink" href="#order_list_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取订单列表。获取账户的交易订单列表。</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>order_id</strong> – str，订单号过滤，只返回此订单号的数据，没传不过滤，返回所有</li>
+<li><strong>status_filter_list</strong> – str数组，订单状态过滤，只返回这些状态的订单数据，没传不过滤，返回所有，参考 <a class="reference external" href="Base_API.html#orderstatus">OrderStatus</a> 类的定义</li>
+<li><strong>code</strong> – str，代码过滤，只返回包含这个代码的数据，没传不过滤，返回所有</li>
+<li><strong>start</strong> – str，开始时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传</li>
+<li><strong>end</strong> – str，结束时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传</li>
+<li><strong>trd_env</strong> – str，交易环境，TrdEnv.REAL(真实环境)或TrdEnv.SIMULATE(仿真环境)</li>
+<li><strong>acc_id</strong> – int，交易业务账户ID，acc_id为ID号时以acc_id为准，传0使用acc_index所对应的账户</li>
+<li><strong>acc_index</strong> – int，交易业务子账户ID列表所对应的下标，默认0，表示第1个业务ID</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">ret_code为RET_OK时，ret_data为DataFrame数据，否则为错误原因字符串，DataFrame数据如下：</p>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="10%" />
+<col width="70%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">参数</th>
+<th class="head">类型</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>trd_side</td>
+<td>str</td>
+<td>交易方向，参考 <a class="reference external" href="Base_API.html#trdside">TrdSide</a> 类的定义</td>
+</tr>
+<tr class="row-odd"><td>order_type</td>
+<td>str</td>
+<td>订单类型，参考 <a class="reference external" href="Base_API.html#ordertype">OrderType</a> 类的定义。OpenHKCCTradeContext仅返回NORMAL</td>
+</tr>
+<tr class="row-even"><td>order_status</td>
+<td>str</td>
+<td>订单状态，参考 <a class="reference external" href="Base_API.html#orderstatus">OrderStatus</a> 类的定义。OpenHKCCTradeContext没有DISABLED</td>
+</tr>
+<tr class="row-odd"><td>order_id</td>
+<td>str</td>
+<td>订单号</td>
+</tr>
+<tr class="row-even"><td>code</td>
+<td>str</td>
+<td>代码</td>
+</tr>
+<tr class="row-odd"><td>stock_name</td>
+<td>str</td>
+<td>名称</td>
+</tr>
+<tr class="row-even"><td>qty</td>
+<td>float</td>
+<td>订单数量，2位精度，期权单位是”张”</td>
+</tr>
+<tr class="row-odd"><td>price</td>
+<td>float</td>
+<td>订单价格，3位精度(A股2位)</td>
+</tr>
+<tr class="row-even"><td>create_time</td>
+<td>str</td>
+<td>创建时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传</td>
+</tr>
+<tr class="row-odd"><td>updated_time</td>
+<td>str</td>
+<td>最后更新时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传</td>
+</tr>
+<tr class="row-even"><td>dealt_qty</td>
+<td>float</td>
+<td>成交数量，2位精度，期权单位是”张”</td>
+</tr>
+<tr class="row-odd"><td>dealt_avg_price</td>
+<td>float</td>
+<td>成交均价，无精度限制</td>
+</tr>
+<tr class="row-even"><td>last_err_msg</td>
+<td>str</td>
+<td>最后的错误描述，如果有错误，会有此描述最后一次错误的原因，无错误为空</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">order_list_query</span><span class="p">())</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="modify-order">
+<h4>modify_order - 修改订单<a class="headerlink" href="#modify-order" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="modify_order">
+<code class="descname">modify_order</code><span class="sig-paren">(</span><em>self</em>, <em>modify_order_op</em>, <em>order_id</em>, <em>qty</em>, <em>price</em>, <em>adjust_limit=0</em>, <em>trd_env=TrdEnv.REAL</em>, <em>acc_id=0</em>, <em>acc_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#modify_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>修改订单。修改订单，包括修改订单的价格和数量(即以前的改单)、撤单、失效、生效、删除等。</p>
+<p>如果是OpenHKCCTradeContext，将不支持改单。可撤单。删除订单是本地操作。</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>modify_order_op</strong> – str，改单操作类型，参考 <a class="reference external" href="Base_API.html#ModifyOrderOp">ModifyOrderOp</a> 类的定义，有</li>
+<li><strong>order_id</strong> – str，订单号</li>
+<li><strong>qty</strong> – float，(改单有效)新的订单数量，2位精度，期权单位是”张”</li>
+<li><strong>price</strong> – float，(改单有效)新的订单价格，3位精度(A股2位)</li>
+<li><strong>adjust_limit</strong> – folat，(改单有效)港股有价位表，订单价格必须在规定的价位上，OpenD会对传入价格自动调整到合法价位上，此参数指定价格调整方向和调整幅度百分比限制，正数代表向上调整，负数代表向下调整，具体值代表调整幅度限制，如：0.015代表向上调整且幅度不超过1.5%；-0.01代表向下调整且幅度不超过1%</li>
+<li><strong>trd_env</strong> – str，交易环境 <a class="reference external" href="Base_API.html#trdenv">TrdEnv</a> ，TrdEnv.REAL(真实环境)或TrdEnv.SIMULATE(仿真环境)</li>
+<li><strong>acc_id</strong> – int，交易业务账户ID，acc_id为ID号时以acc_id为准，传0使用acc_index所对应的账户</li>
+<li><strong>acc_index</strong> – int，交易业务子账户ID列表所对应的下标，默认0，表示第1个业务ID</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">ret_code为RET_OK时，ret_data为DataFrame数据，否则为错误原因字符串，DataFrame数据如下：</p>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="11%" />
+<col width="68%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">参数</th>
+<th class="head">类型</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>trd_env</td>
+<td>str</td>
+<td>交易环境 <a class="reference external" href="Base_API.html#trdenv">TrdEnv</a> ，TrdEnv.REAL(真实环境)或TrdEnv.SIMULATE(仿真环境)</td>
+</tr>
+<tr class="row-odd"><td>order_id</td>
+<td>str</td>
+<td>str，订单号</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">))</span>
+<span class="n">order_id</span> <span class="o">=</span> <span class="s2">&quot;12345&quot;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">modify_order</span><span class="p">(</span><span class="n">ModifyOrderOp</span><span class="o">.</span><span class="n">CANCEL</span><span class="p">,</span> <span class="n">order_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="change-order">
+<h4>change_order - 改单(老接口，兼容以前)<a class="headerlink" href="#change-order" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="change_order">
+<code class="descname">change_order</code><span class="sig-paren">(</span><em>self</em>, <em>order_id</em>, <em>price</em>, <em>qty</em>, <em>adjust_limit=0</em>, <em>trd_env=TrdEnv.REAL</em>, <em>acc_id=0</em><span class="sig-paren">)</span><a class="headerlink" href="#change_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>改单(老接口，兼容以前)。改单，即修改订单的价格和数量，是modify_order修改订单的一种操作，为兼容以前，保留此接口，新写代码请使用modify_order。</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>order_id</strong> – str，订单号</li>
+<li><strong>qty</strong> – float，(改单有效)新的订单数量，2位精度，期权单位是”张”</li>
+<li><strong>price</strong> – float，(改单有效)新的订单价格，3位精度(A股2位)</li>
+<li><strong>adjust_limit</strong> – folat，(改单有效)港股有价位表，订单价格必须在规定的价位上，OpenD会对传入价格自动调整到合法价位上，此参数指定价格调整方向和调整幅度百分比限制，正数代表向上调整，负数代表向下调整，具体值代表调整幅度限制，如：0.015代表向上调整且幅度不超过1.5%；-0.01代表向下调整且幅度不超过1%</li>
+<li><strong>trd_env</strong> – str，交易环境 <a class="reference external" href="Base_API.html#trdenv">TrdEnv</a> ，TrdEnv.REAL(真实环境)或TrdEnv.SIMULATE(仿真环境)</li>
+<li><strong>acc_id</strong> – int，交易业务账户ID，传0默认第一个账户</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">ret_code为RET_OK时，ret_data为DataFrame数据，否则为错误原因字符串，DataFrame数据跟下面的modify_order(修改订单)相同。</p>
+<p>如果是OpenHKCCTradeContext，将直接返回(RET_ERROR, msg)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">))</span>
+<span class="n">order_id</span> <span class="o">=</span> <span class="s2">&quot;12345&quot;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">change_order</span><span class="p">(</span><span class="n">order_id</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="id4">
+<h4>deal_list_query - 获取成交列表<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="deal_list_query">
+<code class="descname">deal_list_query</code><span class="sig-paren">(</span><em>self</em>, <em>code=&quot;&quot;</em>, <em>trd_env=TrdEnv.REAL</em>, <em>acc_id=0</em>, <em>acc_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#deal_list_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取成交列表。获取账户的交易成交列表。</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>code</strong> – str，代码过滤，只返回包含这个代码的数据，没传不过滤，返回所有</li>
+<li><strong>trd_env</strong> – str，交易环境 <a class="reference external" href="Base_API.html#trdenv">TrdEnv</a> ，TrdEnv.REAL(真实环境)或TrdEnv.SIMULATE(仿真环境)</li>
+<li><strong>acc_id</strong> – int，交易业务账户ID，acc_id为ID号时以acc_id为准，传0使用acc_index所对应的账户</li>
+<li><strong>acc_index</strong> – int，交易业务子账户ID列表所对应的下标，默认0，表示第1个业务ID</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">ret_code为RET_OK时，ret_data为DataFrame数据，否则为错误原因字符串，DataFrame数据如下：</p>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="11%" />
+<col width="68%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">参数</th>
+<th class="head">类型</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>trd_side</td>
+<td>str</td>
+<td>交易方向，参考 <a class="reference external" href="Base_API.html#trdside">TrdSide</a> 类的定义</td>
+</tr>
+<tr class="row-odd"><td>deal_id</td>
+<td>str</td>
+<td>成交号</td>
+</tr>
+<tr class="row-even"><td>order_id</td>
+<td>str</td>
+<td>订单号</td>
+</tr>
+<tr class="row-odd"><td>code</td>
+<td>str</td>
+<td>代码</td>
+</tr>
+<tr class="row-even"><td>stock_name</td>
+<td>str</td>
+<td>名称</td>
+</tr>
+<tr class="row-odd"><td>qty</td>
+<td>float</td>
+<td>成交数量，2位精度，期权单位是”张”</td>
+</tr>
+<tr class="row-even"><td>price</td>
+<td>float</td>
+<td>成交价格，3位精度(A股2位)</td>
+</tr>
+<tr class="row-odd"><td>create_time</td>
+<td>str</td>
+<td>创建时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传</td>
+</tr>
+<tr class="row-even"><td>counter_broker_id</td>
+<td>int</td>
+<td>对手经纪号，港股有效。OpenHKCCTradeContext无此字段</td>
+</tr>
+<tr class="row-odd"><td>counter_broker_name</td>
+<td>str</td>
+<td>对手经纪名称，港股有效。OpenHKCCTradeContext无此字段</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">))</span>
+<span class="n">order_id</span> <span class="o">=</span> <span class="s2">&quot;12345&quot;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">deal_list_query</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s1">&#39;HK.00700&#39;</span><span class="p">))</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="history-order-list-query">
+<h4>history_order_list_query - 获取历史订单列表<a class="headerlink" href="#history-order-list-query" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="history_order_list_query">
+<code class="descname">history_order_list_query</code><span class="sig-paren">(</span><em>self</em>, <em>status_filter_list=[]</em>, <em>code=''</em>, <em>start=''</em>, <em>end=''</em>, <em>trd_env=TrdEnv.REAL</em>, <em>acc_id=0</em>, <em>acc_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#history_order_list_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取历史订单列表。获取账户的历史交易订单列表。</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>status_filter_list</strong> – str数组，订单状态过滤，只返回这些状态的订单数据，没传不过滤，返回所有，参考OrderStatus类的定义</li>
+<li><strong>code</strong> – str，代码过滤，只返回包含这个代码的数据，没传不过滤，返回所有</li>
+<li><strong>start</strong> – str，开始时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传</li>
+<li><strong>end</strong> – str，结束时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传</li>
+<li><strong>trd_env</strong> – str，交易环境 <a class="reference external" href="Base_API.html#trdenv">TrdEnv</a> ，TrdEnv.REAL(真实环境)或TrdEnv.SIMULATE(仿真环境)</li>
+<li><strong>acc_id</strong> – int，交易业务账户ID，acc_id为ID号时以acc_id为准，传0使用acc_index所对应的账户</li>
+<li><strong>acc_index</strong> – int，交易业务子账户ID列表所对应的下标，默认0，表示第1个业务ID</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">ret_code为RET_OK时，ret_data为DataFrame数据，否则为错误原因字符串，DataFrame数据跟上面的 <a class="reference external" href="#id3">order-list-query</a> (获取订单列表)相同</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">))</span>
+<span class="n">order_id</span> <span class="o">=</span> <span class="s2">&quot;12345&quot;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">history_order_list_query</span><span class="p">([</span><span class="n">OrderStatus</span><span class="o">.</span><span class="n">FILLED_ALL</span><span class="p">,</span> <span class="n">OrderStatus</span><span class="o">.</span><span class="n">FILLED_PART</span><span class="p">],</span> <span class="s1">&#39;HK.00700&#39;</span><span class="p">))</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="history-deal-list-query">
+<h4>history_deal_list_query - 获取历史成交列表<a class="headerlink" href="#history-deal-list-query" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="history_deal_list_query">
+<code class="descname">history_deal_list_query</code><span class="sig-paren">(</span><em>self</em>, <em>code</em>, <em>start=''</em>, <em>end=''</em>, <em>trd_env=TrdEnv.REAL</em>, <em>acc_id=0</em>, <em>acc_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#history_deal_list_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>获取历史成交列表。获取账户的历史交易成交列表。</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>code</strong> – str，代码过滤，只返回包含这个代码的数据，没传不过滤，返回所有</li>
+<li><strong>start</strong> – str，开始时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传</li>
+<li><strong>end</strong> – str，结束时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传</li>
+<li><strong>trd_env</strong> – str，交易环境 <a class="reference external" href="Base_API.html#trdenv">TrdEnv</a> ，TrdEnv.REAL(真实环境)或TrdEnv.SIMULATE(仿真环境)</li>
+<li><strong>acc_id</strong> – int，交易业务账户ID，acc_id为ID号时以acc_id为准，传0使用acc_index所对应的账户</li>
+<li><strong>acc_index</strong> – int，交易业务子账户ID列表所对应的下标，默认0，表示第1个业务ID</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">ret_code为RET_OK时，ret_data为DataFrame数据，否则为错误原因字符串，DataFrame数据跟上面的 <a class="reference external" href="#id4">deal-list-query</a> (获取成交列表)相同</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">))</span>
+<span class="n">order_id</span> <span class="o">=</span> <span class="s2">&quot;12345&quot;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">history_deal_list_query</span><span class="p">(</span><span class="s1">&#39;HK.00700&#39;</span><span class="p">))</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<hr class="docutils" />
+<div class="section" id="acctradinginfo-query">
+<h4>acctradinginfo_query - 查询账户下最大可买卖数量<a class="headerlink" href="#acctradinginfo-query" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="acctradinginfo_query">
+<code class="descname">acctradinginfo_query</code><span class="sig-paren">(</span><em>self</em>, <em>order_type</em>, <em>code</em>, <em>price</em>, <em>order_id=None</em>, <em>adjust_limit=0</em>, <em>trd_env=TrdEnv.REAL</em>, <em>acc_id=0</em>, <em>acc_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#acctradinginfo_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>查询账户下最大可买卖数量</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>order_type</strong> – 订单类型，参见 <a class="reference external" href="Base_API.html#ordertype">OrderType</a></li>
+<li><strong>code</strong> – 证券代码，例如’HK.00700’</li>
+<li><strong>price</strong> – 报价，3位精度</li>
+<li><strong>order_id</strong> – 订单号。如果是新下单，则可以传None。如果是改单则要传单号，此时计算最大可买可卖时会包括该订单所消耗的购买力，新下订单需要等待半秒才可使用该接口。</li>
+<li><strong>adjust_limit</strong> – 调整方向和调整幅度百分比限制，正数代表向上调整，负数代表向下调整，具体值代表调整幅度限制，如：0.015代表向上调整且幅度不超过1.5%；-0.01代表向下调整且幅度不超过1%。默认0表示不调整</li>
+<li><strong>trd_env</strong> – 交易环境，参见 <a class="reference external" href="Base_API.html#trdenv">TrdEnv</a></li>
+<li><strong>acc_id</strong> – 业务账号，默认0表示第1个</li>
+<li><strong>acc_index</strong> – int，交易业务子账户ID列表所对应的下标，默认0，表示第1个业务ID</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return (ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">ret == RET_OK, data为pd.DataFrame，数据列如下</p>
+<p class="last">ret != RET_OK, data为错误信息</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="8%" />
+<col width="74%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">参数</th>
+<th class="head">类型</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>max_cash_buy</td>
+<td>float</td>
+<td>不使用融资，仅自己的现金最大可买整手股数</td>
+</tr>
+<tr class="row-odd"><td>max_cash_and_margin_buy</td>
+<td>float</td>
+<td>使用融资，自己的现金 + 融资资金总共的最大可买整手股数</td>
+</tr>
+<tr class="row-even"><td>max_position_sell</td>
+<td>float</td>
+<td>不使用融券(卖空)，仅自己的持仓最大可卖整手股数</td>
+</tr>
+<tr class="row-odd"><td>max_sell_short</td>
+<td>float</td>
+<td>使用融券(卖空)，最大可卖空整手股数，不包括多仓</td>
+</tr>
+<tr class="row-even"><td>max_buy_back</td>
+<td>float</td>
+<td>卖空后，需要买回的最大整手股数。因为卖空后，必须先买回已卖空的股数，还掉股票，才能再继续买多。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">))</span>
+<span class="n">order_id</span> <span class="o">=</span> <span class="s2">&quot;12345&quot;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">acctradinginfo_query</span><span class="p">(</span><span class="n">OrderType</span><span class="o">.</span><span class="n">NORMAL</span><span class="p">,</span> <span class="s1">&#39;HK.00700&#39;</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="n">order_id</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">))</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="tradeorderhandlerbase">
+<h3>TradeOrderHandlerBase - 响应订单推送基类<a class="headerlink" href="#tradeorderhandlerbase" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="on-recv-rsp">
+<h4>on_recv_rsp - 响应订单推送<a class="headerlink" href="#on-recv-rsp" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt id="on_recv_rsp">
+<code class="descname">on_recv_rsp</code><span class="sig-paren">(</span><em>self</em>, <em>rsp_pb</em><span class="sig-paren">)</span><a class="headerlink" href="#on_recv_rsp" title="Permalink to this definition">¶</a></dt>
+<dd><p>响应订单推送。OpenD会主动推送订单的最新更新数据过来，需要客户端响应处理。</p>
+<p>该类与place_order返回的顺序参见 <a class="reference internal" href="#place_order">place_order</a> 的说明。</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rsp_pb</strong> – class，订单推送协议pb对象</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">ret_code为RET_OK时，ret_data为DataFrame数据，否则为错误原因字符串，DataFrame数据跟上面的 <a class="reference external" href="#id3">order-list-query</a> (获取订单列表)相同</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="k">class</span> <span class="nc">TradeOrderTest</span><span class="p">(</span><span class="n">TradeOrderHandlerBase</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; order update push&quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">on_recv_rsp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rsp_pb</span><span class="p">):</span>
+      <span class="n">ret</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">TradeOrderTest</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">on_recv_rsp</span><span class="p">(</span><span class="n">rsp_pb</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="n">RET_OK</span><span class="p">:</span>
+          <span class="k">print</span><span class="p">(</span><span class="s2">&quot;* TradeOrderTest content={}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">content</span><span class="p">))</span>
+
+      <span class="k">return</span> <span class="n">ret</span><span class="p">,</span> <span class="n">content</span>
+
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">set_handler</span><span class="p">(</span><span class="n">TradeOrderTest</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">place_order</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mf">700.0</span><span class="p">,</span> <span class="n">qty</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;HK.00700&quot;</span><span class="p">,</span> <span class="n">trd_side</span><span class="o">=</span><span class="n">TrdSide</span><span class="o">.</span><span class="n">SELL</span><span class="p">))</span>
+
+<span class="n">sleep</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="tradedealhandlerbase">
+<h3>TradeDealHandlerBase - 响应成交推送基类<a class="headerlink" href="#tradedealhandlerbase" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h4>on_recv_rsp - 响应成交推送<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<dl class="function">
+<dt>
+<code class="descname">on_recv_rsp</code><span class="sig-paren">(</span><em>self</em>, <em>rsp_pb</em><span class="sig-paren">)</span></dt>
+<dd><p>响应成交推送。OpenD会主动推送新的成交数据过来，需要客户端响应处理</p>
+<p>该类与place_order返回的顺序参见 <a class="reference internal" href="#place_order">place_order</a> 的说明。</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rsp_pb</strong> – class，成交推送协议pb对象</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return(ret_code, ret_data):</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">ret_code为RET_OK时，ret_data为DataFrame数据，否则为错误原因字符串，DataFrame数据跟上面的 <a class="reference external" href="#id4">deal-list-query</a> (获取成交列表)相同</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">futu</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="k">class</span> <span class="nc">TradeDealTest</span><span class="p">(</span><span class="n">TradeDealHandlerBase</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; order update push&quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">on_recv_rsp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rsp_pb</span><span class="p">):</span>
+      <span class="n">ret</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">TradeDealTest</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">on_recv_rsp</span><span class="p">(</span><span class="n">rsp_pb</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="n">RET_OK</span><span class="p">:</span>
+          <span class="k">print</span><span class="p">(</span><span class="s2">&quot;TradeDealTest content={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">content</span><span class="p">))</span>
+
+      <span class="k">return</span> <span class="n">ret</span><span class="p">,</span> <span class="n">content</span>
+
+<span class="n">pwd_unlock</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+<span class="n">trd_ctx</span> <span class="o">=</span> <span class="n">OpenHKTradeContext</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">set_handler</span><span class="p">(</span><span class="n">TradeDealTest</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">unlock_trade</span><span class="p">(</span><span class="n">pwd_unlock</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">trd_ctx</span><span class="o">.</span><span class="n">place_order</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mf">700.0</span><span class="p">,</span> <span class="n">qty</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;HK.00700&quot;</span><span class="p">,</span> <span class="n">trd_side</span><span class="o">=</span><span class="n">TrdSide</span><span class="o">.</span><span class="n">SELL</span><span class="p">))</span>
+
+<span class="n">sleep</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">trd_ctx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="id6">
+<h2>暗盘交易<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>已开户用户需要确认 <a class="reference external" href="https://help.futu5.com/darktrade/">暗盘交易风险</a> 才可以进行暗盘交易。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>暗盘目前仅支持限价单</li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="id8">
+<h2>模拟交易<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>支持港美A股三大市场模拟交易，对比真实交易有以下区别：</p>
+<p>1.订单的状态不支持删除、部分成交、生效、失效状态</p>
+<p>2.不支持生效失效、删除订单操作，仅支持支持改单， 撤单</p>
+<p>3.不支持成交数据，包括今日成交，历史成交，成交推送</p>
+<p>4.下单仅支持Normal类型</p>
+<p>5.模拟交易不需要解锁交易</p>
+<p>可视数据可跳转至 <a class="reference external" href="https://m-match.futunn.com/simulate/">模拟交易</a>，该页面仅支持手机浏览器访问。</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="id10">
+<h2>真实交易<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<p>真实交易支持港股、美股、A股通市场，区别如下</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="21%" />
+<col width="21%" />
+<col width="19%" />
+<col width="19%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">区别</th>
+<th class="head">交易方向</th>
+<th class="head">订单类型</th>
+<th class="head">股票代码</th>
+<th class="head">订单操作</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>港股</td>
+<td>只支持买入和卖出</td>
+<td><p class="first">支持增强限价单，竞价单，</p>
+<p>竞价限价单，绝对限价单，</p>
+<p class="last">特别限价单</p>
+</td>
+<td>5位数字</td>
+<td><p class="first">支持改单、撤单、生效</p>
+<p class="last">失效、删除</p>
+</td>
+</tr>
+<tr class="row-odd"><td>美股</td>
+<td><p class="first">下单只支持传入买入和卖出</p>
+<p>但产生的订单类型可能会出</p>
+<p class="last">现卖空和买回</p>
+</td>
+<td>支持限价单，市价单</td>
+<td>无限制</td>
+<td>仅支持改单和撤单</td>
+</tr>
+<tr class="row-even"><td>A股通</td>
+<td>只支持买入和卖出</td>
+<td>仅支持A股限价委托</td>
+<td>6位数字</td>
+<td>仅支持改单和撤单</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils" />
+<div class="section" id="id11">
+<h2>接口频率限制<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<p>交易相关请求到达网关客户端后， 会转发请求到futu后台服务器，为防止恶意频繁请求，保护服务器负载，会对一些交易接口进行请求频率限制，
+目前的频率限制是以连续30秒内，限制请求次数，具体那些接口有限制以及限制次数如下:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="55%" />
+<col width="45%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">接口名称</th>
+<th class="head">连续30秒内次数限制</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>unlock_trade</td>
+<td>10</td>
+</tr>
+<tr class="row-odd"><td>place_order</td>
+<td>15</td>
+</tr>
+<tr class="row-even"><td>modify_order，change_order</td>
+<td>20</td>
+</tr>
+<tr class="row-odd"><td>history_order_list_query</td>
+<td>10</td>
+</tr>
+<tr class="row-even"><td>history_deal_list_query</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>后台另外限制了下单频率，1秒内下单不可超过5次</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../protocol/intro.html" class="btn btn-neutral float-right" title="协议接口指南" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Quote_API.html" class="btn btn-neutral" title="行情API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, futu
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'3.4',
+              LANGUAGE:'en',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+ 
+<script type="text/javascript">
+    console.log("Layout By futu-api");
+</script>
+
+
+</body>
+</html>

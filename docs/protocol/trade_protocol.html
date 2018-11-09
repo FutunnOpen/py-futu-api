@@ -1,0 +1,954 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>交易协议 &mdash; futu-api 3.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Q&amp;A" href="../q&amp;a/Q&amp;A.html" />
+    <link rel="prev" title="行情协议" href="quote_protocol.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> futu-api
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">基础</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/intro.html">介绍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup/setup.html">安装指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup/FutuOpenDGuide.html">FutuOpenD使用说明</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/Base_API.html">基础API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Quote_API.html">行情API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Trade_API.html">交易API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">PROTOCOL</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">协议接口指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_define.html">基础定义</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quote_protocol.html">行情协议</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">交易协议</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#trd-getacclist-proto-2001">Trd_GetAccList.proto - 2001获取交易账户列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-unlocktrade-proto-2005">Trd_UnlockTrade.proto - 2005解锁或锁定交易</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-subaccpush-proto-2008">Trd_SubAccPush.proto - 2008订阅接收交易账户的推送数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-getfunds-proto-2101">Trd_GetFunds.proto - 2101获取账户资金</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-getpositionlist-proto-2102">Trd_GetPositionList.proto - 2102获取持仓列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-getmaxtrdqtys-proto-2111">Trd_GetMaxTrdQtys.proto - 2111获取最大交易数量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-getorderlist-proto-2201">Trd_GetOrderList.proto - 2201获取订单列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-placeorder-proto-2202">Trd_PlaceOrder.proto - 2202下单</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-modifyorder-proto-2205">Trd_ModifyOrder.proto - 2205修改订单(改价、改量、改状态等)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-updateorder-proto-2208">Trd_UpdateOrder.proto - 2208推送订单更新</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-getorderfilllist-proto-2211">Trd_GetOrderFillList.proto - 2211获取成交列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-updateorderfill-proto-2218">Trd_UpdateOrderFill.proto - 2218推送新成交</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-gethistoryorderlist-proto-2221">Trd_GetHistoryOrderList.proto - 2221获取历史订单列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trd-gethistoryorderfilllist-proto-2222">Trd_GetHistoryOrderFillList.proto - 2222获取历史成交列表</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Q&amp;A</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../q&amp;a/Q&amp;A.html">Q&amp;A</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">futu-api</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>交易协议</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/protocol/trade_protocol.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="id1">
+<h1>交易协议<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div>这里对FutuOpenD开放的交易协议接口作出归档说明。</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>为避免增删导致的版本兼容问题，所有enum枚举类型只用于值的定义，在protobuf结构体中声明类型时使用int32类型</li>
+<li>所有类型定义使用protobuf格式声明，不同语言对接时请自行通过相关工具转换成对应的头文件</li>
+<li>XXX.proto表示协议文件名, 点击超链接可打开github上的协议文件，每条协议内容以github上的为准，此文档更新可能存在滞后</li>
+<li><strong>要实现交易功能，必须先执行“Trd_GetAccList.proto - 2001获取交易账户列表”，然后再执行“Trd_UnlockTrade.proto - 2005解锁对应账户交易功能”才能进行后续交易功能调用</strong></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-getacclist-proto-2001">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetAccList.proto">Trd_GetAccList.proto</a> - 2001获取交易账户列表<a class="headerlink" href="#trd-getacclist-proto-2001" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_GetAccList</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="s">&quot;Trd_Common.proto&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span> <span class="nc">C2S</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="kt">uint64</span> <span class="na">userID</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//需要跟FutuOpenD登陆的牛牛用户ID一致，否则会返回失败</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+        <span class="k">repeated</span> <span class="n">Trd_Common.TrdAcc</span> <span class="na">accList</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易业务账户列表</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Request</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">C2S</span> <span class="na">c2s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>业务账户结构参考 <a class="reference external" href="base_define.html#trdacc">TrdAcc</a></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-unlocktrade-proto-2005">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_UnlockTrade.proto">Trd_UnlockTrade.proto</a> - 2005解锁或锁定交易<a class="headerlink" href="#trd-unlocktrade-proto-2005" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_UnlockTrade</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span> <span class="nc">C2S</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="kt">bool</span> <span class="na">unlock</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//true解锁交易，false锁定交易</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">pwdMD5</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//交易密码的MD5转16进制(全小写)，解锁交易必须要填密码，锁定交易不需要验证密码，可不填</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Request</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">C2S</span> <span class="na">c2s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>除2001协议外，所有交易协议请求都需要FutuOpenD先解锁交易</li>
+<li>密码MD5方式获取请参考 <a class="reference external" href="../setup/FutuOpenDGuide.html#id6">FutuOpenD配置</a> 内的login_pwd_md5字段</li>
+<li>解锁或锁定交易针对与FutuOpenD，只要有一个连接解锁，其他连接都可以调用交易接口</li>
+<li>强烈建议有实盘交易的用户使用加密通道，参考 <a class="reference external" href="intro.html#id10">加密通信流程</a></li>
+<li>限频接口：30秒内最多10次</li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-subaccpush-proto-2008">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_SubAccPush.proto">Trd_SubAccPush.proto</a> - 2008订阅接收交易账户的推送数据<a class="headerlink" href="#trd-subaccpush-proto-2008" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_SubAccPush</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span> <span class="nc">C2S</span>
+<span class="p">{</span>
+        <span class="k">repeated</span> <span class="kt">uint64</span> <span class="na">accIDList</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//要接收推送数据的业务账号列表，全量非增量，即使用者请每次传需要接收推送数据的所有业务账号</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Request</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">C2S</span> <span class="na">c2s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>指定发送该协议的连接接收交易数据（订单状态，成交状态等）推送</li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-getfunds-proto-2101">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetFunds.proto">Trd_GetFunds.proto</a> - 2101获取账户资金<a class="headerlink" href="#trd-getfunds-proto-2101" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_GetFunds</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="s">&quot;Trd_Common.proto&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span> <span class="nc">C2S</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">optional</span> <span class="n">Trd_Common.Funds</span> <span class="na">funds</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//账户资金</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Request</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">C2S</span> <span class="na">c2s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>交易公共参数头结构参考 <a class="reference external" href="base_define.html#trdheader">TrdHeader</a></li>
+<li>账户资金结构参考 <a class="reference external" href="base_define.html#funds">Funds</a></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-getpositionlist-proto-2102">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetPositionList.proto">Trd_GetPositionList.proto</a> - 2102获取持仓列表<a class="headerlink" href="#trd-getpositionlist-proto-2102" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_GetPositionList</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="s">&quot;Trd_Common.proto&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span> <span class="nc">C2S</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">optional</span> <span class="n">Trd_Common.TrdFilterConditions</span> <span class="na">filterConditions</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//过滤条件</span>
+        <span class="k">optional</span> <span class="kt">double</span> <span class="na">filterPLRatioMin</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">//过滤盈亏比例下限，高于此比例的会返回，如0.1，返回盈亏比例大于10%的持仓</span>
+        <span class="k">optional</span> <span class="kt">double</span> <span class="na">filterPLRatioMax</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="c1">//过滤盈亏比例上限，低于此比例的会返回，如0.2，返回盈亏比例小于20%的持仓</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">repeated</span> <span class="n">Trd_Common.Position</span> <span class="na">positionList</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//持仓列表</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Request</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">C2S</span> <span class="na">c2s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>交易公共参数头结构参考 <a class="reference external" href="base_define.html#trdheader">TrdHeader</a></li>
+<li>持仓资金结构参考 <a class="reference external" href="base_define.html#position">Position</a></li>
+<li>过滤条件结构参考 <a class="reference external" href="base_define.html#trdfilterconditions">TrdFilterConditions</a></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-getmaxtrdqtys-proto-2111">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetMaxTrdQtys.proto">Trd_GetMaxTrdQtys.proto</a> - 2111获取最大交易数量<a class="headerlink" href="#trd-getmaxtrdqtys-proto-2111" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_GetMaxTrdQtys</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="s">&quot;Trd_Common.proto&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span> <span class="nc">C2S</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">orderType</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//订单类型, 参见Trd_Common.OrderType的枚举定义</span>
+        <span class="k">required</span> <span class="kt">string</span> <span class="na">code</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">//代码，港股必须是5位数字，A股必须是6位数字，美股没限制</span>
+        <span class="k">required</span> <span class="kt">double</span> <span class="na">price</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="c1">//价格，3位精度。如果是竞价、市价单，请也填入一个当前价格，服务器才好计算</span>
+        <span class="k">optional</span> <span class="kt">uint64</span> <span class="na">orderID</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="c1">//订单号，新下订单不需要，如果是修改订单就需要把原订单号带上才行，因为改单的最大买卖数量会包含原订单数量。</span>
+        <span class="c1">//为保证与下单的价格同步，也提供调整价格选项，对港、A股有意义，因为港股有价位，A股2位精度，美股可不传</span>
+        <span class="k">optional</span> <span class="kt">bool</span> <span class="na">adjustPrice</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span> <span class="c1">//是否调整价格，如果价格不合法，是否调整到合法价位，true调整，false不调整</span>
+        <span class="k">optional</span> <span class="kt">double</span> <span class="na">adjustSideAndLimit</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span> <span class="c1">//调整方向和调整幅度百分比限制，正数代表向上调整，负数代表向下调整，具体值代表调整幅度限制，如：0.015代表向上调整且幅度不超过1.5%；-0.01代表向下调整且幅度不超过1%</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">optional</span> <span class="n">Trd_Common.MaxTrdQtys</span> <span class="na">maxTrdQtys</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//最大可交易数量结构</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Request</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">C2S</span> <span class="na">c2s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>交易公共参数头结构参考 <a class="reference external" href="base_define.html#trdheader">TrdHeader</a></li>
+<li>最大可交易数量结构参考 <a class="reference external" href="base_define.html#MaxTrdQtys">MaxTrdQtys</a></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-getorderlist-proto-2201">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetOrderList.proto">Trd_GetOrderList.proto</a> - 2201获取订单列表<a class="headerlink" href="#trd-getorderlist-proto-2201" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_GetOrderList</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="s">&quot;Trd_Common.proto&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span> <span class="nc">C2S</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">optional</span> <span class="n">Trd_Common.TrdFilterConditions</span> <span class="na">filterConditions</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//过滤条件</span>
+        <span class="k">repeated</span> <span class="kt">int32</span> <span class="na">filterStatusList</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">//需要过滤的订单状态列表</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">repeated</span> <span class="n">Trd_Common.Order</span> <span class="na">orderList</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//订单列表</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Request</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">C2S</span> <span class="na">c2s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>交易公共参数头结构参考 <a class="reference external" href="base_define.html#trdheader">TrdHeader</a></li>
+<li>订单结构参考 <a class="reference external" href="base_define.html#order">Order</a></li>
+<li>过滤条件结构参考 <a class="reference external" href="base_define.html#trdfilterconditions">TrdFilterConditions</a></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-placeorder-proto-2202">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_PlaceOrder.proto">Trd_PlaceOrder.proto</a> - 2202下单<a class="headerlink" href="#trd-placeorder-proto-2202" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_PlaceOrder</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="s">&quot;Trd_Common.proto&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span> <span class="nc">C2S</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Common.PacketID</span> <span class="na">packetID</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易写操作防重放攻击</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">trdSide</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">//交易方向, 参见Trd_Common.TrdSide的枚举定义</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">orderType</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="c1">//订单类型, 参见Trd_Common.OrderType的枚举定义</span>
+        <span class="k">required</span> <span class="kt">string</span> <span class="na">code</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="c1">//代码，港股必须是5位数字，A股必须是6位数字，美股没限制</span>
+        <span class="k">required</span> <span class="kt">double</span> <span class="na">qty</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span> <span class="c1">//数量，2位精度，期权单位是&quot;张&quot;</span>
+        <span class="k">optional</span> <span class="kt">double</span> <span class="na">price</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span> <span class="c1">//价格，3位精度</span>
+        <span class="c1">//以下为调整价格使用，对港、A股有意义，因为港股有价位，A股2位精度，美股可不传</span>
+        <span class="k">optional</span> <span class="kt">bool</span> <span class="na">adjustPrice</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span> <span class="c1">//是否调整价格，如果价格不合法，是否调整到合法价位，true调整，false不调整</span>
+        <span class="k">optional</span> <span class="kt">double</span> <span class="na">adjustSideAndLimit</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span> <span class="c1">//调整方向和调整幅度百分比限制，正数代表向上调整，负数代表向下调整，具体值代表调整幅度限制，如：0.015代表向上调整且幅度不超过1.5%；-0.01代表向下调整且幅度不超过1%</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">optional</span> <span class="kt">uint64</span> <span class="na">orderID</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//订单号</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Request</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">C2S</span> <span class="na">c2s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//如果下单返回的retMsg没用描述清楚错误，可再查看errCode了解详情，errCode一些取值和对应的错误描述如下:</span>
+<span class="c1">//2: 需要升级到保证金账户</span>
+<span class="c1">//3: 需要对交易期权的风险确认才能交易交易期权</span>
+<span class="c1">//7: 开户时选择了不希望交易衍生品</span>
+<span class="c1">//8: 需要对交易股权的风险确认才能交易交易股权</span>
+<span class="c1">//9: 需要对交易低价股的风险确认才能交易交易低价股</span>
+<span class="c1">//11: 需要对暗盘交易的风险确认才能进行暗盘交易</span>
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>请求包标识结构参考 <a class="reference external" href="base_define.html#packetid">PacketID</a></li>
+<li>交易公共参数头结构参考 <a class="reference external" href="base_define.html#trdheader">TrdHeader</a></li>
+<li>交易方向枚举参考 <a class="reference external" href="base_define.html#trdside">TrdSide</a></li>
+<li>订单类型枚举参考 <a class="reference external" href="base_define.html#ordertype">OrderType</a></li>
+<li>限频接口：30秒内最多30次</li>
+<li>如果下单返回的retMsg没用描述清楚错误，可再查看errCode了解详情，errCode一些取值和对应的错误描述如下:</li>
+<li>2: 需要升级到保证金账户</li>
+<li>3: 需要对交易期权的风险确认才能交易交易期权</li>
+<li>7: 开户时选择了不希望交易衍生品</li>
+<li>8: 需要对交易股权的风险确认才能交易交易股权</li>
+<li>9: 需要对交易低价股的风险确认才能交易交易低价股</li>
+<li>11: 需要对暗盘交易的风险确认才能进行暗盘交易</li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-modifyorder-proto-2205">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_ModifyOrder.proto">Trd_ModifyOrder.proto</a> - 2205修改订单(改价、改量、改状态等)<a class="headerlink" href="#trd-modifyorder-proto-2205" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_ModifyOrder</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="s">&quot;Trd_Common.proto&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span> <span class="nc">C2S</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Common.PacketID</span> <span class="na">packetID</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易写操作防重放攻击</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">required</span> <span class="kt">uint64</span> <span class="na">orderID</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">//订单号，forAll为true时，传0</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">modifyOrderOp</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="c1">//修改操作类型，参见Trd_Common.ModifyOrderOp的枚举定义</span>
+        <span class="k">optional</span> <span class="kt">bool</span> <span class="na">forAll</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="c1">//是否对此业务账户的全部订单操作，true是，false否(对单个订单)，无此字段代表false，仅对单个订单</span>
+
+        <span class="c1">//下面的字段仅在modifyOrderOp为ModifyOrderOp_Normal有效</span>
+        <span class="k">optional</span> <span class="kt">double</span> <span class="na">qty</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span> <span class="c1">//数量，2位精度，期权单位是&quot;张&quot;</span>
+        <span class="k">optional</span> <span class="kt">double</span> <span class="na">price</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span> <span class="c1">//价格，3位精度(A股2位)</span>
+        <span class="c1">//以下为调整价格使用，对港、A股有意义，因为港股有价位，A股2位精度，美股可不传</span>
+        <span class="k">optional</span> <span class="kt">bool</span> <span class="na">adjustPrice</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="c1">//是否调整价格，如果价格不合法，是否调整到合法价位，true调整，false不调整</span>
+        <span class="k">optional</span> <span class="kt">double</span> <span class="na">adjustSideAndLimit</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span> <span class="c1">//调整方向和调整幅度百分比限制，正数代表向上调整，负数代表向下调整，具体值代表调整幅度限制，如：0.015代表向上调整且幅度不超过1.5%；-0.01代表向下调整且幅度不超过1%</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">required</span> <span class="kt">uint64</span> <span class="na">orderID</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//订单号</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Request</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">C2S</span> <span class="na">c2s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>请求包标识结构参考 <a class="reference external" href="base_define.html#packetid">PacketID</a></li>
+<li>交易公共参数头结构参考 <a class="reference external" href="base_define.html#trdheader">TrdHeader</a></li>
+<li>修改操作枚举参考 <a class="reference external" href="base_define.html#modifyorderop">ModifyOrderOp</a></li>
+<li>限频接口：30秒内最多30次</li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-updateorder-proto-2208">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_UpdateOrder.proto">Trd_UpdateOrder.proto</a> - 2208推送订单更新<a class="headerlink" href="#trd-updateorder-proto-2208" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_UpdateOrder</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="s">&quot;Trd_Common.proto&quot;</span><span class="p">;</span>
+
+<span class="c1">//推送协议，无C2S和Request结构，retType始终是RetType_Succeed</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">required</span> <span class="n">Trd_Common.Order</span> <span class="na">order</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//订单结构</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>交易公共参数头结构参考 <a class="reference external" href="base_define.html#trdheader">TrdHeader</a></li>
+<li>订单结构参考 <a class="reference external" href="base_define.html#order">Order</a></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-getorderfilllist-proto-2211">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetOrderFillList.proto">Trd_GetOrderFillList.proto</a> - 2211获取成交列表<a class="headerlink" href="#trd-getorderfilllist-proto-2211" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_GetOrderFillList</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="s">&quot;Trd_Common.proto&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span> <span class="nc">C2S</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">optional</span> <span class="n">Trd_Common.TrdFilterConditions</span> <span class="na">filterConditions</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//过滤条件</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">repeated</span> <span class="n">Trd_Common.OrderFill</span> <span class="na">orderFillList</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//成交列表</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Request</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">C2S</span> <span class="na">c2s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>交易公共参数头结构参考 <a class="reference external" href="base_define.html#trdheader">TrdHeader</a></li>
+<li>订单结构参考 <a class="reference external" href="base_define.html#orderfill">OrderFill</a></li>
+<li>过滤条件结构参考 <a class="reference external" href="base_define.html#trdfilterconditions">TrdFilterConditions</a></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-updateorderfill-proto-2218">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_UpdateOrderFill.proto">Trd_UpdateOrderFill.proto</a> - 2218推送新成交<a class="headerlink" href="#trd-updateorderfill-proto-2218" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_UpdateOrderFill</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="s">&quot;Trd_Common.proto&quot;</span><span class="p">;</span>
+
+<span class="c1">//推送协议，无C2S和Request结构，retType始终是RetType_Succeed</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">required</span> <span class="n">Trd_Common.OrderFill</span> <span class="na">orderFill</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//成交结构</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>交易公共参数头结构参考 <a class="reference external" href="base_define.html#trdheader">TrdHeader</a></li>
+<li>订单结构参考 <a class="reference external" href="base_define.html#orderfill">OrderFill</a></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-gethistoryorderlist-proto-2221">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetHistoryOrderList.proto">Trd_GetHistoryOrderList.proto</a> - 2221获取历史订单列表<a class="headerlink" href="#trd-gethistoryorderlist-proto-2221" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_GetHistoryOrderList</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="s">&quot;Trd_Common.proto&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span> <span class="nc">C2S</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdFilterConditions</span> <span class="na">filterConditions</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//过滤条件</span>
+        <span class="k">repeated</span> <span class="kt">int32</span> <span class="na">filterStatusList</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">//需要过滤的订单状态列表</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">repeated</span> <span class="n">Trd_Common.Order</span> <span class="na">orderList</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//历史订单列表</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Request</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">C2S</span> <span class="na">c2s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>交易公共参数头结构参考 <a class="reference external" href="base_define.html#trdheader">TrdHeader</a></li>
+<li>订单结构参考 <a class="reference external" href="base_define.html#order">Order</a></li>
+<li>过滤条件结构参考 <a class="reference external" href="base_define.html#trdfilterconditions">TrdFilterConditions</a></li>
+<li>订单状态枚举参考 <a class="reference external" href="base_define.html#orderstatus">OrderStatus</a></li>
+<li>限频接口：30秒内最多10次</li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="trd-gethistoryorderfilllist-proto-2222">
+<h2><a class="reference external" href="https://github.com/FutunnOpen/futuquant/blob/master/futuquant/common/pb/Trd_GetHistoryOrderFillList.proto">Trd_GetHistoryOrderFillList.proto</a> - 2222获取历史成交列表<a class="headerlink" href="#trd-gethistoryorderfilllist-proto-2222" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="na">syntax</span> <span class="o">=</span> <span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+<span class="kn">package</span> <span class="nn">Trd_GetHistoryOrderFillList</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="s">&quot;Common.proto&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="s">&quot;Trd_Common.proto&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span> <span class="nc">C2S</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdFilterConditions</span> <span class="na">filterConditions</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//过滤条件</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">S2C</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">Trd_Common.TrdHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//交易公共参数头</span>
+        <span class="k">repeated</span> <span class="n">Trd_Common.OrderFill</span> <span class="na">orderFillList</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">//历史成交列表</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Request</span>
+<span class="p">{</span>
+        <span class="k">required</span> <span class="n">C2S</span> <span class="na">c2s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Response</span>
+<span class="p">{</span>
+        <span class="c1">//以下3个字段每条协议都有，注释说明在InitConnect.proto中</span>
+        <span class="k">required</span> <span class="kt">int32</span> <span class="na">retType</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">[</span><span class="k">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">];</span>
+        <span class="k">optional</span> <span class="kt">string</span> <span class="na">retMsg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="k">optional</span> <span class="kt">int32</span> <span class="na">errCode</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">optional</span> <span class="n">S2C</span> <span class="na">s2c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>交易公共参数头结构参考 <a class="reference external" href="base_define.html#trdheader">TrdHeader</a></li>
+<li>成交结构参考 <a class="reference external" href="base_define.html#orderfill">OrderFill</a></li>
+<li>过滤条件结构参考 <a class="reference external" href="base_define.html#trdfilterconditions">TrdFilterConditions</a></li>
+<li>限频接口：30秒内最多10次</li>
+</ul>
+</div>
+<hr class="docutils" />
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../q&amp;a/Q&amp;A.html" class="btn btn-neutral float-right" title="Q&amp;A" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="quote_protocol.html" class="btn btn-neutral" title="行情协议" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, futu
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'3.4',
+              LANGUAGE:'en',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+ 
+<script type="text/javascript">
+    console.log("Layout By futu-api");
+</script>
+
+
+</body>
+</html>

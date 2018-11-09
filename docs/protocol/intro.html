@@ -1,0 +1,785 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>协议接口指南 &mdash; futu-api 3.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="基础定义" href="base_define.html" />
+    <link rel="prev" title="交易API" href="../api/Trade_API.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> futu-api
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">基础</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/intro.html">介绍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup/setup.html">安装指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup/FutuOpenDGuide.html">FutuOpenD使用说明</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/Base_API.html">基础API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Quote_API.html">行情API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Trade_API.html">交易API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">PROTOCOL</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">协议接口指南</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">特点</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">变更记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">协议清单</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">协议请求流程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">协议设计</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id8">协议头结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">协议体结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">加密通信流程</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rsa">RSA加解密</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aes">AES加解密</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="base_define.html">基础定义</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quote_protocol.html">行情协议</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trade_protocol.html">交易协议</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Q&amp;A</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../q&amp;a/Q&amp;A.html">Q&amp;A</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">futu-api</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>协议接口指南</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/protocol/intro.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="id1">
+<h1>协议接口指南<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://github.com/FutunnOpen/py-futu-api/">futu-api</a> 开源项目是基于FutuOpenD开放协议实现的Python交易和行情接口，如果对接口的执行效率和灵活性有更高要求，您也可以选择用其它语言直接对接原始协议。</p>
+<hr class="docutils" />
+<blockquote>
+<div></div></blockquote>
+<div class="section" id="id2">
+<h2>特点<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>基于TCP传输协议实现，稳定高效。</li>
+<li>支持protobuf/json两种协议格式， 灵活接入。</li>
+<li>协议设计支持加密、数据校验及回放功击保护，安全可靠。</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>变更记录<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="12%" />
+<col width="73%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">时间</th>
+<th class="head">修改文件</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>2018/6/20</td>
+<td>无</td>
+<td>初稿</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<hr class="docutils" />
+<div class="section" id="id4">
+<h2>协议清单<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="30%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">协议ID</th>
+<th class="head">Protobuf文件</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1001</td>
+<td><a class="reference external" href="base_define.html#initconnect-proto-1001">InitConnect.proto</a></td>
+<td>初始化连接</td>
+</tr>
+<tr class="row-odd"><td>1002</td>
+<td><a class="reference external" href="base_define.html#getglobalstate-proto-1002">GetGlobalState.proto</a></td>
+<td>获取全局状态</td>
+</tr>
+<tr class="row-even"><td>1003</td>
+<td><a class="reference external" href="base_define.html#notify-proto-1003">Notify.proto</a></td>
+<td>系统通知推送</td>
+</tr>
+<tr class="row-odd"><td>1004</td>
+<td><a class="reference external" href="base_define.html#keepalive-proto-1004">KeepAlive.proto</a></td>
+<td>保活心跳</td>
+</tr>
+<tr class="row-even"><td>2001</td>
+<td><a class="reference external" href="trade_protocol.html#trd-getacclist-proto-2001">Trd_GetAccList.proto</a></td>
+<td>获取业务账户列表</td>
+</tr>
+<tr class="row-odd"><td>2005</td>
+<td><a class="reference external" href="trade_protocol.html#trd-unlocktrade-proto-2005">Trd_UnlockTrade.proto</a></td>
+<td>解锁或锁定交易</td>
+</tr>
+<tr class="row-even"><td>2008</td>
+<td><a class="reference external" href="trade_protocol.html#trd-subaccpush-proto-2008">Trd_SubAccPush.proto</a></td>
+<td>订阅业务账户的交易推送数据</td>
+</tr>
+<tr class="row-odd"><td>2101</td>
+<td><a class="reference external" href="trade_protocol.html#trd-getfunds-proto-2101">Trd_GetFunds.proto</a></td>
+<td>获取账户资金</td>
+</tr>
+<tr class="row-even"><td>2102</td>
+<td><a class="reference external" href="trade_protocol.html#trd-getpositionlist-proto-2102">Trd_GetPositionList.proto</a></td>
+<td>获取账户持仓</td>
+</tr>
+<tr class="row-odd"><td>2111</td>
+<td><a class="reference external" href="trade_protocol.html#trd-getmaxtrdqtys-proto-2111">Trd_GetMaxTrdQtys.proto</a></td>
+<td>获取最大交易数量</td>
+</tr>
+<tr class="row-even"><td>2201</td>
+<td><a class="reference external" href="trade_protocol.html#trd-getorderlist-proto-2201">Trd_GetOrderList.proto</a></td>
+<td>获取订单列表</td>
+</tr>
+<tr class="row-odd"><td>2202</td>
+<td><a class="reference external" href="trade_protocol.html#trd-placeorder-proto-2202">Trd_PlaceOrder.proto</a></td>
+<td>下单</td>
+</tr>
+<tr class="row-even"><td>2205</td>
+<td><a class="reference external" href="trade_protocol.html#trd-modifyorder-proto-2205">Trd_ModifyOrder.proto</a></td>
+<td>修改订单</td>
+</tr>
+<tr class="row-odd"><td>2208</td>
+<td><a class="reference external" href="trade_protocol.html#trd-updateorder-proto-2208">Trd_UpdateOrder.proto</a></td>
+<td>推送订单状态变动通知</td>
+</tr>
+<tr class="row-even"><td>2211</td>
+<td><a class="reference external" href="trade_protocol.html#trd-getorderfilllist-proto-2211">Trd_GetOrderFillList.proto</a></td>
+<td>获取成交列表</td>
+</tr>
+<tr class="row-odd"><td>2218</td>
+<td><a class="reference external" href="trade_protocol.html#trd-updateorderfill-proto-2218">Trd_UpdateOrderFill.proto</a></td>
+<td>推送成交通知</td>
+</tr>
+<tr class="row-even"><td>2221</td>
+<td><a class="reference external" href="trade_protocol.html#trd-gethistoryorderlist-proto-2221">Trd_GetHistoryOrderList.proto</a></td>
+<td>获取历史订单列表</td>
+</tr>
+<tr class="row-odd"><td>2222</td>
+<td><a class="reference external" href="trade_protocol.html#trd-gethistoryorderfilllist-proto-2222">Trd_GetHistoryOrderFillList.proto</a></td>
+<td>获取历史成交列表</td>
+</tr>
+<tr class="row-even"><td>3001</td>
+<td><a class="reference external" href="quote_protocol.html#qot-sub-proto-3001">Qot_Sub.proto</a></td>
+<td>订阅或者反订阅</td>
+</tr>
+<tr class="row-odd"><td>3002</td>
+<td><a class="reference external" href="quote_protocol.html#qot-regqotpush-proto-3002">Qot_RegQotPush.proto</a></td>
+<td>注册推送</td>
+</tr>
+<tr class="row-even"><td>3003</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getsubinfo-proto-3003">Qot_GetSubInfo.proto</a></td>
+<td>获取订阅信息</td>
+</tr>
+<tr class="row-odd"><td>3004</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getbasicqot-proto-3004">Qot_GetBasicQot.proto</a></td>
+<td>获取股票基本行情</td>
+</tr>
+<tr class="row-even"><td>3005</td>
+<td><a class="reference external" href="quote_protocol.html#qot-updatebasicqot-proto-3005">Qot_UpdateBasicQot.proto</a></td>
+<td>推送股票基本行情</td>
+</tr>
+<tr class="row-odd"><td>3006</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getkl-proto-3006k">Qot_GetKL.proto</a></td>
+<td>获取K线</td>
+</tr>
+<tr class="row-even"><td>3007</td>
+<td><a class="reference external" href="quote_protocol.html#qot-updatekl-proto-3007k">Qot_UpdateKL.proto</a></td>
+<td>推送K线</td>
+</tr>
+<tr class="row-odd"><td>3008</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getrt-proto-3008">Qot_GetRT.proto</a></td>
+<td>获取分时</td>
+</tr>
+<tr class="row-even"><td>3009</td>
+<td><a class="reference external" href="quote_protocol.html#qot-updatert-proto-3009">Qot_UpdateRT.proto</a></td>
+<td>推送分时</td>
+</tr>
+<tr class="row-odd"><td>3010</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getticker-proto-3010">Qot_GetTicker.proto</a></td>
+<td>获取逐笔</td>
+</tr>
+<tr class="row-even"><td>3011</td>
+<td><a class="reference external" href="quote_protocol.html#qot-updateticker-proto-3011">Qot_UpdateTicker.proto</a></td>
+<td>推送逐笔</td>
+</tr>
+<tr class="row-odd"><td>3012</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getorderbook-proto-3012">Qot_GetOrderBook.proto</a></td>
+<td>获取买卖盘</td>
+</tr>
+<tr class="row-even"><td>3013</td>
+<td><a class="reference external" href="quote_protocol.html#qot-updateorderbook-proto-3013">Qot_UpdateOrderBook.proto</a></td>
+<td>推送买卖盘</td>
+</tr>
+<tr class="row-odd"><td>3014</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getbroker-proto-3014">Qot_GetBroker.proto</a></td>
+<td>获取经纪队列</td>
+</tr>
+<tr class="row-even"><td>3015</td>
+<td><a class="reference external" href="quote_protocol.html#qot-updatebroker-proto-3015">Qot_UpdateBroker.proto</a></td>
+<td>推送经纪队列</td>
+</tr>
+<tr class="row-odd"><td>3016</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getorderdetail-proto-3016">Qot_GetOrderDetail.proto</a></td>
+<td>获取委托明细</td>
+</tr>
+<tr class="row-even"><td>3017</td>
+<td><a class="reference external" href="quote_protocol.html#qot-updateorderdetail-proto-3017">Qot_UpdateOrderDetail.proto</a></td>
+<td>推送委托明细</td>
+</tr>
+<tr class="row-odd"><td>3100</td>
+<td><a class="reference external" href="quote_protocol.html#qot-gethistorykl-proto-3100k">Qot_GetHistoryKL.proto</a></td>
+<td>获取单只股票一段历史K线</td>
+</tr>
+<tr class="row-even"><td>3101</td>
+<td><a class="reference external" href="quote_protocol.html#qot-gethistoryklpoints-proto-k">Qot_GetHistoryKLPoints.proto</a></td>
+<td>获取多只股票多点历史K线</td>
+</tr>
+<tr class="row-odd"><td>3102</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getrehab-proto-3102">Qot_GetRehab.proto</a></td>
+<td>获取复权信息</td>
+</tr>
+<tr class="row-even"><td>3103</td>
+<td>RequestHistoryKL</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>3200</td>
+<td><a class="reference external" href="quote_protocol.html#qot-gettradedate-proto-3200">Qot_GetTradeDate.proto</a></td>
+<td>获取市场交易日</td>
+</tr>
+<tr class="row-even"><td>3202</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getstaticinfo-proto-3202">Qot_GetStaticInfo.proto</a></td>
+<td>获取股票静态信息</td>
+</tr>
+<tr class="row-odd"><td>3203</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getsecuritysnapshot-proto-3203">Qot_GetSecuritySnapshot.proto</a></td>
+<td>获取股票快照</td>
+</tr>
+<tr class="row-even"><td>3204</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getplateset-proto-3204">Qot_GetPlateSet.proto</a></td>
+<td>获取板块集合下的板块</td>
+</tr>
+<tr class="row-odd"><td>3205</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getplatesecurity-proto-3205">Qot_GetPlateSecurity.proto</a></td>
+<td>获取板块下的股票</td>
+</tr>
+<tr class="row-even"><td>3206</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getreference-proto-3206">Qot_GetReference.proto</a></td>
+<td>获取正股相关股票</td>
+</tr>
+<tr class="row-odd"><td>3207</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getownerplate-proto-3207">Qot_GetOwnerPlate.proto</a></td>
+<td>获取股票所属板块</td>
+</tr>
+<tr class="row-even"><td>3208</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getholdingchangelist-proto-3208">Qot_GetHoldingChangeList.proto</a></td>
+<td>获取持股变化列表</td>
+</tr>
+<tr class="row-odd"><td>3209</td>
+<td><a class="reference external" href="quote_protocol.html#qot-getoptionchain-proto-3209">Qot_GetOptionChain.proto</a></td>
+<td>获取期权链</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>所有 Protobuf 文件可从 <a class="reference external" href="https://github.com/FutunnOpen/py-futu-api/tree/master/futu/common/pb">futu-api</a> Python开源项目下获取</li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="id6">
+<h2>协议请求流程<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>建立连接</li>
+<li>初始化连接</li>
+<li>请求数据或接收推送数据</li>
+<li>定时发送 <a class="reference external" href="base_define.html#keepalive-proto-1004">KeepAlive</a> 保持连接</li>
+</ul>
+</div></blockquote>
+<img alt="../_images/proto.png" src="../_images/proto.png" />
+</div>
+<hr class="docutils" />
+<div class="section" id="id7">
+<h2>协议设计<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>协议数据包括协议头以及协议体，协议头固定字段，协议体根据具体协议决定。</div></blockquote>
+<div class="section" id="id8">
+<h3>协议头结构<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>struct APIProtoHeader
+<span class="o">{</span>
+    u8_t szHeaderFlag<span class="o">[</span><span class="m">2</span><span class="o">]</span><span class="p">;</span>
+    u32_t nProtoID<span class="p">;</span>
+    u8_t nProtoFmtType<span class="p">;</span>
+    u8_t nProtoVer<span class="p">;</span>
+    u32_t nSerialNo<span class="p">;</span>
+    u32_t nBodyLen<span class="p">;</span>
+    u8_t arrBodySHA1<span class="o">[</span><span class="m">20</span><span class="o">]</span><span class="p">;</span>
+    u8_t arrReserved<span class="o">[</span><span class="m">8</span><span class="o">]</span><span class="p">;</span>
+<span class="o">}</span><span class="p">;</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="83%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">字段</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>szHeaderFlag</td>
+<td>包头起始标志，固定为“FT”</td>
+</tr>
+<tr class="row-odd"><td>nProtoID</td>
+<td>协议ID</td>
+</tr>
+<tr class="row-even"><td>nProtoFmtType</td>
+<td>协议格式类型，0为Protobuf格式，1为Json格式</td>
+</tr>
+<tr class="row-odd"><td>nProtoVer</td>
+<td>协议版本，用于迭代兼容, 目前填0</td>
+</tr>
+<tr class="row-even"><td>nSerialNo</td>
+<td>包序列号，用于对应请求包和回包, 要求递增</td>
+</tr>
+<tr class="row-odd"><td>nBodyLen</td>
+<td>包体长度</td>
+</tr>
+<tr class="row-even"><td>arrBodySHA1</td>
+<td>包体原始数据(解密后)的SHA1哈希值</td>
+</tr>
+<tr class="row-odd"><td>arrReserved</td>
+<td>保留8字节扩展</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>u8_t表示8位无符号整数，u32_t表示32位无符号整数</li>
+<li>FutuOpenD内部处理使用Protobuf，因此协议格式建议使用Protobuf，减少Json转换开销</li>
+<li>nProtoFmtType字段指定了包体的数据类型，回包会回对应类型的数据；推送协议数据类型由FutuOpenD配置文件指定</li>
+<li><strong>arrBodySHA1用于校验请求数据在网络传输前后的一致性，必须正确填入</strong></li>
+<li><strong>协议头的二进制流使用的是小端字节序，即一般不需要使用ntohl等相关函数转换数据</strong></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="id9">
+<h3>协议体结构<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p><strong>Protobuf协议请求包体结构</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>message C2S
+<span class="o">{</span>
+    required int64 <span class="nv">req</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+<span class="o">}</span>
+
+message Request
+<span class="o">{</span>
+    required C2S <span class="nv">c2s</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Protobuf协议回应包体结构</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>message S2C
+<span class="o">{</span>
+    required int64 <span class="nv">data</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+<span class="o">}</span>
+
+message Response
+<span class="o">{</span>
+    required int32 <span class="nv">retType</span> <span class="o">=</span> <span class="m">1</span> <span class="o">[</span><span class="nv">default</span> <span class="o">=</span> -400<span class="o">]</span><span class="p">;</span> //RetType,返回结果
+    optional string <span class="nv">retMsg</span> <span class="o">=</span> <span class="m">2</span><span class="p">;</span>
+    optional int32 <span class="nv">errCode</span> <span class="o">=</span> <span class="m">3</span><span class="p">;</span>
+    optional S2C <span class="nv">s2c</span> <span class="o">=</span> <span class="m">4</span><span class="p">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Json协议请求包体结构</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">{</span>
+    <span class="s2">&quot;c2s&quot;</span>:
+    <span class="o">{</span>
+         <span class="s2">&quot;req&quot;</span>: <span class="m">0</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Json协议回应包体结构</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">{</span>
+    <span class="s2">&quot;retType&quot;</span> : <span class="m">0</span>
+    <span class="s2">&quot;retMsg&quot;</span> : <span class="s2">&quot;&quot;</span>
+    <span class="s2">&quot;errCode&quot;</span> : <span class="m">0</span>
+    <span class="s2">&quot;s2c&quot;</span>:
+    <span class="o">{</span>
+        <span class="s2">&quot;data&quot;</span>: <span class="m">0</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="83%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">字段</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>c2s</td>
+<td>请求参数结构</td>
+</tr>
+<tr class="row-odd"><td>req</td>
+<td>请求参数，实际根据协议定义</td>
+</tr>
+<tr class="row-even"><td>retType</td>
+<td>请求结果</td>
+</tr>
+<tr class="row-odd"><td>retMsg</td>
+<td>若请求失败，说明失败原因</td>
+</tr>
+<tr class="row-even"><td>errCode</td>
+<td>若请求失败对应错误码</td>
+</tr>
+<tr class="row-odd"><td>s2c</td>
+<td>回应数据结构，部分协议不返回数据则无该字段</td>
+</tr>
+<tr class="row-even"><td>data</td>
+<td>回应数据，实际根据协议定义</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>包体格式类型请求包由协议头 <a class="reference external" href="#id8">nProtoFmtType</a> 指定， FutuOPenD主动推送格式参见 <a class="reference external" href="https://futunnopen.github.io/futuquant/setup/FutuOpenDGuide.html#id5">FutuOpenD配置</a> 约定的 “push_proto_type“ 配置项</li>
+<li>原始协议文件格式是以Protobuf格式定义，若需要json格式传输，建议使用protobuf3的接口直接转换成json</li>
+<li>枚举值字段定义使用有符号整形，注释指明对应枚举，枚举一般定义于Common.proto，Qot_Common.proto，Trd_Common.proto文件中</li>
+<li><strong>协议中价格、百分比等数据用浮点类型来传输，直接使用会有精度问题，需要根据精度（如协议中未指明，默认小数点后三位）做四舍五入之后再使用</strong></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="id10">
+<h3>加密通信流程<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>若FutuOpenD配置了加密, <a class="reference external" href="base_define.html#initconnect-proto-1001">InitConnect</a> 初始化连接协议必须使用RSA公钥加密，后续其他协议使用 <a class="reference external" href="base_define.html#initconnect-proto-1001">InitConnect</a> 返回的随机密钥进行AES加密通信。</li>
+<li>FutuOpenD的加密流程借鉴了SSL协议，但考虑到一般是本地部署服务和应用，简化了相关流程，FutuOpenD与接入Client共用了同一个RSA 私钥文件，请妥善保存和分发私钥文件。</li>
+<li>可到”<a class="reference external" href="http://web.chacuo.net/netrsakeypair">http://web.chacuo.net/netrsakeypair</a>”这个网址在线生成随机RSA密钥对，密钥格式必须为PCKS#1，密钥长度512，1024都可以，不要设置密码，将生成的私钥复制保存到文件中，然后将私钥文件路径配置到 <a class="reference external" href="https://futunnopen.github.io/futuquant/setup/FutuOpenDGuide.html#id5">FutuOpenD配置</a> 约定的 “rsa_private_key”配置项中</li>
+<li></li>
+<li><strong>强烈建议有实盘交易的用户配置加密，避免账户和交易信息泄露</strong></li>
+</ul>
+<img alt="../_images/encrypt.png" src="../_images/encrypt.png" />
+</div></blockquote>
+</div>
+<hr class="docutils" />
+<div class="section" id="rsa">
+<h3>RSA加解密<a class="headerlink" href="#rsa" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="https://futunnopen.github.io/futuquant/setup/FutuOpenDGuide.html#id5">FutuOpenD配置</a> 约定”rsa_private_key”为私钥文件路径</li>
+<li>FutuOpenD 与接入客户端共用相同的私钥文件</li>
+<li>RSA加解密仅用于 <a class="reference external" href="base_define.html#initconnect-proto-1001">InitConnect</a> 请求，用于安全获取其它请求协议的对称加密Key</li>
+<li>FutuOpenD的RSA密钥为1024位, 填充方式PKCS1, 公钥加密，私钥解密，公钥可通过私钥生成</li>
+<li>Python API 参考实现: <a class="reference external" href="https://github.com/FutunnOpen/futuquant/tree/master/futuquant/common/sys_config.py">RsaCrypt</a>  类的encrypt / decrypt 接口</li>
+</ul>
+</div></blockquote>
+<p><strong>发送数据加密</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>RSA加密规则:若密钥位数是key_size, 单次加密串的最大长度为 (key_size)/8 - 11, 目前位数1024, 一次加密长度可定为100</li>
+<li>将明文数据分成一个或数个最长100字节的小段进行加密，拼接分段加密数据即为最终的Body加密数据</li>
+</ul>
+</div></blockquote>
+<p><strong>接收数据解密</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>RSA解密同样遵循分段规则，对于1024位密钥, 每小段待解密数据长度为128字节</li>
+<li>将密文数据分成一个或数个128字节长的小段进行解密，拼接分段解密数据即为最终的Body解密数据</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</div>
+<hr class="docutils" />
+<div class="section" id="aes">
+<h3>AES加解密<a class="headerlink" href="#aes" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><blockquote>
+<div><ul class="simple">
+<li>加密key由 <a class="reference external" href="base_define.html#initconnect-proto-1001">InitConnect</a> 协议返回</li>
+<li>使用的是AES的ecb加密模式。</li>
+<li>Python API 参考实现: <a class="reference external" href="https://github.com/FutunnOpen/futuquant/tree/master/futuquant/common/conn_mng.py">FutuConnMng</a>  类的encrypt_conn_data / decrypt_conn_data 接口</li>
+</ul>
+</div></blockquote>
+<p><strong>发送数据加密</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>AES加密要求源数据长度必须是16的整数倍,  故需补‘0’对齐后再加密，记录mod_len为源数据长度与16取模值</li>
+<li>因加密前有可能对源数据作修改， 故需在加密后的数据尾再增加一个16字节的填充数据块，其最后一个字节赋值mod_len, 其余字节赋值‘0’， 将加密数据和额外的填充数据块拼接作为最终要发送协议的body数据</li>
+</ul>
+</div></blockquote>
+<p><strong>接收数据解密</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>协议body数据, 先将最后一个字节取出，记为mod_len， 然后将body截掉尾部16字节填充数据块后再解密（与加密填充额外数据块逻辑对应）</li>
+<li>mod_len 为0时，上述解密后的数据即为协议返回的body数据, 否则需截掉尾部(16 - mod_len)长度的用于填充对齐的数据</li>
+</ul>
+<img alt="../_images/AES.png" src="../_images/AES.png" />
+</div></blockquote>
+</div></blockquote>
+<hr class="docutils" />
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="base_define.html" class="btn btn-neutral float-right" title="基础定义" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../api/Trade_API.html" class="btn btn-neutral" title="交易API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, futu
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'3.4',
+              LANGUAGE:'en',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+ 
+<script type="text/javascript">
+    console.log("Layout By futu-api");
+</script>
+
+
+</body>
+</html>

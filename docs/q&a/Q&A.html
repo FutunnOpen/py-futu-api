@@ -1,0 +1,309 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Q&amp;A &mdash; futu-api 3.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="交易协议" href="../protocol/trade_protocol.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> futu-api
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">基础</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/intro.html">介绍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup/setup.html">安装指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup/FutuOpenDGuide.html">FutuOpenD使用说明</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/Base_API.html">基础API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Quote_API.html">行情API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Trade_API.html">交易API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">PROTOCOL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../protocol/intro.html">协议接口指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocol/base_define.html">基础定义</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocol/quote_protocol.html">行情协议</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocol/trade_protocol.html">交易协议</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Q&amp;A</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Q&amp;A</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#futu-api">安装futu-api相关问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api">API调用相关问题</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">futu-api</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Q&amp;A</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/q&amp;a/Q&amp;A.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="q-a">
+<h1>Q&amp;A<a class="headerlink" href="#q-a" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="futu-api">
+<h2>安装futu-api相关问题<a class="headerlink" href="#futu-api" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<p>Q: 入门指引及接口文档获取方式：</p>
+<p>A: <a class="reference external" href="https://futunnopen.github.io/futuquant/index.html">https://futunnopen.github.io/futuquant/index.html</a></p>
+<hr class="docutils" />
+<p>Q: 在linux, MAC上是否可以使用？</p>
+<p>A:可以。</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="api">
+<h2>API调用相关问题<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<p>Q: 提示订阅额度已满怎么办？</p>
+<p>A:如果是本地，说明订阅的额度已经满了，可以退订一些后重新尝试，注意退订需要再订阅满。如果是云端，说明云服务器使用的人数太多了，额度已满，如果方便的话，可以下载客户端在本地运行。</p>
+<hr class="docutils" />
+<p>Q: 想要订阅股票太多，额度不够用怎么办？</p>
+<p>A: 解决方法可以多开些账号。</p>
+<hr class="docutils" />
+<p>Q: 10061错误怎么办？</p>
+<p>A:检查是否开启了富途牛牛客户端，客户端需要使用群文件中的API版本，并检查版本号是否正确，是不是最新版本，最新版本在群文件可获得。</p>
+<hr class="docutils" />
+<p>Q: 407错误，提示股票未订阅怎么办？</p>
+<p>A:首先是先订阅，如果已经订阅了，那么请检查订阅的数据类型和要获得的数据类型是否一致。</p>
+<hr class="docutils" />
+<p>Q: 获取逐笔为空怎么办？</p>
+<p>A:返回的逐笔是订阅以后的数据，订阅时间之前的数据是不会返回的。如果订阅完就立即获取，这段时间内可能没有逐笔数据，所以返回为空，建议用推送获得逐笔数据或者留出些时间余量。</p>
+<p>A: <a class="reference external" href="https://futunnopen.github.io/futuquant/setup/Hist_KLine_Download_Intro.html">详见历史K线下载指引</a> ，历史K线下载暂时不支持恒指期货。</p>
+<hr class="docutils" />
+<p>Q:历史K线下载下来怎么使用？</p>
+<p>A:历史数据下载的数据可以通过API接口get_history_kline调用，数据结构是DataFrame，可以根据自己的需求再自行保存为.csv或者数据库中去。接口使用参见行情接口文档，链接在入门指引及接口文档获取方式中。</p>
+<hr class="docutils" />
+<p>Q: API是否支持恒指期货、A股？</p>
+<p>A: 只支持查询，不支持交易。</p>
+<hr class="docutils" />
+<p>Q: 期货数据怎么获取？</p>
+<p>A:在python脚本中的股票代码是”HK_FUTURE.999010”，请检查股票代码是否正确。如果股票代码正确，请检查是否开启了富途牛牛客户端。注意期货数据暂时不支持历史K线下载。</p>
+<hr class="docutils" />
+<p>Q: 为何在同一设备多次验证设备锁？</p>
+<p>A:设备标识随机生成并存放于com.futunn.FutuOpenD\F3CNN\Device.dat文件中，如果删除或损坏会重新生成新设备标识然后验证设备锁；还有镜像拷贝部署的用户需要注意，如果多台机器的Device.dat内容相同，也会导致这些机器多次验证设备锁，手动删除Device.dat文件即可。</p>
+<hr class="docutils" />
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../protocol/trade_protocol.html" class="btn btn-neutral" title="交易协议" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, futu
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'3.4',
+              LANGUAGE:'en',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+ 
+<script type="text/javascript">
+    console.log("Layout By futu-api");
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,613 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>FutuOpenD使用说明 &mdash; futu-api 3.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="基础API" href="../api/Base_API.html" />
+    <link rel="prev" title="安装指南" href="setup.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> futu-api
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">基础</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro/intro.html">介绍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">安装指南</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FutuOpenD使用说明</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">基本介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">免责声明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">登录参数使用优先级</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">配置文件</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id6">FutuOpenD配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rsa">RSA私钥文件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#futuhistdata">FutuHistData配置</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">启动命令行参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">运维命令</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#exit">exit - 退出程序</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#req-phone-verify-code">req_phone_verify_code - 请求手机验证码</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#input-phone-verify-code">input_phone_verify_code - 输入手机验证码</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#req-pic-verify-code">req_pic_verify_code - 请求图形验证码</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#input-pic-verify-code">input_pic_verify_code - 输入图形验证码</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#relogin">relogin - 重登录</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#help">help - 命令帮助</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/Base_API.html">基础API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Quote_API.html">行情API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/Trade_API.html">交易API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">PROTOCOL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../protocol/intro.html">协议接口指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocol/base_define.html">基础定义</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocol/quote_protocol.html">行情协议</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocol/trade_protocol.html">交易协议</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Q&amp;A</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../q&amp;a/Q&amp;A.html">Q&amp;A</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">futu-api</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>FutuOpenD使用说明</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/setup/FutuOpenDGuide.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="futuopend">
+<h1>FutuOpenD使用说明<a class="headerlink" href="#futuopend" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>基本介绍<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>FutuOpenD运行于客户本机或服务器，接收API协议，中转协议到富途后台并将处理后的数据返回给协议请求连接。</p>
+<p>FutuOpenD程序暂时不提供安装程序，直接提供程序压缩包。压缩包内除了各平台的执行程序，还有带有默认FutuOpenD配置文件（FutuOpenD.xml），默认FutuHisData配置文件（FutuHistData.xml）以及程序打包数据（Appdata.dat）。</p>
+<p>FutuOpenD配置文件用于配置FutuOpenD程序启动参数，若不存在则程序无法正常启动。</p>
+<p>FutuHisData用于配置历史数据位置，若不存在则历史数据接口无法获取到数据。</p>
+<p>程序打包数据是程序需要用到的一些数据量较大的信息，打包数据减少启动下载该数据用时，若不存在则程序无法正常启动。</p>
+</div></blockquote>
+</div>
+<div class="section" id="id2">
+<h2>免责声明<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>已开户用户需要同意 <a class="reference external" href="https://www.futunn.com/about/api-disclaimer/">免责声明</a> 才可以使用FutuOpenD。</div></blockquote>
+</div>
+<div class="section" id="id4">
+<h2>登录参数使用优先级<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>1.命令行证书登录</p>
+<p>2.命令行帐号密码密文登录</p>
+<p>3.命令行帐号密码明文登录</p>
+<p>4.配置文件证书登录</p>
+<p>5.配置文件帐号密码密文登录</p>
+<p>6.配置文件帐号密码明文登录</p>
+</div></blockquote>
+</div>
+<div class="section" id="id5">
+<h2>配置文件<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h3>FutuOpenD配置<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>FutuOpenD启动配置文件使用XML格式，如下图所示：</p>
+<img alt="../_images/FTOpenDConfig.png" src="../_images/FTOpenDConfig.png" />
+<p><strong>配置项：</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="46%" />
+<col width="45%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">键值</th>
+<th class="head">说明</th>
+<th class="head">是否可选配置项</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>ip</td>
+<td>监听地址</td>
+<td>是，不设置则默认0.0.0.0</td>
+</tr>
+<tr class="row-odd"><td>api_port</td>
+<td>API协议接收端口</td>
+<td>是，可以命令行指定</td>
+</tr>
+<tr class="row-even"><td>push_proto_type</td>
+<td>API协议支持PB以及Json格式，PB：0，Json：1，推送类协议通过该配置决定包体格式</td>
+<td>是，不设置则默认Json格式</td>
+</tr>
+<tr class="row-odd"><td>qot_push_frequency</td>
+<td>API订阅数据推送频率控制，单位毫秒，目前不包括K线和分时</td>
+<td>是，不设置则不限制频率</td>
+</tr>
+<tr class="row-even"><td>rsa_private_key</td>
+<td>API协议RSA加密私钥（PKCS#1）文件绝对路径</td>
+<td>是，不设置则协议不加密</td>
+</tr>
+<tr class="row-odd"><td>telnet_port</td>
+<td>远程操作命令监听端口</td>
+<td>是，不设置则启用远程命令</td>
+</tr>
+<tr class="row-even"><td>login_account</td>
+<td>登录帐号</td>
+<td>是，可以使用证书登录或命令行输入</td>
+</tr>
+<tr class="row-odd"><td>login_pwd</td>
+<td>登录密码明文</td>
+<td>是，可以使用密文、证书登录或命令行输入</td>
+</tr>
+<tr class="row-even"><td>login_pwd_md5</td>
+<td>登录密码密文（32位MD5加密16进制），密文明文都存在情况下，只使用密文</td>
+<td>是，可以使用明文、证书登录或命令行输入</td>
+</tr>
+<tr class="row-odd"><td>login_cert_file</td>
+<td>证书文件绝对路径，除帐号密码外的另一种登录方式输入，若同时存在帐号密码登录配置项，只使用证书登录</td>
+<td>是，可以使用帐号密码登录或命令行输入</td>
+</tr>
+<tr class="row-even"><td>log_level</td>
+<td>日志级别，可填no,debug,info,warning,error,fatal</td>
+<td>是，默认info级别</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>密文是明文经过32位MD5加密后用16进制表示的数据，搜索在线MD5加密（注意，通过第三方网站计算可能有记录撞库的风险）或下载MD5计算工具可计算得到。</p>
+<p>32位MD5密文如下图红框区域（e10adc3949ba59abbe56e057f20f883e）：</p>
+<img alt="../_images/MD5.png" src="../_images/MD5.png" />
+<p>FutuOpenD默认读取同目录下的FutuOpenD.xml。在MacOS上，由于系统保护机制，FutuOpenD.app在运行时会被分配一个随机路径，导致无法找到原本的路径。此时有以下方法：</p>
+<ol class="last arabic simple">
+<li>执行tar包下的fixrun.sh</li>
+<li>用命令行参数-cfg_file指定配置文件路径，见下面说明</li>
+</ol>
+</div>
+</div>
+<div class="section" id="rsa">
+<h3>RSA私钥文件<a class="headerlink" href="#rsa" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>参考文件格式：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>        -----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQCx3W78hx5dQxg47hGMEj02JAJYP+HdKGWD8QilzeK4eL6QJ9QP
++uVYGA5Jp0Ed2AaV+zQrT/BCe6z5j/Qd5B0eY2cFlgk+/hbAt7A4wcSAbby8nONw
+0fZTglU78FhLUih84Int5HO0Fr3WLUDvpE+TgS3l/2u5ym6H6fvsdrdNCwIDAQAB
+AoGAHep/s2vKmKcjWNf6DZQ3xXZzCoLcK4WS5YlSCglCHAL7EmYQjguGLbYGGS9P
+jYR7Pxi8YpiUcao5otQqnCh1GRFouU397D3h+bf/bQXINZcv3sxKFrXm9MNVaBJD
+W4BcC3HGfnlaIVTKU+qGkeA1BydP5AQyxsGOq00IUeGK4uECQQD/5xHLDwhwYFyc
+MK4xMnlrvne8TSlPBciWfrxQ7V/X0eP/HQ20VkVxc0tFD91aLrCap6OYcNV9jwJN
+wTQLt5wbAkEAse7C75LKW0+cMcROvAR3qLV2LbGjLW+cH6WmEP9CEGxi0aJg4Gs3
+oSRYfaC/RLI87sSb0DC5+mTswXduLGpB0QJAJk0ec6cHW1KA6fu7Rq/ITqEOaMef
+xC0YbbYAV5h/vNy0ZE2j7HbxI97eyDJsrf/I/QzURo+01HsgHCUrtglAOwJBAKiW
+cA7sh1zS5kxlErCkjvfDz1BmIhT3zfZSTjGGmYLUHyE/eAjKra+5rzqA5xjgxEj6
+8iLlOCFeJND+Jt5gYzECQH+HtFilF1SxGS4AHrJomHaMhk/IazjtUnLuFM/DuZ/h
+sxTqXpBBCtTqcAotMlx4ZJQYL3f2PmI2Q/o0NUMt40w<span class="o">=</span>
+-----END RSA PRIVATE KEY-----
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>RSA 密钥的填充方式为 PKCS1, 位数1024</li>
+<li>密钥文件可通过第三方web平台自动生成， 请在baidu或google上搜索”RSA 在线生成”</li>
+<li>将私钥保存成文件，并在将文件路径配置在FutuOpenD.xml的rsa_private_key配置项</li>
+<li>公钥可通过私钥计算得到，但生成私钥时不要设置密码</li>
+</ul>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="futuhistdata">
+<h3>FutuHistData配置<a class="headerlink" href="#futuhistdata" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>历史数据下载启动配置文件使用XML格式，如下图所示：</p>
+<img alt="../_images/FTHistDataConfig.png" src="../_images/FTHistDataConfig.png" />
+<p><strong>配置项：</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">键值</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>enable</td>
+<td>是否启用下载工具</td>
+</tr>
+<tr class="row-odd"><td>nnid</td>
+<td>指定用于下载历史数据的牛牛号，需要先在FueuOpenD中登录该牛牛号，才能下载历史数据</td>
+</tr>
+<tr class="row-even"><td>begin_time</td>
+<td>下载起始时间，时间格式为HHMM，每天到当地这个时间点开始下载</td>
+</tr>
+<tr class="row-odd"><td>end_time</td>
+<td>下载结束时间，时间格式为HHMM，每天到当地这个时间点暂停下载，end小于start时表示end为第二天</td>
+</tr>
+<tr class="row-even"><td>market</td>
+<td>下载数据市场，可选市场类型为hk、us、cn，多个市用|连接，如hk|cn|us</td>
+</tr>
+<tr class="row-odd"><td>kline_type</td>
+<td>下载K线数据类型，可选的K线类型为day、week、month、year、min1、min5、min15、min30、min60，多个类型用|连接</td>
+</tr>
+<tr class="row-even"><td>hist_data_dir</td>
+<td>历史数据存放位置绝对路径,修改后重启程序才生效</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="id7">
+<h2>启动命令行参数<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>命令行部分参数与配置文件相同，同样参数若存在于命令行与配置文件，使用命令行参数。</p>
+<img alt="../_images/login-command.png" src="../_images/login-command.png" />
+<p>传参格式：-key=value</p>
+<p>例如FutuOpenD.exe -login_account=100000 -login_pwd=123456 -lang=en</p>
+<p><strong>参数项：</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="43%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">键值</th>
+<th class="head">说明</th>
+<th class="head">是否可选配置项</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>login_account</td>
+<td>登录帐号</td>
+<td>是，可以使用证书登录或配置文件配置项</td>
+</tr>
+<tr class="row-odd"><td>login_pwd</td>
+<td>登录密码明文</td>
+<td>是，可以使用证书登录或配置文件配置项</td>
+</tr>
+<tr class="row-even"><td>login_pwd_md5</td>
+<td>登录密码密文（32位MD5加密16进制），密文明文都存在情况下，只使用密文</td>
+<td>是，可以使用密文、证书登录或配置文件配置项</td>
+</tr>
+<tr class="row-odd"><td>login_cert_file</td>
+<td>证书文件绝对路径，除帐号密码外的另一种登录方式输入，若同时存在帐号密码登录配置项，只使用证书登录</td>
+<td>是，可以使用明文、证书登录或配置文件配置项</td>
+</tr>
+<tr class="row-even"><td>login_region</td>
+<td>优先连接点区域，但不一定能连接上该区域连接点(gz/sh/hk)</td>
+<td>是，不设置则自动选择</td>
+</tr>
+<tr class="row-odd"><td>cfg_file</td>
+<td>FutuOpenD配置文件绝对路径</td>
+<td>是，不设置则使用程序所在目录下的FutuOpenD.xml</td>
+</tr>
+<tr class="row-even"><td>hist_data_cfg_file</td>
+<td>FutuHistData配置文件绝对路径</td>
+<td>是，不设置则使用程序所在目录下的FutuHistData.xml</td>
+</tr>
+<tr class="row-odd"><td>console</td>
+<td>是否显示控制台，后台运行：0，控制台运行：1</td>
+<td>是，不设置则默认控制台运行</td>
+</tr>
+<tr class="row-even"><td>lang</td>
+<td>FutuOpenD语言，en：英文，chs：简体中文</td>
+<td>是，不设置则默认简体中文</td>
+</tr>
+<tr class="row-odd"><td>api_port</td>
+<td>API协议接收端口</td>
+<td>是，不设置则使用配置文件配置项</td>
+</tr>
+<tr class="row-even"><td>help</td>
+<td>输出启动命令行参数然后退出程序</td>
+<td>是，不设置则正常启动FutuOpenD</td>
+</tr>
+<tr class="row-odd"><td>log_level</td>
+<td>日志级别，可填no,debug,info,warning,error,fatal</td>
+<td>是，默认info级别</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<hr class="docutils" />
+<div class="section" id="id8">
+<h2>运维命令<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>通过命令行或者Telent发送命令可以对FutuOpenD做运维操作。</p>
+<p>命令格式：<strong>cmd -param_key1=param_value1 -param_key2=param_value2</strong></p>
+</div></blockquote>
+<div class="section" id="exit">
+<h3>exit - 退出程序<a class="headerlink" href="#exit" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>exit</p>
+<p>退出FutuOpenD程序</p>
+</div></blockquote>
+</div>
+<div class="section" id="req-phone-verify-code">
+<h3>req_phone_verify_code - 请求手机验证码<a class="headerlink" href="#req-phone-verify-code" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>req_phone_verify_code</p>
+<p>请求手机验证码，当启用设备锁并初次在该设备登录，要求做安全验证。</p>
+</div></blockquote>
+</div>
+<div class="section" id="input-phone-verify-code">
+<h3>input_phone_verify_code - 输入手机验证码<a class="headerlink" href="#input-phone-verify-code" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>input_phone_verify_code -code=123456</p>
+<p>输入手机验证码，并继续登录流程。</p>
+<p><strong>Parameters: code</strong> - str，手机验证码</p>
+</div></blockquote>
+</div>
+<div class="section" id="req-pic-verify-code">
+<h3>req_pic_verify_code - 请求图形验证码<a class="headerlink" href="#req-pic-verify-code" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>req_pic_verify_code</p>
+<p>请求图形验证码，当多次输入错登录密码时，需要输入图形验证码。</p>
+</div></blockquote>
+</div>
+<div class="section" id="input-pic-verify-code">
+<h3>input_pic_verify_code - 输入图形验证码<a class="headerlink" href="#input-pic-verify-code" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>input_pic_verify_code -code=1234</p>
+<p>输入图形验证码，并继续登录流程。</p>
+<p><strong>Paramters code:</strong> str，图形验证码</p>
+</div></blockquote>
+</div>
+<div class="section" id="relogin">
+<h3>relogin - 重登录<a class="headerlink" href="#relogin" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>relogin -login_pwd=123456</p>
+<p>当登录密码修改或中途打开设备锁等情况，要求用户重新登录时，可以使用该命令。只能重登当前帐号，不支持切换帐号。
+密码参数主要用于登录密码修改的情况，不指定密码则使用启动时登录密码。</p>
+<p><strong>Paramters login_pwd:</strong> str，登录密码明文</p>
+<p><strong>Paramters login_pwd_md5:</strong> str，登录密码密文（32位MD5加密16进制）</p>
+</div></blockquote>
+</div>
+<div class="section" id="help">
+<h3>help - 命令帮助<a class="headerlink" href="#help" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>help -cmd=exit</p>
+<p>查看指定命令详细信息，不指定参数则输出命令列表</p>
+<p><strong>Paramters cmd:</strong> str，命令</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="simple">
+<li>运维代码在Telnet窗口或命令控制台输入</li>
+</ul>
+<img alt="../_images/req-verify.png" class="last" src="../_images/req-verify.png" />
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../api/Base_API.html" class="btn btn-neutral float-right" title="基础API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="setup.html" class="btn btn-neutral" title="安装指南" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, futu
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'3.4',
+              LANGUAGE:'en',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+ 
+<script type="text/javascript">
+    console.log("Layout By futu-api");
+</script>
+
+
+</body>
+</html>
