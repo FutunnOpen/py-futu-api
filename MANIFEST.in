@@ -1,10 +1,10 @@
 include README.md
-recursive-include futuquant *.md
-recursive-include futuquant *.url
-recursive-include futuquant *.json
-recursive-include futuquant *.bat
-recursive-include futuquant *.csv
+recursive-include futu *.md
+recursive-include futu *.url
+recursive-include futu *.json
+recursive-include futu *.bat
+recursive-include futu *.csv
 
 include requirements.txt
-include futuquant/VERSION.txt
-recursive-include docs/document *
+include futu/VERSION.txt
+recursive-include doc_maker *

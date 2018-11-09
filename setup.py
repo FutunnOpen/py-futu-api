@@ -26,7 +26,7 @@ from setuptools import (
 
 is_py2 = sys.version_info[0] == 2
 
-with open(join(dirname(__file__), 'futuquant/VERSION.txt'), 'rb') as f:
+with open(join(dirname(__file__), 'futu/VERSION.txt'), 'rb') as f:
     version = f.read().decode('ascii').strip()
 
 install_requires = ["pandas",
@@ -46,7 +46,7 @@ setup(
     keywords='Futu HK/US Stock Quant Trading API',
     author='Futu, Inc.',
     author_email='ftdev@futunn.com',
-    url='https://github.com/FutunnOpen/futuquant',
+    url='https://github.com/FutunnOpen/py-futu-api',
     license='Apache License 2.0',
     packages=find_packages(exclude=[]),
     package_data={'': ['*.*']},
