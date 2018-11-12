@@ -1,0 +1,76 @@
+2018-10-19 16:34:56,777 - INFO - unlock (0, None)
+2018-10-19 16:34:57,013 - INFO - subscribe (0, None)
+2018-10-19 16:34:57,128 - INFO - place_order 买入 code= US.GNK price= 11.82
+2018-10-19 16:35:03,675 - INFO - 【订单状态推送】 (0,   trd_env    code stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.GNK     根科船务贸易              0.0        0.0  1.0  8229171276417613154     NORMAL  11.82   SUBMITTING  2018-10-19 04:34:55  2018-10-19 04:34:55      BUY                      US)
+2018-10-19 16:35:03,705 - INFO - place_order 【买入】 (0,      code stock_name trd_side order_type order_status             order_id  qty  price          create_time         updated_time  dealt_qty  dealt_avg_price last_err_msg
+0  US.GNK     根科船务贸易      BUY     NORMAL   SUBMITTING  8229171276417613154  1.0  11.82  2018-10-19 04:34:55  2018-10-19 04:34:55        0.0              0.0             )
+2018-10-19 16:35:03,710 - INFO - 【订单状态推送】 (0,   trd_env    code stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.GNK     根科船务贸易              0.0        0.0  1.0  8229171276417613154     NORMAL  11.82    SUBMITTED  2018-10-19 04:34:55  2018-10-19 04:35:01      BUY                      US)
+2018-10-19 16:35:03,717 - INFO - 【订单状态推送】 (0,   trd_env    code stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.GNK     根科船务贸易            11.82        1.0  1.0  8229171276417613154     NORMAL  11.82   FILLED_ALL  2018-10-19 04:34:55  2018-10-19 04:35:01      BUY                      US)
+2018-10-19 16:35:03,747 - INFO - 【订单成交推送】 (0,   trd_env    code stock_name             deal_id             order_id  qty  price trd_side          create_time  counter_broker_id counter_broker_name trd_market
+0    REAL  US.GNK     根科船务贸易  218882881441202361  8229171276417613154  1.0  11.82      BUY  2018-10-19 04:35:01                  0                             US)
+2018-10-19 16:35:13,804 - INFO - position_list_query ret_code = -1 len(ret_data) = 26
+2018-10-19 16:35:13,804 - INFO - place_order 卖出 code= US.GNK price= 12.02
+2018-10-19 16:35:18,518 - INFO - 【订单状态推送】 (0,   trd_env    code stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.GNK     根科船务贸易            12.02        1.0  1.0  8372964195919629053     NORMAL  12.02   FILLED_ALL  2018-10-19 04:35:12  2018-10-19 04:35:16     SELL                      US)
+2018-10-19 16:35:18,523 - INFO - 【订单状态推送】 (0,   trd_env    code stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.GNK     根科船务贸易            12.02        1.0  1.0  8372964195919629053     NORMAL  12.02   FILLED_ALL  2018-10-19 04:35:12  2018-10-19 04:35:16     SELL                      US)
+2018-10-19 16:35:18,527 - INFO - 【订单成交推送】 (0,   trd_env    code stock_name              deal_id             order_id  qty  price trd_side          create_time  counter_broker_id counter_broker_name trd_market
+0    REAL  US.GNK     根科船务贸易  2226130032020761938  8372964195919629053  1.0  12.02     SELL  2018-10-19 04:35:16                  0                             US)
+2018-10-19 16:35:18,561 - INFO - place_order 【卖出】 (0,      code stock_name trd_side order_type order_status             order_id  qty  price          create_time         updated_time  dealt_qty  dealt_avg_price last_err_msg
+0  US.GNK     根科船务贸易     SELL     NORMAL   FILLED_ALL  8372964195919629053  1.0  12.02  2018-10-19 04:35:12  2018-10-19 04:35:16        1.0            12.02             )
+2018-10-19 16:35:28,654 - INFO - position_list_query ret_code = -1 len(ret_data) = 26
+2018-10-19 16:37:28,656 - INFO - unsubscribe (0, None)
+2018-10-19 16:37:28,668 - INFO - subscribe (0, None)
+2018-10-19 16:37:28,786 - INFO - place_order 买入 code= US.IDRA price= 5.569999999999999
+2018-10-19 16:37:33,891 - INFO - 【订单状态推送】 (0,   trd_env     code stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.IDRA       井寺制药              0.0        0.0  1.0  8516999063814330520     NORMAL   5.57   SUBMITTING  2018-10-19 04:37:27  2018-10-19 04:37:27      BUY                      US)
+2018-10-19 16:37:33,931 - INFO - place_order 【买入】 (0,       code stock_name trd_side order_type order_status             order_id  qty  price          create_time         updated_time  dealt_qty  dealt_avg_price last_err_msg
+0  US.IDRA       井寺制药      BUY     NORMAL   SUBMITTING  8516999063814330520  1.0   5.57  2018-10-19 04:37:27  2018-10-19 04:37:27        0.0              0.0             )
+2018-10-19 16:37:33,936 - INFO - 【订单状态推送】 (0,   trd_env     code stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.IDRA       井寺制药              0.0        0.0  1.0  8516999063814330520     NORMAL   5.57    SUBMITTED  2018-10-19 04:37:27  2018-10-19 04:37:32      BUY                      US)
+2018-10-19 16:37:33,974 - INFO - 【订单状态推送】 (0,   trd_env     code stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.IDRA       井寺制药             5.57        1.0  1.0  8516999063814330520     NORMAL   5.57   FILLED_ALL  2018-10-19 04:37:27  2018-10-19 04:37:32      BUY                      US)
+2018-10-19 16:37:33,978 - INFO - 【订单成交推送】 (0,   trd_env     code stock_name              deal_id             order_id  qty  price trd_side          create_time  counter_broker_id counter_broker_name trd_market
+0    REAL  US.IDRA       井寺制药  7693959301485181565  8516999063814330520  1.0   5.57      BUY  2018-10-19 04:37:32                  0                             US)
+2018-10-19 16:37:44,044 - INFO - position_list_query ret_code = -1 len(ret_data) = 26
+2018-10-19 16:37:44,044 - INFO - place_order 卖出 code= US.IDRA price= 5.77
+2018-10-19 16:37:48,947 - INFO - 【订单状态推送】 (0,   trd_env     code stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.IDRA       井寺制药              0.0        0.0  1.0  8660427503801673267     NORMAL   5.77    SUBMITTED  2018-10-19 04:37:42  2018-10-19 04:37:47     SELL                      US)
+2018-10-19 16:37:48,952 - INFO - 【订单状态推送】 (0,   trd_env     code stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.IDRA       井寺制药              0.0        0.0  1.0  8660427503801673267     NORMAL   5.77    SUBMITTED  2018-10-19 04:37:42  2018-10-19 04:37:47     SELL                      US)
+2018-10-19 16:37:48,986 - INFO - 【订单状态推送】 (0,   trd_env     code stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.IDRA       井寺制药             5.77        1.0  1.0  8660427503801673267     NORMAL   5.77   FILLED_ALL  2018-10-19 04:37:42  2018-10-19 04:37:47     SELL                      US)
+2018-10-19 16:37:48,989 - INFO - place_order 【卖出】 (0,       code stock_name trd_side order_type order_status             order_id  qty  price          create_time         updated_time  dealt_qty  dealt_avg_price last_err_msg
+0  US.IDRA       井寺制药     SELL     NORMAL    SUBMITTED  8660427503801673267  1.0   5.77  2018-10-19 04:37:42  2018-10-19 04:37:47        0.0              0.0             )
+2018-10-19 16:37:48,993 - INFO - 【订单成交推送】 (0,   trd_env     code stock_name              deal_id             order_id  qty  price trd_side          create_time  counter_broker_id counter_broker_name trd_market
+0    REAL  US.IDRA       井寺制药  8836131451745939526  8660427503801673267  1.0   5.77     SELL  2018-10-19 04:37:47                  0                             US)
+2018-10-19 16:37:59,083 - INFO - position_list_query ret_code = -1 len(ret_data) = 26
+2018-10-19 16:39:59,085 - INFO - unsubscribe (0, None)
+2018-10-19 16:39:59,111 - INFO - subscribe (0, None)
+2018-10-19 16:39:59,211 - INFO - subscribe (0, None)
+2018-10-19 16:39:59,305 - INFO - subscribe (0, None)
+2018-10-19 16:39:59,419 - INFO - subscribe (0, None)
+2018-10-19 16:39:59,523 - INFO - place_order 买入 code= US.TRVN price= 0.791
+2018-10-19 16:40:05,855 - INFO - 【订单状态推送】 (0,   trd_env     code     stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.TRVN  Trevena, Inc.              0.0        0.0  1.0  8804765948574790606     NORMAL  0.791    SUBMITTED  2018-10-19 04:39:57  2018-10-19 04:40:04      BUY                      US)
+2018-10-19 16:40:05,860 - INFO - 【订单状态推送】 (0,   trd_env     code     stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.TRVN  Trevena, Inc.              0.0        0.0  1.0  8804765948574790606     NORMAL  0.791    SUBMITTED  2018-10-19 04:39:57  2018-10-19 04:40:04      BUY                      US)
+2018-10-19 16:40:05,896 - INFO - place_order 【买入】 (0,       code     stock_name trd_side order_type order_status             order_id  qty  price          create_time         updated_time  dealt_qty  dealt_avg_price last_err_msg
+0  US.TRVN  Trevena, Inc.      BUY     NORMAL    SUBMITTED  8804765948574790606  1.0  0.791  2018-10-19 04:39:57  2018-10-19 04:40:04        0.0              0.0             )
+2018-10-19 16:40:05,901 - INFO - 【订单状态推送】 (0,   trd_env     code     stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.TRVN  Trevena, Inc.            0.791        1.0  1.0  8804765948574790606     NORMAL  0.791   FILLED_ALL  2018-10-19 04:39:57  2018-10-19 04:40:04      BUY                      US)
+2018-10-19 16:40:05,906 - INFO - 【订单成交推送】 (0,   trd_env     code     stock_name              deal_id             order_id  qty  price trd_side          create_time  counter_broker_id counter_broker_name trd_market
+0    REAL  US.TRVN  Trevena, Inc.  6309122570897672781  8804765948574790606  1.0  0.791      BUY  2018-10-19 04:40:04                  0                             US)
+2018-10-19 16:40:15,990 - INFO - position_list_query ret_code = -1 len(ret_data) = 26
+2018-10-19 16:40:15,990 - INFO - place_order 卖出 code= US.TRVN price= 0.811
+2018-10-19 16:40:21,115 - INFO - 【订单状态推送】 (0,   trd_env     code     stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.TRVN  Trevena, Inc.            0.811        1.0  1.0  8949095309492076905     NORMAL  0.811   FILLED_ALL  2018-10-19 04:40:14  2018-10-19 04:40:19     SELL                      US)
+2018-10-19 16:40:21,120 - INFO - 【订单状态推送】 (0,   trd_env     code     stock_name  dealt_avg_price  dealt_qty  qty             order_id order_type  price order_status          create_time         updated_time trd_side last_err_msg trd_market
+0    REAL  US.TRVN  Trevena, Inc.            0.811        1.0  1.0  8949095309492076905     NORMAL  0.811   FILLED_ALL  2018-10-19 04:40:14  2018-10-19 04:40:19     SELL                      US)
+2018-10-19 16:40:21,124 - INFO - 【订单成交推送】 (0,   trd_env     code     stock_name              deal_id             order_id  qty  price trd_side          create_time  counter_broker_id counter_broker_name trd_market
+0    REAL  US.TRVN  Trevena, Inc.  8969327942549066898  8949095309492076905  1.0  0.811     SELL  2018-10-19 04:40:19                  0                             US)
+2018-10-19 16:40:21,153 - INFO - place_order 【卖出】 (0,       code     stock_name trd_side order_type order_status             order_id  qty  price          create_time         updated_time  dealt_qty  dealt_avg_price last_err_msg
+0  US.TRVN  Trevena, Inc.     SELL     NORMAL   FILLED_ALL  8949095309492076905  1.0  0.811  2018-10-19 04:40:14  2018-10-19 04:40:19        1.0            0.811             )
