@@ -676,7 +676,7 @@ subscribe
 
  订阅注册需要的实时信息，指定股票和订阅的数据类型即可，港股订阅需要Lv2行情。
  
- 注意：len(code_list) * 订阅的K线类型的数量 <= 100
+ 注意：len(code_list) * 订阅的K线类型的数量 <= 200
 
  :param code_list: 需要订阅的股票代码列表
  :param subtype_list: 需要订阅的数据类型列表，参见 SubType_

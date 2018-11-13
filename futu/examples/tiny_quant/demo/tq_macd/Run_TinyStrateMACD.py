@@ -14,10 +14,11 @@ if __name__ == '__main__':
     futu.logger.console_level = logging.INFO
     my_strate = TinyStrateMACD()
     frame = TinyQuantFrame(my_strate)
-    while True:
-        frame.run()
-        time.sleep(10000)
-        frame.stop()
+    frame.run()
+    # while True:
+    #     frame.run()
+    #     time.sleep(10000)
+    #     frame.stop()
 
 
 

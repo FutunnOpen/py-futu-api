@@ -11,7 +11,7 @@ import pandas as pd
 from futu.common.open_context_base import OpenContextBase, ContextStatus
 from futu.quote.quote_query import *
 
-MAX_KLINE_SUB_COUNT = 100
+MAX_KLINE_SUB_COUNT = 200
 
 class OpenQuoteContext(OpenContextBase):
     """行情上下文对象类"""
