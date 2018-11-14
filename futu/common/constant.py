@@ -346,6 +346,7 @@ class KLType(object):
       月K线
     """
     K_1M = "K_1M"
+    K_3M = "K_3M"
     K_5M = "K_5M"
     K_15M = "K_15M"
     K_30M = "K_30M"
@@ -353,16 +354,22 @@ class KLType(object):
     K_DAY = "K_DAY"
     K_WEEK = "K_WEEK"
     K_MON = "K_MON"
+    K_1M = "K_1M"
+    K_QUARTER = "K_QUARTER"
+    K_YEAR = "K_YEAR"
 
 KTYPE_MAP = {
     KLType.K_1M: 1,
+    KLType.K_3M: 17,
     KLType.K_5M: 6,
     KLType.K_15M: 7,
     KLType.K_30M: 8,
     KLType.K_60M: 9,
     KLType.K_DAY: 2,
     KLType.K_WEEK: 3,
-    KLType.K_MON: 4
+    KLType.K_MON: 4,
+    KLType.K_QUARTER: 15,
+    KLType.K_YEAR: 16
 }
 
 
