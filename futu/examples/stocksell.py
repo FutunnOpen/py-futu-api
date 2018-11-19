@@ -6,7 +6,7 @@ from time import sleep
 import futu as ft
 
 
-def simple_sell(quote_ctx, trade_ctx, stock_code, trade_price, volume, trade_env, order_type=ft.OrderType.SPECIAL_LIMIT):
+def simple_sell(quote_ctx, trade_ctx, stock_code, trade_price, volume, trade_env, order_type=ft.OrderType.NORMAL):
     """简单卖出函数"""
     lot_size = 0
     while True:
@@ -31,7 +31,7 @@ def simple_sell(quote_ctx, trade_ctx, stock_code, trade_price, volume, trade_env
             return data
 
 
-def smart_sell(quote_ctx, trade_ctx, stock_code, volume, trade_env, order_type=ft.OrderType.SPECIAL_LIMIT):
+def smart_sell(quote_ctx, trade_ctx, stock_code, volume, trade_env, order_type=ft.OrderType.NORMAL):
     """智能卖出函数"""
     lot_size = 0
     while True:
@@ -67,10 +67,10 @@ if __name__ =="__main__":
     ip = '127.0.0.1'
     port = 11111
 
-    code = 'HK.00123'
+    code = 'HK.00700'
     unlock_pwd = '123456'
     trd_env = ft.TrdEnv.SIMULATE
-    order_type = ft.OrderType.SPECIAL_LIMIT
+    order_type = ft.OrderType.NORMAL
 
     quote_ctx = ft.OpenQuoteContext(ip, port)
     trd_ctx = ft.OpenHKTradeContext(ip, port)
@@ -78,7 +78,7 @@ if __name__ =="__main__":
     quote_ctx.subscribe(code, ft.SubType.ORDER_BOOK)
     print("* unlock_trade:{}".format(trd_ctx.unlock_trade(unlock_pwd)))
 
-    simple_sell(quote_ctx, trd_ctx, code, 700.0, 100, trd_env, order_type)
+    simple_sell(quote_ctx, trd_ctx, code, 280.0, 100, trd_env, order_type)
     smart_sell(quote_ctx, trd_ctx, code, 100, trd_env, order_type)
 
     quote_ctx.close()
