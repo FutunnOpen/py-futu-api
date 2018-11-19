@@ -90,6 +90,8 @@ class OrderBookHandlerBase(RspHandlerBase):
         :return: 参见get_order_book的返回值
         """
         ret_code, content = self.parse_rsp_pb(rsp_pb)
+        if ret_code == RET_OK:
+            self.on_recv_log(content)
 
         return ret_code, content
 
@@ -178,7 +180,7 @@ class TickerHandlerBase(RspHandlerBase):
         if ret_code != RET_OK:
             return ret_code, content
         else:
-
+            self.on_recv_log(content)
             col_list = [
                 'code', 'time', 'price', 'volume', 'turnover',
                 "ticker_direction", 'sequence', 'type', 'push_data_type',
@@ -276,6 +278,7 @@ class BrokerHandlerBase(RspHandlerBase):
         if ret_code != RET_OK:
             return ret_code, content, None
         else:
+            self.on_recv_log(content)
             stock_code, bid_content, ask_content = content
             bid_list = [
                 'code', 'bid_broker_id', 'bid_broker_name', 'bid_broker_pos'
@@ -285,8 +288,10 @@ class BrokerHandlerBase(RspHandlerBase):
             ]
             bid_frame_table = pd.DataFrame(bid_content, columns=bid_list)
             ask_frame_table = pd.DataFrame(ask_content, columns=ask_list)
-
             return RET_OK, stock_code, [bid_frame_table, ask_frame_table]
+
+
+
 
 
 class KeepAliveHandlerBase(RspHandlerBase):

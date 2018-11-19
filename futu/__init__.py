@@ -34,3 +34,7 @@ from futu.common.sys_config import SysConfig
 
 with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'VERSION.txt'), 'rb') as f:
     __version__ = f.read().decode('ascii').strip()
+
+
+def set_futu_debug_model(value):
+    common.set_debug_model(value)

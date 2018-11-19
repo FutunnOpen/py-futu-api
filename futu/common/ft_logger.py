@@ -73,7 +73,7 @@ class FTLog(object):
             # self.log_path = os.path.join(pwd_name, __LogName__)
 
         self._file_level = logging.DEBUG
-        self._console_level = logging.WARNING
+        self._console_level = logging.INFO
 
         if "file_level" in args:
             self._file_level = args["file_level"]
@@ -116,7 +116,7 @@ class FTLog(object):
                 msg += ' {0}={1};'.format(k, v)
         return title + msg
 
-    def add_msg(self, msg):
+    def format_msg(self, msg):
         rv = self.findCaller()
         if (rv is not None) and (len(rv) > 0):
             filepath = rv[0]
@@ -127,7 +127,7 @@ class FTLog(object):
 
     def warning2(self, flag, msg, *args, **kwargs):
         if self._file_level <= logging.WARNING or self._console_level <= logging.WARNING:
-            msg = self.add_msg(msg)
+            msg = self.format_msg(msg)
         if (self._file_level <= logging.WARNING) and ((flag & self.ONLY_FILE) != 0):
             self.file_logger.warning(msg, *args, **kwargs)
         if (self._console_level <= logging.WARNING) and ((flag & self.ONLY_CONSOLE) != 0):
@@ -135,7 +135,7 @@ class FTLog(object):
 
     def error2(self, flag, msg, *args, **kwargs):
         if self._file_level <= logging.ERROR or self._console_level <= logging.ERROR:
-            msg = self.add_msg(msg)
+            msg = self.format_msg(msg)
         if (self._file_level <= logging.ERROR) and ((flag & self.ONLY_FILE) != 0):
             self.file_logger.error(msg, *args, **kwargs)
         if (self._console_level <= logging.ERROR) and ((flag & self.ONLY_CONSOLE) != 0):
@@ -143,7 +143,7 @@ class FTLog(object):
 
     def debug2(self, flag, msg, *args, **kwargs):
         if self._file_level <= logging.DEBUG or self._console_level <= logging.DEBUG:
-            msg = self.add_msg(msg)
+            msg = self.format_msg(msg)
         if (self._file_level <= logging.DEBUG) and ((flag & self.ONLY_FILE) != 0):
             self.file_logger.debug(msg, *args, **kwargs)
         if (self._console_level <= logging.DEBUG) and ((flag & self.ONLY_CONSOLE) != 0):
@@ -151,20 +151,11 @@ class FTLog(object):
 
     def info2(self, flag, msg, *args, **kwargs):
         if self._file_level <= logging.INFO or self._console_level <= logging.INFO:
-            msg = self.add_msg(msg)
+            msg = self.format_msg(msg)
         if (self._file_level <= logging.INFO) and ((flag & self.ONLY_FILE) != 0):
             self.file_logger.info(msg, *args, **kwargs)
         if (self._console_level <= logging.INFO) and ((flag & self.ONLY_CONSOLE) != 0):
             self.console_logger.info(msg, *args, **kwargs)
-
-    def file_warning(self, msg, *args, **kwargs):
-        self.file_logger.warning(msg, *args, **kwargs)
-
-    def file_error(self, msg, *args, **kwargs):
-        self.warning(msg, *args, **kwargs)
-
-    def file_debug(self, msg, *args, **kwargs):
-        self.file_logger.debug(msg, *args, **kwargs)
 
     def warning(self, msg, *args, **kwargs):
         self.warning2(self.BOTH_FILE_CONSOLE, msg, *args, **kwargs)
@@ -197,7 +188,23 @@ class FTLog(object):
         self._console_level = value
         self.console_logger.setLevel(self._console_level)
         self.consoleHandler.setLevel(self._console_level)
-        
+
+    @property
+    def debug_model(self):#这个接口可以方便的让用户设置当前log的级别，一般在生产环境中，尽量关闭冗余的log以提升性能
+        if self._console_level <= logging.INFO and self._file_level <= logging.DEBUG:
+            return True
+        else:
+            return False
+
+    @console_level.setter
+    def debug_model(self, value):
+        if value:
+            self._console_level = logging.INFO
+            self._file_level = logging.DEBUG
+        else:
+            self._console_level = logging.WARNING
+            self._file_level = logging.WARNING
+
 
     def findCaller(self):
         """
