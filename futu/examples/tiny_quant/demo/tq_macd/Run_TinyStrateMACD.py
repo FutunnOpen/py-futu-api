@@ -3,7 +3,7 @@
 '''
     策略运行脚本
 '''
-from TinyStrateMACD import *
+from futu.examples.tiny_quant.demo.tq_macd.TinyStrateMACD import *
 import logging
 import futu
 import time
