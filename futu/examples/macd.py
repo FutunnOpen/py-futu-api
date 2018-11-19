@@ -154,7 +154,6 @@ class MACD(object):
 
 
 if __name__ == "__main__":
-    ft.logger.console_level = logging.DEBUG
     SHORT_PERIOD = 12
     LONG_PERIOD = 26
     SMOOTH_PERIOD = 9

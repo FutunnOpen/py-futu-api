@@ -7,7 +7,7 @@ import json
 from .ft_logger import *
 
 IS_PY2 = sys.version_info[0] == 2
-debug_model = True
+debug_model = False
 
 def bytes_utf8(data):
     if IS_PY2:

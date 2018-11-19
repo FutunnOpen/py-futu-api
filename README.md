@@ -82,9 +82,34 @@ trade_hk_ctx.close()
 
 ### 组织结构
 
-![image](https://futunnopen.github.io/py-futu-api/_static/Structure.png)
-
-​	最新版本在master分支。之前各版本在其他分支上。
+```
+futu
+│  setup.py
+│  
+├─docs
+├─futu
+│  │  VERSION.txt
+│  │  __init__.py
+│  │  
+│  ├─common
+│  ├─examples 
+│  │  │  macd.py
+│  │  │  stocksell.py
+│  │  │  broker_analysis.py
+│  │  │  check_all_get_push.py
+│  │  │  loop_get_mkt_snapshot.py
+│  │  │  simple.py
+│  │  │  
+│  │  └─tiny_quant
+│  │      ├─demo
+│  │      │  ├─tq_macd 
+│  │      │  └─tq_sample
+│  │      └─tiny_quant_frame
+│  │          └─event
+│  ├─quote 
+│  └─trade
+└─setup
+```
 
 ---
 

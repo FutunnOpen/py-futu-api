@@ -190,7 +190,10 @@ class FTLog(object):
         self.consoleHandler.setLevel(self._console_level)
 
     @property
-    def debug_model(self):#这个接口可以方便的让用户设置当前log的级别，一般在生产环境中，尽量关闭冗余的log以提升性能
+    def debug_model(self):
+        """
+        这个接口可以方便的让用户设置当前log的级别，一般在生产环境中，尽量关闭冗余的log以提升性能
+        """
         if self._console_level <= logging.INFO and self._file_level <= logging.DEBUG:
             return True
         else:
@@ -198,7 +201,7 @@ class FTLog(object):
 
     @console_level.setter
     def debug_model(self, value):
-        if value:
+        if value is True:
             self._console_level = logging.INFO
             self._file_level = logging.DEBUG
         else:
