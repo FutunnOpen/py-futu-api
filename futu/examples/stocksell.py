@@ -24,10 +24,10 @@ def simple_sell(quote_ctx, trade_ctx, stock_code, trade_price, volume, trade_env
         ret, data = trade_ctx.place_order(price=trade_price, qty=qty, code=stock_code,
                                           trd_side=ft.TrdSide.SELL, trd_env=trade_env, order_type=order_type)
         if ret != ft.RET_OK:
-            print('下单失败:{}'.format(data))
+            print('simple_sell 下单失败:{}'.format(data))
             return None
         else:
-            print('下单成功')
+            print('simple_sell 下单成功')
             return data
 
 
@@ -51,14 +51,16 @@ def smart_sell(quote_ctx, trade_ctx, stock_code, volume, trade_env, order_type=f
             continue
 
         price = data['Bid'][0][0]
-        print('bid price is {}'.format(price))
+        print('smart_sell bid price is {}'.format(price))
 
         ret, data = trade_ctx.place_order(price=price, qty=qty, code=stock_code,
-                                          trd_side=ft.TrdSide.SELL, trd_env=trade_env, order_type=order_type)
+                                          trd_side=ft.TrdSide.BUY, trd_env=trade_env, order_type=order_type)
         if ret != ft.RET_OK:
-            print('下单失败:{}'.format(data))
+            print('smart_sell 下单失败:{}'.format(data))
             return None
         else:
+            print('smart_sell 下单成功')
+            print(data)
             return data
 
 
