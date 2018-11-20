@@ -203,7 +203,7 @@ get_multiple_history_kline
 
  :param codelist: 股票代码列表，list或str。例如：['HK.00700', 'HK.00001']，'HK.00700,SZ.399001'
  :param start: 起始时间，，例如'2017-06-20'
- :param end: 结束时间，例如'2017-07-20'，start与end组合关系参见 get_history_kline_
+ :param end: 结束时间，例如'2017-07-20'
  :param ktype: k线类型，参见 KLType_
  :param autype: 复权类型，参见 AuType_
  :return: 成功时返回(RET_OK, [data])，data是DataFrame数据, 数据列格式如下
@@ -237,61 +237,6 @@ get_multiple_history_kline
     quote_ctx.close()
 
 
-get_history_kline
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-..  py:function:: get_history_kline(self, code, start=None, end=None, ktype=KLType.K_DAY, autype=AuType.QFQ, fields=[KL_FIELD.ALL])
-
- 得到本地历史k线，需先参照帮助文档下载k线
-
- :param code: 股票代码
- :param start: 开始时间，例如'2017-06-20'。
- :param end:  结束时间，例如'2017-06-30'。
-            start和end的组合如下：
-			
-              ==========    ==========    ========================================
-              start类型      end类型       说明
-              ==========    ==========    ========================================
-                str            str           start和end分别为指定的日期
-                None           str           start为end往前365天
-                str            None          end为start往后365天
-                None           None          end为当前日期，start为end往前365天
-              ==========    ==========    ========================================
- :param ktype: k线类型， 参见 KLType_ 定义
- :param autype: 复权类型, 参见 AuType_ 定义
- :param fields: 需返回的字段列表，参见 KL_FIELD_ 定义 KL_FIELD.ALL  KL_FIELD.OPEN ....
- :return: (ret, data)
-
-        ret == RET_OK 返回pd Dataframe数据, 数据列格式如下
-
-        ret != RET_OK 返回错误字符串
-
-    =================   ===========   ==============================================================================
-    参数                  类型                        说明
-    =================   ===========   ==============================================================================
-    code                str            股票代码
-    time_key            str            k线时间（美股默认是美东时间，港股A股默认是北京时间）
-    open                float          开盘价
-    close               float          收盘价
-    high                float          最高价
-    low                 float          最低价
-    pe_ratio            float          市盈率（该字段为比例字段，默认不展示%）
-    turnover_rate       float          换手率
-    volume              int            成交量
-    turnover            float          成交额
-    change_rate         float          涨跌幅
-    last_close          float          昨收价
-    =================   ===========   ==============================================================================
-
-	
- :Example:
-
- .. code:: python
-
-    from futu import *
-    quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
-    print(quote_ctx.get_history_kline('HK.00700', start='2017-06-20', end='2017-06-22'))
-    quote_ctx.close()
 
 
 request_history_kline
@@ -844,7 +789,7 @@ get_stock_quote
 
     from futu import *
     quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
-    code_list = ['US.AAPL180914C212500']
+    code_list = ['US.AAPL210115C185000']
     print(quote_ctx.subscribe(code_list, [SubType.QUOTE]))
     print(quote_ctx.get_stock_quote(code_list))
     quote_ctx.close()
@@ -1639,17 +1584,13 @@ on_recv_rsp
 
 为控制订阅产生推送数据流量，股票订阅总量有额度控制，规则如下:
 
-1.使用高频数据接口前，需要订阅（调用subscribe），订阅有额度限制：
-
- 用户额度 >= 订阅K线股票数 * K线权重 + 订阅逐笔股票数 * 逐笔权重 + 订阅报价股票数 * 报价权重 + 订阅摆盘股票数 * 摆盘权重
+1.使用高频数据接口前，需要订阅（调用subscribe），订阅有额度限制：订阅类型数量*股票数量不可超过订阅额度。
  
-2.目前所有订阅类型占用额度均为1，用户总额度与用户等级相关，参考 `OpenAPI用户等级权限 <Quote_API.html#id12>`_。
+2.用户总额度与用户等级相关，参考 `OpenAPI用户等级权限 <Quote_API.html#id12>`_。
 
-3.订阅至少一分钟才可以反订阅
+3.订阅至少一分钟才可以反订阅。
 
-.. note::
-
-	*  futu-api的订阅接口subscribe限制了股票个数*K线种类必须小于等于100
+---------------------------------------------------------------------
 
 OpenAPI用户等级权限
 ----------------------
