@@ -54,7 +54,7 @@ class RspHandlerBase(object):
             time_str = time.strftime('%Y_%m_%d', time.localtime(time.time()))
             millis = int(round(time.time() * 1000))
             type_name = self.__class__.__name__
-            log_name = os.path.join("{}_{}_{}.log".format(time_str, millis, type_name))
+            log_name = os.path.join("Track_{}_{}_{}.log".format(time_str, millis, type_name))
             self.open_file(log_name)
         if self._file:
             try:

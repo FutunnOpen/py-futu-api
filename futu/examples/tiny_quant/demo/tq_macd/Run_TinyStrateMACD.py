@@ -11,7 +11,6 @@ from futu.examples.tiny_quant.tiny_quant_frame.TinyQuantFrame import *
 
 
 if __name__ == '__main__':
-    futu.logger.console_level = logging.INFO
     my_strate = TinyStrateMACD()
     frame = TinyQuantFrame(my_strate)
     frame.run()
