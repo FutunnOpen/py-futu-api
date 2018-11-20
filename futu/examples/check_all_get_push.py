@@ -69,16 +69,14 @@ class BrokerTest(BrokerHandlerBase):
     """ 获取经纪队列推送数据 """
     def on_recv_rsp(self, rsp_pb):
         """数据响应回调函数"""
-        ret_code, content = super(BrokerTest, self).on_recv_rsp(rsp_pb)
-        if ret_code != RET_OK:
-            print("* BrokerTest: error, msg: %s " % content)
-            return RET_ERROR, content
-
-        stock_code, bid_content, ask_content = content
-        print("* BrokerTest code \n", stock_code)
-        print("* BrokerTest bid \n", bid_content)
-        print("* BrokerTest ask \n", ask_content)
-        return RET_OK, content
+        ret_code, stock_code, contents = super(BrokerTest, self).on_recv_rsp(rsp_pb)
+        if ret_code == RET_OK:
+            bid_content = contents[0]
+            ask_content = contents[1]
+            print("* BrokerTest code \n", stock_code)
+            print("* BrokerTest bid \n", bid_content)
+            print("* BrokerTest ask \n", ask_content)
+        return ret_code
 
 
 class SysNotifyTest(SysNotifyHandlerBase):
@@ -197,7 +195,7 @@ def quote_test():
     # """
 
     # """
-    sleep(10)
+    sleep(10000)
     quote_ctx.close()
     # """
 
@@ -272,7 +270,7 @@ def trade_hk_test():
     print("* history_deal_list_query : {}\n".format(trd_ctx.history_deal_list_query(code="", start="", end="2018-6-1")))
     # """
 
-    sleep(10)
+    sleep(100000)
     trd_ctx.close()
 
 
