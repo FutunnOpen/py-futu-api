@@ -37,7 +37,6 @@ code_list = [code]
 plate = 'HK.BK1107'
 print(quote_ctx.get_trading_days(market, start_date=None, end_date=None))   # 获取交易日
 print(quote_ctx.get_stock_basicinfo(market, stock_type=ft.SecurityType.STOCK))   # 获取股票信息
-print(quote_ctx.get_history_kline(code, start=None, end=None, ktype=ft.KLType.K_DAY, autype=ft.AuType.QFQ))  # 获取历史K线
 print(quote_ctx.get_autype_list(code_list))                                  # 获取复权因子
 print(quote_ctx.get_market_snapshot(code_list))                              # 获取市场快照
 print(quote_ctx.get_plate_list(market, ft.Plate.ALL))                         # 获取板块集合下的子板块列表
