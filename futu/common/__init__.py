@@ -50,6 +50,7 @@ class RspHandlerBase(object):
     def on_recv_log(self, content):
         if not debug_model:
             return
+
         if self._file is None:
             time_str = time.strftime('%Y_%m_%d', time.localtime(time.time()))
             millis = int(round(time.time() * 1000))
@@ -58,7 +59,11 @@ class RspHandlerBase(object):
             self.open_file(log_name)
         if self._file:
             try:
-                self._file.write(json.dumps(content, indent=4).replace('\n', '').replace('\t', '').replace(' ', '') + "\n")
+                log_contents = dict()
+                log_contents["content"] = content
+                log_contents["time"] = time.strftime('%H:%M:%S', time.localtime(time.time()))
+                log_contents["millis"] = int(round(time.time() * 1000))
+                self._file.write(json.dumps(log_contents, indent=4).replace('\n', '').replace('\t', '').replace(' ', '') + "\n")
                 self._file.flush()
             except TypeError:
                 type_name = self.__class__.__name__
