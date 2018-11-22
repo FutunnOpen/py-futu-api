@@ -199,6 +199,24 @@ relogin - 重登录
   **Paramters login_pwd:** str，登录密码明文
   
   **Paramters login_pwd_md5:** str，登录密码密文（32位MD5加密16进制）
+  
+ping - 检测与连接点之间的时延
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  ping 
+
+  检测与连接点之前的时延
+  
+show_delay_report - 展示延迟统计报告
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  show_delay_report -detail_report_path=D:/detail.txt -push_count_type=sr2cs 
+
+  展示延迟统计报告,包括推送延迟，请求延迟以及下单延迟。每日6:00清理数据。 
+  
+  **Paramters detail_report_path:** str，报告输出的路径
+  
+  **Paramters push_count_type:** str，推送延迟的类型(sr2ss,ss2cr,cr2cs,ss2cs,sr2cs)，默认sr2cs，sr指服务器接收时间(目前只有港股支持该时间)，ss指服务器发出时间，cr指OpenD接收时间，cs指OpenD发出时间
 	  
 help - 命令帮助
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
