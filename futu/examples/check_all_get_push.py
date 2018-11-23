@@ -195,7 +195,7 @@ def quote_test():
     # """
 
     # """
-    sleep(10000)
+    sleep(60*60*24)
     quote_ctx.close()
     # """
 
