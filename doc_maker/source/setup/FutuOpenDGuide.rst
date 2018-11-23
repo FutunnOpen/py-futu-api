@@ -214,7 +214,7 @@ show_delay_report - 展示延迟统计报告
 
   展示延迟统计报告，包括推送延迟，请求延迟以及下单延迟。每日北京时间6:00清理数据。 
   
-  **Paramters detail_report_path:** str，报告输出的路径，可选参数，若不指定则不输出到文件
+  **Paramters detail_report_path:** str，报告输出的绝对路径，可选参数，若不指定则输出到OpenD界面
   
   **Paramters push_count_type:** str，推送延迟的类型(sr2ss,ss2cr,cr2cs,ss2cs,sr2cs)，默认sr2cs，sr指服务器接收时间(目前只有港股支持该时间)，ss指服务器发出时间，cr指OpenD接收时间，cs指OpenD发出时间
 	  
