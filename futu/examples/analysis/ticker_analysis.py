@@ -97,6 +97,7 @@ class TickerAnalysis(object):
                     error_times = 0
                 target_offset = target_offset + 1
             source_offset = source_offset + 1
+        return diff_result
 
 
 
