@@ -16,24 +16,30 @@ class OrderBookItem(object):
 
     def __cmp__(self, other):
         if self.price < other.price:
-            return  -1
+            return -1
         if self.price > other.price:
             return 1
         if self.aggregate_quantity < other.aggregate_quantity:
-            return  -1
+            return -1
         if self.aggregate_quantity > other.aggregate_quantity:
             return 1
         if self.number_of_orders < other.number_of_orders:
-            return  -1
+            return -1
         if self.number_of_orders > other.number_of_orders:
+            return 1
+        if self.price_level < other.price_level:
+            return -1
+        if self.price_level > other.price_level:
             return 1
         return 0
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             r = (self.price == other.price) and \
-                   (self.aggregate_quantity == other.aggregate_quantity) and \
-                   (self.number_of_orders == other.number_of_orders)
+                (self.aggregate_quantity == other.aggregate_quantity) and \
+                (self.number_of_orders == other.number_of_orders) and \
+                (self.price_level == other.price_level)
+
             return r
         else:
             return False
@@ -62,6 +68,7 @@ class OrderBookAnalysis(object):
             target_items = target
         else:
             return False
+
         if len(source_items) != len(target_items):
             return False
         if len(source_items) == 0:
@@ -174,7 +181,6 @@ class OrderBookAnalysis(object):
         """去除掉重复元素和脏数据"""
         new_list = list()
         last = None
-
         for item in items:
             if self.compare_item(item, last):
                 continue

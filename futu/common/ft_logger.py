@@ -70,6 +70,9 @@ class FTLog(object):
         else:
             self.log_path = os.path.join(os.environ['HOME'], ("." + __LogPathName__))
 
+        if not os.path.exists(self.log_path):
+            os.makedirs(self.log_path)
+
         self._file_level = logging.DEBUG
         self._console_level = logging.INFO
 

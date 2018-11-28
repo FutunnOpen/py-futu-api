@@ -128,7 +128,7 @@ class FutuDataEvent(object):
         dt_start = dt_now - timedelta(days= 365 if ktype == KTYPE_DAY else 30)
         str_start = dt_start.strftime("%Y-%m-%d")
         str_end = dt_now.strftime("%Y-%m-%d")
-        ret, data = self._quote_context.get_history_kline(code=symbol, start=str_start, end=str_end, ktype=ktype, autype=ft.AuType.QFQ)
+        ret, data, page_req_key = self._quote_context.request_history_kline(code=symbol, start=str_start, end=str_end, ktype=ktype, autype=ft.AuType.QFQ)
         if ret == 0:
             # with GLOBAL.dt_lock:
             for ix, row in data.iterrows():
@@ -146,7 +146,7 @@ class FutuDataEvent(object):
                     last_am_bar = bar
 
         # 导入今天的最新数据
-        ret, data = self._quote_context.get_cur_kline(code=symbol, num=1000, ktype=ktype, autype=ft.AuType.QFQ)
+        ret, data, page_req_key = self._quote_context.request_history_kline(code=symbol, max_count=1000, ktype=ktype, autype=ft.AuType.QFQ)
         if ret == 0:
             # with GLOBAL.dt_lock:
             for ix, row in data.iterrows():
