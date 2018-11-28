@@ -11,6 +11,7 @@ else:
 
 CallbackItem = namedtuple('CallbackItem', ['ctx', 'proto_id', 'rsp_pb'])
 
+
 class CallbackExecutor:
     def __init__(self):
         self._queue = queue.Queue()
@@ -31,5 +32,3 @@ class CallbackExecutor:
             ctx, proto_id, rsp_pb = w
             ctx.packet_callback(proto_id, rsp_pb)
 
-
-callback_executor = CallbackExecutor()

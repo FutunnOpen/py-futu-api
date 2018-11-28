@@ -17,8 +17,8 @@ from futu.quote.quote_query import KeepAlive, parse_head
 from futu.common.conn_mng import FutuConnMng
 from futu.common.network_manager import NetManager
 from .err import Err
+from .callback_executor import CallbackExecutor, CallbackItem
 from .ft_logger import *
-from .callback_executor import callback_executor, CallbackItem
 
 _SyncReqRet = namedtuple('_SyncReqRet', ('ret', 'msg'))
 
@@ -35,6 +35,7 @@ class OpenContextBase(object):
     def __init__(self, host, port, async_enable):
         self.__host = host
         self.__port = port
+        self._callback_executor = CallbackExecutor()
         self.__async_socket_enable = async_enable
         self._net_mgr = NetManager.default()
         self._handler_ctx = HandlerContext(self._is_proc_run)
@@ -331,7 +332,7 @@ class OpenContextBase(object):
             self._handle_keep_alive(conn_id, proto_info.proto_id, ret_code, msg, rsp_pb)
         elif ret_code == RET_OK:
             item = CallbackItem(self, proto_info.proto_id, rsp_pb)
-            callback_executor.queue.put(item)
+            self._callback_executor.queue.put(item)
 
     def on_activate(self, conn_id, now):
         with self._lock:
