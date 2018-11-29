@@ -83,11 +83,11 @@ class TickerAnalysis(object):
             source_item = source[source_offset]
             if not find_start:
                 target_time_sec_tag = int(target_item["millis"] / 1000)
-                source_time_sec_tag = int(target_item["millis"] / 1000)
+                source_time_sec_tag = int(source_item["trade_time"] / 1000)
                 if abs(target_time_sec_tag - source_time_sec_tag) < 10 and self.compare_item(target_item, source_item):
                     print("----------start----------")
-                    print(target_item["volume"])
-                    print(source_item["volume"])
+                    print(target_item["millis"])
+                    print(source_item["trade_time"])
                     find_start = True
             if find_start:
                 if not self.compare_item(target_item, source_item):
@@ -106,11 +106,14 @@ class TickerAnalysis(object):
 
 if __name__ =="__main__":
     analysis = TickerAnalysis()
-    analysis.analysis_opend_json("D:\\tmp\\Track_2018_11_21_1542768961590_TickerTest.log")
+    analysis.analysis_opend_json("D:\\tmp\\Track_2018_11_28_1543370754392_TickerTest2.log")
     analysis.save_opend_dict("D:\\tmp\\Track_OpenD.json", "HK.00700")
 
-    analysis.analysis_server_json("D:\\tmp\\sort_700_ticker_11_21.json", "HK.00700")
+    analysis.analysis_server_json("D:\\tmp\\sort_700_ticker.json", "HK.00700")
     analysis.save_server_dict("D:\\tmp\\Track_Server.json", "HK.00700")
 
     diff_result = analysis.compare("HK.00700")
+    with open("D:\\tmp\\diff_ticker", 'w')  as f:
+        for item in diff_result:
+            f.write(json.dumps(item, indent=4).replace('\n', '').replace('\t', '').replace(' ', '') + "\n")
     print(diff_result)
