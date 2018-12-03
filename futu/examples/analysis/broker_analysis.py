@@ -13,6 +13,9 @@ class BrokerAnalysis(object):
         self.server_find_dict = dict()
         self.server_dict = dict()
 
+        self.diff_result = list()
+        self.error_times = 0
+
     @staticmethod
     def trim_list(items):
         """去除掉重复元素和脏数据"""
@@ -147,46 +150,6 @@ class BrokerAnalysis(object):
             v["bid"] = BrokerAnalysis.trim_list(v["bid"])
 
 
-    # def compare(self, source, target):
-    #     target_offset = 0
-    #     source_offset = 0
-    #     find_start = False
-    #     find_start_times = 0 #连续重复3个才能认为是找到了
-    #     error_times = 0
-    #     targer_error_times = 0
-    #     while target_offset < len(target) and source_offset < len(source):
-    #         target_item = target[target_offset]
-    #         source_item = source[source_offset]
-    #         if not operator.eq(target_item, source_item):
-    #             if not find_start:
-    #                 source_offset = source_offset + 1
-    #             else:
-    #                 print("S = " + str(source_item).replace(' ', ''))
-    #                 print("T = " + str(target_item).replace(' ', ''))
-    #                 print("target_offset = " + str(target_offset + 1) + "       source_offset = " + str(source_offset + 1))
-    #                 if error_times < 3:
-    #                     source_offset = source_offset + 1
-    #                     error_times = error_times + 1
-    #                     targer_error_times = 0
-    #                 else: #此路不通，再试试回滚后调整target_offset
-    #                     source_offset = source_offset - error_times
-    #                     error_times = 0
-    #                     target_offset = target_offset + 1
-    #                     targer_error_times = targer_error_times + 1
-    #             if targer_error_times > 3:
-    #                 print("------------------------")
-    #                 break
-    #         else:
-    #             source_offset = source_offset + 1
-    #             target_offset = target_offset + 1
-    #             if len(target_item) > 0:
-    #                 find_start = True
-    #             error_times = 0
-    #             targer_error_times = 0
-    #
-    #     if not find_start:
-    #         print("------no find_start----------")
-
     def try_find_opend_items(self, find_item, side, stock_code):
         find_list = list()
         for k, v in self.opend_find_dict[stock_code].items():
@@ -216,12 +179,11 @@ class BrokerAnalysis(object):
         return find_list
 
 
-    def compare(self, source, target):
-        diff_result = list()
-        target_offset = 0
-        source_offset = 0
+    def compare(self, source, target, source_offset=0, target_offset= 0):
+        if source_offset == 0 and target_offset == 0:
+            self.diff_result = list()
+            self.error_times = 0
         find_start = False
-        error_times = 0
         find_start_times = 0 #连续重复3个才能认为是找到了
         while target_offset < len(target) and source_offset < len(source):
             target_item = target[target_offset]
@@ -230,20 +192,17 @@ class BrokerAnalysis(object):
                 if not find_start:
                     source_offset = source_offset + 1
                 else:
-                    diff_result.append({"S": source_item, "T": target_item})
-                    # print("S = " + str(source_item).replace(' ', ''))
-                    # print("T = " + str(target_item).replace(' ', ''))
-                    # print("target_offset = " + str(target_offset + 1) + "       source_offset = " + str(source_offset + 1))
-                    error_times = error_times + 1
-                    if error_times > 3:
-                        break
-
+                    self.diff_result.append({"S": source_item, "T": target_item})
+                    self.error_times = self.error_times + 1
+                    source_offset = source_offset + 1
+                    target_offset = target_offset + 1
+                    self.compare(source, target, source_offset, target_offset)
+                    break
             else:
                 if not find_start and len(target_item) > 0:
                     find_start_times = find_start_times + 1
                 if find_start_times > 3:
                     find_start = True
-                error_times = 0
 
             source_offset = source_offset + 1
             target_offset = target_offset + 1
@@ -251,7 +210,7 @@ class BrokerAnalysis(object):
         if not find_start:
             print("------no find_start----------")
 
-        return diff_result
+        return self.diff_result
 
 
     def compare_ask(self, stock_code):
@@ -294,16 +253,16 @@ class BrokerAnalysis(object):
 
 if __name__ =="__main__":
     analysis = BrokerAnalysis()
-    analysis.analysis_opend_json("D:\\tmp\\Track_2018_11_21_1542768961720_BrokerTest.log")
+    analysis.analysis_opend_json("D:\\tmp\\11.30\\Track_2018_11_30_1543543325164_BrokerTest.log")
     analysis.save_opend_dict("D:\\tmp\\Broker_OpenD.json", "HK.00700")
-    analysis.analysis_server_json("D:\\tmp\\sort_700_BrokerQueue_11_21.json", "HK.00700")
+    analysis.analysis_server_json("D:\\tmp\\11.30\\sort_700_BrokerQueue(1).json", "HK.00700")
     analysis.save_server_dict("D:\\tmp\\Broker_Server.json", "HK.00700", "ask")
 
     diff_result = analysis.compare_ask("HK.00700")
-    analysis.save_compare_result(diff_result, "ask", "HK.00700", "D:\\tmp\\diff_result_ask.json")
+    analysis.save_compare_result(diff_result, "ask", "HK.00700", "D:\\tmp\\11.30\\diff_result_ask.json")
 
     diff_result = analysis.compare_bid("HK.00700")
-    analysis.save_compare_result(diff_result, "bid", "HK.00700", "D:\\tmp\\diff_result_bid.json",)
+    analysis.save_compare_result(diff_result, "bid", "HK.00700", "D:\\tmp\\11.30\\diff_result_bid.json",)
 
     # stock_list = ['HK.66173', 'HK.61039', 'HK.66284', 'HK.62748', 'HK.64836', 'HK.62329']
     # for stock in stock_list:
