@@ -2,9 +2,9 @@
 
 ### 简介
 
-[​**futu-api**](https://futunnopen.github.io/py-futu-api/intro/intro.html)开源项目可以满足使用[**富途Open API**](https://www.futunn.com/)软件进行量化投资的需求, 提供包括Python接口、Json和Protobuf接口的行情及交易的API。
+[​**futu-api**](https://futunnopen.github.io/futu-api-doc/intro/intro.html)开源项目可以满足使用[**富途Open API**](https://www.futunn.com/)软件进行量化投资的需求, 提供包括Python接口、Json和Protobuf接口的行情及交易的API。
 
-- [官方在线文档](https://futunnopen.github.io/py-futu-api/intro/intro.html)
+- [官方在线文档](https://futunnopen.github.io/futu-api-doc/intro/intro.html)
 
 -------------------
 
@@ -161,11 +161,11 @@ trade_hk_ctx.close()
 ### 使用须知
 
 - python脚本运行前，需先启动[FutuOpenD](https://www.futunn.com/download/openAPI)网关客户端
-- 详情查看[安装指南](https://futunnopen.github.io/py-futu-api/setup/setup.html)
+- 详情查看[安装指南](https://futunnopen.github.io/futu-api-doc/setup/setup.html)
 
 ### API与FutuOpenD网关客户端的架构
 
-![image](https://futunnopen.github.io/py-futu-api/_images/API.png)
+![image](https://futunnopen.github.io/futu-api-doc/_images/API.png)
 
 ***
 
