@@ -5,6 +5,8 @@ Examples for use the python functions: get push data
 from time import sleep
 from futu import *
 
+
+
 class StockQuoteTest(StockQuoteHandlerBase):
     """
     获得报价推送数据
@@ -15,7 +17,7 @@ class StockQuoteTest(StockQuoteHandlerBase):
         if ret_code != RET_OK:
             logger.debug("StockQuoteTest: error, msg: %s" % content)
             return RET_ERROR, content
-        print("* StockQuoteTest : %s" % content)
+        # print("* StockQuoteTest : %s" % content)
         return RET_OK, content
 
 
@@ -24,8 +26,8 @@ class CurKlineTest(CurKlineHandlerBase):
     def on_recv_rsp(self, rsp_pb):
         """数据响应回调函数"""
         ret_code, content = super(CurKlineTest, self).on_recv_rsp(rsp_pb)
-        if ret_code == RET_OK:
-            print("* CurKlineTest : %s\n" % content)
+        if ret_code != RET_OK:
+            print("* CurKlineTest: error, msg: %s" % content)
         return RET_OK, content
 
 
@@ -37,7 +39,7 @@ class RTDataTest(RTDataHandlerBase):
         if ret_code != RET_OK:
             print("* RTDataTest: error, msg: %s" % content)
             return RET_ERROR, content
-        print("* RTDataTest :%s \n" % content)
+        # print("* RTDataTest :%s \n" % content)
         return RET_OK, content
 
 
@@ -49,7 +51,7 @@ class TickerTest(TickerHandlerBase):
         if ret_code != RET_OK:
             print("* TickerTest: error, msg: %s" % content)
             return RET_ERROR, content
-        print("* TickerTest\n", content)
+        # print("* TickerTest\n", content)
         return RET_OK, content
 
 
@@ -61,7 +63,7 @@ class OrderBookTest(OrderBookHandlerBase):
         if ret_code != RET_OK:
             print("* OrderBookTest: error, msg: %s" % content)
             return RET_ERROR, content
-        print("* OrderBookTest\n", content)
+        # print("* OrderBookTest\n", content)
         return RET_OK, content
 
 
@@ -73,9 +75,9 @@ class BrokerTest(BrokerHandlerBase):
         if ret_code == RET_OK:
             bid_content = contents[0]
             ask_content = contents[1]
-            print("* BrokerTest code \n", stock_code)
-            print("* BrokerTest bid \n", bid_content)
-            print("* BrokerTest ask \n", ask_content)
+            # print("* BrokerTest code \n", stock_code)
+            # print("* BrokerTest bid \n", bid_content)
+            # print("* BrokerTest ask \n", ask_content)
         return ret_code
 
 

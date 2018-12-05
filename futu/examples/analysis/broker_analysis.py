@@ -245,12 +245,6 @@ class BrokerAnalysis(object):
 
 
 
-
-
-
-
-
-
 if __name__ =="__main__":
     analysis = BrokerAnalysis()
     analysis.analysis_opend_json("D:\\tmp\\11.30\\Track_2018_11_30_1543543325164_BrokerTest.log")
