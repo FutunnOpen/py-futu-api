@@ -54,7 +54,7 @@ def smart_sell(quote_ctx, trade_ctx, stock_code, volume, trade_env, order_type=f
         print('smart_sell bid price is {}'.format(price))
 
         ret, data = trade_ctx.place_order(price=price, qty=qty, code=stock_code,
-                                          trd_side=ft.TrdSide.BUY, trd_env=trade_env, order_type=order_type)
+                                          trd_side=ft.TrdSide.SELL, trd_env=trade_env, order_type=order_type)
         if ret != ft.RET_OK:
             print('smart_sell 下单失败:{}'.format(data))
             return None
