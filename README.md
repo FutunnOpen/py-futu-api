@@ -82,32 +82,78 @@ trade_hk_ctx.close()
 ### 组织结构
 
 ```
-futu
-│  setup.py
-│  
-├─docs
-├─futu
-│  │  VERSION.txt
-│  │  __init__.py
-│  │  
-│  ├─common
-│  ├─examples 
-│  │  │  macd.py
-│  │  │  stocksell.py
-│  │  │  broker_analysis.py
-│  │  │  check_all_get_push.py
-│  │  │  loop_get_mkt_snapshot.py
-│  │  │  simple.py
-│  │  │  
-│  │  └─tiny_quant
-│  │      ├─demo
-│  │      │  ├─tq_macd 
-│  │      │  └─tq_sample
-│  │      └─tiny_quant_frame
-│  │          └─event
-│  ├─quote 
-│  └─trade
-└─setup
+.
+├── futu
+│   ├── common #主要框架代码
+│   │   ├── callback_executor.py
+│   │   ├── comm_add_path.py
+│   │   ├── conn_key.txt
+│   │   ├── conn_mng.py
+│   │   ├── constant.py
+│   │   ├── err.py
+│   │   ├── ft_logger.py
+│   │   ├── handler_context.py
+│   │   ├── __init__.py
+│   │   ├── network_manager.py
+│   │   ├── open_context_base.py
+│   │   ├── pb
+│   │   │   └── __init__.py
+│   │   ├── pbjson.py
+│   │   ├── sys_config.py
+│   │   └── utils.py
+│   ├── examples #一些简单的演示demo
+│   │   ├── analysis
+│   │   │   ├── broker_analysis.py
+│   │   │   ├── orderbook_analysis.py
+│   │   │   └── ticker_analysis.py
+│   │   ├── check_all_get_push.py
+│   │   ├── __init__.py
+│   │   ├── loop_get_mkt_snapshot.py
+│   │   ├── macd.py
+│   │   ├── simple.py
+│   │   ├── stocksell.py
+│   │   └── tiny_quant #这里是一个历史遗留的复杂回测框架，暂时继续保留两个demo，这里建议开发者自己找好用的回测框架，不要再依赖这个破碎框架（裁剪自vnpy）
+│   │       ├── demo
+│   │       │   ├── __init__.py
+│   │       │   ├── tq_macd
+│   │       │   │   ├── __init__.py
+│   │       │   │   ├── setting.json
+│   │       │   │   └── TinyStrateMACD.py
+│   │       │   └── tq_sample
+│   │       │       ├── __init__.py
+│   │       │       ├── setting.json
+│   │       │       └── TinyStrateSample.py
+│   │       ├── __init__.py
+│   │       └── tiny_quant_frame #裁剪自vnpy
+│   │           ├── event
+│   │           │   ├── eventEngine.py
+│   │           │   ├── eventType.py
+│   │           │   └── __init__.py
+│   │           ├── FutuDataEvent.py
+│   │           ├── FutuMarketEvent.py
+│   │           ├── __init__.py
+│   │           ├── setting.json
+│   │           ├── TinyDefine.py
+│   │           ├── TinyQuantBase.py
+│   │           ├── TinyQuantFrame.py
+│   │           ├── TinyStrateBase.py
+│   │           └── TinyStrateSample.py
+│   ├── __init__.py
+│   ├── quote #行情相关接口代码
+│   │   ├── __init__.py
+│   │   ├── open_quote_context.py
+│   │   ├── quote_query.py
+│   │   └── quote_response_handler.py
+│   ├── trade #交易相关接口代码
+│   │   ├── __init__.py
+│   │   ├── open_trade_context.py
+│   │   ├── trade_query.py
+│   │   └── trade_response_handler.py
+│   └── VERSION.txt
+├── setup
+│   ├── PyCrypto-Wheels.url
+│   └── .url
+└── setup.py
 ```
 
 ---
