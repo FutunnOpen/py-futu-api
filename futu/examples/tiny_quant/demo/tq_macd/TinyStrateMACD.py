@@ -5,6 +5,7 @@
 '''
 import talib
 from futu.examples.tiny_quant.tiny_quant_frame.TinyStrateBase import *
+from futu.examples.tiny_quant.tiny_quant_frame.TinyQuantFrame import *
 from futu import *
 import datetime
 import pandas as pd
@@ -120,3 +121,9 @@ class TinyStrateMACD(TinyStrateBase):
 
         trd_ctx.close()
 
+
+
+if __name__ == '__main__':
+    my_strate = TinyStrateMACD()
+    frame = TinyQuantFrame(my_strate)
+    frame.run()

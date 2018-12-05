@@ -213,7 +213,7 @@ class TinyQuantFrame(object):
 
             if frame_setting['logFile']:
                 if not self.fileHandler:
-                    filename = 'vt_' + datetime.now().strftime('%Y%m%d') + '.log'
+                    filename = 'vt_' + datetime.now().strftime('%Y_%m_%d') + '.log'
                     filepath = os.path.join(self.log_path, filename)
                     self.fileHandler = logging.FileHandler(filepath)
                     self.fileHandler.setLevel(level)

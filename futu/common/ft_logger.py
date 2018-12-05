@@ -69,8 +69,9 @@ class FTLog(object):
             self.log_path = os.path.join(os.getenv("appdata"), __LogPathName__)
         else:
             self.log_path = os.path.join(os.environ['HOME'], ("." + __LogPathName__))
-            # pwd_name = pwd.getpwuid(os.getuid())[0]
-            # self.log_path = os.path.join(pwd_name, __LogName__)
+
+        if not os.path.exists(self.log_path):
+            os.makedirs(self.log_path)
 
         self._file_level = logging.DEBUG
         self._console_level = logging.INFO
@@ -88,7 +89,7 @@ class FTLog(object):
         self.formatter = logging.Formatter('%(asctime)s %(message)s')
 
         if not hasattr(self, 'fileHandler'):
-            file_name = 'ft_' + datetime.now().strftime('%Y%m%d') + '.log'
+            file_name = 'py_' + datetime.now().strftime('%Y_%m_%d') + '.log'
             file_path = os.path.join(self.log_path, file_name)
             self.fileHandler = logging.FileHandler(file_path)
             self.fileHandler.setLevel(self._file_level)

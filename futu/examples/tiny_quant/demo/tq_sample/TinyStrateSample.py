@@ -5,6 +5,8 @@
 '''
 import talib
 from futu.examples.tiny_quant.tiny_quant_frame.TinyStrateBase import *
+from futu.examples.tiny_quant.tiny_quant_frame.TinyQuantFrame import *
+
 
 class TinyStrateSample(TinyStrateBase):
     """策略名称, setting.json中作为该策略配置的key"""
@@ -123,4 +125,10 @@ class TinyStrateSample(TinyStrateBase):
         if array:
             return result
         return result[-1]
+
+
+if __name__ == '__main__':
+    my_strate = TinyStrateSample()
+    frame = TinyQuantFrame(my_strate)
+    frame.run()
 

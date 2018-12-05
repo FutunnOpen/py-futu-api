@@ -288,7 +288,7 @@ class BrokerHandlerBase(RspHandlerBase):
             ]
             bid_frame_table = pd.DataFrame(bid_content, columns=bid_list)
             ask_frame_table = pd.DataFrame(ask_content, columns=ask_list)
-            return RET_OK, stock_code, [bid_frame_table, ask_frame_table]
+            return ret_code, stock_code, [bid_frame_table, ask_frame_table]
 
 
 
@@ -360,4 +360,4 @@ class OrderDetailHandlerBase(RspHandlerBase):
         if ret_code != RET_OK:
             return ret_code, msg
         else:
-            return RET_OK, data
+            return ret_code, data

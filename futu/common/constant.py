@@ -288,6 +288,7 @@ class SubType(object):
     ORDER_BOOK = "ORDER_BOOK"
     ORDER_DETAIL = "ORDER_DETAIL"
     K_1M = "K_1M"
+    K_3M = "K_3M"
     K_5M = "K_5M"
     K_15M = "K_15M"
     K_30M = "K_30M"
@@ -295,13 +296,15 @@ class SubType(object):
     K_DAY = "K_DAY"
     K_WEEK = "K_WEEK"
     K_MON = "K_MON"
+    K_QUARTER = "K_QUARTER"
+    K_YEAR = "K_YEAR"
     RT_DATA = "RT_DATA"
     BROKER = "BROKER"
 
 
 KLINE_SUBTYPE_LIST = [SubType.K_DAY, SubType.K_MON, SubType.K_WEEK,
-                      SubType.K_1M, SubType.K_5M, SubType.K_15M,
-                      SubType.K_30M, SubType.K_60M
+                      SubType.K_1M, SubType.K_3M, SubType.K_5M, SubType.K_15M,
+                      SubType.K_30M, SubType.K_60M, SubType.K_QUARTER, SubType.K_YEAR,
                       ]
 
 
@@ -319,9 +322,11 @@ SUBTYPE_MAP = {
     SubType.K_WEEK: 12,
     SubType.K_MON: 13,
     SubType.BROKER: 14,
+    SubType.K_QUARTER: 15,
+    SubType.K_YEAR: 16,
+    SubType.K_3M: 17,
     SubType.ORDER_DETAIL: 18
 }
-
 
 # k线类型
 class KLType(object):
@@ -360,7 +365,7 @@ class KLType(object):
 
 KTYPE_MAP = {
     KLType.K_1M: 1,
-    KLType.K_3M: 17,
+    KLType.K_3M: 10,
     KLType.K_5M: 6,
     KLType.K_15M: 7,
     KLType.K_30M: 8,
@@ -368,8 +373,8 @@ KTYPE_MAP = {
     KLType.K_DAY: 2,
     KLType.K_WEEK: 3,
     KLType.K_MON: 4,
-    KLType.K_QUARTER: 15,
-    KLType.K_YEAR: 16
+    KLType.K_QUARTER: 11,
+    KLType.K_YEAR: 5
 }
 
 
