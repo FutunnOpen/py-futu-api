@@ -79,6 +79,14 @@ trade_hk_ctx.close()
 
 ---
 
+### 调试开关和推送记录
+
+- set_futu_debug_model函数可以打开或关闭调试级别的log记录。
+- 如果打开记录，则会记录info级别的log并且记录所有逐笔、摆盘、券商经纪的推送记录，以便于后面排查，文件记录在%appdata%(%HOME%)\com.futunn.FutuOpenD\Log下面
+- examples\analysis下面会有对逐笔、摆盘、券商经纪的推送记录的分析脚本，与我们联系，拿到原始交易所数据后，可以载入比对（beta功能）
+
+---
+
 ### 组织结构
 
 ```

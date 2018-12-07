@@ -201,13 +201,18 @@ class FTLog(object):
             return False
 
     @console_level.setter
-    def debug_model(self, value):
-        if value is True:
+    def debug_model(self, on_off):
+        if on_off is True:
             self._console_level = logging.INFO
             self._file_level = logging.DEBUG
         else:
             self._console_level = logging.WARNING
             self._file_level = logging.WARNING
+
+        self.console_logger.setLevel(self._console_level)
+        self.consoleHandler.setLevel(self._console_level)
+        self.file_logger.setLevel(self._file_level)
+        self.fileHandler.setLevel(self._file_level)
 
 
     def findCaller(self):
