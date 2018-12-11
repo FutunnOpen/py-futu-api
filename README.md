@@ -169,7 +169,7 @@ trade_hk_ctx.close()
 ### 使用须知
 
 - python脚本运行前，需先启动[FutuOpenD](https://www.futunn.com/download/openAPI)网关客户端
-- 详情查看[安装指南](https://futunnopen.github.io/futu-api-doc/setup/setup.html)
+- 详情查看[安装指南](https://futunnopen.github.io/futu-api-doc/api/setup.html)
 
 ### API与FutuOpenD网关客户端的架构
 
