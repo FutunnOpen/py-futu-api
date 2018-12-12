@@ -76,7 +76,34 @@ def is_socket_exception_wouldblock(e):
 
 
 def make_ctrl_socks():
-    return socket.socketpair()
+    LOCAL_HOST = '127.0.0.1'
+    if IS_PY2:
+        svr_sock = []
+        lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        def svr_sock_func():
+            try:
+                sock, _ = lsock.accept()
+                svr_sock.append(sock)
+            except Exception as e:
+                logger.warning('Ctrl sock fail: {}'.format(str(e)))
+        try:
+            lsock.bind((LOCAL_HOST, 0))
+            _, port = lsock.getsockname()[:2]
+            lsock.listen(1)
+            thread = threading.Thread(target=svr_sock_func)
+            thread.start()
+            client_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            client_sock.settimeout(0.1)
+            client_sock.connect((LOCAL_HOST, port))
+            thread.join()
+            return svr_sock[0], client_sock
+        except Exception as e:
+            logger.warning('Ctrl sock fail: {}'.format(str(e)))
+            return None, None
+        finally:
+            lsock.close()
+    else:
+        return socket.socketpair()
 
 class NetManager:
     _default_inst = None
@@ -427,20 +454,15 @@ class NetManager:
 
         err = None
         is_closed = False
-        while True:
-            try:
-                data = conn.sock.recv(1024 * 1024)
-                if data == b'':
-                    is_closed = True
-                    break
-                else:
-                    conn.readbuf.extend(data)
-            except Exception as e:
-                if is_socket_exception_wouldblock(e):
-                    break
-                else:
-                    err = str(e)
-                    break
+        try:
+            data = conn.sock.recv(1024 * 1024)
+            if data == b'':
+                is_closed = True
+            else:
+                conn.readbuf.extend(data)
+        except Exception as e:
+            if not is_socket_exception_wouldblock(e):
+                err = str(e)
 
         while len(conn.readbuf) > 0:
             head_len = get_message_head_len()
@@ -457,7 +479,7 @@ class NetManager:
 
         if is_closed:
             self.close(conn.conn_id)
-            conn.handler.on_closed(conn.conn_id)
+            conn.handler.on_error(conn.conn_id, Err.ConnectionClosed.text)
         elif err:
             self.close(conn.conn_id)
             conn.handler.on_error(conn.conn_id, err)
