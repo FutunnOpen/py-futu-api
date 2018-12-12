@@ -144,7 +144,7 @@ def quote_test():
     big_sub_codes = []
     subtype_list = [SubType.QUOTE, SubType.ORDER_BOOK, SubType.TICKER, SubType.K_DAY, SubType.RT_DATA, SubType.BROKER]
 
-    code_list = ['HK.00700', 'HK.00388']
+    code_list = ['HK.00700', 'HK_FUTURE.999010']
 
     print("* get_owner_plate : {}\n".format(quote_ctx.get_owner_plate(code_list)))
     print("* get_referencestock_list : {}\n".format(quote_ctx.get_referencestock_list(

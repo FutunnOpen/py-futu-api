@@ -36,5 +36,5 @@ with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'VERSION.txt
     __version__ = f.read().decode('ascii').strip()
 
 
-def set_futu_debug_model(value):
-    common.set_debug_model(value)
+def set_futu_debug_model(on_off=True):
+    common.set_debug_model(on_off)
