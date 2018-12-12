@@ -27,10 +27,10 @@ class BeforePublishTest(object):
     def __init__(self):
         pandas.set_option('max_columns',100)
         pandas.set_option('display.width',1000)
-        # self.host = '172.18.10.58'
-        self.host = '127.0.0.1'
-        self.port_quote = 11111
-        # self.port_trade = 11111 # 测试环境
+        self.host = '172.18.7.65'
+        # self.host = '127.0.0.1'
+        self.port_quote = 11113
+        # self.port_trade = 11113 # 测试环境
 
 
     def test_quotation(self):
@@ -85,10 +85,8 @@ class BeforePublishTest(object):
         logger.info(quote_ctx.get_rt_ticker(code='SH.601998', num=1000))
 
         logger.info('订阅 subscribe-KL')
-        codes3 = ['HK.00772', 'US.FB', 'SZ.000885', 'HK.00434', 'US.VIPS', 'SZ.000001']
-        logger.info(quote_ctx.subscribe(code_list=codes3,
-                                        subtype_list=[SubType.K_3M, SubType.K_5M, SubType.K_DAY, SubType.K_WEEK,
-                                                      SubType.K_QUARTER, SubType.K_YEAR]))
+        codes3 = ['HK.00772','US.FB','SZ.000885', 'HK.00434','US.VIPS','SZ.000001']
+        logger.info(quote_ctx.subscribe(code_list=codes3, subtype_list=[SubType.K_3M,SubType.K_5M,SubType.K_DAY,SubType.K_WEEK,SubType.K_QUARTER,SubType.K_YEAR]))
         logger.info('获取实时K线 get_cur_kline')
         logger.info(quote_ctx.get_cur_kline(code='HK.00434', num=1000, ktype=SubType.K_3M, autype=AuType.NONE))
         logger.info(quote_ctx.get_cur_kline(code='HK.00772', num=1000, ktype=SubType.K_5M, autype=AuType.QFQ))
@@ -120,12 +118,13 @@ class BeforePublishTest(object):
 
         logger.info('查询订阅 query_subscription')
         logger.info(quote_ctx.query_subscription(is_all_conn=True))
+        logger.info(quote_ctx.subscribe('SZ.000001',SubType.ORDER_DETAIL))
         logger.info(quote_ctx.get_order_detail('SZ.000001'))
         time.sleep(61)
         logger.info('反订阅 unsubscribe')
         subTypes = [SubType.QUOTE, SubType.ORDER_BOOK, SubType.BROKER, SubType.TICKER, SubType.RT_DATA, SubType.K_1M,
-                    SubType.K_3M,SubType.K_5M, SubType.K_15M, SubType.K_30M, SubType.K_60M, SubType.K_DAY, SubType.K_WEEK,
-                    SubType.K_MON,SubType.K_QUARTER, SubType.K_YEAR]
+                    SubType.K_3M, SubType.K_5M, SubType.K_15M, SubType.K_30M, SubType.K_60M, SubType.K_DAY,
+                    SubType.K_WEEK,SubType.K_MON, SubType.K_QUARTER, SubType.K_YEAR]
         codes=codes1+codes2+codes3+codes4+codes5+codes6
         logger.info(quote_ctx.unsubscribe(code_list = codes, subtype_list = subTypes))
 
@@ -369,9 +368,6 @@ class BeforePublishTest(object):
         logger.info(trade_us.history_deal_list_query(code='', start='', end='', trd_env=tradeEnv, acc_id=0))
         logger.info('CN 历史成交列表')
         logger.info(trade_cn.history_deal_list_query(code='', start='', end='', trd_env=tradeEnv, acc_id=0))
-        trade_hk.close()
-        trade_us.close()
-        trade_cn.close()
 
 
     
@@ -472,16 +468,6 @@ class TradeDealTest(TradeDealHandlerBase):
         TradeDealTest.logger.info(ret_data)
         return RET_OK,ret_data
 
-class OrderDetailTest(OrderDetailHandlerBase):
-    def on_recv_rsp(self, rsp_str):
-        ret_code, err_or_stock_code, data = super(OrderDetailTest, self).on_recv_rsp(rsp_str)
-        if ret_code != RET_OK:
-            print("OrderDetailTest: error, msg: {}".format(err_or_stock_code))
-            return RET_ERROR, data
-
-        print("OrderDetailTest: stock: {} data: {} ".format(err_or_stock_code, data))  # OrderDetailTest
-
-        return RET_OK, data
 
 if __name__ == '__main__':
     # trade_ctx_us = OpenUSTradeContext('127.0.0.1',11112)
@@ -490,24 +476,10 @@ if __name__ == '__main__':
     while True:
         aa.test_quotation()
         time.sleep(300)
-    # quote_ctx = OpenQuoteContext('127.0.0.1',11111)
-    # handlers = [CurKlineTest(), OrderBookTest(), RTDataTest(), TickerTest(), StockQuoteTest(), BrokerTest()]
-    # for handler in handlers:
-    #     quote_ctx.set_handler(handler)
-    # ret_code, ret_data = quote_ctx.get_stock_basicinfo(Market.HK, SecurityType.STOCK)
-    # code_list = list(ret_data['code'])[100:600]
-    # print(len(code_list))
-    # print(quote_ctx.query_subscription(code_list))
-    # quote_ctx.set_handler(CurKlineTest())
-    # print(quote_ctx.subscribe(code_list, [SubType.TICKER, SubType.K_1M]))# , SubType.RT_DATA, SubType.TICKER, SubType.QUOTE
-    # print(quote_ctx.query_subscription(code_list))
-    # quote_ctx.close()
-
-
     # aa.test_trade(TrdEnv.REAL)
     # time.sleep(30)
     # aa.test_trade(TrdEnv.SIMULATE)
-    # order_id_hk=3609064270230150378
+    # # order_id_hk=3609064270230150378
     # trade_hk = OpenHKTradeContext('127.0.0.1', 11111)
     # print('111')
     # print(trade_hk.modify_order(modify_order_op=ModifyOrderOp.CANCEL, order_id=order_id_hk, qty=0, price=0, adjust_limit=0,

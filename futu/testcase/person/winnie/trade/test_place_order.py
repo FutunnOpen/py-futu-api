@@ -169,14 +169,14 @@ if __name__ == '__main__':
     po = PlaceOrder()
     trd_ctx = OpenHKTradeContext(host='127.0.0.1', port=11161)
     trd_ctx.unlock_trade('123123')
-    ret_code,ret_data = trd_ctx.place_order(10,100,'HK.00700',TrdSide.BUY)
-    ret_code, ret_data = trd_ctx.order_list_query()
+    # ret_code,ret_data = trd_ctx.place_order(10,100,'HK.00700',TrdSide.BUY)
+    print(trd_ctx.order_list_query())
     # time.sleep(1)
     # order_id = ret_data['order_id'][0]
-    order_id = '8216076940823345086'
+    order_id = '8218309537838283855'
     print(order_id)
     print(trd_ctx.order_list_query())
-    print(trd_ctx.change_order(order_id,7,1000))
+    print(trd_ctx.modify_order(ModifyOrderOp.NORMAL,order_id,11,1000))
     # time.sleep(1)
     # print(ret_data)
     # order_id = ret_data['order_id'][0]

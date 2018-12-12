@@ -67,10 +67,10 @@ def smart_sell(quote_ctx, trade_ctx, stock_code, volume, trade_env, order_type=f
 if __name__ =="__main__":
 
     ip = '127.0.0.1'
-    port = 11111
+    port = 11112
 
     code = 'HK.00700'
-    unlock_pwd = '123456'
+    unlock_pwd = '123123'
     trd_env = ft.TrdEnv.SIMULATE
     order_type = ft.OrderType.NORMAL
 

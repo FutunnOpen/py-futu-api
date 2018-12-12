@@ -71,7 +71,8 @@ class TinyStrateMACD(TinyStrateBase):
                     self.do_trade(symbol, price, "buy")
                 elif signal <0:
                     self.do_trade(symbol, price, "sell")
-            quote_ctx = OpenQuoteContext(host='172.24.31.139', port=11111)
+            # quote_ctx = OpenQuoteContext(host='172.24.31.139', port=11111)
+            quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
 
 
 

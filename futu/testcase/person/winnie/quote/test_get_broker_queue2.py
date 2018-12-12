@@ -18,7 +18,7 @@ class AsyncBroker(unittest.TestCase):
         :return:
         '''
         #打印日志：测试用例名
-        print(casename, file=f2, flush=True)
+        print(casename)
         #设置监听
         handler = BrokerTest()
         quote_ctx2.set_handler(handler)
@@ -150,12 +150,13 @@ class BrokerTest(BrokerHandlerBase):
         ret_code, err_or_stock_code, data = super(BrokerTest, self).on_recv_rsp(rsp_str)  # 基类的on_recv_rsp方法解包返回了经济队列信息
         # 打印,记录日志
         print(data, file=f2, flush=True)
+        print(data)
 
         return RET_OK, data
 
 
 if __name__ == '__main__':
-    quote_ctx2 = OpenQuoteContext(host='127.0.0.1', port=11121)
+    quote_ctx2 = OpenQuoteContext(host='127.0.0.1', port=11112)
     pandas.set_option('max_columns', 100)
     pandas.set_option('display.width', 1000)
     unittest.main()

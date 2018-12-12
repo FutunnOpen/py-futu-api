@@ -26,10 +26,11 @@ class GetRtTicker(unittest.TestCase):
         ret_code_sub, ret_data_sub = quote_ctx1.subscribe(code, SubType.TICKER)
         ret_code, ret_data1 = quote_ctx1.get_rt_ticker(code, num)
         print(casename)
+        print(num)
         print(num, file=f1, flush=True)
         print(casename,file=f1, flush=True)
         print(ret_data1, file=f1, flush=True)
-        # print(ret_data)
+        print(ret_data1)
         ret_code_sub, ret_data_sub = quote_ctx2.subscribe(code, SubType.TICKER)
         ret_code, ret_data2 = quote_ctx2.get_rt_ticker(code, num)
         print(num, file=f2, flush=True)
@@ -97,7 +98,7 @@ class GetRtTicker(unittest.TestCase):
         :return:
         '''
         casename = sys._getframe().f_code.co_name
-        code = 'US.DIS181123P110000'
+        code = 'US.AAPL181221C182500'
         self.step_check_base1(casename,code)
 
     #A股
@@ -197,14 +198,14 @@ if __name__ == '__main__':
     # 新订阅协议
     quote_ctx1 = OpenQuoteContext('127.0.0.1',11111)
     # 旧协议
-    quote_ctx2 = OpenQuoteContext('127.0.0.1', 11121)
+    quote_ctx2 = OpenQuoteContext('127.0.0.1', 11111)
     pandas.set_option('max_columns', 100)
     pandas.set_option('display.width', 1000)
     pandas.set_option('display.max_rows', 1000)
-    # grt = GetRtTicker()
-    # grt.test_get_rt_ticker_us_drvt()
+    grt = GetRtTicker()
+    grt.test_get_rt_ticker_us_drvt()
     # while True:
-    unittest.main()
+    # unittest.main()
 
     # 高频接口
     # 设置监听

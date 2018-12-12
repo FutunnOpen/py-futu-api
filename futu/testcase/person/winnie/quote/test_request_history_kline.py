@@ -23,6 +23,7 @@ class RequestHistoryKline(unittest.TestCase):
         logger.info('【testcase】' + case_name)
         page_req_key = None
         ret,data,page_req_key = quote_ctx.request_history_kline(code, start,end,ktype,autype,fields,page_req_key)
+        print(data)
         logger.info(data)
         return ret,data
 
@@ -72,15 +73,16 @@ class RequestHistoryKline(unittest.TestCase):
         self.common_request_history_kline_check_success(code, ret, data)
 
     # 获取港股牛熊近1年3分k数据
-    # def test_request_history_kline_15min_1year(self):
-    #     case_name = sys._getframe().f_code.co_name
-    #     code = 'HK.66950'
-    #     end = '2018-11-12'
-    #     start = '2017-11-12'
-    #     ktype = KLType.K_3M
-    #     ret, data = self.common_request_history_kline_process(case_name, code, start, end, ktype)
-    #     # 校验：数据大于5000条，code显示都是'HK.69426'
-    #     self.common_request_history_kline_check_success(code, ret, data)
+    def test_request_history_kline_15min_1year(self):
+        case_name = sys._getframe().f_code.co_name
+        # code = 'HK.66950'
+        code = 'HK.00700'
+        end = '2018-11-12'
+        start = '2017-11-30'
+        ktype = KLType.K_3M
+        ret, data = self.common_request_history_kline_process(case_name, code, start, end, ktype)
+        # 校验：数据大于5000条，code显示都是'HK.69426'
+        self.common_request_history_kline_check_success(code, ret, data)
 
     # 获取港股正股近1年15分k数据
     def test_request_history_kline_15min_1years(self):
@@ -150,21 +152,21 @@ class RequestHistoryKline(unittest.TestCase):
         code = 'US..DJI'
         end = '2018-11-12'
         start = '2017-11-12'
-        ktype = KLType.K_DAY
+        ktype = KLType.K_QUARTER
         ret, data = self.common_request_history_kline_process(case_name, code, start, end, ktype)
         # 校验：252条数据，code部分是'US..DJI'
         self.common_request_history_kline_check_success(code, ret, data)
 
     # 美股指数获取近1年季k
-    # def test_request_history_kline_us_idx_1year_season(self):
-    #     case_name = sys._getframe().f_code.co_name
-    #     code = 'US..DJI'
-    #     end = '2018-11-12'
-    #     start = '2017-11-12'
-    #     ktype = KLType.K_SEASON
-    #     ret, data = self.common_request_history_kline_process(case_name, code, start, end, ktype)
-    #     # 校验：252条数据，code部分是'US..DJI'
-    #     self.common_request_history_kline_check_success(code, ret, data)
+    def test_request_history_kline_us_idx_1year_season(self):
+        case_name = sys._getframe().f_code.co_name
+        code = 'US..DJI'
+        end = '2018-11-12'
+        start = '2017-11-12'
+        ktype = KLType.K_QUARTER
+        ret, data = self.common_request_history_kline_process(case_name, code, start, end, ktype)
+        # 校验：252条数据，code部分是'US..DJI'
+        #self.common_request_history_kline_check_success(code, ret, data)
 
     # 美股ETF获取近1年日k
     def test_request_history_kline_us_etf_1years(self):
@@ -248,16 +250,39 @@ class RequestHistoryKline(unittest.TestCase):
         # 需验证日期都是1号
 
     # 获取A股正股近1年年k数据
-    # def test_request_history_kline_ch_stock_year_2years(self):
-    #     case_name = sys._getframe().f_code.co_name
-    #     code = 'SZ.300431'
-    #     end = '2018-11-12'
-    #     start = '2017-11-12'
-    #     ktype = KLType.K_YEAR
-    #     autype = AuType.NONE
-    #     ret, data = self.common_request_history_kline_process(case_name, code, start, end, ktype, autype)
+    def test_request_history_kline_ch_stock_year_2years(self):
+        case_name = sys._getframe().f_code.co_name
+        code = 'SZ.300431'
+        # code = 'HK.00700'
+        end = '2018-11-22'
+        start = '2017-11-25'
+        ktype = KLType.K_YEAR
+        autype = AuType.NONE
+        ret, data = self.common_request_history_kline_process(case_name, code, start, end, ktype, autype)
     #     # 校验：
-    #     self.common_request_history_kline_check_success(code, ret, data)
+        self.common_request_history_kline_check_success(code, ret, data)
+
+    def test_request_history_kline_hk_stock_year_2years(self):
+        case_name = sys._getframe().f_code.co_name
+        code = 'HK.00700'
+        end = '2018-11-22'
+        start = '2013-11-25'
+        ktype = KLType.K_YEAR
+        autype = AuType.NONE
+        ret, data = self.common_request_history_kline_process(case_name, code, start, end, ktype, autype)
+    #     # 校验：
+        self.common_request_history_kline_check_success(code, ret, data)
+
+    def test_request_history_kline_us_stock_year_2years(self):
+        case_name = sys._getframe().f_code.co_name
+        code = 'SZ.000001'
+        end = '2018-11-22'
+        start = '2017-11-25'
+        ktype = KLType.K_3M
+        autype = AuType.NONE
+        ret, data = self.common_request_history_kline_process(case_name, code, start, end, ktype, autype)
+    #     # 校验：
+        self.common_request_history_kline_check_success(code, ret, data)
 
     # 美股指数获取近1年周k
     def test_request_history_kline_us_idx_week_1years(self):
@@ -350,5 +375,12 @@ if __name__ == '__main__':
     pandas.set_option('max_columns', 100)
     pandas.set_option('display.width', 1000)
 
-    unittest.main()
+    # unittest.main()
+    tmp = RequestHistoryKline()
+    # tmp.test_request_history_kline_us_idx_1year()
+    # tmp.test_request_history_kline_us_idx_1year_season()
+    # tmp.test_request_history_kline_15min_1year()
+    # tmp.test_request_history_kline_hk_stock_year_2years()
+    tmp.test_request_history_kline_us_stock_year_2years()
+    # tmp.test_request_history_kline_ch_stock_year_2years()
 

@@ -28,8 +28,9 @@ class BeforePublishTest(object):
         pandas.set_option('max_columns',100)
         pandas.set_option('display.width',1000)
         self.host = '172.18.7.65'
+        # self.host = '127.0.0.1'
         self.port_quote = 11111
-        self.port_trade = 11112 # 测试环境
+        # self.port_trade = 11111 # 测试环境
 
 
     def test_quotation(self):
@@ -84,12 +85,15 @@ class BeforePublishTest(object):
         logger.info(quote_ctx.get_rt_ticker(code='SH.601998', num=1000))
 
         logger.info('订阅 subscribe-KL')
-        codes3 = ['HK.00772','US.FB','SZ.000885']
-        logger.info(quote_ctx.subscribe(code_list=codes3, subtype_list=[SubType.K_5M,SubType.K_DAY,SubType.K_WEEK]))
+        codes3 = ['HK.00772','US.FB','SZ.000885', 'HK.00434','US.VIPS','SZ.000001']
+        logger.info(quote_ctx.subscribe(code_list=codes3, subtype_list=[SubType.K_3M,SubType.K_5M,SubType.K_DAY,SubType.K_WEEK,SubType.K_QUARTER,SubType.K_YEAR]))
         logger.info('获取实时K线 get_cur_kline')
+        logger.info(quote_ctx.get_cur_kline(code='HK.00434', num=1000, ktype=SubType.K_3M, autype=AuType.NONE))
         logger.info(quote_ctx.get_cur_kline(code='HK.00772', num=1000, ktype=SubType.K_5M, autype=AuType.QFQ))
         logger.info(quote_ctx.get_cur_kline(code='US.FB', num=500, ktype=SubType.K_DAY, autype=AuType.HFQ))
         logger.info(quote_ctx.get_cur_kline(code='SZ.000885', num=750, ktype=SubType.K_WEEK, autype=AuType.NONE))
+        logger.info(quote_ctx.get_cur_kline(code='US.VIPS', num=750, ktype=SubType.K_QUARTER, autype=AuType.QFQ))
+        logger.info(quote_ctx.get_cur_kline(code='SZ.000001', num=750, ktype=SubType.K_YEAR, autype=AuType.QFQ))
 
         logger.info('订阅 subscribe-order_book')
         codes4 = ['HK.01810','US.AMZN']
@@ -114,17 +118,26 @@ class BeforePublishTest(object):
 
         logger.info('查询订阅 query_subscription')
         logger.info(quote_ctx.query_subscription(is_all_conn=True))
+        logger.info(quote_ctx.subscribe('SZ.000001',SubType.ORDER_DETAIL))
         logger.info(quote_ctx.get_order_detail('SZ.000001'))
         time.sleep(61)
         logger.info('反订阅 unsubscribe')
         subTypes = [SubType.QUOTE, SubType.ORDER_BOOK, SubType.BROKER, SubType.TICKER, SubType.RT_DATA, SubType.K_1M,
-                    SubType.K_5M, SubType.K_15M, SubType.K_30M, SubType.K_60M, SubType.K_DAY, SubType.K_WEEK,
-                    SubType.K_MON]
+                    SubType.K_3M, SubType.K_5M, SubType.K_15M, SubType.K_30M, SubType.K_60M, SubType.K_DAY,
+                    SubType.K_WEEK,SubType.K_MON, SubType.K_QUARTER, SubType.K_YEAR]
         codes=codes1+codes2+codes3+codes4+codes5+codes6
         logger.info(quote_ctx.unsubscribe(code_list = codes, subtype_list = subTypes))
 
         logger.info('查询订阅 query_subscription')
         logger.info(quote_ctx.query_subscription(is_all_conn=True))
+
+        logger.info('下载历史数据 request_history_kline')
+        ret, data, page_req_key = quote_ctx.request_history_kline('HK.00700', None, None, KLType.K_3M)
+        logger.info(data)
+        ret, data, page_req_key = quote_ctx.request_history_kline('US.VIPS', None, None, KLType.K_QUARTER)
+        logger.info(data)
+        ret, data, page_req_key = quote_ctx.request_history_kline('US.VIPS', None, None, KLType.K_YEAR)
+        logger.info(data)
 
         #异步实时数据
         # 设置监听
@@ -134,9 +147,9 @@ class BeforePublishTest(object):
         # 订阅
         codes = ['HK.00700', 'US.AAPL', 'SH.601318']
         quote_ctx.subscribe(code_list=codes, subtype_list=subTypes)
-        # time.sleep(5 * 60)  # 订阅5分钟
-        # quote_ctx.stop()
-        # quote_ctx.close()
+        time.sleep(5 * 60)  # 订阅5分钟
+        quote_ctx.stop()
+        quote_ctx.close()
 
     def test_trade(self,tradeEnv = TrdEnv.REAL):
         #交易接口测试
@@ -460,11 +473,20 @@ if __name__ == '__main__':
     # trade_ctx_us = OpenUSTradeContext('127.0.0.1',11112)
     # print(trade_ctx_us.place_order(35.4,1,'US.CTRP',TrdSide.BUY,OrderType.NORMAL))
     aa = BeforePublishTest()
-    aa.test_quotation()
-    aa.test_trade(TrdEnv.REAL)
-    time.sleep(30)
-    aa.test_trade(TrdEnv.SIMULATE)
-    # order_id_hk=3609064270230150378
+    while True:
+        # quote_ctx = OpenQuoteContext('172.18.7.65', 11111)
+        # code = 'HK.00700'
+        # print('111')
+        # print(quote_ctx.subscribe(code, SubType.TICKER))
+        # print(quote_ctx.get_rt_ticker(code, 100))
+        # time.sleep(2)
+        # quote_ctx.close()
+        aa.test_quotation()
+        time.sleep(10)
+    # aa.test_trade(TrdEnv.REAL)
+    # time.sleep(30)
+    # aa.test_trade(TrdEnv.SIMULATE)
+    # # order_id_hk=3609064270230150378
     # trade_hk = OpenHKTradeContext('127.0.0.1', 11111)
     # print('111')
     # print(trade_hk.modify_order(modify_order_op=ModifyOrderOp.CANCEL, order_id=order_id_hk, qty=0, price=0, adjust_limit=0,
