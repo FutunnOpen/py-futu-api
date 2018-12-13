@@ -189,8 +189,10 @@ class BrokerAnalysis(object):
             target_item = target[target_offset]
             source_item = source[source_offset]
             if not operator.eq(target_item, source_item):
+                find_start_times = 0
                 if not find_start:
                     source_offset = source_offset + 1
+                    continue
                 else:
                     self.diff_result.append({"S": source_item, "T": target_item})
                     self.error_times = self.error_times + 1
@@ -201,7 +203,7 @@ class BrokerAnalysis(object):
             else:
                 if not find_start and len(target_item) > 0:
                     find_start_times = find_start_times + 1
-                if find_start_times > 3:
+                if find_start_times > 5:
                     find_start = True
 
             source_offset = source_offset + 1
@@ -247,16 +249,16 @@ class BrokerAnalysis(object):
 
 if __name__ =="__main__":
     analysis = BrokerAnalysis()
-    analysis.analysis_opend_json("D:\\tmp\\11.30\\Track_2018_11_30_1543543325164_BrokerTest.log")
+    analysis.analysis_opend_json("D:\\tmp\\Track_2018_12_13_1544666376103_BrokerTest.log")
     analysis.save_opend_dict("D:\\tmp\\Broker_OpenD.json", "HK.00700")
-    analysis.analysis_server_json("D:\\tmp\\11.30\\sort_700_BrokerQueue(1).json", "HK.00700")
+    analysis.analysis_server_json("D:\\tmp\\sort_700_BrokerQueue.json", "HK.00700")
     analysis.save_server_dict("D:\\tmp\\Broker_Server.json", "HK.00700", "ask")
 
     diff_result = analysis.compare_ask("HK.00700")
-    analysis.save_compare_result(diff_result, "ask", "HK.00700", "D:\\tmp\\11.30\\diff_result_ask.json")
+    analysis.save_compare_result(diff_result, "ask", "HK.00700", "D:\\tmp\\diff_result_ask.json")
 
     diff_result = analysis.compare_bid("HK.00700")
-    analysis.save_compare_result(diff_result, "bid", "HK.00700", "D:\\tmp\\11.30\\diff_result_bid.json",)
+    analysis.save_compare_result(diff_result, "bid", "HK.00700", "D:\\tmp\\diff_result_bid.json",)
 
     # stock_list = ['HK.66173', 'HK.61039', 'HK.66284', 'HK.62748', 'HK.64836', 'HK.62329']
     # for stock in stock_list:

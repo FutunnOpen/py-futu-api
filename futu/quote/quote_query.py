@@ -107,10 +107,10 @@ class TradeDayQuery:
             return RET_ERROR, ret_msg, None
 
         raw_trading_day_list = rsp_pb.s2c.tradeDateList
-        print(raw_trading_day_list)
-        # convert to list format that we use
-        trading_day_list = [x.time.split()[0] for x in raw_trading_day_list]
-
+        trading_day_list = list()
+        for x in raw_trading_day_list:
+            if x.time is not None and len(x.time) > 0:
+                trading_day_list.append({"time": x.time, "trade_date_type": x.tradeDateType})
         return RET_OK, "", trading_day_list
 
 

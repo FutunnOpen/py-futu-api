@@ -438,19 +438,19 @@ class OrderBookAnalysis(object):
 if __name__ =="__main__":
 
     analysis = OrderBookAnalysis()
-    analysis.analysis_server_json("D:\\tmp\\11.30\\摆盘\\sort_700_AggregateOrderBookUpdate.json", "HK.00700")
-    analysis.save_server_dict("D:\\tmp\\11.30\\摆盘\\OrderBook_Server", "HK.00700")
+    analysis.analysis_server_json("D:\\tmp\\sort_700_AggregateOrderBookUpdate.json", "HK.00700")
+    analysis.save_server_dict("D:\\tmp\\OrderBook_Server", "HK.00700")
 
-    analysis.analysis_opend_json("D:\\tmp\\11.30\\摆盘\\Track_2018_11_30_1543543325040_OrderBookTest.log")
-    analysis.save_opend_dict("D:\\tmp\\11.30\\摆盘\\OrderBook_OpenD", "HK.00700")
+    analysis.analysis_opend_json("D:\\tmp\\Track_2018_12_13_1544666376106_OrderBookTest.log")
+    analysis.save_opend_dict("D:\\tmp\\OrderBook_OpenD", "HK.00700")
 
     diff_result_list = analysis.compare_ask("HK.00700")
 
-    with open("D:\\tmp\\11.30\\摆盘\\diff_OrderBookAnalysis_ask.txt", 'w') as f:
+    with open("D:\\tmp\\diff_OrderBookAnalysis_ask.txt", 'w') as f:
         for item in diff_result_list:
             f.write(json.dumps(item, indent=4, default=order_book_to_dict).replace('\n', '').replace('\t', '').replace(' ', '') + "\n")
 
     diff_result_list = analysis.compare_bid("HK.00700")
-    with open("D:\\tmp\\11.30\\摆盘\\diff_OrderBookAnalysis_bid.txt", 'w') as f:
+    with open("D:\\tmp\\diff_OrderBookAnalysis_bid.txt", 'w') as f:
         for item in diff_result_list:
             f.write(json.dumps(item, indent=4, default=order_book_to_dict).replace('\n', '').replace('\t', '').replace(' ', '') + "\n")
