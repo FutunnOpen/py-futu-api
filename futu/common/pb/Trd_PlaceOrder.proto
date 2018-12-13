@@ -12,7 +12,7 @@ message C2S
 	required int32 orderType = 4; //订单类型, 参见Trd_Common.OrderType的枚举定义
 	required string code = 5; //代码，港股必须是5位数字，A股必须是6位数字，美股没限制
 	required double qty = 6; //数量，2位精度，期权单位是"张"
-	optional double price = 7; //价格，3位精度
+	optional double price = 7; //价格，大于1的精度为2位，小于1的精度为3位
 	//以下2个为调整价格使用，都传才有效，对港、A股有意义，因为港股有价位，A股2位精度，美股可不传
 	optional bool adjustPrice = 8; //是否调整价格，如果价格不合法，是否调整到合法价位，true调整，false不调整
 	optional double adjustSideAndLimit = 9; //调整方向和调整幅度百分比限制，正数代表向上调整，负数代表向下调整，具体值代表调整幅度限制，如：0.015代表向上调整且幅度不超过1.5%；-0.01代表向下调整且幅度不超过1%

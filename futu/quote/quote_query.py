@@ -107,6 +107,7 @@ class TradeDayQuery:
             return RET_ERROR, ret_msg, None
 
         raw_trading_day_list = rsp_pb.s2c.tradeDateList
+        print(raw_trading_day_list)
         # convert to list format that we use
         trading_day_list = [x.time.split()[0] for x in raw_trading_day_list]
 
@@ -252,6 +253,11 @@ class MarketSnapshotQuery:
             snapshot_tmp['listing_date'] = "N/A" if record.HasField('optionExData') else record.basic.listTime
             snapshot_tmp['price_spread'] = record.basic.priceSpread
             snapshot_tmp['lot_size'] = record.basic.lotSize
+            snapshot_tmp['ask_price'] = record.basic.askPrice
+            snapshot_tmp['bid_price'] = record.basic.bidPrice
+            snapshot_tmp['ask_vol'] = record.basic.askVol
+            snapshot_tmp['bid_vol'] = record.basic.bidVol
+
 
             snapshot_tmp['equity_valid'] = False
             # equityExData

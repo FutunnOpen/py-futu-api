@@ -726,7 +726,11 @@ class OpenQuoteContext(OpenContextBase):
             'listing_date',
             'lot_size',
             'price_spread',
-            'stock_owner'
+            'stock_owner',
+            'ask_price',
+            'bid_price',
+            'ask_vol',
+            'bid_vol'
         ]
 
         col_list.append('equity_valid')
@@ -1364,7 +1368,6 @@ class OpenQuoteContext(OpenContextBase):
                 turnover                 float          成交额
                 pe_ratio                 float          市盈率（该字段为比例字段，默认不展示%）
                 turnover_rate            float          换手率
-                last_close               float          昨收价
                 =====================   ===========   ==============================================================
         """
         param_table = {'code': code, 'ktype': ktype}
@@ -1400,7 +1403,7 @@ class OpenQuoteContext(OpenContextBase):
 
         col_list = [
             'code', 'time_key', 'open', 'close', 'high', 'low', 'volume',
-            'turnover', 'pe_ratio', 'turnover_rate', 'last_close'
+            'turnover', 'pe_ratio', 'turnover_rate'
         ]
         kline_frame_table = pd.DataFrame(kline_list, columns=col_list)
 
