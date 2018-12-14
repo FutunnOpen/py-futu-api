@@ -22,10 +22,10 @@ def str_utf8(data):
     else:
         return str(data, encoding='utf-8')
 
-def set_debug_model(value):
+def set_debug_model(on_off):
     global debug_model
-    debug_model = (value is True)
-    logger.debug_model = (value is True)
+    debug_model = (on_off is True)
+    logger.debug_model = (on_off is True)
 
 
 class RspHandlerBase(object):
