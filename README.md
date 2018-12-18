@@ -35,7 +35,7 @@ market = ft.Market.HK
 code = 'HK.00123'
 code_list = [code]
 plate = 'HK.BK1107'
-print(quote_ctx.get_trading_days(market, start_date=None, end_date=None))   # 获取交易日
+print(quote_ctx.get_trading_days(market, start=None, end=None))   # 获取交易日
 print(quote_ctx.get_stock_basicinfo(market, stock_type=ft.SecurityType.STOCK))   # 获取股票信息
 print(quote_ctx.get_autype_list(code_list))                                  # 获取复权因子
 print(quote_ctx.get_market_snapshot(code_list))                              # 获取市场快照
