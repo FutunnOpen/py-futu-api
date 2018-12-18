@@ -1,8 +1,8 @@
-# futu-api - 富途量化投资平台 (Futu Quant Trading API)
+# futu-api - 富途开放API (FUTU Open API)
 
 ### 简介
 
-[​**futu-api**](https://futunnopen.github.io/futu-api-doc/intro/intro.html)开源项目可以满足使用[**富途Open API**](https://www.futunn.com/)软件进行量化投资的需求, 提供包括Python接口、Json和Protobuf接口的行情及交易的API。
+[​**futu-api**](https://futunnopen.github.io/futu-api-doc/intro/intro.html)开源项目可以满足使用[**FUTU Open API**](https://www.futunn.com/download/openAPI)软件进行量化投资的需求, 并提供包括Python、Json/Protobuf协议的行情及交易接口。
 
 - [官方在线文档](https://futunnopen.github.io/futu-api-doc/intro/intro.html)
 
@@ -13,7 +13,7 @@
 pip install futu-api
 ```
 
-###### 注: 本API当前仅支持Python3, 推荐安装anaconda3环境，方便快捷。
+###### 注: 本API支持Python2.7/Python3.x, 推荐安装anaconda2或anaconda3环境，方便快捷。
 
 ---
 
