@@ -3,7 +3,7 @@
     Constant collection
 """
 from copy import copy
-
+from enum import Enum, unique
 
 RET_OK = 0
 RET_ERROR = -1
@@ -87,8 +87,8 @@ MKT_MAP = {
     Market.SZ: 22
 }
 
-from .pb import Trd_Common_pb2
-from .pb import Qot_Common_pb2
+from futu.common.pb import Trd_Common_pb2
+from futu.common.pb import Qot_Common_pb2
 
 QOT_MARKET_TO_TRD_SEC_MARKET_MAP = {
     Qot_Common_pb2.QotMarket_Unknown: Trd_Common_pb2.TrdSecMarket_Unknown,
@@ -742,6 +742,9 @@ class ProtoId(object):
     Qot_GetOrderDetail = 3016           # 获取委托明细
     Qot_UpdateOrderDetail = 3017        # 推送委托明细
 
+    Qot_GetWarrantData = 3210        # 拉取涡轮信息
+
+
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
 
@@ -1248,10 +1251,198 @@ class SecurityReferenceType:
     WARRANT = 'WARRANT'
 
 
-from .pb import Qot_GetReference_pb2
+from futu.common.pb import Qot_GetReference_pb2
 
 
 STOCK_REFERENCE_TYPE_MAP = {
     SecurityReferenceType.NONE: Qot_GetReference_pb2.ReferenceType_Unknow,
     SecurityReferenceType.WARRANT: Qot_GetReference_pb2.ReferenceType_Warrant
 }
+
+
+@unique
+class SortField(Enum):
+    """
+    Unknown = 0
+    Code = 1 代码
+    CurPrice = 2 最新价
+    PriceChangeVal = 3 涨跌额
+    ChangeRate = 4 涨跌幅%
+    Status = 5 状态
+    BidPrice = 6 买入价
+    AskPrice = 7 卖出价
+    BidVol = 8 买量
+    AskVol = 9 卖量
+    Volume = 10 成交量
+    Turnover = 11 成交额
+    Score = 12 综合评分
+    Premium = 13 溢价%
+    EffectiveLeverage = 14 有效杠杆
+    Delta = 15 对冲值,仅认购认沽支持该字段
+    ImpliedVolatility = 16 引伸波幅,仅认购认沽支持该字段
+    Type = 17 类型
+    StrikePrice = 18 行权价
+    BreakEvenPoint = 19 打和点
+    MaturityTime = 20 到期日
+    ListTime = 21 上市日期
+    LastTradeTime = 22 最后交易日
+    Leverage = 23 杠杆比率
+    InOutMoney = 24 价内/价外%
+    RecoveryPrice = 25 收回价,仅牛熊证支持该字段
+    ChangePrice = 26  换股价
+    Change = 27 换股比率
+    StreetRate = 28 街货比%
+    StreetVol = 29 街货量
+    Amplitude = 30 振幅%
+    WarrantName = 31  名称
+    Issuer = 32 发行人
+    LotSize = 33  每手
+    IssueSize = 34 发行量
+    """
+    Unknown = 0
+    Code = 1 
+    CurPrice = 2 
+    PriceChangeVal = 3 
+    ChangeRate = 4 
+    Status = 5 
+    BidPrice = 6 
+    AskPrice = 7 
+    BidVol = 8 
+    AskVol = 9 
+    Volume = 10 
+    Turnover = 11 
+    Score = 12 
+    Premium = 13 
+    EffectiveLeverage = 14 
+    Delta = 15 
+    ImpliedVolatility = 16 
+    Type = 17 
+    StrikePrice = 18 
+    BreakEvenPoint = 19 
+    MaturityTime = 20 
+    ListTime = 21 
+    LastTradeTime = 22 
+    Leverage = 23 
+    InOutMoney = 24 
+    RecoveryPrice = 25 
+    ChangePrice = 26 
+    Change = 27 
+    StreetRate = 28 
+    StreetVol = 29 
+    Amplitude = 30 
+    WarrantName = 31 
+    Issuer = 32 
+    LotSize = 33 
+    IssueSize = 34
+
+@unique
+class IpoPeriod(Enum):
+    """	
+    Unknown = 0; 未知
+    Today = 1; 今日上市
+    Tomorrow = 2; 明日上市
+    Nextweek = 3; 未来一周上市
+    Lastweek = 4; 过去一周上市
+    Lastmonth = 5; 过去一月上市
+    """
+    Unknown = 0 
+    Today = 1 
+    Tomorrow = 2 
+    Nextweek = 3 
+    Lastweek = 4 
+    Lastmonth = 5
+
+
+@unique
+class PriceType(Enum):
+    """
+    Unknown = 0;
+    Outside = 1; //价外
+    WithIn = 2; //价内
+    """
+    Unknown = 0
+    Outside = 1
+    WithIn = 2
+
+
+@unique
+class WarrantStatus(Enum):
+    """
+    Unknown = 0; //未知
+    WarrantStatus_Normal = 1; //正常状态
+    WarrantStatus_Suspend = 2; //停牌
+    WarrantStatus_StopTrade = 3; //终止交易
+    WarrantStatus_PendingListing = 4; //等待上市
+    """
+    Unknown = 0
+    Normal = 1
+    Suspend = 2
+    StopTrade = 3
+    PendingListing = 4
+
+@unique
+class WarrantType(Enum):
+    """
+    Unknown = 0 未知
+    Buy = 1 认购
+    Sell = 2 认沽
+    Bull = 3 牛
+    Bear = 4 熊
+    """
+    Unknown = 0
+    Buy = 1
+    Sell = 2
+    Bull = 3
+    Bear = 4
+
+
+class Issuer(Enum):
+    """
+    Unknown = 0未知
+    SG = 1法兴
+    BP = 2法巴
+    CS = 3瑞信
+    CT = 4花旗
+    EA = 5东亚
+    GS = 6高盛
+    HS = 7汇丰
+    JP = 8摩通
+    MB = 9麦银
+    SC = 10渣打
+    UB = 11瑞银
+    BI = 12中银
+    DB = 13德银
+    DC = 14大和
+    ML = 15美林
+    NM = 16野村
+    RB = 17荷合
+    RS = 18苏皇
+    BC = 19巴克莱
+    HT = 20海通
+    VT = 21瑞通
+    KC = 22比联
+    """
+
+    Unknown = 0
+    SG = 1
+    BP = 2
+    CS = 3
+    CT = 4
+    EA = 5
+    GS = 6
+    HS = 7
+    JP = 8
+    MB = 9
+    SC = 10
+    UB = 11
+    BI = 12
+    DB = 13
+    DC = 14
+    ML = 15
+    NM = 16
+    RB = 17
+    RS = 18
+    BC = 19
+    HT = 20
+    VT = 21
+    KC = 22

@@ -5,8 +5,6 @@
 
 from futu.common.utils import *
 
-
-
 # 无数据时的值
 NoneDataType = 'N/A'
 
@@ -108,9 +106,11 @@ class TradeDayQuery:
 
         raw_trading_day_list = rsp_pb.s2c.tradeDateList
         trading_day_list = list()
+
         for x in raw_trading_day_list:
             if x.time is not None and len(x.time) > 0:
                 trading_day_list.append({"time": x.time, "trade_date_type": x.tradeDateType})
+
         return RET_OK, "", trading_day_list
 
 
@@ -995,35 +995,37 @@ class StockQuoteQuery:
             return RET_ERROR, rsp_pb.retMsg, []
         raw_quote_list = rsp_pb.s2c.basicQotList
 
-        quote_list = [{
-            'code': merge_qot_mkt_stock_str(int(record.security.market), record.security.code),
-            'data_date': record.updateTime.split()[0],
-            'data_time': record.updateTime.split()[1],
-            'last_price': record.curPrice,
-            'open_price': record.openPrice,
-            'high_price': record.highPrice,
-            'low_price': record.lowPrice,
-            'prev_close_price': record.lastClosePrice,
-            'volume': int(record.volume),
-            'turnover': record.turnover,
-            'turnover_rate': record.turnoverRate,
-            'amplitude': record.amplitude,
-            'suspension': record.isSuspended,
-            'listing_date': record.listTime,
-            'price_spread': record.priceSpread if record.HasField('priceSpread') else 0,
-            'dark_status': QUOTE.REV_DARK_STATUS_MAP[record.darkStatus] if record.HasField('darkStatus') else DarkStatus.NONE,
-            "strike_price": record.optionExData.strikePrice,
-            "contract_size": record.optionExData.contractSize,
-            "open_interest": record.optionExData.openInterest,
-            "implied_volatility": record.optionExData.impliedVolatility,
-            "premium": record.optionExData.premium,
-            "delta": record.optionExData.delta,
-            "gamma": record.optionExData.gamma,
-            'vega': record.optionExData.vega,
-            'theta': record.optionExData.theta,
-            'rho': record.optionExData.rho,
-        } for record in raw_quote_list]
-
+        quote_list = list()
+        for record in raw_quote_list:
+            if record.updateTime is not None and len(record.updateTime) != 0:
+                quote_list.append({
+                'code': merge_qot_mkt_stock_str(int(record.security.market), record.security.code),
+                'data_date': record.updateTime.split()[0],
+                'data_time': record.updateTime.split()[1],
+                'last_price': record.curPrice,
+                'open_price': record.openPrice,
+                'high_price': record.highPrice,
+                'low_price': record.lowPrice,
+                'prev_close_price': record.lastClosePrice,
+                'volume': int(record.volume),
+                'turnover': record.turnover,
+                'turnover_rate': record.turnoverRate,
+                'amplitude': record.amplitude,
+                'suspension': record.isSuspended,
+                'listing_date': record.listTime,
+                'price_spread': record.priceSpread if record.HasField('priceSpread') else 0,
+                'dark_status': QUOTE.REV_DARK_STATUS_MAP[record.darkStatus] if record.HasField('darkStatus') else DarkStatus.NONE,
+                "strike_price": record.optionExData.strikePrice,
+                "contract_size": record.optionExData.contractSize,
+                "open_interest": record.optionExData.openInterest,
+                "implied_volatility": record.optionExData.impliedVolatility,
+                "premium": record.optionExData.premium,
+                "delta": record.optionExData.delta,
+                "gamma": record.optionExData.gamma,
+                'vega': record.optionExData.vega,
+                'theta': record.optionExData.theta,
+                'rho': record.optionExData.rho,
+            })
         return RET_OK, "", quote_list
 
 
@@ -1800,3 +1802,25 @@ class OrderDetail:
             'Bid': bid
         }
         return RET_OK, "", data
+
+
+
+class QuoteWarrant:
+    """
+    拉取涡轮
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, req, conn_id):
+        from futu.quote.quote_get_warrant import Request as WarrantRequest
+        if (req is None) or (not isinstance(req, WarrantRequest)):
+            req = WarrantRequest()
+        return pack_pb_req(req.fill_request_pb(), ProtoId.Qot_GetWarrantData, conn_id)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        from futu.quote.quote_get_warrant import Response as WarrantResponse
+        return WarrantResponse.unpack_response_pb(rsp_pb)

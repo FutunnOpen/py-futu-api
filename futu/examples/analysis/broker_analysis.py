@@ -249,7 +249,7 @@ class BrokerAnalysis(object):
 
 if __name__ =="__main__":
     analysis = BrokerAnalysis()
-    analysis.analysis_opend_json("D:\\tmp\\Track_2018_12_13_1544666376103_BrokerTest.log")
+    analysis.analysis_opend_json("D:\\tmp\\Track_2018_12_18_1545104613045_BrokerTest.log")
     analysis.save_opend_dict("D:\\tmp\\Broker_OpenD.json", "HK.00700")
     analysis.analysis_server_json("D:\\tmp\\sort_700_BrokerQueue.json", "HK.00700")
     analysis.save_server_dict("D:\\tmp\\Broker_Server.json", "HK.00700", "ask")

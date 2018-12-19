@@ -28,9 +28,6 @@ class CurKlineTest(CurKlineHandlerBase):
         ret_code, content = super(CurKlineTest, self).on_recv_rsp(rsp_pb)
         if ret_code != RET_OK:
             print("* CurKlineTest: error, msg: %s" % content)
-        else:
-            print("***********************")
-            print(content)
         return RET_OK, content
 
 
@@ -128,13 +125,13 @@ def quote_test():
     quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
 
     # 设置异步回调接口
-    # quote_ctx.set_handler(StockQuoteTest())
+    quote_ctx.set_handler(StockQuoteTest())
     quote_ctx.set_handler(CurKlineTest())
-    # quote_ctx.set_handler(RTDataTest())
-    # quote_ctx.set_handler(TickerTest())
-    # quote_ctx.set_handler(OrderBookTest())
-    # quote_ctx.set_handler(BrokerTest())
-    # quote_ctx.set_handler(SysNotifyTest())
+    quote_ctx.set_handler(RTDataTest())
+    quote_ctx.set_handler(TickerTest())
+    quote_ctx.set_handler(OrderBookTest())
+    quote_ctx.set_handler(BrokerTest())
+    quote_ctx.set_handler(SysNotifyTest())
     quote_ctx.start()
 
     # 获取推送数据
@@ -142,7 +139,9 @@ def quote_test():
                      'HK.01299', 'HK.01833', 'HK.00005', 'HK.00883', 'HK.00388', 'HK.01398',
                      'HK.01114', 'HK.02800', 'HK.02018', 'HK.03988', 'HK.00386', 'HK.01211',
                      'HK.00700', 'HK.01177',  'HK.02601', 'HK.02628', 'HK_FUTURE.999010']
-    subtype_list = [SubType.K_1M]
+    subtype_list = [SubType.QUOTE, SubType.ORDER_BOOK, SubType.TICKER, SubType.K_DAY, SubType.RT_DATA, SubType.BROKER]
+
+    sub_codes =  ['HK.00700', 'HK_FUTURE.999010']
 
     # print("* get_owner_plate : {}\n".format(quote_ctx.get_owner_plate(code_list)))
     # print("* get_referencestock_list : {}\n".format(quote_ctx.get_referencestock_list(
@@ -166,7 +165,7 @@ def quote_test():
         print("* query_subscription : {}\n".format(quote_ctx.query_subscription(True)))
         sleep(1)
     """
-    print("* subscribe : {}\n".format(quote_ctx.subscribe(big_sub_codes, subtype_list)))
+    print("* subscribe : {}\n".format(quote_ctx.subscribe(sub_codes, subtype_list)))
 
     # # """
     # print("* get_stock_basicinfo : {}\n".format(quote_ctx.get_stock_basicinfo(Market.HK, SecurityType.ETF)))
