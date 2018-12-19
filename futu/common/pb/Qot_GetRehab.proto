@@ -46,6 +46,7 @@ message Rehab
 	optional double addPrice = 20;	
 	optional double dividend = 21; //现金分红(eg.每10股派现0.5元,则该字段值为0.05)
 	optional double spDividend = 22; //特别股息(eg.每10股派特别股息0.5元,则该字段值为0.05)
+	optional double timestamp = 23; //时间戳
 }
 
 message SecurityRehab

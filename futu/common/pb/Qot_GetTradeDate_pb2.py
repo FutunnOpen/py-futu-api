@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetTradeDate.proto',
   package='Qot_GetTradeDate',
   syntax='proto2',
-  serialized_pb=_b('\n\x16Qot_GetTradeDate.proto\x12\x10Qot_GetTradeDate\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"9\n\x03\x43\x32S\x12\x0e\n\x06market\x18\x01 \x02(\x05\x12\x11\n\tbeginTime\x18\x02 \x02(\t\x12\x0f\n\x07\x65ndTime\x18\x03 \x02(\t\"\x19\n\tTradeDate\x12\x0c\n\x04time\x18\x01 \x02(\t\"9\n\x03S2C\x12\x32\n\rtradeDateList\x18\x01 \x03(\x0b\x32\x1b.Qot_GetTradeDate.TradeDate\"-\n\x07Request\x12\"\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x15.Qot_GetTradeDate.C2S\"f\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\"\n\x03s2c\x18\x04 \x01(\x0b\x32\x15.Qot_GetTradeDate.S2C')
+  serialized_pb=_b('\n\x16Qot_GetTradeDate.proto\x12\x10Qot_GetTradeDate\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"9\n\x03\x43\x32S\x12\x0e\n\x06market\x18\x01 \x02(\x05\x12\x11\n\tbeginTime\x18\x02 \x02(\t\x12\x0f\n\x07\x65ndTime\x18\x03 \x02(\t\"C\n\tTradeDate\x12\x0c\n\x04time\x18\x01 \x02(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x01\x12\x15\n\rtradeDateType\x18\x03 \x01(\x05\"9\n\x03S2C\x12\x32\n\rtradeDateList\x18\x01 \x03(\x0b\x32\x1b.Qot_GetTradeDate.TradeDate\"-\n\x07Request\x12\"\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x15.Qot_GetTradeDate.C2S\"f\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\"\n\x03s2c\x18\x04 \x01(\x0b\x32\x15.Qot_GetTradeDate.S2C')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -87,6 +87,20 @@ _TRADEDATE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='timestamp', full_name='Qot_GetTradeDate.TradeDate.timestamp', index=1,
+      number=2, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='tradeDateType', full_name='Qot_GetTradeDate.TradeDate.tradeDateType', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -100,7 +114,7 @@ _TRADEDATE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=135,
-  serialized_end=160,
+  serialized_end=202,
 )
 
 
@@ -130,8 +144,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=162,
-  serialized_end=219,
+  serialized_start=204,
+  serialized_end=261,
 )
 
 
@@ -161,8 +175,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=221,
-  serialized_end=266,
+  serialized_start=263,
+  serialized_end=308,
 )
 
 
@@ -213,8 +227,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=268,
-  serialized_end=370,
+  serialized_start=310,
+  serialized_end=412,
 )
 
 _S2C.fields_by_name['tradeDateList'].message_type = _TRADEDATE

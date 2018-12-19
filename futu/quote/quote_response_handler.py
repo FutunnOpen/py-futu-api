@@ -135,7 +135,7 @@ class CurKlineHandlerBase(RspHandlerBase):
         else:
             col_list = [
                 'code', 'time_key', 'open', 'close', 'high', 'low', 'volume',
-                'turnover', 'k_type', 'last_close'
+                'turnover', 'k_type'
             ]
             kline_frame_table = pd.DataFrame(content, columns=col_list)
 

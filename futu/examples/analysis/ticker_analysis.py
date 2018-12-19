@@ -106,7 +106,7 @@ class TickerAnalysis(object):
 
 if __name__ =="__main__":
     analysis = TickerAnalysis()
-    analysis.analysis_opend_json("D:\\tmp\\Track_2018_11_28_1543370754392_TickerTest2.log")
+    analysis.analysis_opend_json("D:\\tmp\\Track_2018_12_18_1545104613515_TickerTest.log")
     analysis.save_opend_dict("D:\\tmp\\Track_OpenD.json", "HK.00700")
 
     analysis.analysis_server_json("D:\\tmp\\sort_700_ticker.json", "HK.00700")

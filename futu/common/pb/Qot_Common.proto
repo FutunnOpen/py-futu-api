@@ -74,6 +74,14 @@ enum QotMarketState
 	QotMarketState_HkCas = 19; // 盘后竞价,港股市场增加CAS机制对应的市场状态
 }
 
+//交易时间类型
+enum TradeDateType
+{
+	TradeDateType_Whole = 0; //全天交易
+	TradeDateType_Morning = 1; //上午交易，下午休市
+	TradeDateType_Afternoon = 2; //下午交易，上午休市
+}			
+
 enum RehabType
 {
 	RehabType_None = 0; //不复权
@@ -201,8 +209,105 @@ enum PushDataType
 {
 	PushDataType_Unknow = 0;
 	PushDataType_Realtime = 1; //实时推送的数据
-	PushDataType_ByDisConn = 2; //对后台行情连接断开期间拉取补充的数据 最多750个
+	PushDataType_ByDisConn = 2; //对后台行情连接断开期间拉取补充的数据 最多50个
 	PushDataType_Cache = 3; //非实时非连接断开补充数据
+}
+
+//涡轮排序
+enum SortField
+{
+	SortField_Unknow = 0;
+    SortField_Code = 1; //代码
+    SortField_CurPrice = 2; //最新价
+	SortField_PriceChangeVal = 3; //涨跌额
+    SortField_ChangeRate = 4; //涨跌幅%
+	SortField_Status = 5; //状态
+    SortField_BidPrice = 6; //买入价
+    SortField_AskPrice = 7; //卖出价
+    SortField_BidVol = 8; //买量
+    SortField_AskVol = 9; //卖量
+    SortField_Volume = 10; //成交量
+    SortField_Turnover = 11; //成交额
+	SortField_Score = 12; //综合评分
+    SortField_Premium = 13; //溢价%
+	SortField_EffectiveLeverage = 14; //有效杠杆
+    SortField_Delta = 15; //对冲值,仅认购认沽支持该字段
+    SortField_ImpliedVolatility = 16; //引伸波幅,仅认购认沽支持该字段
+    SortField_Type = 17; //类型
+    SortField_StrikePrice = 18; //行权价
+    SortField_BreakEvenPoint = 19; //打和点
+    SortField_MaturityTime = 20; //到期日
+	SortField_ListTime = 21; //上市日期
+    SortField_LastTradeTime = 22; //最后交易日
+    SortField_Leverage = 23; //杠杆比率
+    SortField_InOutMoney = 24; //价内/价外%
+    SortField_RecoveryPrice = 25; //收回价,仅牛熊证支持该字段
+	SortField_ChangePrice = 26; // 换股价
+    SortField_Change = 27; //换股比率
+    SortField_StreetRate = 28; //街货比%
+	SortField_StreetVol = 29; //街货量
+    SortField_Amplitude = 30; //振幅%
+	SortField_WarrantName = 31; // 名称
+    SortField_Issuer = 32; //发行人
+	SortField_LotSize = 33; // 每手
+    SortField_IssueSize = 34; //发行量
+}
+
+//涡轮发行人
+enum Issuer
+{
+	Issuer_Unknow = 0; //未知
+	Issuer_SG = 1; //法兴
+    Issuer_BP = 2; //法巴
+    Issuer_CS = 3; //瑞信
+    Issuer_CT = 4; //花旗	
+    Issuer_EA = 5; //东亚
+    Issuer_GS = 6; //高盛
+    Issuer_HS = 7; //汇丰
+    Issuer_JP = 8; //摩通	
+    Issuer_MB = 9; //麦银	
+	Issuer_SC = 10; //渣打
+	Issuer_UB = 11; //瑞银
+	Issuer_BI = 12; //中银
+	Issuer_DB = 13; //德银
+    Issuer_DC = 14; //大和
+	Issuer_ML = 15; //美林
+	Issuer_NM = 16; //野村
+    Issuer_RB = 17; //荷合
+    Issuer_RS = 18; //苏皇	
+    Issuer_BC = 19; //巴克莱
+    Issuer_HT = 20; //海通
+    Issuer_VT = 21; //瑞通
+    Issuer_KC = 22; //比联
+}
+
+//涡轮上市日
+enum IpoPeriod
+{
+	IpoPeriod_Unknow = 0; //未知
+    IpoPeriod_Today = 1; //今日上市
+    IpoPeriod_Tomorrow = 2; //明日上市
+    IpoPeriod_Nextweek = 3; //未来一周上市
+    IpoPeriod_Lastweek = 4; //过去一周上市
+    IpoPeriod_Lastmonth = 5; //过去一月上市
+}
+
+//涡轮价外/内
+enum PriceType
+{
+	PriceType_Unknow = 0;
+	PriceType_Outside = 1; //价外
+	PriceType_WithIn = 2; //价内
+}
+
+//涡轮状态
+enum WarrantStatus
+{
+    WarrantStatus_Unkonw = 0; //未知
+    WarrantStatus_Normal = 1; //正常状态
+	WarrantStatus_Suspend = 2; //停牌
+    WarrantStatus_StopTrade = 3; //终止交易
+    WarrantStatus_PendingListing = 4; //等待上市
 }
 
  //两个字段确定一支股票
@@ -226,6 +331,7 @@ message KLine
 	optional double turnoverRate = 10; //换手率
 	optional double pe = 11; //市盈率
 	optional double changeRate = 12; //涨跌幅
+	optional double timestamp = 13; //时间戳
 }
 
 message OptionBasicQotExData
@@ -259,6 +365,8 @@ message BasicQot
 	required double turnoverRate = 13; //换手率
 	required double amplitude = 14; //振幅
 	optional int32 darkStatus = 15; //DarkStatus, 暗盘交易状态
+	optional double listTimestamp = 17; //上市日期时间戳
+	optional double updateTimestamp = 18; //更新时间戳
 
 	optional OptionBasicQotExData optionExData = 16; //期权特有字段
 }
@@ -273,6 +381,7 @@ message TimeShare
 	optional double avgPrice = 6; //均价
 	optional int64 volume = 7; //成交量
 	optional double turnover = 8; //成交额
+	optional double timestamp = 9; //时间戳
 }
 
 message SecurityStaticBasic
@@ -284,6 +393,7 @@ message SecurityStaticBasic
 	required string name = 5; //股票名字
 	required string listTime = 6; //上市时间字符串
 	optional bool delisting = 7; //是否退市
+	optional double listTimestamp = 8; //上市时间戳
 }
 
 message WarrantStaticExData
@@ -300,6 +410,7 @@ message OptionStaticExData
 	required double strikePrice = 4; //行权价
 	required bool suspend = 5; //是否停牌
 	required string market = 6; //发行市场名字
+	optional double strikeTimestamp = 7; //行权日时间戳
 }
 
 message SecurityStaticInfo
@@ -328,6 +439,7 @@ message Ticker
 	optional int32 type = 8; //TickerType, 逐笔类型
 	optional int32 typeSign = 9; //逐笔类型符号
 	optional int32 pushDataType = 10; //用于区分推送情况
+	optional double timestamp = 11; //时间戳
 }
 
 message OrderBook
@@ -352,6 +464,7 @@ message ShareHoldingChange
     required double changeQty = 4; //较上一次变动数量
 	required double changeRatio = 5; //较上一次变动百分比（是相对于自身的比例，而不是总的。如总股本1万股，持有100股，持股百分比是1%，卖掉50股，变动比例是50%，而不是0.5%）
     required string time = 6; //发布时间(YYYY-MM-DD HH:MM:SS字符串)
+	optional double timestamp = 7; //时间戳,发布时间(YYYY-MM-DD HH:MM:SS字符串)
 }
 
 message SubInfo

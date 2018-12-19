@@ -1,4 +1,4 @@
-# futu-api - 富途量化投资平台 (Futu Quant Trading API)
+# futu-api - 富途自动化交易API (Futu Quant Trading API)
 
 ### 简介
 

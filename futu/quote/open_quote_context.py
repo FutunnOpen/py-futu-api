@@ -95,6 +95,8 @@ class OpenQuoteContext(OpenContextBase):
             self._wait_reconnect()
         return ret_code, ret_msg
 
+
+
     def get_trading_days(self, market, start=None, end=None):
         """获取交易日
         :param market: 市场类型，Market_
@@ -109,7 +111,7 @@ class OpenQuoteContext(OpenContextBase):
          str            None          end为start往后365天
          None           None          end为当前日期，start为end往前365天
          ==========    ==========    ========================================
-        :return: 成功时返回(RET_OK, data)，data是字符串数组；失败时返回(RET_ERROR, data)，其中data是错误描述字符串
+        :return: 成功时返回(RET_OK, data)，data是[{'trade_date_type': 0, 'time': '2018-01-05'}]数组；失败时返回(RET_ERROR, data)，其中data是错误描述字符串
         """
         if market is None or is_str(market) is False:
             error_str = ERROR_STR_PREFIX + "the type of market param is wrong"
@@ -133,6 +135,7 @@ class OpenQuoteContext(OpenContextBase):
 
         if ret_code != RET_OK:
             return RET_ERROR, msg
+
 
         return RET_OK, trade_day_list
 
@@ -726,7 +729,11 @@ class OpenQuoteContext(OpenContextBase):
             'listing_date',
             'lot_size',
             'price_spread',
-            'stock_owner'
+            'stock_owner',
+            'ask_price',
+            'bid_price',
+            'ask_vol',
+            'bid_vol'
         ]
 
         col_list.append('equity_valid')
@@ -1364,7 +1371,6 @@ class OpenQuoteContext(OpenContextBase):
                 turnover                 float          成交额
                 pe_ratio                 float          市盈率（该字段为比例字段，默认不展示%）
                 turnover_rate            float          换手率
-                last_close               float          昨收价
                 =====================   ===========   ==============================================================
         """
         param_table = {'code': code, 'ktype': ktype}
@@ -1400,7 +1406,7 @@ class OpenQuoteContext(OpenContextBase):
 
         col_list = [
             'code', 'time_key', 'open', 'close', 'high', 'low', 'volume',
-            'turnover', 'pe_ratio', 'turnover_rate', 'last_close'
+            'turnover', 'pe_ratio', 'turnover_rate'
         ]
         kline_frame_table = pd.DataFrame(kline_list, columns=col_list)
 
@@ -1833,3 +1839,36 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
 
         return RET_OK, order_detail
+
+
+    def get_warrant(self, code, req=None):
+        """
+        :param begin:数据起始点
+        :param num:请求个数
+        :param sort_field:Qot_Common.SortField,根据哪个字段排序
+        :param ascend:升序ture, 降序false
+        """
+        from futu.quote.quote_get_warrant import Request
+
+        if (req is None) or (not isinstance(req, Request)):
+            req = Request()
+
+        if req.owner is None or len(req.owner) == 0:
+            req.owner = code
+
+        query_processor = self._get_sync_query_processor(QuoteWarrant.pack_req, QuoteWarrant.unpack_rsp)
+        kargs = {
+            "req": req,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, content = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return ret_code, msg
+        else:
+            warrant_data_list, last_page, all_count = content
+            warrant_data_frame = pd.DataFrame(warrant_data_list)
+            return ret_code, warrant_data_frame, last_page, all_count
+
+
+
+

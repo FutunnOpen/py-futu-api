@@ -7,7 +7,6 @@ from google.protobuf.json_format import MessageToJson
 from threading import RLock
 from futu.common.conn_mng import *
 from futu.common.sys_config import *
-from futu.common.pbjson import json2pb
 
 
 ProtoInfo = collections.namedtuple('ProtoInfo', ['proto_id', 'serial_no'])
@@ -443,6 +442,10 @@ class ProtobufMap(dict):
         """ Qot_UpdateOrderDetail = 3017 推送委托明细 """
         from futu.common.pb.Qot_UpdateOrderDetail_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdateOrderDetail] = Response()
+
+        """ Qot_GetWarrantData = 3210 获取涡轮 """
+        from futu.common.pb.Qot_GetWarrant_pb2 import Response as GetWarrantPBResponse
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetWarrantData] = GetWarrantPBResponse()
 
     def __getitem__(self, key):
         return ProtobufMap.created_protobuf_map[key] if key in ProtobufMap.created_protobuf_map else None
