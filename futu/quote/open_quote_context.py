@@ -1841,20 +1841,18 @@ class OpenQuoteContext(OpenContextBase):
         return RET_OK, order_detail
 
 
-    def get_warrant(self, code, req=None):
+    def get_warrant(self, stock_owner='', req=None):
         """
-        :param begin:数据起始点
-        :param num:请求个数
-        :param sort_field:Qot_Common.SortField,根据哪个字段排序
-        :param ascend:升序ture, 降序false
+        :param stock_owner:所属正股
+        :param req:futu.quote.quote_get_warrant.Request
         """
         from futu.quote.quote_get_warrant import Request
 
         if (req is None) or (not isinstance(req, Request)):
             req = Request()
 
-        if req.owner is None or len(req.owner) == 0:
-            req.owner = code
+        if stock_owner is not None:
+            req.stock_owner = stock_owner
 
         query_processor = self._get_sync_query_processor(QuoteWarrant.pack_req, QuoteWarrant.unpack_rsp)
         kargs = {
