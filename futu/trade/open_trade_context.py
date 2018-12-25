@@ -280,7 +280,7 @@ class OpenTradeContextBase(OpenContextBase):
 
     def _check_stock_code(self, code):
         stock_code = ''
-        if code != '':
+        if code is not None and code != '':
             ret_code, content = split_stock_str(str(code))
             if ret_code == RET_OK:
                 _, stock_code = content
@@ -615,7 +615,7 @@ class OpenTradeContextBase(OpenContextBase):
 
         return RET_OK, order_list_table
 
-    def history_deal_list_query(self, code, start='', end='', trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+    def history_deal_list_query(self, code='', start='', end='', trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
 
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
