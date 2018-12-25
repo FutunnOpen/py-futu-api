@@ -117,7 +117,7 @@ class Request(object):
         if self.cur_price_min is not None:
             """最新价过滤起点"""
             pb.c2s.curPriceMin = self.cur_price_min
-        if self.cur_price_max is not None
+        if self.cur_price_max is not None:
             """最新价过滤终点"""
             pb.c2s.curPriceMax = self.cur_price_max
         if self.strike_price_min is not None:
