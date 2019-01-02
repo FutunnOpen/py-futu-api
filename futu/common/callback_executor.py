@@ -32,3 +32,5 @@ class CallbackExecutor:
             ctx, proto_id, rsp_pb = w
             ctx.packet_callback(proto_id, rsp_pb)
 
+    def close(self):
+        self._queue.put(None)
