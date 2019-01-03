@@ -1851,8 +1851,11 @@ class OpenQuoteContext(OpenContextBase):
         if (req is None) or (not isinstance(req, Request)):
             req = Request()
 
+        if req.stock_owner is not None and stock_owner is not None:
+            raise RuntimeError('不能同时设置stock_owner，请检查req.stock_owner是否为None！')
         if stock_owner is not None:
             req.stock_owner = stock_owner
+
 
         query_processor = self._get_sync_query_processor(QuoteWarrant.pack_req, QuoteWarrant.unpack_rsp)
         kargs = {
@@ -1864,8 +1867,14 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         else:
             warrant_data_list, last_page, all_count = content
-            warrant_data_frame = pd.DataFrame(warrant_data_list)
-            return ret_code, warrant_data_frame, last_page, all_count
+            col_list = ['stock', 'name', 'stock_owner', 'type', 'issuer', 'maturity_time', 'maturityTimestamp',
+                        'listTime', 'listTimestamp', 'lastTradeTime', 'lastTradeTimestamp', 'recoveryPrice', 'conversionRatio',
+                        'lotSize', 'strikePrice', 'lastClosePrice', 'curPrice', 'priceChangeVal', 'changeRate', 'status', 'bidPrice',
+                        'askPrice', 'bidVol', 'askVol', 'volume', 'turnover', 'score', 'premium', 'breakEvenPoint', 'ipop', 'priceRecoveryRatio',
+                        'conversionPrice', 'streetRate', 'streetVol', 'amplitude', 'issueSize', 'highPrice', 'lowPrice', 'impliedVolatility', 'delta', 'effectiveLeverage']
+            warrant_data_frame = pd.DataFrame(warrant_data_list, columns=col_list)
+            #1120400921001028854
+            return ret_code, (warrant_data_frame, last_page, all_count)
 
 
 
