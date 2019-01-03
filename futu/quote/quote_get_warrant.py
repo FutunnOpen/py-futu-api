@@ -11,7 +11,7 @@ class Request(object):
     sort_field = SortField.Code #根据哪个字段排序
     ascend = True #升序ture, 降序false
     """以下为筛选条件，可选字段，不填表示不过滤"""
-    stock_owner = ""  #所属正股
+    stock_owner = None  #所属正股
     type_list = list()  #Qot_Common.WarrantType, 窝轮类型过滤列表 WrtType
     issuer_list = list()  #Qot_Common.Issuer, 发行人过滤列表
     maturity_time_min = ""  #到期日, 到期日范围的开始时间戳
@@ -91,6 +91,14 @@ class Request(object):
             market_code, stock_code = content
             pb.c2s.owner.market = market_code
             pb.c2s.owner.code = stock_code
+
+        if not isinstance(self.type_list, list):
+            #1120400921001028867
+            self.type_list = [self.type_list]
+        if not isinstance(self.issuer_list, list):
+            #1120400921001028867
+            self.issuer_list = [self.issuer_list]
+
         if self.type_list is not None and len(self.type_list) != 0:
             """Qot_Common.WarrantType,窝轮类型过滤列表"""
             for t in self.type_list:
