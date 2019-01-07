@@ -1867,11 +1867,11 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         else:
             warrant_data_list, last_page, all_count = content
-            col_list = ['stock', 'name', 'stock_owner', 'type', 'issuer', 'maturity_time', 'maturityTimestamp',
-                        'listTime', 'listTimestamp', 'lastTradeTime', 'lastTradeTimestamp', 'recoveryPrice', 'conversionRatio',
-                        'lotSize', 'strikePrice', 'lastClosePrice', 'curPrice', 'priceChangeVal', 'changeRate', 'status', 'bidPrice',
-                        'askPrice', 'bidVol', 'askVol', 'volume', 'turnover', 'score', 'premium', 'breakEvenPoint', 'ipop', 'priceRecoveryRatio',
-                        'conversionPrice', 'streetRate', 'streetVol', 'amplitude', 'issueSize', 'highPrice', 'lowPrice', 'impliedVolatility', 'delta', 'effectiveLeverage']
+            col_list = ['stock', 'name', 'stock_owner', 'type', 'issuer', 'maturity_time', 'maturity_timestamp',
+                        'list_time', 'list_timestamp', 'last_trade_time', 'last_trade_timestamp', 'recovery_price', 'conversion_ratio',
+                        'lot_size', 'strike_price', 'last_close_price', 'cur_price', 'price_change_val', 'change_rate', 'status', 'bid_price',
+                        'ask_price', 'bid_vol', 'ask_vol', 'volume', 'turnover', 'score', 'premium', 'break_even_point', 'ipop', 'price_recovery_ratio',
+                        'conversion_price', 'street_rate', 'street_vol', 'amplitude', 'issue_size', 'high_price', 'low_price', 'implied_volatility', 'delta', 'effective_leverage']
             warrant_data_frame = pd.DataFrame(warrant_data_list, columns=col_list)
             #1120400921001028854
             return ret_code, (warrant_data_frame, last_page, all_count)
