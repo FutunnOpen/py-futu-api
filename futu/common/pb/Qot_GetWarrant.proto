@@ -15,8 +15,8 @@ message C2S
 	optional Qot_Common.Security owner = 5;	//所属正股
 	repeated int32 typeList = 6; //Qot_Common.WarrantType,窝轮类型过滤列表
 	repeated int32 issuerList = 7; //Qot_Common.Issuer,发行人过滤列表
-	optional string maturityTimeMin = 8; //到期日, 到期日范围的开始时间戳
-	optional string maturityTimeMax = 9; //到期日范围的结束时间戳
+	optional string maturityTimeMin = 8; //到期日, 到期日范围的开始时间字符串
+	optional string maturityTimeMax = 9; //到期日范围的结束时间字符串
 	optional int32 ipoPeriod = 10; //Qot_Common.IpoPeriod,上市日
 	optional int32 priceType = 11; //Qot_Common.PriceType, 价内/价外
 	optional int32 status = 12; //Qot_Common.WarrantStatus, 窝轮状态
