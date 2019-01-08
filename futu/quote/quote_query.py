@@ -1818,7 +1818,11 @@ class QuoteWarrant:
         from futu.quote.quote_get_warrant import Request as WarrantRequest
         if (req is None) or (not isinstance(req, WarrantRequest)):
             req = WarrantRequest()
-        return pack_pb_req(req.fill_request_pb(), ProtoId.Qot_GetWarrantData, conn_id)
+        ret, context = req.fill_request_pb()
+        if ret == RET_OK:
+            return pack_pb_req(context, ProtoId.Qot_GetWarrantData, conn_id)
+        else:
+            return ret, context, None
 
     @classmethod
     def unpack_rsp(cls, rsp_pb):

@@ -87,7 +87,7 @@ class Request(object):
             ret, content = split_stock_str(self.stock_owner)
             if ret == RET_ERROR:
                 error_str = content
-                return RET_ERROR, error_str, None
+                return RET_ERROR, error_str
             market_code, stock_code = content
             pb.c2s.owner.market = market_code
             pb.c2s.owner.code = stock_code
@@ -189,7 +189,7 @@ class Request(object):
             """正股距回收价%过滤终点,仅牛熊证支持该字段过滤"""
             pb.c2s.priceRecoveryRatioMax = self.price_recovery_ratio_max
 
-        return pb
+        return RET_OK, pb
 
 
 class Response(object):
