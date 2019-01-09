@@ -1446,3 +1446,10 @@ class Issuer(Enum):
     HT = 20
     VT = 21
     KC = 22
+
+
+
+class TradeDateType(Enum):
+    Whole = 0 #全天交易
+    Morning = 1 #上午交易，下午休市
+    Afternoon = 2 #下午交易，上午休市

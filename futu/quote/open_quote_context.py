@@ -1869,10 +1869,12 @@ class OpenQuoteContext(OpenContextBase):
             warrant_data_list, last_page, all_count = content
             col_list = ['stock', 'name', 'stock_owner', 'type', 'issuer', 'maturity_time',
                         'list_time', 'last_trade_time', 'recovery_price', 'conversion_ratio',
-                        'lot_size', 'strike_price', 'last_close_price', 'cur_price', 'price_change_val', 'change_rate', 'status', 'bid_price',
-                        'ask_price', 'bid_vol', 'ask_vol', 'volume', 'turnover', 'score', 'premium', 'break_even_point', 'ipop', 'price_recovery_ratio',
-                        'conversion_price', 'street_rate', 'street_vol', 'amplitude', 'issue_size', 'high_price', 'low_price', 'implied_volatility', 'delta', 'effective_leverage',
-                        'list_timestamp',  'last_trade_timestamp', 'maturity_timestamp']
+                        'lot_size', 'strike_price', 'last_close_price', 'cur_price', 'price_change_val', 'change_rate',
+                        'status', 'bid_price', 'ask_price', 'bid_vol', 'ask_vol', 'volume', 'turnover', 'score',
+                        'premium', 'break_even_point', 'leverage', 'ipop', 'price_recovery_ratio', 'conversion_price',
+                        'street_rate', 'street_vol', 'amplitude', 'issue_size', 'high_price', 'low_price',
+                        'implied_volatility', 'delta', 'effective_leverage', 'list_timestamp',  'last_trade_timestamp',
+                        'maturity_timestamp']
             warrant_data_frame = pd.DataFrame(warrant_data_list, columns=col_list)
             #1120400921001028854
             return ret_code, (warrant_data_frame, last_page, all_count)

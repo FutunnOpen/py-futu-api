@@ -102,25 +102,42 @@ class Request(object):
         if self.type_list is not None and len(self.type_list) != 0:
             """Qot_Common.WarrantType,窝轮类型过滤列表"""
             for t in self.type_list:
+                if not isinstance(t, WarrantType):
+                    return RET_ERROR, 'type_list is wrong. must be [WarrantType]'
                 pb.c2s.typeList.append(t.value)
         if self.issuer_list is not None and len(self.issuer_list) != 0:
             """Qot_Common.Issuer,发行人过滤列表"""
             for t in self.issuer_list:
+                if not isinstance(t, Issuer):
+                    return RET_ERROR, 'issuer_list is wrong. must be [Issuer]'
                 pb.c2s.issuerList.append(t.value)
-        if self.maturity_time_min is not None and len(self.maturity_time_min) != 0:
+
+        if self.maturity_time_min is not None:
             """到期日, 到期日范围的开始时间戳"""
+            if not isinstance(self.maturity_time_min, str) or len(self.maturity_time_min) != 0:
+                return RET_ERROR, 'maturity_time_min is wrong. must be str. eg:2018-02-05'
             pb.c2s.maturityTimeMin = self.maturity_time_min
+
         if self.maturity_time_max is not None and len(self.maturity_time_max) != 0:
             """到期日范围的结束时间戳"""
+            if not isinstance(self.maturity_time_max, str) or len(self.maturity_time_max) != 0:
+                return RET_ERROR, 'maturity_time_max is wrong. must be str. eg:2018-02-10'
             pb.c2s.maturityTimeMax = self.maturity_time_max
+
         if self.ipo_period is not None:
             """上市日"""
+            if not isinstance(self.ipo_period, IpoPeriod):
+                return RET_ERROR, 'ipo_period is wrong. must be IpoPeriod'
             pb.c2s.ipoPeriod = self.ipo_period.value
         if self.price_type is not None:
             """价内/价外"""
+            if not isinstance(self.price_type, PriceType):
+                return RET_ERROR, 'price_type is wrong. must be PriceType'
             pb.c2s.priceType = self.price_type.value
         if self.status is not None:
             """窝轮状态"""
+            if not isinstance(self.status, WarrantStatus):
+                return RET_ERROR, 'status is wrong. must be WarrantStatus'
             pb.c2s.status = self.status.value
         if self.cur_price_min is not None:
             """最新价过滤起点"""
@@ -252,7 +269,7 @@ class Response(object):
                 warrant["change_rate"] = item.changeRate
             if item.HasField("status"):
                 """窝轮状态"""
-                warrant["status"] = item.status
+                warrant["status"] = WarrantStatus(item.status)
             if item.HasField("bidPrice"):
                 """买入价"""
                 warrant["bid_price"] = item.bidPrice
@@ -280,6 +297,9 @@ class Response(object):
             if item.HasField("breakEvenPoint"):
                 """打和点"""
                 warrant["break_even_point"] = item.breakEvenPoint
+            if item.HasField("leverage"):
+                """杠杠比率"""
+                warrant["leverage"] = item.leverage
             if item.HasField("ipop"):
                 """价内/价外%	"""
                 warrant["ipop"] = item.ipop
