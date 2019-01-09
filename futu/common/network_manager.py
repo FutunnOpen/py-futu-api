@@ -449,17 +449,25 @@ class NetManager:
         return None
 
     def _on_read(self, conn):
+        start_time = time.time()
+        recv_len = 0
+        buf_len = 0
+        packet_count = 0
+
         if conn.status == ConnStatus.Closed:
             return
 
         err = None
         is_closed = False
         try:
-            data = conn.sock.recv(1024 * 1024)
+            data = conn.sock.recv(128 * 1024)
             if data == b'':
                 is_closed = True
             else:
                 conn.readbuf.extend(data)
+                recv_len = len(data)
+                buf_len = len(conn.readbuf)
+
         except Exception as e:
             if not is_socket_exception_wouldblock(e):
                 err = str(e)
@@ -475,6 +483,7 @@ class NetManager:
 
             rsp_body = conn.readbuf[head_len:head_len+body_len]
             del conn.readbuf[:head_len+body_len]
+            packet_count += 1
             self._on_packet(conn, head_dict, Err.Ok.code, '', rsp_body)
 
         if is_closed:
@@ -483,6 +492,8 @@ class NetManager:
         elif err:
             self.close(conn.conn_id)
             conn.handler.on_error(conn.conn_id, err)
+        end_time = time.time()
+        logger.debug('conn_id={}; elapsed={}; recv_len={}; buf_len={}; packet={};'.format(conn.conn_id, end_time-start_time, recv_len, buf_len, packet_count))
 
     def _on_write(self, conn):
         if conn.status == ConnStatus.Closed:
