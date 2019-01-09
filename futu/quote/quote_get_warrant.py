@@ -113,13 +113,13 @@ class Request(object):
         if self.maturity_time_max is not None and len(self.maturity_time_max) != 0:
             """到期日范围的结束时间戳"""
             pb.c2s.maturityTimeMax = self.maturity_time_max
-        if self.ipo_period is not None and self.ipo_period != IpoPeriod.Unknown:
+        if self.ipo_period is not None:
             """上市日"""
             pb.c2s.ipoPeriod = self.ipo_period.value
-        if self.price_type is not None and self.price_type != PriceType.Unknown:
+        if self.price_type is not None:
             """价内/价外"""
             pb.c2s.priceType = self.price_type.value
-        if self.status is not None and self.status != WarrantStatus.Unknown:
+        if self.status is not None:
             """窝轮状态"""
             pb.c2s.status = self.status.value
         if self.cur_price_min is not None:
