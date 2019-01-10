@@ -1805,6 +1805,8 @@ class OpenQuoteContext(OpenContextBase):
         return RET_OK, option_chain
 
     def get_order_detail(self, code):
+        return RET_ERROR, "this service has been cancelled"
+
         """
         查询A股Level 2权限下提供的委托明细
 
