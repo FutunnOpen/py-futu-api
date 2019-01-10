@@ -109,7 +109,7 @@ class TradeDayQuery:
 
         for x in raw_trading_day_list:
             if x.time is not None and len(x.time) > 0:
-                trading_day_list.append({"time": x.time, "trade_date_type": x.tradeDateType})
+                trading_day_list.append({"trade_date_type": TradeDateType(x.tradeDateType), "time": x.time})
 
         return RET_OK, "", trading_day_list
 
