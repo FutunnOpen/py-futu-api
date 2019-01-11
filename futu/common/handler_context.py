@@ -50,11 +50,11 @@ class HandlerContext:
             3015: {
                 "type": BrokerHandlerBase,
                 "obj": BrokerHandlerBase()
-            },
-            3017: {
-                "type": OrderDetailHandlerBase,
-                "obj": OrderDetailHandlerBase()
             }
+            # 3017: {
+            #     "type": OrderDetailHandlerBase,
+            #     "obj": OrderDetailHandlerBase()
+            # }
         }
 
         self._pre_handler_table = {

@@ -286,7 +286,7 @@ class SubType(object):
     TICKER = "TICKER"
     QUOTE = "QUOTE"
     ORDER_BOOK = "ORDER_BOOK"
-    ORDER_DETAIL = "ORDER_DETAIL"
+    # ORDER_DETAIL = "ORDER_DETAIL"
     K_1M = "K_1M"
     K_3M = "K_3M"
     K_5M = "K_5M"
@@ -325,7 +325,7 @@ SUBTYPE_MAP = {
     SubType.K_QUARTER: 15,
     SubType.K_YEAR: 16,
     SubType.K_3M: 17,
-    SubType.ORDER_DETAIL: 18
+    # SubType.ORDER_DETAIL: 18
 }
 
 # k线类型
@@ -1446,3 +1446,10 @@ class Issuer(Enum):
     HT = 20
     VT = 21
     KC = 22
+
+
+
+class TradeDateType(Enum):
+    Whole = 0 #全天交易
+    Morning = 1 #上午交易，下午休市
+    Afternoon = 2 #下午交易，上午休市
