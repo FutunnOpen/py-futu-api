@@ -114,13 +114,13 @@ class Request(object):
 
         if self.maturity_time_min is not None:
             """到期日, 到期日范围的开始时间戳"""
-            if not isinstance(self.maturity_time_min, str) or len(self.maturity_time_min) != 0:
+            if not isinstance(self.maturity_time_min, str) or len(self.maturity_time_min) == 0:
                 return RET_ERROR, 'maturity_time_min is wrong. must be str. eg:2018-02-05'
             pb.c2s.maturityTimeMin = self.maturity_time_min
 
         if self.maturity_time_max is not None and len(self.maturity_time_max) != 0:
             """到期日范围的结束时间戳"""
-            if not isinstance(self.maturity_time_max, str) or len(self.maturity_time_max) != 0:
+            if not isinstance(self.maturity_time_max, str) or len(self.maturity_time_max) == 0:
                 return RET_ERROR, 'maturity_time_max is wrong. must be str. eg:2018-02-10'
             pb.c2s.maturityTimeMax = self.maturity_time_max
 
