@@ -1853,8 +1853,6 @@ class OpenQuoteContext(OpenContextBase):
         if (req is None) or (not isinstance(req, Request)):
             req = Request()
 
-        if req.stock_owner is not None and stock_owner is not None:
-            raise RuntimeError('不能同时设置stock_owner，请检查req.stock_owner是否为None！')
         if stock_owner is not None:
             req.stock_owner = stock_owner
 

@@ -36,6 +36,7 @@ enum PlateSetType
 	PlateSetType_Other = 4; //其他板块, 仅用于3207（获取股票所属板块）协议返回,不可作为其他协议的请求参数
 }
 
+//涡轮类型
 enum WarrantType
 {
 	WarrantType_Unknown = 0; //未知

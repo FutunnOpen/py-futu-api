@@ -5,10 +5,11 @@ import os
 from abc import abstractmethod
 from bidict import bidict
 
-__JsonFileName__ = "Qot_Common.json"
+__JsonFileName__ = "Qot_Common.proto.json"
 __PBPrefixName__ = "Qot_Common_pb2."
 __TemplateCodeFileName__ = "template_code.txt"
 __TemplateFileHeadName__ = "template_head.txt"
+__TemplateRstName__ = "rst_template.txt"
 
 class EnumsItemStruct(object):
 
@@ -142,9 +143,30 @@ class GenerateCode(object):
                                  variablecode=variablecode.rstrip("\n,"),
                                  diccode=diccode.rstrip("\n,"))
             code_file.write(c)
-
         code_file.close()
 
+    def rst(self, export_file):
+        if len(self.enums) == 0:
+            return
+        rst_template= ""
+        with open(os.path.join(self.local_path, __TemplateRstName__), 'r', encoding='UTF-8') as load_f:
+            rst_template = load_f.read()
+        code_file = open(export_file, 'w', encoding='utf-8')
+        for class_item in self.enums:
+            classdescription = class_item.description.replace("\n", "，")
+            classname = class_item.name
+            dicinfo = ""
+            for item in class_item.values:
+                name = item.underscore_name
+                description = item.description
+                kvcode = " ..  py:attribute:: {name}\n\n  {description}\n\n".format(name=name, description=description)
+                dicinfo += kvcode
+
+            c = rst_template.format(classname=classname,
+                                    classdescription=classdescription,
+                                    dicinfo=dicinfo)
+            code_file.write(c)
+        code_file.close()
 
 
 
@@ -153,6 +175,7 @@ if __name__ =="__main__":
     c.load()
     path = os.path.dirname(os.path.realpath(__file__))
     c.py(os.path.join(path, "Qot_Common.py"))
+    c.rst(os.path.join(path, "Qot_Common.rst"))
 
 # if __name__ =="__main__":
 #     print(SortField.to_string("hhh"))

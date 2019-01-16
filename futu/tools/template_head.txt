@@ -1,0 +1,45 @@
+# -*- coding: utf-8 -*-
+"""
+    Constant collection
+"""
+
+from abc import abstractmethod
+
+class FtEnum(object):
+
+    def __init__(self):
+        self.str_dic = self.load_dic()
+        """逆转kv对"""
+        self.number_dic = dict()
+        for k, v in self.str_dic.items():
+            self.number_dic[v] = k
+
+    @abstractmethod
+    def load_dic(self):
+        return {
+        }
+
+    @classmethod
+    def to_number(cls, str_value):
+        obj = cls()
+        if not isinstance(str_value, str):
+            return False, obj.__class__.__name__ + " input parameter must str!"
+
+        if str_value in obj.str_dic:
+            return True, obj.str_dic[str_value]
+        else:
+            return False, obj.__class__.__name__ + " input parameter is incorrect!"
+
+    @classmethod
+    def to_string(cls, number_value):
+        obj = cls()
+        if not isinstance(number_value, int):
+            return False, obj.__class__.__name__ + " input parameter must int!"
+
+        if number_value in obj.number_dic:
+            return True, obj.number_dic[number_value]
+        else:
+            return False, str(number_value) + " cannot be converted to SortField Type!"
+
+
+from futu.common.pb import Qot_Common_pb2

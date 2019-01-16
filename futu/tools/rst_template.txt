@@ -1,0 +1,10 @@
+{classname} - {classdescription}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
+{classdescription}定义
+
+..  py:class:: {classname}
+
+{dicinfo}
+--------------------------------------
+
