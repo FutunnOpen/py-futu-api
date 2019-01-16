@@ -30,7 +30,7 @@ message OptionChain
 {
 	required string strikeTime = 1; //行权日
 	repeated OptionItem option = 2; //期权信息
-	optional double strikeTimestamp = 7; //行权日时间戳
+	optional double strikeTimestamp = 3; //行权日时间戳
 }
 
 message S2C

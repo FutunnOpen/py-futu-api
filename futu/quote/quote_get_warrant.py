@@ -5,42 +5,43 @@
 from futu import *
 from futu.common.conn_mng import *
 
+
 class Request(object):
-    begin = 0 #数据起始点
-    num = 200 #请求数据个数，最大200
-    sort_field = SortField.Code #根据哪个字段排序
-    ascend = True #升序ture, 降序false
+    begin = 0  # 数据起始点
+    num = 200  # 请求数据个数，最大200
+    sort_field = SortField.CODE  # 根据哪个字段排序
+    ascend = True  # 升序ture, 降序false
     """以下为筛选条件，可选字段，不填表示不过滤"""
-    stock_owner = None  #所属正股
-    type_list = list()  #Qot_Common.WarrantType, 窝轮类型过滤列表 WrtType
-    issuer_list = list()  #Qot_Common.Issuer, 发行人过滤列表
-    maturity_time_min = ""  #到期日, 到期日范围的开始时间戳
-    maturity_time_max = ""  #到期日范围的结束时间戳
-    ipo_period = IpoPeriod.Unknown   #上市日
-    price_type = PriceType.Unknown  #Qot_Common.PriceType, 价内 / 价外
-    status = WarrantStatus.Unknown  #Qot_Common.WarrantStatus, 窝轮状态
-    cur_price_min = None  #最新价过滤起点
-    cur_price_max = None  #最新价过滤终点
-    strike_price_min = None  #行使价过滤起点
-    strike_price_max = None #行使价过滤终点
-    street_min = None  #街货占比 % 过滤起点
-    street_max = None   #街货占比 % 过滤终点
-    conversion_min = None #换股比率过滤起点
-    conversion_max = None #换股比率过滤终点
-    vol_min = -1 #成交量过滤起点
-    vol_max = -1 #成交量过滤终点
-    premium_min = None #溢价 % 过滤起点
-    premium_max = None #溢价 % 过滤终点
-    leverage_ratio_min = None  #杠杆比率过滤起点
-    leverage_ratio_max = None  #杠杆比率过滤终点
-    delta_min = None  #对冲值过滤起点, 仅认购认沽支持该字段过滤
-    delta_max = None #对冲值过滤终点, 仅认购认沽支持该字段过滤
-    implied_min = None #引伸波幅过滤起点, 仅认购认沽支持该字段过滤
-    implied_max = None #引伸波幅过滤终点, 仅认购认沽支持该字段过滤
-    recovery_price_min = None #回收价过滤起点, 仅牛熊证支持该字段过滤
-    recovery_price_max = None #回收价过滤终点, 仅牛熊证支持该字段过滤
-    price_recovery_ratio_min = None #正股距回收价 % 过滤起点, 仅牛熊证支持该字段过滤
-    price_recovery_ratio_max = None #正股距回收价 % 过滤终点, 仅牛熊证支持该字段过滤
+    stock_owner = None  # 所属正股
+    type_list = list()  # Qot_Common.WarrantType, 窝轮类型过滤列表 WrtType
+    issuer_list = list()  # Qot_Common.Issuer, 发行人过滤列表
+    maturity_time_min = ""  # 到期日, 到期日范围的开始时间戳
+    maturity_time_max = ""  # 到期日范围的结束时间戳
+    ipo_period = IpoPeriod.NONE   # 上市日
+    price_type = PriceType.NONE  # Qot_Common.PriceType, 价内 / 价外
+    status = WarrantStatus.NONE  # Qot_Common.WarrantStatus, 窝轮状态
+    cur_price_min = None  # 最新价过滤起点
+    cur_price_max = None  # 最新价过滤终点
+    strike_price_min = None  # 行使价过滤起点
+    strike_price_max = None  # 行使价过滤终点
+    street_min = None  # 街货占比 % 过滤起点
+    street_max = None   # 街货占比 % 过滤终点
+    conversion_min = None  # 换股比率过滤起点
+    conversion_max = None  # 换股比率过滤终点
+    vol_min = -1  # 成交量过滤起点
+    vol_max = -1  # 成交量过滤终点
+    premium_min = None  # 溢价 % 过滤起点
+    premium_max = None  # 溢价 % 过滤终点
+    leverage_ratio_min = None  # 杠杆比率过滤起点
+    leverage_ratio_max = None  # 杠杆比率过滤终点
+    delta_min = None   # 对冲值过滤起点, 仅认购认沽支持该字段过滤
+    delta_max = None  # 对冲值过滤终点, 仅认购认沽支持该字段过滤
+    implied_min = None  # 引伸波幅过滤起点, 仅认购认沽支持该字段过滤
+    implied_max = None  # 引伸波幅过滤终点, 仅认购认沽支持该字段过滤
+    recovery_price_min = None  # 回收价过滤起点, 仅牛熊证支持该字段过滤
+    recovery_price_max = None  # 回收价过滤终点, 仅牛熊证支持该字段过滤
+    price_recovery_ratio_min = None  # 正股距回收价 % 过滤起点, 仅牛熊证支持该字段过滤
+    price_recovery_ratio_max = None  # 正股距回收价 % 过滤终点, 仅牛熊证支持该字段过滤
 
     def __init__(self):
         self.stock_owner = None
@@ -80,7 +81,12 @@ class Request(object):
         pb = GetWarrantPBRequest()
         pb.c2s.begin = self.begin
         pb.c2s.num = self.num
-        pb.c2s.sortField = self.sort_field.value
+
+        r, v = SortField.to_number(self.sort_field)
+        if not r:
+            return RET_ERROR, 'sort_field is wrong. must be SortField'
+        pb.c2s.sortField = v
+
         pb.c2s.ascend = self.ascend
         if self.stock_owner is not None and len(self.stock_owner) != 0:
             """所属正股"""
@@ -102,43 +108,48 @@ class Request(object):
         if self.type_list is not None and len(self.type_list) != 0:
             """Qot_Common.WarrantType,窝轮类型过滤列表"""
             for t in self.type_list:
-                if not isinstance(t, WarrantType):
-                    return RET_ERROR, 'type_list is wrong. must be [WarrantType]'
-                pb.c2s.typeList.append(t.value)
+                r, v = WrtType.to_number(t)
+                if not r:
+                    return RET_ERROR, 'type_list is wrong. must be [WrtType]'
+                pb.c2s.typeList.append(v)
         if self.issuer_list is not None and len(self.issuer_list) != 0:
             """Qot_Common.Issuer,发行人过滤列表"""
             for t in self.issuer_list:
-                if not isinstance(t, Issuer):
+                r, v = Issuer.to_number(t)
+                if not r:
                     return RET_ERROR, 'issuer_list is wrong. must be [Issuer]'
-                pb.c2s.issuerList.append(t.value)
+                pb.c2s.issuerList.append(v)
 
         if self.maturity_time_min is not None:
             """到期日, 到期日范围的开始时间戳"""
-            if not isinstance(self.maturity_time_min, str) or len(self.maturity_time_min) != 0:
+            if not isinstance(self.maturity_time_min, str) or len(self.maturity_time_min) == 0:
                 return RET_ERROR, 'maturity_time_min is wrong. must be str. eg:2018-02-05'
             pb.c2s.maturityTimeMin = self.maturity_time_min
 
         if self.maturity_time_max is not None and len(self.maturity_time_max) != 0:
             """到期日范围的结束时间戳"""
-            if not isinstance(self.maturity_time_max, str) or len(self.maturity_time_max) != 0:
+            if not isinstance(self.maturity_time_max, str) or len(self.maturity_time_max) == 0:
                 return RET_ERROR, 'maturity_time_max is wrong. must be str. eg:2018-02-10'
             pb.c2s.maturityTimeMax = self.maturity_time_max
 
         if self.ipo_period is not None:
             """上市日"""
-            if not isinstance(self.ipo_period, IpoPeriod):
+            r, v = IpoPeriod.to_number(self.ipo_period)
+            if not r:
                 return RET_ERROR, 'ipo_period is wrong. must be IpoPeriod'
-            pb.c2s.ipoPeriod = self.ipo_period.value
+            pb.c2s.ipoPeriod = v
         if self.price_type is not None:
             """价内/价外"""
-            if not isinstance(self.price_type, PriceType):
+            r, v = PriceType.to_number(self.price_type)
+            if not r:
                 return RET_ERROR, 'price_type is wrong. must be PriceType'
-            pb.c2s.priceType = self.price_type.value
+            pb.c2s.priceType = v
         if self.status is not None:
             """窝轮状态"""
-            if not isinstance(self.status, WarrantStatus):
+            r, v = WarrantStatus.to_number(self.status)
+            if not r:
                 return RET_ERROR, 'status is wrong. must be WarrantStatus'
-            pb.c2s.status = self.status.value
+            pb.c2s.status = v
         if self.cur_price_min is not None:
             """最新价过滤起点"""
             pb.c2s.curPriceMin = self.cur_price_min
@@ -225,8 +236,8 @@ class Response(object):
             warrant = dict()
             warrant["stock"] = merge_qot_mkt_stock_str(int(item.stock.market), item.stock.code) #股票
             warrant["stock_owner"] = merge_qot_mkt_stock_str(int(item.owner.market), item.owner.code) #所属正股
-            warrant["type"] = WarrantType(item.type)  #窝轮类型
-            warrant["issuer"] = Issuer(item.issuer)  #发行人
+            warrant["type"] = WrtType.to_string2(item.type)  #窝轮类型
+            warrant["issuer"] = Issuer.to_string2(item.issuer)  #发行人
             warrant["maturity_time"] = item.maturityTime  #到期日
             if item.HasField("maturityTimestamp"):
                 """到期日时间戳"""
@@ -269,7 +280,7 @@ class Response(object):
                 warrant["change_rate"] = item.changeRate
             if item.HasField("status"):
                 """窝轮状态"""
-                warrant["status"] = WarrantStatus(item.status)
+                warrant["status"] = WarrantStatus.to_string2(item.status)
             if item.HasField("bidPrice"):
                 """买入价"""
                 warrant["bid_price"] = item.bidPrice
@@ -346,5 +357,5 @@ class Response(object):
 
 if __name__ =="__main__":
     req = Request()
-    req.type_list.append(WarrantType.Buy)
+    req.type_list.append(WrtType.BUY)
     req.fill_request_pb()

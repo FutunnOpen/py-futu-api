@@ -109,7 +109,7 @@ class TradeDayQuery:
 
         for x in raw_trading_day_list:
             if x.time is not None and len(x.time) > 0:
-                trading_day_list.append({"trade_date_type": TradeDateType(x.tradeDateType), "time": x.time})
+                trading_day_list.append({"time": x.time, "trade_date_type": TradeDateType.to_string2(x.tradeDateType)})
 
         return RET_OK, "", trading_day_list
 
@@ -168,8 +168,8 @@ class StockBasicInfoQuery:
             "lot_size": record.basic.lotSize,
             "stock_type": QUOTE.REV_SEC_TYPE_MAP[record.basic.secType]
                 if record.basic.secType in QUOTE.REV_SEC_TYPE_MAP else SecurityType.NONE,
-            "stock_child_type": QUOTE.REV_WRT_TYPE_MAP[record.warrantExData.type]
-                if record.warrantExData.type in QUOTE.REV_WRT_TYPE_MAP else WrtType.NONE,
+
+            "stock_child_type": WrtType.to_string2(record.warrantExData.type),
             "stock_owner":merge_qot_mkt_stock_str(
                     record.warrantExData.owner.market,
                     record.warrantExData.owner.code) if record.HasField('warrantExData') else (
@@ -287,8 +287,7 @@ class MarketSnapshotQuery:
                 snapshot_tmp['wrt_valid'] = True
                 snapshot_tmp[
                     'wrt_conversion_ratio'] = record.warrantExData.conversionRate
-                snapshot_tmp['wrt_type'] = QUOTE.REV_WRT_TYPE_MAP[
-                    record.warrantExData.warrantType]
+                snapshot_tmp['wrt_type'] = WrtType.to_string2(record.warrantExData.warrantType)
                 snapshot_tmp[
                     'wrt_strike_price'] = record.warrantExData.strikePrice
                 snapshot_tmp[
@@ -1526,7 +1525,7 @@ class StockReferenceList:
             data['list_time'] = info.basic.listTime
             if info.HasField('warrantExData'):
                 data['wrt_valid'] = True
-                data['wrt_type'] = QUOTE.REV_WRT_TYPE_MAP[info.warrantExData.type]
+                data['wrt_type'] = WrtType.to_string2(info.warrantExData.type)
                 data['wrt_code'] = merge_qot_mkt_stock_str(info.warrantExData.owner.market,
                                                            info.warrantExData.owner.code)
             else:

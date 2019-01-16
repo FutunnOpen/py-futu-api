@@ -36,6 +36,7 @@ enum PlateSetType
 	PlateSetType_Other = 4; //其他板块, 仅用于3207（获取股票所属板块）协议返回,不可作为其他协议的请求参数
 }
 
+//涡轮类型
 enum WarrantType
 {
 	WarrantType_Unknown = 0; //未知
@@ -303,7 +304,7 @@ enum PriceType
 //涡轮状态
 enum WarrantStatus
 {
-    WarrantStatus_Unkonw = 0; //未知
+    WarrantStatus_Unknow = 0; //未知
     WarrantStatus_Normal = 1; //正常状态
 	WarrantStatus_Suspend = 2; //停牌
     WarrantStatus_StopTrade = 3; //终止交易
@@ -464,7 +465,7 @@ message ShareHoldingChange
     required double changeQty = 4; //较上一次变动数量
 	required double changeRatio = 5; //较上一次变动百分比（是相对于自身的比例，而不是总的。如总股本1万股，持有100股，持股百分比是1%，卖掉50股，变动比例是50%，而不是0.5%）
     required string time = 6; //发布时间(YYYY-MM-DD HH:MM:SS字符串)
-	optional double timestamp = 7; //时间戳,发布时间(YYYY-MM-DD HH:MM:SS字符串)
+	optional double timestamp = 7; //时间戳
 }
 
 message SubInfo

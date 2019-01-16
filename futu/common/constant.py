@@ -4,6 +4,56 @@
 """
 from copy import copy
 from enum import Enum, unique
+from abc import abstractmethod
+
+
+class FtEnum(object):
+
+    def __init__(self):
+        self.str_dic = self.load_dic()
+        """逆转kv对"""
+        self.number_dic = dict()
+        for k, v in self.str_dic.items():
+            self.number_dic[v] = k
+
+    @abstractmethod
+    def load_dic(self):
+        return {
+        }
+
+    @classmethod
+    def to_number(cls, str_value):
+        obj = cls()
+        if not isinstance(str_value, str):
+            return False, obj.__class__.__name__ + " input parameter must str!"
+
+        if str_value in obj.str_dic:
+            return True, obj.str_dic[str_value]
+        else:
+            return False, obj.__class__.__name__ + " input parameter is incorrect!"
+
+    @classmethod
+    def to_string(cls, number_value):
+        obj = cls()
+        if not isinstance(number_value, int):
+            return False, obj.__class__.__name__ + " input parameter must int!"
+
+        if number_value in obj.number_dic:
+            return True, obj.number_dic[number_value]
+        else:
+            return False, str(number_value) + " cannot be converted to SortField Type!"
+
+    @classmethod
+    def to_string2(cls, number_value):
+        obj = cls()
+        if not isinstance(number_value, int):
+            return "N/A"
+        if number_value in obj.number_dic:
+            return obj.number_dic[number_value]
+        else:
+            return "N/A"
+
+
 
 RET_OK = 0
 RET_ERROR = -1
@@ -98,6 +148,9 @@ QOT_MARKET_TO_TRD_SEC_MARKET_MAP = {
     Qot_Common_pb2.QotMarket_HK_Future: Trd_Common_pb2.TrdSecMarket_HK,
     Qot_Common_pb2.QotMarket_US_Security: Trd_Common_pb2.TrdSecMarket_US,
 }
+
+
+#print(type(Trd_Common_pb2.ModifyOrderOp_Delete))
 
 # 市场状态
 class MarketState:
@@ -222,31 +275,6 @@ SEC_TYPE_MAP = {
     SecurityType.DRVT:8,
     SecurityType.NONE: 0
 }
-
-
-# 窝轮类型
-class WrtType(object):
-    """
-    港股窝轮类型
-    ..  py:class:: WrtType
-     ..  py:attribute:: CALL
-      认购
-     ..  py:attribute:: PUT
-      认沽
-     ..  py:attribute:: BULL
-      牛证
-     ..  py:attribute:: BEAR
-      熊证
-     ..  py:attribute:: NONE
-      未知
-    """
-    CALL = "CALL"
-    PUT = "PUT"
-    BULL = "BULL"
-    BEAR = "BEAR"
-    NONE = "N/A"
-
-WRT_TYPE_MAP = {WrtType.CALL: 1, WrtType.PUT: 2, WrtType.BULL: 3, WrtType.BEAR: 4, WrtType.NONE: 0}
 
 
 # 实时数据定阅类型
@@ -845,10 +873,10 @@ TICKER_TYPE_MAP = {
     TickerType.COMPREHENSIVE_DELAY_PRICE: Qot_Common_pb2.TickerType_ComprehensiveDelayPrice
 }
 
+
 # noinspection PyPep8Naming
 class QUOTE(object):
     REV_MKT_MAP = {MKT_MAP[x]: x for x in MKT_MAP}
-    REV_WRT_TYPE_MAP = {WRT_TYPE_MAP[x]: x for x in WRT_TYPE_MAP}
     REV_PLATE_CLASS_MAP = {PLATE_CLASS_MAP[x]: x for x in PLATE_CLASS_MAP}
     REV_SEC_TYPE_MAP = {SEC_TYPE_MAP[x]: x for x in SEC_TYPE_MAP}
     REV_SUBTYPE_MAP = {SUBTYPE_MAP[x]: x for x in SUBTYPE_MAP}
@@ -1260,196 +1288,238 @@ STOCK_REFERENCE_TYPE_MAP = {
 }
 
 
-@unique
-class SortField(Enum):
-    """
-    Unknown = 0
-    Code = 1 代码
-    CurPrice = 2 最新价
-    PriceChangeVal = 3 涨跌额
-    ChangeRate = 4 涨跌幅%
-    Status = 5 状态
-    BidPrice = 6 买入价
-    AskPrice = 7 卖出价
-    BidVol = 8 买量
-    AskVol = 9 卖量
-    Volume = 10 成交量
-    Turnover = 11 成交额
-    Score = 12 综合评分
-    Premium = 13 溢价%
-    EffectiveLeverage = 14 有效杠杆
-    Delta = 15 对冲值,仅认购认沽支持该字段
-    ImpliedVolatility = 16 引伸波幅,仅认购认沽支持该字段
-    Type = 17 类型
-    StrikePrice = 18 行权价
-    BreakEvenPoint = 19 打和点
-    MaturityTime = 20 到期日
-    ListTime = 21 上市日期
-    LastTradeTime = 22 最后交易日
-    Leverage = 23 杠杆比率
-    InOutMoney = 24 价内/价外%
-    RecoveryPrice = 25 收回价,仅牛熊证支持该字段
-    ChangePrice = 26  换股价
-    Change = 27 换股比率
-    StreetRate = 28 街货比%
-    StreetVol = 29 街货量
-    Amplitude = 30 振幅%
-    WarrantName = 31  名称
-    Issuer = 32 发行人
-    LotSize = 33  每手
-    IssueSize = 34 发行量
-    """
-    Unknown = 0
-    Code = 1 
-    CurPrice = 2 
-    PriceChangeVal = 3 
-    ChangeRate = 4 
-    Status = 5 
-    BidPrice = 6 
-    AskPrice = 7 
-    BidVol = 8 
-    AskVol = 9 
-    Volume = 10 
-    Turnover = 11 
-    Score = 12 
-    Premium = 13 
-    EffectiveLeverage = 14 
-    Delta = 15 
-    ImpliedVolatility = 16 
-    Type = 17 
-    StrikePrice = 18 
-    BreakEvenPoint = 19 
-    MaturityTime = 20 
-    ListTime = 21 
-    LastTradeTime = 22 
-    Leverage = 23 
-    InOutMoney = 24 
-    RecoveryPrice = 25 
-    ChangePrice = 26 
-    Change = 27 
-    StreetRate = 28 
-    StreetVol = 29 
-    Amplitude = 30 
-    WarrantName = 31 
-    Issuer = 32 
-    LotSize = 33 
-    IssueSize = 34
-
-@unique
-class IpoPeriod(Enum):
-    """	
-    Unknown = 0; 未知
-    Today = 1; 今日上市
-    Tomorrow = 2; 明日上市
-    Nextweek = 3; 未来一周上市
-    Lastweek = 4; 过去一周上市
-    Lastmonth = 5; 过去一月上市
-    """
-    Unknown = 0 
-    Today = 1 
-    Tomorrow = 2 
-    Nextweek = 3 
-    Lastweek = 4 
-    Lastmonth = 5
+'''-------------------------WarrantType----------------------------'''
 
 
-@unique
-class PriceType(Enum):
-    """
-    Unknown = 0;
-    Outside = 1; //价外
-    WithIn = 2; //价内
-    """
-    Unknown = 0
-    Outside = 1
-    WithIn = 2
+#
+class WrtType(FtEnum):
+    NONE = "N/A"                                       # 未知
+    BUY = "BUY"                                        # 认购
+    SELL = "SELL"                                      # 认沽
+    BULL = "BULL"                                      # 牛
+    BEAR = "BEAR"                                      # 熊
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.WarrantType_Unknown,
+            self.BUY: Qot_Common_pb2.WarrantType_Buy,
+            self.SELL: Qot_Common_pb2.WarrantType_Sell,
+            self.BULL: Qot_Common_pb2.WarrantType_Bull,
+            self.BEAR: Qot_Common_pb2.WarrantType_Bear
+        }
 
 
-@unique
-class WarrantStatus(Enum):
-    """
-    Unknown = 0; //未知
-    WarrantStatus_Normal = 1; //正常状态
-    WarrantStatus_Suspend = 2; //停牌
-    WarrantStatus_StopTrade = 3; //终止交易
-    WarrantStatus_PendingListing = 4; //等待上市
-    """
-    Unknown = 0
-    Normal = 1
-    Suspend = 2
-    StopTrade = 3
-    PendingListing = 4
-
-@unique
-class WarrantType(Enum):
-    """
-    Unknown = 0 未知
-    Buy = 1 认购
-    Sell = 2 认沽
-    Bull = 3 牛
-    Bear = 4 熊
-    """
-    Unknown = 0
-    Buy = 1
-    Sell = 2
-    Bull = 3
-    Bear = 4
+'''-------------------------SortField----------------------------'''
 
 
-class Issuer(Enum):
-    """
-    Unknown = 0未知
-    SG = 1法兴
-    BP = 2法巴
-    CS = 3瑞信
-    CT = 4花旗
-    EA = 5东亚
-    GS = 6高盛
-    HS = 7汇丰
-    JP = 8摩通
-    MB = 9麦银
-    SC = 10渣打
-    UB = 11瑞银
-    BI = 12中银
-    DB = 13德银
-    DC = 14大和
-    ML = 15美林
-    NM = 16野村
-    RB = 17荷合
-    RS = 18苏皇
-    BC = 19巴克莱
-    HT = 20海通
-    VT = 21瑞通
-    KC = 22比联
-    """
+# 涡轮排序
+class SortField(FtEnum):
+    NONE = "N/A"                                       # 未知
+    CODE = "CODE"                                      # 代码
+    CUR_PRICE = "CUR_PRICE"                            # 最新价
+    PRICE_CHANGE_VAL = "PRICE_CHANGE_VAL"              # 涨跌额
+    CHANGE_RATE = "CHANGE_RATE"                        # 涨跌幅%
+    STATUS = "STATUS"                                  # 状态
+    BID_PRICE = "BID_PRICE"                            # 买入价
+    ASK_PRICE = "ASK_PRICE"                            # 卖出价
+    BID_VOL = "BID_VOL"                                # 买量
+    ASK_VOL = "ASK_VOL"                                # 卖量
+    VOLUME = "VOLUME"                                  # 成交量
+    TURNOVER = "TURNOVER"                              # 成交额
+    SCORE = "SCORE"                                    # 综合评分
+    PREMIUM = "PREMIUM"                                # 溢价%
+    EFFECTIVE_LEVERAGE = "EFFECTIVE_LEVERAGE"          # 有效杠杆
+    DELTA = "DELTA"                                    # 对冲值,仅认购认沽支持该字段
+    IMPLIED_VOLATILITY = "IMPLIED_VOLATILITY"          # 引伸波幅,仅认购认沽支持该字段
+    TYPE = "TYPE"                                      # 类型
+    STRIKE_PRICE = "STRIKE_PRICE"                      # 行权价
+    BREAK_EVEN_POINT = "BREAK_EVEN_POINT"              # 打和点
+    MATURITY_TIME = "MATURITY_TIME"                    # 到期日
+    LIST_TIME = "LIST_TIME"                            # 上市日期
+    LAST_TRADE_TIME = "LAST_TRADE_TIME"                # 最后交易日
+    LEVERAGE = "LEVERAGE"                              # 杠杆比率
+    IN_OUT_MONEY = "IN_OUT_MONEY"                      # 价内/价外%
+    RECOVERY_PRICE = "RECOVERY_PRICE"                  # 收回价,仅牛熊证支持该字段
+    CHANGE_PRICE = "CHANGE_PRICE"                      # 换股价
+    CHANGE = "CHANGE"                                  # 换股比率
+    STREET_RATE = "STREET_RATE"                        # 街货比%
+    STREET_VOL = "STREET_VOL"                          # 街货量
+    AMPLITUDE = "AMPLITUDE"                            # 振幅%
+    WARRANT_NAME = "WARRANT_NAME"                      # 名称
+    ISSUER = "ISSUER"                                  # 发行人
+    LOT_SIZE = "LOT_SIZE"                              # 每手
+    ISSUE_SIZE = "ISSUE_SIZE"                          # 发行量
 
-    Unknown = 0
-    SG = 1
-    BP = 2
-    CS = 3
-    CT = 4
-    EA = 5
-    GS = 6
-    HS = 7
-    JP = 8
-    MB = 9
-    SC = 10
-    UB = 11
-    BI = 12
-    DB = 13
-    DC = 14
-    ML = 15
-    NM = 16
-    RB = 17
-    RS = 18
-    BC = 19
-    HT = 20
-    VT = 21
-    KC = 22
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.SortField_Unknow,
+            self.CODE: Qot_Common_pb2.SortField_Code,
+            self.CUR_PRICE: Qot_Common_pb2.SortField_CurPrice,
+            self.PRICE_CHANGE_VAL: Qot_Common_pb2.SortField_PriceChangeVal,
+            self.CHANGE_RATE: Qot_Common_pb2.SortField_ChangeRate,
+            self.STATUS: Qot_Common_pb2.SortField_Status,
+            self.BID_PRICE: Qot_Common_pb2.SortField_BidPrice,
+            self.ASK_PRICE: Qot_Common_pb2.SortField_AskPrice,
+            self.BID_VOL: Qot_Common_pb2.SortField_BidVol,
+            self.ASK_VOL: Qot_Common_pb2.SortField_AskVol,
+            self.VOLUME: Qot_Common_pb2.SortField_Volume,
+            self.TURNOVER: Qot_Common_pb2.SortField_Turnover,
+            self.SCORE: Qot_Common_pb2.SortField_Score,
+            self.PREMIUM: Qot_Common_pb2.SortField_Premium,
+            self.EFFECTIVE_LEVERAGE: Qot_Common_pb2.SortField_EffectiveLeverage,
+            self.DELTA: Qot_Common_pb2.SortField_Delta,
+            self.IMPLIED_VOLATILITY: Qot_Common_pb2.SortField_ImpliedVolatility,
+            self.TYPE: Qot_Common_pb2.SortField_Type,
+            self.STRIKE_PRICE: Qot_Common_pb2.SortField_StrikePrice,
+            self.BREAK_EVEN_POINT: Qot_Common_pb2.SortField_BreakEvenPoint,
+            self.MATURITY_TIME: Qot_Common_pb2.SortField_MaturityTime,
+            self.LIST_TIME: Qot_Common_pb2.SortField_ListTime,
+            self.LAST_TRADE_TIME: Qot_Common_pb2.SortField_LastTradeTime,
+            self.LEVERAGE: Qot_Common_pb2.SortField_Leverage,
+            self.IN_OUT_MONEY: Qot_Common_pb2.SortField_InOutMoney,
+            self.RECOVERY_PRICE: Qot_Common_pb2.SortField_RecoveryPrice,
+            self.CHANGE_PRICE: Qot_Common_pb2.SortField_ChangePrice,
+            self.CHANGE: Qot_Common_pb2.SortField_Change,
+            self.STREET_RATE: Qot_Common_pb2.SortField_StreetRate,
+            self.STREET_VOL: Qot_Common_pb2.SortField_StreetVol,
+            self.AMPLITUDE: Qot_Common_pb2.SortField_Amplitude,
+            self.WARRANT_NAME: Qot_Common_pb2.SortField_WarrantName,
+            self.ISSUER: Qot_Common_pb2.SortField_Issuer,
+            self.LOT_SIZE: Qot_Common_pb2.SortField_LotSize,
+            self.ISSUE_SIZE: Qot_Common_pb2.SortField_IssueSize
+        }
 
 
+'''-------------------------IpoPeriod----------------------------'''
 
-class TradeDateType(Enum):
-    Whole = 0 #全天交易
-    Morning = 1 #上午交易，下午休市
-    Afternoon = 2 #下午交易，上午休市
+
+# 涡轮上市日
+class IpoPeriod(FtEnum):
+    NONE = "N/A"                                       # 未知
+    TODAY = "TODAY"                                    # 今日上市
+    TOMORROW = "TOMORROW"                              # 明日上市
+    NEXTWEEK = "NEXTWEEK"                              # 未来一周上市
+    LASTWEEK = "LASTWEEK"                              # 过去一周上市
+    LASTMONTH = "LASTMONTH"                            # 过去一月上市
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.IpoPeriod_Unknow,
+            self.TODAY: Qot_Common_pb2.IpoPeriod_Today,
+            self.TOMORROW: Qot_Common_pb2.IpoPeriod_Tomorrow,
+            self.NEXTWEEK: Qot_Common_pb2.IpoPeriod_Nextweek,
+            self.LASTWEEK: Qot_Common_pb2.IpoPeriod_Lastweek,
+            self.LASTMONTH: Qot_Common_pb2.IpoPeriod_Lastmonth
+        }
+
+
+'''-------------------------PriceType----------------------------'''
+
+
+# 涡轮价外/内
+class PriceType(FtEnum):
+    NONE = "N/A"                                       # 未知
+    OUTSIDE = "OUTSIDE"                                # 价外
+    WITH_IN = "WITH_IN"                                # 价内
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.PriceType_Unknow,
+            self.OUTSIDE: Qot_Common_pb2.PriceType_Outside,
+            self.WITH_IN: Qot_Common_pb2.PriceType_WithIn
+        }
+
+
+'''-------------------------WarrantStatus----------------------------'''
+
+
+# 涡轮状态
+class WarrantStatus(FtEnum):
+    NONE = "N/A"                                       # 未知
+    NORMAL = "NORMAL"                                  # 正常状态
+    SUSPEND = "SUSPEND"                                # 停牌
+    STOP_TRADE = "STOP_TRADE"                          # 终止交易
+    PENDING_LISTING = "PENDING_LISTING"                # 等待上市
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.WarrantStatus_Unkonw,
+            self.NORMAL: Qot_Common_pb2.WarrantStatus_Normal,
+            self.SUSPEND: Qot_Common_pb2.WarrantStatus_Suspend,
+            self.STOP_TRADE: Qot_Common_pb2.WarrantStatus_StopTrade,
+            self.PENDING_LISTING: Qot_Common_pb2.WarrantStatus_PendingListing
+        }
+
+
+'''-------------------------Issuer----------------------------'''
+
+
+# 涡轮发行人
+class Issuer(FtEnum):
+    NONE = "N/A"                                       # 未知
+    SG = "SG"                                          # 法兴
+    BP = "BP"                                          # 法巴
+    CS = "CS"                                          # 瑞信
+    CT = "CT"                                          # 花旗
+    EA = "EA"                                          # 东亚
+    GS = "GS"                                          # 高盛
+    HS = "HS"                                          # 汇丰
+    JP = "JP"                                          # 摩通
+    MB = "MB"                                          # 麦银
+    SC = "SC"                                          # 渣打
+    UB = "UB"                                          # 瑞银
+    BI = "BI"                                          # 中银
+    DB = "DB"                                          # 德银
+    DC = "DC"                                          # 大和
+    ML = "ML"                                          # 美林
+    NM = "NM"                                          # 野村
+    RB = "RB"                                          # 荷合
+    RS = "RS"                                          # 苏皇
+    BC = "BC"                                          # 巴克莱
+    HT = "HT"                                          # 海通
+    VT = "VT"                                          # 瑞通
+    KC = "KC"                                          # 比联
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.Issuer_Unknow,
+            self.SG: Qot_Common_pb2.Issuer_SG,
+            self.BP: Qot_Common_pb2.Issuer_BP,
+            self.CS: Qot_Common_pb2.Issuer_CS,
+            self.CT: Qot_Common_pb2.Issuer_CT,
+            self.EA: Qot_Common_pb2.Issuer_EA,
+            self.GS: Qot_Common_pb2.Issuer_GS,
+            self.HS: Qot_Common_pb2.Issuer_HS,
+            self.JP: Qot_Common_pb2.Issuer_JP,
+            self.MB: Qot_Common_pb2.Issuer_MB,
+            self.SC: Qot_Common_pb2.Issuer_SC,
+            self.UB: Qot_Common_pb2.Issuer_UB,
+            self.BI: Qot_Common_pb2.Issuer_BI,
+            self.DB: Qot_Common_pb2.Issuer_DB,
+            self.DC: Qot_Common_pb2.Issuer_DC,
+            self.ML: Qot_Common_pb2.Issuer_ML,
+            self.NM: Qot_Common_pb2.Issuer_NM,
+            self.RB: Qot_Common_pb2.Issuer_RB,
+            self.RS: Qot_Common_pb2.Issuer_RS,
+            self.BC: Qot_Common_pb2.Issuer_BC,
+            self.HT: Qot_Common_pb2.Issuer_HT,
+            self.VT: Qot_Common_pb2.Issuer_VT,
+            self.KC: Qot_Common_pb2.Issuer_KC
+        }
+
+
+'''-------------------------TradeDateType----------------------------'''
+
+
+# 交易时间类型
+class TradeDateType(FtEnum):
+    WHOLE = "WHOLE"                                    # 全天交易
+    MORNING = "MORNING"                                # 上午交易，下午休市
+    AFTERNOON = "AFTERNOON"                            # 下午交易，上午休市
+
+    def load_dic(self):
+        return {
+            self.WHOLE: Qot_Common_pb2.TradeDateType_Whole,
+            self.MORNING: Qot_Common_pb2.TradeDateType_Morning,
+            self.AFTERNOON: Qot_Common_pb2.TradeDateType_Afternoon
+        }
