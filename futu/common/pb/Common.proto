@@ -10,6 +10,14 @@ enum RetType
 	RetType_Unknown = -400; //未知结果
 }
 
+//包加密算法
+enum PacketEncAlgo
+{
+	PacketEncAlgo_FTAES_ECB = 0; //富途修改过的AES加密的ECB模式
+	PacketEncAlgo_None = -1; //不加密
+	PacketEncAlgo_AES_ECB = 1; //标准的AES加密的ECB模式
+}
+
 //包的唯一标识，用于回放攻击的识别和保护
 message PacketID
 {

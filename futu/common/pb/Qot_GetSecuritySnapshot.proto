@@ -35,7 +35,7 @@ message WarrantSnapshotExData
     required string maturityTime = 4; //到期日时间字符串
     required string endTradeTime = 5; //最后交易日时间字符串
     required Qot_Common.Security owner = 6; //所属正股 
-    required double recoveryPrice = 7; //回收价
+    required double recoveryPrice = 7; //收回价
     required int64 streetVolumn = 8; //街货量
     required int64 issueVolumn = 9; //发行量
     required double streetRate = 10; //街货占比
