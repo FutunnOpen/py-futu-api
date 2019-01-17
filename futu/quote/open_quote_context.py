@@ -984,7 +984,7 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, "", code_list, subtype_list
 
-    def subscribe(self, code_list, subtype_list, is_first_push=True):
+    def subscribe(self, code_list, subtype_list, is_first_push=True, subscribe_push=True):
         """
         订阅注册需要的实时信息，指定股票和订阅的数据类型即可
 
@@ -993,6 +993,7 @@ class OpenQuoteContext(OpenContextBase):
         :param code_list: 需要订阅的股票代码列表
         :param subtype_list: 需要订阅的数据类型列表，参见SubType
         :param is_first_push: 订阅成功后是否马上推送一次数据
+        :param subscribe_push: 订阅后不推送
         :return: (ret, err_message)
 
                 ret == RET_OK err_message为None
@@ -1007,9 +1008,9 @@ class OpenQuoteContext(OpenContextBase):
         print(quote_ctx.subscribe(['HK.00700'], [SubType.QUOTE)])
         quote_ctx.close()
         """
-        return self._subscribe_impl(code_list, subtype_list, is_first_push)
+        return self._subscribe_impl(code_list, subtype_list, is_first_push, subscribe_push)
 
-    def _subscribe_impl(self, code_list, subtype_list, is_first_push):
+    def _subscribe_impl(self, code_list, subtype_list, is_first_push, subscribe_push):
 
         ret, msg, code_list, subtype_list = self._check_subscribe_param(code_list, subtype_list)
         if ret != RET_OK:
@@ -1030,7 +1031,8 @@ class OpenQuoteContext(OpenContextBase):
             'code_list': code_list,
             'subtype_list': subtype_list,
             'conn_id': self.get_sync_conn_id(),
-            'is_first_push': is_first_push
+            'is_first_push': is_first_push,
+            'subscribe_push': subscribe_push
         }
         ret_code, msg, _ = query_processor(**kargs)
 
