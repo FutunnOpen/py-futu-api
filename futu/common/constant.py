@@ -1443,7 +1443,7 @@ class WarrantStatus(FtEnum):
 
     def load_dic(self):
         return {
-            self.NONE: Qot_Common_pb2.WarrantStatus_Unkonw,
+            self.NONE: Qot_Common_pb2.WarrantStatus_Unknow,
             self.NORMAL: Qot_Common_pb2.WarrantStatus_Normal,
             self.SUSPEND: Qot_Common_pb2.WarrantStatus_Suspend,
             self.STOP_TRADE: Qot_Common_pb2.WarrantStatus_StopTrade,
