@@ -226,7 +226,7 @@ class Response(object):
     def unpack_response_pb(resp):
         from futu.common.pb.Qot_GetWarrant_pb2 import Response as GetWarrantPBResponse
         if resp is None or not isinstance(resp, GetWarrantPBResponse):
-            return RET_ERROR, "unpack_response_pb error"
+            return RET_ERROR, "unpack_response_pb error", None
         if resp.retType != RET_OK:
             return RET_ERROR, resp.retMsg, None
 
