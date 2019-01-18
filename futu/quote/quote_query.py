@@ -852,8 +852,9 @@ class SubscriptionQuery:
         return pack_pb_req(req, ProtoId.Qot_Sub, conn_id)
 
     @classmethod
-    def pack_subscribe_req(cls, code_list, subtype_list, conn_id, is_first_push):
-        return SubscriptionQuery.pack_sub_or_unsub_req(code_list, subtype_list, True, conn_id, is_first_push, True)
+    def pack_subscribe_req(cls, code_list, subtype_list, conn_id, is_first_push, subscribe_push):
+        return SubscriptionQuery.pack_sub_or_unsub_req(code_list, subtype_list, True, conn_id, is_first_push,
+                                                       subscribe_push)  # True
 
     @classmethod
     def unpack_subscribe_rsp(cls, rsp_pb):
