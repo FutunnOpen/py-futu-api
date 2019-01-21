@@ -1294,16 +1294,16 @@ STOCK_REFERENCE_TYPE_MAP = {
 #
 class WrtType(FtEnum):
     NONE = "N/A"                                       # 未知
-    BUY = "BUY"                                        # 认购
-    SELL = "SELL"                                      # 认沽
+    CALL = "CALL"                                      # 认购
+    PUT = "PUT"                                        # 认沽
     BULL = "BULL"                                      # 牛
     BEAR = "BEAR"                                      # 熊
 
     def load_dic(self):
         return {
             self.NONE: Qot_Common_pb2.WarrantType_Unknown,
-            self.BUY: Qot_Common_pb2.WarrantType_Buy,
-            self.SELL: Qot_Common_pb2.WarrantType_Sell,
+            self.CALL: Qot_Common_pb2.WarrantType_Buy,
+            self.PUT: Qot_Common_pb2.WarrantType_Sell,
             self.BULL: Qot_Common_pb2.WarrantType_Bull,
             self.BEAR: Qot_Common_pb2.WarrantType_Bear
         }
