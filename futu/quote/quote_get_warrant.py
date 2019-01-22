@@ -203,7 +203,7 @@ class Request(object):
             pb.c2s.impliedMin = self.implied_min
         if self.delta_max is not None:
             """引伸波幅过滤终点,仅认购认沽支持该字段过滤	"""
-            pb.c2s.impliedMax = self.delta_max
+            pb.c2s.impliedMax = self.implied_max
         if self.recovery_price_min is not None:
             """回收价过滤起点,仅牛熊证支持该字段过滤"""
             pb.c2s.recoveryPriceMin = self.recovery_price_min
