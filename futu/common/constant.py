@@ -1294,8 +1294,8 @@ STOCK_REFERENCE_TYPE_MAP = {
 #
 class WrtType(FtEnum):
     NONE = "N/A"                                       # 未知
-    CALL = "BUY"                                        # 认购
-    PUT = "SELL"                                      # 认沽
+    CALL = "CALL"                                        # 认购
+    PUT = "PUT"                                      # 认沽
     BULL = "BULL"                                      # 牛
     BEAR = "BEAR"                                      # 熊
 
