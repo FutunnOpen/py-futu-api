@@ -35,13 +35,15 @@ message WarrantSnapshotExData
     required string maturityTime = 4; //到期日时间字符串
     required string endTradeTime = 5; //最后交易日时间字符串
     required Qot_Common.Security owner = 6; //所属正股 
-    required double recoveryPrice = 7; //回收价
+    required double recoveryPrice = 7; //收回价
     required int64 streetVolumn = 8; //街货量
     required int64 issueVolumn = 9; //发行量
     required double streetRate = 10; //街货占比
     required double delta = 11; //对冲值
     required double impliedVolatility = 12; //引申波幅
     required double premium = 13; //溢价
+	optional double maturityTimestamp = 14; //到期日时间戳
+	optional double endTradeTimestamp = 15; //最后交易日时间戳
 }
 
  // 期权类型额外数据
@@ -59,7 +61,8 @@ message OptionSnapshotExData
     required double gamma = 10; //希腊值 Gamma
 	required double vega = 11; //希腊值 Vega
     required double theta = 12; //希腊值 Theta
-    required double rho = 13; //希腊值 Rho  
+    required double rho = 13; //希腊值 Rho
+	optional double strikeTimestamp = 14; //行权日时间戳  
 }
 
  //基本快照数据
@@ -80,6 +83,12 @@ message SnapshotBasicData
 	required int64 volume = 13; //成交量
 	required double turnover = 14; //成交额
 	required double turnoverRate = 15; //换手率
+	optional double listTimestamp = 16; //上市时间戳
+	optional double updateTimestamp = 17; //更新时间戳
+	optional double askPrice = 18;//卖价
+    optional double bidPrice = 19;//买价
+	optional int64 askVol = 20;//卖量
+    optional int64 bidVol = 21;//买量
 }
 
 message Snapshot

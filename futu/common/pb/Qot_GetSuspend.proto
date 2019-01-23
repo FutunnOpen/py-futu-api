@@ -14,6 +14,7 @@ message C2S
 message Suspend
 {
 	required string time = 1; //时间字符串
+	optional double timestamp = 2; //时间戳
 }
 
 message SecuritySuspend

@@ -8,6 +8,9 @@ message C2S
 	required int32 clientVer = 1; //客户端版本号，clientVer = "."以前的数 * 100 + "."以后的，举例：1.1版本的clientVer为1 * 100 + 1 = 101，2.21版本为2 * 100 + 21 = 221
 	required string clientID = 2; //客户端唯一标识，无生具体生成规则，客户端自己保证唯一性即可
 	optional bool recvNotify = 3; //此连接是否接收市场状态、交易需要重新解锁等等事件通知，true代表接收，FutuOpenD就会向此连接推送这些通知，反之false代表不接收不推送
+	//如果通信要加密，首先得在FutuOpenD和客户端都配置RSA密钥，不配置始终不加密
+	//如果配置了RSA密钥且指定的加密算法不为PacketEncAlgo_None则加密(即便这里不设置，配置了RSA密钥，也会采用默认加密方式)，默认采用FTAES_ECB算法
+	optional int32 packetEncAlgo = 4; //指定包加密算法，参见Common.PacketEncAlgo的枚举定义
 }
 
 message S2C

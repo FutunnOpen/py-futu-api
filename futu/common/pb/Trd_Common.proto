@@ -174,6 +174,8 @@ message Order
 	optional double fillAvgPrice = 13; //成交均价，无精度限制
 	optional string lastErrMsg = 14; //最后的错误描述，如果有错误，会有此描述最后一次错误的原因，无错误为空
 	optional int32 secMarket = 15; //（2018/07/17新增）证券所属市场，参见TrdSecMarket的枚举定义
+	optional double createTimestamp = 16; //创建时间戳
+	optional double updateTimestamp = 17; //最后更新时间戳
 }
 
 //成交结构
@@ -192,6 +194,7 @@ message OrderFill
 	optional int32 counterBrokerID = 11; //对手经纪号，港股有效
 	optional string counterBrokerName = 12; //对手经纪名称，港股有效
 	optional int32 secMarket = 13; //（2018/07/17新增）证券所属市场，参见TrdSecMarket的枚举定义
+	optional double createTimestamp = 14; //时间戳
 }
 
 //最大可交易数量

@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Common.proto',
   package='Common',
   syntax='proto2',
-  serialized_pb=_b('\n\x0c\x43ommon.proto\x12\x06\x43ommon\",\n\x08PacketID\x12\x0e\n\x06\x63onnID\x18\x01 \x02(\x04\x12\x10\n\x08serialNo\x18\x02 \x02(\r*w\n\x07RetType\x12\x13\n\x0fRetType_Succeed\x10\x00\x12\x1b\n\x0eRetType_Failed\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_TimeOut\x10\x9c\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Unknown\x10\xf0\xfc\xff\xff\xff\xff\xff\xff\xff\x01')
+  serialized_pb=_b('\n\x0c\x43ommon.proto\x12\x06\x43ommon\",\n\x08PacketID\x12\x0e\n\x06\x63onnID\x18\x01 \x02(\x04\x12\x10\n\x08serialNo\x18\x02 \x02(\r*w\n\x07RetType\x12\x13\n\x0fRetType_Succeed\x10\x00\x12\x1b\n\x0eRetType_Failed\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_TimeOut\x10\x9c\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Unknown\x10\xf0\xfc\xff\xff\xff\xff\xff\xff\xff\x01*h\n\rPacketEncAlgo\x12\x1b\n\x17PacketEncAlgo_FTAES_ECB\x10\x00\x12\x1f\n\x12PacketEncAlgo_None\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x19\n\x15PacketEncAlgo_AES_ECB\x10\x01')
 )
 
 _RETTYPE = _descriptor.EnumDescriptor(
@@ -54,10 +54,40 @@ _RETTYPE = _descriptor.EnumDescriptor(
 _sym_db.RegisterEnumDescriptor(_RETTYPE)
 
 RetType = enum_type_wrapper.EnumTypeWrapper(_RETTYPE)
+_PACKETENCALGO = _descriptor.EnumDescriptor(
+  name='PacketEncAlgo',
+  full_name='Common.PacketEncAlgo',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='PacketEncAlgo_FTAES_ECB', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PacketEncAlgo_None', index=1, number=-1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PacketEncAlgo_AES_ECB', index=2, number=1,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=191,
+  serialized_end=295,
+)
+_sym_db.RegisterEnumDescriptor(_PACKETENCALGO)
+
+PacketEncAlgo = enum_type_wrapper.EnumTypeWrapper(_PACKETENCALGO)
 RetType_Succeed = 0
 RetType_Failed = -1
 RetType_TimeOut = -100
 RetType_Unknown = -400
+PacketEncAlgo_FTAES_ECB = 0
+PacketEncAlgo_None = -1
+PacketEncAlgo_AES_ECB = 1
 
 
 
@@ -100,6 +130,7 @@ _PACKETID = _descriptor.Descriptor(
 
 DESCRIPTOR.message_types_by_name['PacketID'] = _PACKETID
 DESCRIPTOR.enum_types_by_name['RetType'] = _RETTYPE
+DESCRIPTOR.enum_types_by_name['PacketEncAlgo'] = _PACKETENCALGO
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 PacketID = _reflection.GeneratedProtocolMessageType('PacketID', (_message.Message,), dict(

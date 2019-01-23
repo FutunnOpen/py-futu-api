@@ -1,0 +1,8 @@
+# {classdescription}
+class {classname}(FtEnum):
+{variablecode}
+
+    def load_dic(self):
+        return {{
+{diccode}
+        }}

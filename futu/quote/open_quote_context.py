@@ -95,6 +95,8 @@ class OpenQuoteContext(OpenContextBase):
             self._wait_reconnect()
         return ret_code, ret_msg
 
+
+
     def get_trading_days(self, market, start=None, end=None):
         """获取交易日
         :param market: 市场类型，Market_
@@ -109,7 +111,7 @@ class OpenQuoteContext(OpenContextBase):
          str            None          end为start往后365天
          None           None          end为当前日期，start为end往前365天
          ==========    ==========    ========================================
-        :return: 成功时返回(RET_OK, data)，data是字符串数组；失败时返回(RET_ERROR, data)，其中data是错误描述字符串
+        :return: 成功时返回(RET_OK, data)，data是[{'trade_date_type': 0, 'time': '2018-01-05'}]数组；失败时返回(RET_ERROR, data)，其中data是错误描述字符串
         """
         if market is None or is_str(market) is False:
             error_str = ERROR_STR_PREFIX + "the type of market param is wrong"
@@ -133,6 +135,7 @@ class OpenQuoteContext(OpenContextBase):
 
         if ret_code != RET_OK:
             return RET_ERROR, msg
+
 
         return RET_OK, trade_day_list
 
@@ -726,7 +729,11 @@ class OpenQuoteContext(OpenContextBase):
             'listing_date',
             'lot_size',
             'price_spread',
-            'stock_owner'
+            'stock_owner',
+            'ask_price',
+            'bid_price',
+            'ask_vol',
+            'bid_vol'
         ]
 
         col_list.append('equity_valid')
@@ -977,7 +984,7 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, "", code_list, subtype_list
 
-    def subscribe(self, code_list, subtype_list, is_first_push=True):
+    def subscribe(self, code_list, subtype_list, is_first_push=True, subscribe_push=True):
         """
         订阅注册需要的实时信息，指定股票和订阅的数据类型即可
 
@@ -986,6 +993,7 @@ class OpenQuoteContext(OpenContextBase):
         :param code_list: 需要订阅的股票代码列表
         :param subtype_list: 需要订阅的数据类型列表，参见SubType
         :param is_first_push: 订阅成功后是否马上推送一次数据
+        :param subscribe_push: 订阅后不推送
         :return: (ret, err_message)
 
                 ret == RET_OK err_message为None
@@ -1000,9 +1008,9 @@ class OpenQuoteContext(OpenContextBase):
         print(quote_ctx.subscribe(['HK.00700'], [SubType.QUOTE)])
         quote_ctx.close()
         """
-        return self._subscribe_impl(code_list, subtype_list, is_first_push)
+        return self._subscribe_impl(code_list, subtype_list, is_first_push, subscribe_push)
 
-    def _subscribe_impl(self, code_list, subtype_list, is_first_push):
+    def _subscribe_impl(self, code_list, subtype_list, is_first_push, subscribe_push=True):
 
         ret, msg, code_list, subtype_list = self._check_subscribe_param(code_list, subtype_list)
         if ret != RET_OK:
@@ -1023,7 +1031,8 @@ class OpenQuoteContext(OpenContextBase):
             'code_list': code_list,
             'subtype_list': subtype_list,
             'conn_id': self.get_sync_conn_id(),
-            'is_first_push': is_first_push
+            'is_first_push': is_first_push,
+            'subscribe_push': subscribe_push
         }
         ret_code, msg, _ = query_processor(**kargs)
 
@@ -1364,7 +1373,6 @@ class OpenQuoteContext(OpenContextBase):
                 turnover                 float          成交额
                 pe_ratio                 float          市盈率（该字段为比例字段，默认不展示%）
                 turnover_rate            float          换手率
-                last_close               float          昨收价
                 =====================   ===========   ==============================================================
         """
         param_table = {'code': code, 'ktype': ktype}
@@ -1400,7 +1408,7 @@ class OpenQuoteContext(OpenContextBase):
 
         col_list = [
             'code', 'time_key', 'open', 'close', 'high', 'low', 'volume',
-            'turnover', 'pe_ratio', 'turnover_rate', 'last_close'
+            'turnover', 'pe_ratio', 'turnover_rate'
         ]
         kline_frame_table = pd.DataFrame(kline_list, columns=col_list)
 
@@ -1799,6 +1807,8 @@ class OpenQuoteContext(OpenContextBase):
         return RET_OK, option_chain
 
     def get_order_detail(self, code):
+        return RET_ERROR, "this service has been cancelled"
+
         """
         查询A股Level 2权限下提供的委托明细
 
@@ -1833,3 +1843,44 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
 
         return RET_OK, order_detail
+
+
+    def get_warrant(self, stock_owner='', req=None):
+        """
+        :param stock_owner:所属正股
+        :param req:futu.quote.quote_get_warrant.Request
+        """
+        from futu.quote.quote_get_warrant import Request
+
+        if (req is None) or (not isinstance(req, Request)):
+            req = Request()
+
+        if stock_owner is not None:
+            req.stock_owner = stock_owner
+
+
+        query_processor = self._get_sync_query_processor(QuoteWarrant.pack_req, QuoteWarrant.unpack_rsp)
+        kargs = {
+            "req": req,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, content = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return ret_code, msg
+        else:
+            warrant_data_list, last_page, all_count = content
+            col_list = ['stock', 'name', 'stock_owner', 'type', 'issuer', 'maturity_time',
+                        'list_time', 'last_trade_time', 'recovery_price', 'conversion_ratio',
+                        'lot_size', 'strike_price', 'last_close_price', 'cur_price', 'price_change_val', 'change_rate',
+                        'status', 'bid_price', 'ask_price', 'bid_vol', 'ask_vol', 'volume', 'turnover', 'score',
+                        'premium', 'break_even_point', 'leverage', 'ipop', 'price_recovery_ratio', 'conversion_price',
+                        'street_rate', 'street_vol', 'amplitude', 'issue_size', 'high_price', 'low_price',
+                        'implied_volatility', 'delta', 'effective_leverage', 'list_timestamp',  'last_trade_timestamp',
+                        'maturity_timestamp']
+            warrant_data_frame = pd.DataFrame(warrant_data_list, columns=col_list)
+            #1120400921001028854
+            return ret_code, (warrant_data_frame, last_page, all_count)
+
+
+
+

@@ -5,8 +5,6 @@
 
 from futu.common.utils import *
 
-
-
 # 无数据时的值
 NoneDataType = 'N/A'
 
@@ -107,8 +105,11 @@ class TradeDayQuery:
             return RET_ERROR, ret_msg, None
 
         raw_trading_day_list = rsp_pb.s2c.tradeDateList
-        # convert to list format that we use
-        trading_day_list = [x.time.split()[0] for x in raw_trading_day_list]
+        trading_day_list = list()
+
+        for x in raw_trading_day_list:
+            if x.time is not None and len(x.time) > 0:
+                trading_day_list.append({"time": x.time, "trade_date_type": TradeDateType.to_string2(x.tradeDateType)})
 
         return RET_OK, "", trading_day_list
 
@@ -167,8 +168,8 @@ class StockBasicInfoQuery:
             "lot_size": record.basic.lotSize,
             "stock_type": QUOTE.REV_SEC_TYPE_MAP[record.basic.secType]
                 if record.basic.secType in QUOTE.REV_SEC_TYPE_MAP else SecurityType.NONE,
-            "stock_child_type": QUOTE.REV_WRT_TYPE_MAP[record.warrantExData.type]
-                if record.warrantExData.type in QUOTE.REV_WRT_TYPE_MAP else WrtType.NONE,
+
+            "stock_child_type": WrtType.to_string2(record.warrantExData.type),
             "stock_owner":merge_qot_mkt_stock_str(
                     record.warrantExData.owner.market,
                     record.warrantExData.owner.code) if record.HasField('warrantExData') else (
@@ -252,6 +253,11 @@ class MarketSnapshotQuery:
             snapshot_tmp['listing_date'] = "N/A" if record.HasField('optionExData') else record.basic.listTime
             snapshot_tmp['price_spread'] = record.basic.priceSpread
             snapshot_tmp['lot_size'] = record.basic.lotSize
+            snapshot_tmp['ask_price'] = record.basic.askPrice
+            snapshot_tmp['bid_price'] = record.basic.bidPrice
+            snapshot_tmp['ask_vol'] = record.basic.askVol
+            snapshot_tmp['bid_vol'] = record.basic.bidVol
+
 
             snapshot_tmp['equity_valid'] = False
             # equityExData
@@ -281,8 +287,7 @@ class MarketSnapshotQuery:
                 snapshot_tmp['wrt_valid'] = True
                 snapshot_tmp[
                     'wrt_conversion_ratio'] = record.warrantExData.conversionRate
-                snapshot_tmp['wrt_type'] = QUOTE.REV_WRT_TYPE_MAP[
-                    record.warrantExData.warrantType]
+                snapshot_tmp['wrt_type'] = WrtType.to_string2(record.warrantExData.warrantType)
                 snapshot_tmp[
                     'wrt_strike_price'] = record.warrantExData.strikePrice
                 snapshot_tmp[
@@ -847,8 +852,9 @@ class SubscriptionQuery:
         return pack_pb_req(req, ProtoId.Qot_Sub, conn_id)
 
     @classmethod
-    def pack_subscribe_req(cls, code_list, subtype_list, conn_id, is_first_push):
-        return SubscriptionQuery.pack_sub_or_unsub_req(code_list, subtype_list, True, conn_id, is_first_push, True)
+    def pack_subscribe_req(cls, code_list, subtype_list, conn_id, is_first_push, subscribe_push):
+        return SubscriptionQuery.pack_sub_or_unsub_req(code_list, subtype_list, True, conn_id, is_first_push,
+                                                       subscribe_push)  # True
 
     @classmethod
     def unpack_subscribe_rsp(cls, rsp_pb):
@@ -989,35 +995,37 @@ class StockQuoteQuery:
             return RET_ERROR, rsp_pb.retMsg, []
         raw_quote_list = rsp_pb.s2c.basicQotList
 
-        quote_list = [{
-            'code': merge_qot_mkt_stock_str(int(record.security.market), record.security.code),
-            'data_date': record.updateTime.split()[0],
-            'data_time': record.updateTime.split()[1],
-            'last_price': record.curPrice,
-            'open_price': record.openPrice,
-            'high_price': record.highPrice,
-            'low_price': record.lowPrice,
-            'prev_close_price': record.lastClosePrice,
-            'volume': int(record.volume),
-            'turnover': record.turnover,
-            'turnover_rate': record.turnoverRate,
-            'amplitude': record.amplitude,
-            'suspension': record.isSuspended,
-            'listing_date': record.listTime,
-            'price_spread': record.priceSpread if record.HasField('priceSpread') else 0,
-            'dark_status': QUOTE.REV_DARK_STATUS_MAP[record.darkStatus] if record.HasField('darkStatus') else DarkStatus.NONE,
-            "strike_price": record.optionExData.strikePrice,
-            "contract_size": record.optionExData.contractSize,
-            "open_interest": record.optionExData.openInterest,
-            "implied_volatility": record.optionExData.impliedVolatility,
-            "premium": record.optionExData.premium,
-            "delta": record.optionExData.delta,
-            "gamma": record.optionExData.gamma,
-            'vega': record.optionExData.vega,
-            'theta': record.optionExData.theta,
-            'rho': record.optionExData.rho,
-        } for record in raw_quote_list]
-
+        quote_list = list()
+        for record in raw_quote_list:
+            if record.updateTime is not None and len(record.updateTime) != 0:
+                quote_list.append({
+                'code': merge_qot_mkt_stock_str(int(record.security.market), record.security.code),
+                'data_date': record.updateTime.split()[0],
+                'data_time': record.updateTime.split()[1],
+                'last_price': record.curPrice,
+                'open_price': record.openPrice,
+                'high_price': record.highPrice,
+                'low_price': record.lowPrice,
+                'prev_close_price': record.lastClosePrice,
+                'volume': int(record.volume),
+                'turnover': record.turnover,
+                'turnover_rate': record.turnoverRate,
+                'amplitude': record.amplitude,
+                'suspension': record.isSuspended,
+                'listing_date': record.listTime,
+                'price_spread': record.priceSpread if record.HasField('priceSpread') else 0,
+                'dark_status': QUOTE.REV_DARK_STATUS_MAP[record.darkStatus] if record.HasField('darkStatus') else DarkStatus.NONE,
+                "strike_price": record.optionExData.strikePrice,
+                "contract_size": record.optionExData.contractSize,
+                "open_interest": record.optionExData.openInterest,
+                "implied_volatility": record.optionExData.impliedVolatility,
+                "premium": record.optionExData.premium,
+                "delta": record.optionExData.delta,
+                "gamma": record.optionExData.gamma,
+                'vega': record.optionExData.vega,
+                'theta': record.optionExData.theta,
+                'rho': record.optionExData.rho,
+            })
         return RET_OK, "", quote_list
 
 
@@ -1518,7 +1526,7 @@ class StockReferenceList:
             data['list_time'] = info.basic.listTime
             if info.HasField('warrantExData'):
                 data['wrt_valid'] = True
-                data['wrt_type'] = QUOTE.REV_WRT_TYPE_MAP[info.warrantExData.type]
+                data['wrt_type'] = WrtType.to_string2(info.warrantExData.type)
                 data['wrt_code'] = merge_qot_mkt_stock_str(info.warrantExData.owner.market,
                                                            info.warrantExData.owner.code)
             else:
@@ -1794,3 +1802,29 @@ class OrderDetail:
             'Bid': bid
         }
         return RET_OK, "", data
+
+
+
+class QuoteWarrant:
+    """
+    拉取涡轮
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, req, conn_id):
+        from futu.quote.quote_get_warrant import Request as WarrantRequest
+        if (req is None) or (not isinstance(req, WarrantRequest)):
+            req = WarrantRequest()
+        ret, context = req.fill_request_pb()
+        if ret == RET_OK:
+            return pack_pb_req(context, ProtoId.Qot_GetWarrantData, conn_id)
+        else:
+            return ret, context, None
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        from futu.quote.quote_get_warrant import Response as WarrantResponse
+        return WarrantResponse.unpack_response_pb(rsp_pb)

@@ -135,7 +135,7 @@ class CurKlineHandlerBase(RspHandlerBase):
         else:
             col_list = [
                 'code', 'time_key', 'open', 'close', 'high', 'low', 'volume',
-                'turnover', 'k_type', 'last_close'
+                'turnover', 'k_type'
             ]
             kline_frame_table = pd.DataFrame(content, columns=col_list)
 
@@ -348,16 +348,16 @@ class AsyncHandler_InitConnect(RspHandlerBase):
 
         return ret_code, msg
 
-
-class OrderDetailHandlerBase(RspHandlerBase):
-    def __init__(self):
-        super(OrderDetailHandlerBase, self).__init__()
-
-    def on_recv_rsp(self, rsp_pb):
-        """receive response callback function"""
-        ret_code, msg, data = OrderDetail.unpack_rsp(rsp_pb)
-
-        if ret_code != RET_OK:
-            return ret_code, msg
-        else:
-            return ret_code, data
+#
+# class OrderDetailHandlerBase(RspHandlerBase):
+#     def __init__(self):
+#         super(OrderDetailHandlerBase, self).__init__()
+#
+#     def on_recv_rsp(self, rsp_pb):
+#         """receive response callback function"""
+#         ret_code, msg, data = OrderDetail.unpack_rsp(rsp_pb)
+#
+#         if ret_code != RET_OK:
+#             return ret_code, msg
+#         else:
+#             return ret_code, data
