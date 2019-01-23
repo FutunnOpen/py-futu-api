@@ -1010,7 +1010,7 @@ class OpenQuoteContext(OpenContextBase):
         """
         return self._subscribe_impl(code_list, subtype_list, is_first_push, subscribe_push)
 
-    def _subscribe_impl(self, code_list, subtype_list, is_first_push, subscribe_push = True):
+    def _subscribe_impl(self, code_list, subtype_list, is_first_push, subscribe_push=True):
 
         ret, msg, code_list, subtype_list = self._check_subscribe_param(code_list, subtype_list)
         if ret != RET_OK:
