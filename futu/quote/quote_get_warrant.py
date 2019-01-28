@@ -98,10 +98,10 @@ class Request(object):
             pb.c2s.owner.market = market_code
             pb.c2s.owner.code = stock_code
 
-        if not isinstance(self.type_list, list):
+        if self.type_list is not None and not isinstance(self.type_list, list):
             #1120400921001028867
             self.type_list = [self.type_list]
-        if not isinstance(self.issuer_list, list):
+        if self.issuer_list is not None and not isinstance(self.issuer_list, list):
             #1120400921001028867
             self.issuer_list = [self.issuer_list]
 
