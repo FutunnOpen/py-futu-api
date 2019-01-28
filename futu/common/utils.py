@@ -7,6 +7,7 @@ from google.protobuf.json_format import MessageToJson
 from threading import RLock
 from futu.common.conn_mng import *
 from futu.common.sys_config import *
+from futu.common.pbjson import json2pb
 
 
 ProtoInfo = collections.namedtuple('ProtoInfo', ['proto_id', 'serial_no'])
