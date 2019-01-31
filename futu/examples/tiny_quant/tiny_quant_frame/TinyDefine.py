@@ -50,7 +50,7 @@ MAP_KLINE_SIZE = {KTYPE_DAY: 200,
 
 class GLOBAL(object):
     """ datetime.strptime 有线程安全问题"""
-    dt_lock = threading._RLock()
+    dt_lock = threading.RLock()
 
 class TinyQuoteData(object):
     """行情数据类"""
