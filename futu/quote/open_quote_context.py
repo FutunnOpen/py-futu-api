@@ -733,7 +733,14 @@ class OpenQuoteContext(OpenContextBase):
             'ask_price',
             'bid_price',
             'ask_vol',
-            'bid_vol'
+            'bid_vol',
+            'enable_margin',
+            'mortgage_ratio',
+            'long_margin_initial_ratio',
+            'enable_short_sell',
+            'short_sell_rate',
+            'short_available_volume',
+            'short_margin_initial_ratio'
         ]
 
         col_list.append('equity_valid')
@@ -993,7 +1000,7 @@ class OpenQuoteContext(OpenContextBase):
         :param code_list: 需要订阅的股票代码列表
         :param subtype_list: 需要订阅的数据类型列表，参见SubType
         :param is_first_push: 订阅成功后是否马上推送一次数据
-        :param subscribe_push: 订阅后不推送
+        :param subscribe_push: 订阅后推送
         :return: (ret, err_message)
 
                 ret == RET_OK err_message为None
@@ -1844,7 +1851,6 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, order_detail
 
-
     def get_warrant(self, stock_owner='', req=None):
         """
         :param stock_owner:所属正股
@@ -1857,7 +1863,6 @@ class OpenQuoteContext(OpenContextBase):
 
         if stock_owner is not None:
             req.stock_owner = stock_owner
-
 
         query_processor = self._get_sync_query_processor(QuoteWarrant.pack_req, QuoteWarrant.unpack_rsp)
         kargs = {
@@ -1880,6 +1885,22 @@ class OpenQuoteContext(OpenContextBase):
             warrant_data_frame = pd.DataFrame(warrant_data_list, columns=col_list)
             #1120400921001028854
             return ret_code, (warrant_data_frame, last_page, all_count)
+
+    def get_history_kl_quota(self, user_id, get_detail=False):
+        """拉取历史K线已经用掉的额度"""
+        query_processor = self._get_sync_query_processor(HistoryKLQuota.pack_req, HistoryKLQuota.unpack_rsp)
+        kargs = {
+            "user_id": user_id,
+            "get_detail": get_detail,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, data = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return ret_code, msg
+        else:
+            used_quota = data["used_quota"]
+            detail_list = data["detail_list"]
+            return ret_code, (used_quota, detail_list)
 
 
 

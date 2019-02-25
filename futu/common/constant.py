@@ -755,6 +755,7 @@ class ProtoId(object):
     Qot_GetHistoryKLPoints = 3101  # 获取多只股票历史单点K线
     Qot_GetRehab = 3102  # 获取复权信息
     Qot_RequestHistoryKL = 3103 # 拉取历史K线
+    Qot_RequestHistoryKLQuota = 3104  # 拉取历史K线已经用掉的额度
 
     # 其他行情数据
     Qot_GetTradeDate = 3200         # 获取市场交易日
@@ -767,11 +768,11 @@ class ProtoId(object):
     Qot_GetOwnerPlate = 3207        # 获取股票所属板块
     Qot_GetHoldingChangeList = 3208     # 获取高管持股变动
     Qot_GetOptionChain = 3209           # 获取期权链
+
     Qot_GetOrderDetail = 3016           # 获取委托明细
     Qot_UpdateOrderDetail = 3017        # 推送委托明细
 
     Qot_GetWarrantData = 3210        # 拉取涡轮信息
-
 
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
