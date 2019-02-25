@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_RequestHistoryKLQuota.proto',
   package='Qot_RequestHistoryKLQuota',
   syntax='proto2',
-  serialized_pb=_b('\n\x1fQot_RequestHistoryKLQuota.proto\x12\x19Qot_RequestHistoryKLQuota\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"c\n\nDetailItem\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x13\n\x0brequestTime\x18\x02 \x02(\t\x12\x18\n\x10requestTimeStamp\x18\x03 \x01(\x03\")\n\x03\x43\x32S\x12\x0e\n\x06userID\x18\x01 \x02(\x04\x12\x12\n\nbGetDetail\x18\x02 \x01(\x08\"S\n\x03S2C\x12\x11\n\tusedQuota\x18\x01 \x02(\x05\x12\x39\n\ndetailList\x18\x02 \x03(\x0b\x32%.Qot_RequestHistoryKLQuota.DetailItem\"6\n\x07Request\x12+\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x1e.Qot_RequestHistoryKLQuota.C2S\"o\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12+\n\x03s2c\x18\x04 \x01(\x0b\x32\x1e.Qot_RequestHistoryKLQuota.S2C')
+  serialized_pb=_b('\n\x1fQot_RequestHistoryKLQuota.proto\x12\x19Qot_RequestHistoryKLQuota\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"c\n\nDetailItem\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x13\n\x0brequestTime\x18\x02 \x02(\t\x12\x18\n\x10requestTimeStamp\x18\x03 \x01(\x03\"\x19\n\x03\x43\x32S\x12\x12\n\nbGetDetail\x18\x02 \x01(\x08\"S\n\x03S2C\x12\x11\n\tusedQuota\x18\x01 \x02(\x05\x12\x39\n\ndetailList\x18\x02 \x03(\x0b\x32%.Qot_RequestHistoryKLQuota.DetailItem\"6\n\x07Request\x12+\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x1e.Qot_RequestHistoryKLQuota.C2S\"o\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12+\n\x03s2c\x18\x04 \x01(\x0b\x32\x1e.Qot_RequestHistoryKLQuota.S2C')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -81,14 +81,7 @@ _C2S = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='userID', full_name='Qot_RequestHistoryKLQuota.C2S.userID', index=0,
-      number=1, type=4, cpp_type=4, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='bGetDetail', full_name='Qot_RequestHistoryKLQuota.C2S.bGetDetail', index=1,
+      name='bGetDetail', full_name='Qot_RequestHistoryKLQuota.C2S.bGetDetail', index=0,
       number=2, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
@@ -107,7 +100,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=195,
-  serialized_end=236,
+  serialized_end=220,
 )
 
 
@@ -144,8 +137,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=238,
-  serialized_end=321,
+  serialized_start=222,
+  serialized_end=305,
 )
 
 
@@ -175,8 +168,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=323,
-  serialized_end=377,
+  serialized_start=307,
+  serialized_end=361,
 )
 
 
@@ -227,8 +220,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=379,
-  serialized_end=490,
+  serialized_start=363,
+  serialized_end=474,
 )
 
 _DETAILITEM.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY

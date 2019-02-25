@@ -1847,10 +1847,9 @@ class HistoryKLQuota:
         pass
 
     @classmethod
-    def pack_req(cls, user_id, get_detail, conn_id):
+    def pack_req(cls, get_detail, conn_id):
         from futu.common.pb.Qot_RequestHistoryKLQuota_pb2 import Request
         req = Request()
-        req.c2s.userID = user_id
         req.c2s.bGetDetail = get_detail
         return pack_pb_req(req, ProtoId.Qot_RequestHistoryKLQuota, conn_id)
 

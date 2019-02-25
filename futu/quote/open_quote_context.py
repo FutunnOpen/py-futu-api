@@ -1886,11 +1886,11 @@ class OpenQuoteContext(OpenContextBase):
             #1120400921001028854
             return ret_code, (warrant_data_frame, last_page, all_count)
 
-    def get_history_kl_quota(self, user_id, get_detail=False):
+    def get_history_kl_quota(self, get_detail=False):
         """拉取历史K线已经用掉的额度"""
+        # self.get_login_user_id()
         query_processor = self._get_sync_query_processor(HistoryKLQuota.pack_req, HistoryKLQuota.unpack_rsp)
         kargs = {
-            "user_id": user_id,
             "get_detail": get_detail,
             "conn_id": self.get_sync_conn_id()
         }
