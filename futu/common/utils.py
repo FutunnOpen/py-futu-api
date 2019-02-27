@@ -503,22 +503,23 @@ def binary2pb(b, proto_id, proto_fmt_type):
 def pack_pb_req(pb_req, proto_id, conn_id, serial_no=0):
     proto_fmt = SysConfig.get_proto_fmt()
     serial_no = serial_no if serial_no else get_unique_id32()
+    is_encrypt = FutuConnMng.is_conn_encrypt(conn_id)
 
     if proto_fmt == ProtoFMT.Json:
         req_json = MessageToJson(pb_req)
         ret, msg, req = _joint_head(proto_id, proto_fmt, len(req_json),
-                          req_json.encode(), conn_id, serial_no)
+                          req_json.encode(), conn_id, serial_no, is_encrypt)
         return ret, msg, req
 
     elif proto_fmt == ProtoFMT.Protobuf:
-        ret, msg, req = _joint_head(proto_id, proto_fmt, pb_req.ByteSize(), pb_req, conn_id, serial_no)
+        ret, msg, req = _joint_head(proto_id, proto_fmt, pb_req.ByteSize(), pb_req, conn_id, serial_no, is_encrypt)
         return ret, msg, req
     else:
         error_str = ERROR_STR_PREFIX + 'unknown protocol format, %d' % proto_fmt
         return RET_ERROR, error_str, None
 
 
-def _joint_head(proto_id, proto_fmt_type, body_len, str_body, conn_id, serial_no):
+def _joint_head(proto_id, proto_fmt_type, body_len, str_body, conn_id, serial_no, is_encrypt):
 
     # sha20 = b'00000000000000000000'
     reserve8 = b'\x00\x00\x00\x00\x00\x00\x00\x00'
@@ -531,11 +532,12 @@ def _joint_head(proto_id, proto_fmt_type, body_len, str_body, conn_id, serial_no
     sha20 = hashlib.sha1(str_body).digest()
 
     # init connect 需要用rsa加密
-    if SysConfig.is_proto_encrypt():
-        if proto_id == ProtoId.InitConnect:
+    if proto_id == ProtoId.InitConnect:
+        if SysConfig.INIT_RSA_FILE != '':
             str_body = RsaCrypt.encrypt(str_body)
             body_len = len(str_body)
-        else:
+    else:
+        if is_encrypt:
             ret, msg, str_body = FutuConnMng.encrypt_conn_data(conn_id, str_body)
             body_len = len(str_body)
             if ret != RET_OK:
@@ -563,13 +565,13 @@ def parse_proto_info(head_bytes):
     return ProtoInfo(unpacked[2], unpacked[5])
 
 
-def decrypt_rsp_body(rsp_body, head_dict, conn_id):
+def decrypt_rsp_body(rsp_body, head_dict, conn_id, is_encrypt):
     ret_code = RET_OK
     msg = ''
     sha20 = head_dict['sha20']
     proto_id = head_dict['proto_id']
 
-    if SysConfig.is_proto_encrypt():
+    if is_encrypt:
         try:
             if proto_id == ProtoId.InitConnect:
                 rsp_body = RsaCrypt.decrypt(rsp_body)

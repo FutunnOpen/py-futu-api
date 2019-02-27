@@ -4,6 +4,7 @@
 """
 
 from futu.common.utils import *
+from ..common.pb import Common_pb2
 
 # 无数据时的值
 NoneDataType = 'N/A'
@@ -17,13 +18,19 @@ class InitConnect:
         pass
 
     @classmethod
-    def pack_req(cls, client_ver, client_id, recv_notify=False):
+    def pack_req(cls, client_ver, client_id, recv_notify, is_encrypt):
 
         from futu.common.pb.InitConnect_pb2 import Request
         req = Request()
         req.c2s.clientVer = client_ver
         req.c2s.clientID = client_id
         req.c2s.recvNotify = recv_notify
+
+        if is_encrypt:
+            req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_FTAES_ECB
+        else:
+            req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_None
+
         return pack_pb_req(req, ProtoId.InitConnect, 0)
 
     @classmethod

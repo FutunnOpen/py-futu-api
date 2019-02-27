@@ -32,10 +32,11 @@ class SyncReqRspInfo:
 
 
 class Connection:
-    def __init__(self, conn_id, sock, addr, handler):
+    def __init__(self, conn_id, sock, addr, handler, is_encrypt):
         self._conn_id = conn_id
         self.opend_conn_id = 0
         self.sock = sock
+        self.is_encrypt = is_encrypt
         self.handler = handler
         self._peer_addr = addr
         self.status = ConnStatus.Start
@@ -147,7 +148,7 @@ class NetManager:
         self._r_sock, self._w_sock = make_ctrl_socks()
         self._selector.register(self._r_sock, selectors.EVENT_READ)
 
-    def connect(self, addr, handler, timeout):
+    def connect(self, addr, handler, timeout, is_encrypt):
         with self._lock:
             conn_id = self._next_conn_id
             self._next_conn_id += 1
@@ -155,7 +156,7 @@ class NetManager:
         def work():
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 1024 * 1024)
-            conn = Connection(conn_id, sock, addr, handler)
+            conn = Connection(conn_id, sock, addr, handler, is_encrypt)
             conn.status = ConnStatus.Connecting
             conn.start_time = datetime.now()
             conn.timeout = timeout
@@ -545,7 +546,7 @@ class NetManager:
         proto_info = ProtoInfo(head_dict['proto_id'], head_dict['serial_no'])
         rsp_pb = None
         if err_code == Err.Ok.code:
-            ret_decrypt, msg_decrypt, rsp_body = decrypt_rsp_body(rsp_body_data, head_dict, conn.opend_conn_id)
+            ret_decrypt, msg_decrypt, rsp_body = decrypt_rsp_body(rsp_body_data, head_dict, conn.opend_conn_id, conn.is_encrypt)
             if ret_decrypt == RET_OK:
                 rsp_pb = binary2pb(rsp_body, head_dict['proto_id'], head_dict['proto_fmt_type'])
             else:
