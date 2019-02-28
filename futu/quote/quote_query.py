@@ -1873,7 +1873,7 @@ class HistoryKLQuota:
         details = rsp_pb.s2c.detailList
         for item in details:
             code = merge_qot_mkt_stock_str(int(item.security.market), item.security.code)
-            request_time = str(item.requestTimeStamp)
+            request_time = str(item.requestTime)
             detail_list.append({"code": code, "request_time": request_time})
 
         data = {
