@@ -265,15 +265,17 @@ class MarketSnapshotQuery:
             snapshot_tmp['ask_vol'] = record.basic.askVol
             snapshot_tmp['bid_vol'] = record.basic.bidVol
             # 2019.02.25 增加一批数据
-            snapshot_tmp['enable_margin'] = record.basic.enableMargin  # 是否可融资，如果为true，后两个字段才有意
-            if snapshot_tmp['enable_margin'] is True:
-                snapshot_tmp['mortgage_ratio'] = record.basic.mortgageRatio
-                snapshot_tmp['long_margin_initial_ratio'] = record.basic.longMarginInitialRatio
-            snapshot_tmp['enable_short_sell'] = record.basic.enableShortSell  # 是否可卖空，如果为true，后三个字段才有意义
-            if snapshot_tmp['enable_short_sell'] is True:
-                snapshot_tmp['short_sell_rate'] = record.basic.shortSellRate
-                snapshot_tmp['short_available_volume'] = record.basic.shortAvailableVolume
-                snapshot_tmp['short_margin_initial_ratio'] = record.basic.shortMarginInitialRatio
+            if record.basic.HasField("enableMargin"):
+                snapshot_tmp['enable_margin'] = record.basic.enableMargin  # 是否可融资，如果为true，后两个字段才有意
+                if snapshot_tmp['enable_margin'] is True:
+                    snapshot_tmp['mortgage_ratio'] = record.basic.mortgageRatio
+                    snapshot_tmp['long_margin_initial_ratio'] = record.basic.longMarginInitialRatio
+            if record.basic.HasField("enableShortSell"):
+                snapshot_tmp['enable_short_sell'] = record.basic.enableShortSell  # 是否可卖空，如果为true，后三个字段才有意义
+                if snapshot_tmp['enable_short_sell'] is True:
+                    snapshot_tmp['short_sell_rate'] = record.basic.shortSellRate
+                    snapshot_tmp['short_available_volume'] = record.basic.shortAvailableVolume
+                    snapshot_tmp['short_margin_initial_ratio'] = record.basic.shortMarginInitialRatio
 
             snapshot_tmp['equity_valid'] = False
             # equityExData
@@ -1867,12 +1869,13 @@ class HistoryKLQuota:
         used_quota = rsp_pb.s2c.usedQuota
 
         detail_list = []
-        if rsp_pb.s2c.HasField("detailList"):
-            details = rsp_pb.s2c.detailList
-            for item in details:
-                code = merge_qot_mkt_stock_str(int(item.security.market), item.security.code)
-                request_time = str(item.requestTimeStamp)
-                detail_list.append({"code": code, "request_time": request_time})
+
+        details = rsp_pb.s2c.detailList
+        for item in details:
+            code = merge_qot_mkt_stock_str(int(item.security.market), item.security.code)
+            request_time = str(item.requestTimeStamp)
+            detail_list.append({"code": code, "request_time": request_time})
+
         data = {
             "used_quota": used_quota,
             "detail_list": detail_list
