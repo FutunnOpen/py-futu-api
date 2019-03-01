@@ -32,7 +32,7 @@ class OpenContextBase(object):
     """Base class for set context"""
     metaclass__ = ABCMeta
 
-    def __init__(self, host, port, async_enable):
+    def __init__(self, host, port, async_enable, is_encrypt=None):
         self.__host = host
         self.__port = port
         self._callback_executor = CallbackExecutor()
@@ -49,8 +49,12 @@ class OpenContextBase(object):
         self._last_keep_alive_time = datetime.now()
         self._reconnect_timer = None
         self._keep_alive_fail_count = 0
+        self._is_encrypt = is_encrypt
+        if self.is_encrypt():
+            assert SysConfig.INIT_RSA_FILE != '', Err.NotSetRSAFile.text
         self._net_mgr.start()
         self._socket_reconnect_and_wait_ready()
+
         while True:
             with self._lock:
                 if self._status == ContextStatus.Ready:
@@ -210,7 +214,7 @@ class OpenContextBase(object):
         with self._lock:
             self._status = ContextStatus.Connecting
             # logger.info("try connecting: host={}; port={};".format(self.__host, self.__port))
-            ret, msg, conn_id = self._net_mgr.connect((self.__host, self.__port), self, 5)
+            ret, msg, conn_id = self._net_mgr.connect((self.__host, self.__port), self, 5, self.is_encrypt())
             if ret == RET_OK:
                 self._conn_id = conn_id
             else:
@@ -287,12 +291,19 @@ class OpenContextBase(object):
 
         return RET_OK, state_dict
 
+    def is_encrypt(self):
+        with self._lock:
+            if self._is_encrypt is None:
+                return SysConfig.is_proto_encrypt()
+            return self._is_encrypt
+
     def on_connected(self, conn_id):
         logger.info('Connected : conn_id={0}; '.format(conn_id))
         kargs = {
             'client_ver': int(SysConfig.get_client_ver()),
             'client_id': str(SysConfig.get_client_id()),
             'recv_notify': True,
+            'is_encrypt': self.is_encrypt()
         }
 
         ret, msg, req_str = InitConnect.pack_req(**kargs)
@@ -372,6 +383,7 @@ class OpenContextBase(object):
             self._sync_req_ret = _SyncReqRet(ret, msg)
             if ret == RET_OK:
                 conn_info = copy(data)
+                conn_info['is_encrypt'] = self.is_encrypt()
                 self._sync_conn_id = conn_info['conn_id']
                 self._keep_alive_interval = conn_info['keep_alive_interval'] * 4 / 5
                 self._net_mgr.set_conn_info(conn_id, conn_info)

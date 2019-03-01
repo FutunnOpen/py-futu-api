@@ -9,13 +9,13 @@ from futu.common.err import Err, make_msg
 class OpenTradeContextBase(OpenContextBase):
     """Class for set context of HK stock trade"""
 
-    def __init__(self, trd_mkt, host="127.0.0.1", port=11111):
+    def __init__(self, trd_mkt, host="127.0.0.1", port=11111, is_encrypt=None):
         self.__trd_mkt = trd_mkt
         self._ctx_unlock = None
         self.__last_acc_list = []
         self.__is_acc_sub_push = False
 
-        super(OpenTradeContextBase, self).__init__(host, port, True)
+        super(OpenTradeContextBase, self).__init__(host, port, True, is_encrypt=is_encrypt)
         self.set_pre_handler(AsyncHandler_TrdSubAccPush(self))
 
     def close(self):
@@ -727,21 +727,21 @@ class OpenTradeContextBase(OpenContextBase):
 
 # 港股交易接口
 class OpenHKTradeContext(OpenTradeContextBase):
-    def __init__(self, host="127.0.0.1", port=11111):
-        super(OpenHKTradeContext, self).__init__(TrdMarket.HK, host, port)
+    def __init__(self, host="127.0.0.1", port=11111, is_encrypt=None):
+        super(OpenHKTradeContext, self).__init__(TrdMarket.HK, host, port, is_encrypt=is_encrypt)
 
 
 # 美股交易接口
 class OpenUSTradeContext(OpenTradeContextBase):
-    def __init__(self, host="127.0.0.1", port=11111):
-        super(OpenUSTradeContext, self).__init__(TrdMarket.US, host, port)
+    def __init__(self, host="127.0.0.1", port=11111, is_encrypt=None):
+        super(OpenUSTradeContext, self).__init__(TrdMarket.US, host, port, is_encrypt=is_encrypt)
 
 
 
 # A股通交易接口
 class OpenHKCCTradeContext(OpenTradeContextBase):
-    def __init__(self, host="127.0.0.1", port=11111):
-        super().__init__(TrdMarket.HKCC, host, port)
+    def __init__(self, host="127.0.0.1", port=11111, is_encrypt=None):
+        super().__init__(TrdMarket.HKCC, host, port, is_encrypt=is_encrypt)
 
     def order_list_query(self, order_id="", status_filter_list=[], code='', start='', end='',
                          trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
@@ -834,5 +834,5 @@ class OpenHKCCTradeContext(OpenTradeContextBase):
 
 # A股交易接口
 class OpenCNTradeContext(OpenTradeContextBase):
-    def __init__(self, host="127.0.0.1", port=11111):
-        super(OpenCNTradeContext, self).__init__(TrdMarket.CN, host, port)
+    def __init__(self, host="127.0.0.1", port=11111, is_encrypt=None):
+        super(OpenCNTradeContext, self).__init__(TrdMarket.CN, host, port, is_encrypt=is_encrypt)
