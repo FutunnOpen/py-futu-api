@@ -1899,8 +1899,9 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         else:
             used_quota = data["used_quota"]
+            remain_quota = data["remain_quota"]
             detail_list = data["detail_list"]
-            return ret_code, (used_quota, detail_list)
+            return ret_code, (used_quota, remain_quota, detail_list)
 
 
 
