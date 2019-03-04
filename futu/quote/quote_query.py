@@ -1867,7 +1867,7 @@ class HistoryKLQuota:
         if rsp_pb.retType != RET_OK:
             return RET_ERROR, rsp_pb.retMsg, None
         used_quota = rsp_pb.s2c.usedQuota
-
+        remain_quota = rsp_pb.s2c.remainQuota
         detail_list = []
 
         details = rsp_pb.s2c.detailList
@@ -1878,6 +1878,7 @@ class HistoryKLQuota:
 
         data = {
             "used_quota": used_quota,
+            "remain_quota": remain_quota,
             "detail_list": detail_list
         }
         return RET_OK, "", data
