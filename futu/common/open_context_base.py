@@ -44,6 +44,7 @@ class OpenContextBase(object):
         self._keep_alive_interval = 10
         self._last_keep_alive_time = datetime.now()
         self._reconnect_timer = None
+        self._sync_query_connect_timeout = None
         self._keep_alive_fail_count = 0
         self._is_encrypt = is_encrypt
         if self.is_encrypt():
@@ -72,6 +73,10 @@ class OpenContextBase(object):
     def status(self):
         with self._lock:
             return self._status
+
+    def set_sync_query_connect_timeout(self, timeout):
+        with self._lock:
+            self._sync_query_connect_timeout = timeout
 
     @abstractmethod
     def close(self):
@@ -168,6 +173,7 @@ class OpenContextBase(object):
 
         def sync_query_processor(**kargs):
             """sync query processor"""
+            start_time = datetime.now()
             while True:
                 with self._lock:
                     if self._status == ContextStatus.READY:
@@ -176,6 +182,11 @@ class OpenContextBase(object):
                         break
                     elif self._status == ContextStatus.CLOSED:
                         return RET_ERROR, Err.ConnectionClosed.text, None
+
+                if self._sync_query_connect_timeout is not None:
+                    elapsed_time = datetime.now() - start_time
+                    if elapsed_time.total_seconds() >= self._sync_query_connect_timeout:
+                        return RET_ERROR, Err.Timeout.text, None
                 sleep(0.01)
 
             try:
