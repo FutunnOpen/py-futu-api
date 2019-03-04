@@ -57,7 +57,7 @@ class OpenContextBase(object):
 
         while True:
             with self._lock:
-                if self._status == ContextStatus.Ready:
+                if self._status == ContextStatus.Ready or self._status == ContextStatus.Closed:
                     break
             sleep(0.02)
 
@@ -173,6 +173,8 @@ class OpenContextBase(object):
                         net_mgr = self._net_mgr
                         conn_id = self._conn_id
                         break
+                    elif self._status == ContextStatus.Closed:
+                        return RET_ERROR, Err.ConnectionClosed.text, None
                 sleep(0.01)
 
             try:
