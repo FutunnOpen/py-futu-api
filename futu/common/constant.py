@@ -1524,3 +1524,10 @@ class TradeDateType(FtEnum):
             self.MORNING: Qot_Common_pb2.TradeDateType_Morning,
             self.AFTERNOON: Qot_Common_pb2.TradeDateType_Afternoon
         }
+
+
+class ContextStatus:
+    START = 'START'
+    CONNECTING = 'CONNECTING'
+    READY = 'READY'
+    CLOSED = 'CLOSED'
