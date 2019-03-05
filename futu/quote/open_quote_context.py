@@ -1903,6 +1903,46 @@ class OpenQuoteContext(OpenContextBase):
             detail_list = data["detail_list"]
             return ret_code, (used_quota, remain_quota, detail_list)
 
+    def get_user_info(self, info_type=0, user_id=0):
+        """获取用户信息（内部保留函数）"""
+        query_processor = self._get_sync_query_processor(GetUserInfo.pack_req, GetUserInfo.unpack_rsp)
+        kargs = {
+            "user_id": user_id,
+            "info_type": info_type,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, data = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return ret_code, msg
+        else:
+            return ret_code, data
+
+    def verification(self, verification_type=VerificationType.NONE, verification_op=VerificationOp.NONE, code=""):
+        """图形验证码下载之后会将其存至固定路径，请到该路径下查看验证码
+        Windows平台：%appdata%/com.futunn.FutuOpenD/F3CNN/PicVerifyCode.png
+        非Windows平台：~/.com.futunn.FutuOpenD/F3CNN/PicVerifyCode.png
+        注意：只有最后一次请求验证码会生效，重复请求只有最后一次的验证码有效"""
+
+        """required int32 type = 1; //验证码类型, VerificationType
+        required int32 op = 2; //操作, VerificationOp
+        optional string code = 3; //验证码，请求验证码时忽略该字段，输入时必填"""
+
+        query_processor = self._get_sync_query_processor(Verification.pack_req, Verification.unpack_rsp)
+        kargs = {
+            "verification_type": verification_type,
+            "verification_op": verification_op,
+            "code": code,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, data = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return ret_code, msg
+        else:
+            return ret_code, data
+
+
+
+
 
 
 

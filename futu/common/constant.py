@@ -713,6 +713,10 @@ class ProtoId(object):
     GetGlobalState = 1002  # 获取全局状态
     Notify = 1003  # 通知推送
     KeepAlive = 1004  # 通知推送
+    GetUserInfo = 1005  # 获取用户信息
+    Verification = 1006  # 请求或输入验证码
+    GetDelayStatistics = 1007  # 获取延迟统计
+
 
     Trd_GetAccList = 2001  # 获取业务账户列表
     Trd_UnlockTrade = 2005  # 解锁或锁定交易
@@ -1523,4 +1527,94 @@ class TradeDateType(FtEnum):
             self.WHOLE: Qot_Common_pb2.TradeDateType_Whole,
             self.MORNING: Qot_Common_pb2.TradeDateType_Morning,
             self.AFTERNOON: Qot_Common_pb2.TradeDateType_Afternoon
+        }
+
+
+'''-------------------------行情权限----------------------------'''
+from futu.common.pb import GetUserInfo_pb2
+
+
+# 行情权限
+class QotRight(FtEnum):
+    NONE = "N/A"                                       # 未知
+    BMP = "BMP"                                        # Bmp，无法订阅
+    LEVEL1 = "LEVEL1"                                  # Level1
+    LEVEL2 = "LEVEL2"                                  # Level2
+
+    def load_dic(self):
+        return {
+            self.NONE: GetUserInfo_pb2.QotRight_Unknow,
+            self.BMP: GetUserInfo_pb2.QotRight_Bmp,
+            self.LEVEL1: GetUserInfo_pb2.QotRight_Level1,
+            self.LEVEL2: GetUserInfo_pb2.QotRight_Level2
+        }
+
+
+'''-------------------------验证码操作----------------------------'''
+from futu.common.pb import Verification_pb2
+
+#
+class VerificationOp(FtEnum):
+    NONE = "N/A"                                       # 未知操作
+    REQUEST = "REQUEST"                                # 请求验证码
+    INPUT_AND_LOGIN = "INPUT_AND_LOGIN"                # 输入验证码并继续登录操作
+
+    def load_dic(self):
+        return {
+            self.NONE: Verification_pb2.VerificationOp_Unknow,
+            self.REQUEST: Verification_pb2.VerificationOp_Request,
+            self.INPUT_AND_LOGIN: Verification_pb2.VerificationOp_InputAndLogin
+        }
+
+
+'''-------------------------验证码类型----------------------------'''
+
+
+#
+class VerificationType(FtEnum):
+    NONE = "N/A"                                       # 未知操作
+    PICTURE = "PICTURE"                                # 图形验证码
+    PHONE = "PHONE"                                    # 手机验证码
+
+    def load_dic(self):
+        return {
+            self.NONE: Verification_pb2.VerificationType_Unknow,
+            self.PICTURE: Verification_pb2.VerificationType_Picture,
+            self.PHONE: Verification_pb2.VerificationType_Phone
+        }
+
+
+'''-------------------------被强制退出登录,例如修改了登录密码,中途打开设备锁等,详细原因在描述返回----------------------------'''
+
+from futu.common.pb import GetGlobalState_pb2
+
+
+class ProgramStatusType(FtEnum):
+    NONE = "N/A"                                       # 未知
+    LOADED = "LOADED"                                  # 已完成类似加载配置,启动服务器等操作,服务器启动之前的状态无需返回
+    LOGING = "LOGING"                                  # 登录中
+    NEED_PIC_VERIFY_CODE = "NEED_PIC_VERIFY_CODE"      # 需要图形验证码
+    NEED_PHONE_VERIFY_CODE = "NEED_PHONE_VERIFY_CODE"  # 需要手机验证码
+    LOGIN_FAILED = "LOGIN_FAILED"                      # 登录失败,详细原因在描述返回
+    FORCE_UPDATE = "FORCE_UPDATE"                      # 客户端版本过低
+    NESSARY_DATA_PREPARING = "NESSARY_DATA_PREPARING"  # 正在拉取类似免责声明等一些必要信息
+    NESSARY_DATA_MISSING = "NESSARY_DATA_MISSING"      # 缺少必要信息
+    UN_AGREE_DISCLAIMER = "UN_AGREE_DISCLAIMER"        # 未同意免责声明
+    READY = "READY"                                    # 可以接收业务协议收发,正常可用状态
+    FORCE_LOGOUT = "FORCE_LOGOUT"                      # OpenD登录后被强制退出登录，会导致连接全部断开,需要重连后才能得到以下该状态（并且需要在ui模式下）
+
+    def load_dic(self):
+        return {
+            self.NONE: GetGlobalState_pb2.ProgramStatusType_None,
+            self.LOADED: GetGlobalState_pb2.ProgramStatusType_Loaded,
+            self.LOGING: GetGlobalState_pb2.ProgramStatusType_Loging,
+            self.NEED_PIC_VERIFY_CODE: GetGlobalState_pb2.ProgramStatusType_NeedPicVerifyCode,
+            self.NEED_PHONE_VERIFY_CODE: GetGlobalState_pb2.ProgramStatusType_NeedPhoneVerifyCode,
+            self.LOGIN_FAILED: GetGlobalState_pb2.ProgramStatusType_LoginFailed,
+            self.FORCE_UPDATE: GetGlobalState_pb2.ProgramStatusType_ForceUpdate,
+            self.NESSARY_DATA_PREPARING: GetGlobalState_pb2.ProgramStatusType_NessaryDataPreparing,
+            self.NESSARY_DATA_MISSING: GetGlobalState_pb2.ProgramStatusType_NessaryDataMissing,
+            self.UN_AGREE_DISCLAIMER: GetGlobalState_pb2.ProgramStatusType_UnAgreeDisclaimer,
+            self.READY: GetGlobalState_pb2.ProgramStatusType_Ready,
+            self.FORCE_LOGOUT: GetGlobalState_pb2.ProgramStatusType_ForceLogout
         }

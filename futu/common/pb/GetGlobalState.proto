@@ -4,6 +4,32 @@ package GetGlobalState;
 import "Common.proto";
 import "Qot_Common.proto";
 
+enum ProgramStatusType
+{
+	ProgramStatusType_None = 0;
+	ProgramStatusType_Loaded = 1; //已完成类似加载配置,启动服务器等操作,服务器启动之前的状态无需返回
+
+	ProgramStatusType_Loging = 2; //登录中
+	ProgramStatusType_NeedPicVerifyCode = 3; //需要图形验证码
+	ProgramStatusType_NeedPhoneVerifyCode = 4; //需要手机验证码
+	ProgramStatusType_LoginFailed = 5; //登录失败,详细原因在描述返回
+	ProgramStatusType_ForceUpdate = 6; //客户端版本过低
+
+	ProgramStatusType_NessaryDataPreparing = 7; //正在拉取类似免责声明等一些必要信息
+	ProgramStatusType_NessaryDataMissing = 8; //缺少必要信息
+	ProgramStatusType_UnAgreeDisclaimer = 9; //未同意免责声明
+	ProgramStatusType_Ready = 10; //可以接收业务协议收发,正常可用状态
+	
+	//OpenD登录后被强制退出登录，会导致连接全部断开,需要重连后才能得到以下该状态（并且需要在ui模式下）
+	ProgramStatusType_ForceLogout = 11; //被强制退出登录,例如修改了登录密码,中途打开设备锁等,详细原因在描述返回
+}
+
+message ProgramStatus
+{
+	required ProgramStatusType type = 1; //当前状态
+	optional string strExtDesc = 2; // 额外描述
+}
+
 message C2S
 {
 	required uint64 userID = 1; //需要跟FutuOpenD登陆的牛牛用户ID一致，否则会返回失败
@@ -22,6 +48,7 @@ message S2C
 	required int32 serverBuildNo = 9; //buildNo
 	required int64 time = 10; //当前服务器时间
 	optional double localTime = 11; //当前本地时间
+	optional ProgramStatus programStatus = 12; //当前程序状态
 }
 
 message Request

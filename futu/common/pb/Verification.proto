@@ -1,0 +1,48 @@
+syntax = "proto2";
+package Verification;
+
+import "Common.proto";
+
+enum VerificationType
+{
+	VerificationType_Unknow = 0; //未知操作
+	VerificationType_Picture = 1; // 图形验证码
+	VerificationType_Phone = 2; // 手机验证码
+}
+
+enum VerificationOp
+{
+	VerificationOp_Unknow = 0; //未知操作
+	VerificationOp_Request = 1; //请求验证码
+	VerificationOp_InputAndLogin = 2; //输入验证码并继续登录操作
+}
+
+//图形验证码下载之后会将其存至固定路径，请到该路径下查看验证码
+//Windows平台：%appdata%/com.futunn.FutuOpenD/F3CNN/PicVerifyCode.png
+//非Windows平台：~/.com.futunn.FutuOpenD/F3CNN/PicVerifyCode.png
+//注意：只有最后一次请求验证码会生效，重复请求只有最后一次的验证码有效
+message C2S
+{
+	required int32 type = 1; //验证码类型, VerificationType
+	required int32 op = 2; //操作, VerificationOp
+	optional string code = 3; //验证码，请求验证码时忽略该字段，输入时必填
+}
+
+message S2C
+{
+
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //返回结果，参见Common.RetType的枚举定义
+	optional string retMsg = 2; //返回结果描述
+	optional int32 errCode = 3; //错误码，客户端一般通过retType和retMsg来判断结果和详情，errCode只做日志记录，仅在个别协议失败时对账用
+	
+	optional S2C s2c = 4;
+}

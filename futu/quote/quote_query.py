@@ -1335,6 +1335,13 @@ class GlobalStateQuery:
             return RET_ERROR, rsp_pb.retMsg, None
 
         state = rsp_pb.s2c
+        program_status_type = ProgramStatusType.NONE
+        program_status_desc = ""
+        if state.HasField('programStatus'):
+            program_status_type = ProgramStatusType.to_string(state.programStatus.type)
+            if state.programStatus.HasField("strExtDesc"):
+                program_status_desc = state.programStatus.strExtDesc
+
         state_dict = {
             'market_sz': QUOTE.REV_MARKET_STATE_MAP[state.marketSZ]
                     if state.marketSZ in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
@@ -1352,6 +1359,8 @@ class GlobalStateQuery:
             'timestamp': str(state.time),
             'qot_logined': "1" if state.qotLogined else "0",
             'local_timestamp': state.localTime if state.HasField('localTime') else time.time(),
+            'program_status_type': program_status_type,
+            'program_status_desc': program_status_desc
         }
         return RET_OK, "", state_dict
 
@@ -1882,3 +1891,66 @@ class HistoryKLQuota:
             "detail_list": detail_list
         }
         return RET_OK, "", data
+
+
+class GetUserInfo:
+    """
+    拉取限额
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, info_type, user_id, conn_id):
+        from futu.common.pb.GetUserInfo_pb2 import Request
+        req = Request()
+        req.c2s.userID = user_id
+        return pack_pb_req(req, ProtoId.GetUserInfo, conn_id)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        nick_name = rsp_pb.s2c.nickName
+        avatar_url = rsp_pb.s2c.avatarUrl
+        api_level = rsp_pb.s2c.apiLevel
+        hk_qot_right = rsp_pb.s2c.hkQotRight
+        us_qot_right = rsp_pb.s2c.usQotRight
+        cn_qot_right = rsp_pb.s2c.cnQotRight
+        is_need_agree_disclaimer = rsp_pb.s2c.is_need_agree_disclaimer
+
+        data = {
+            "nick_name": nick_name,
+            "avatar_url": avatar_url,
+            "api_level": api_level,
+            "hk_qot_right": QotRight.to_string(hk_qot_right),
+            "us_qot_right": QotRight.to_string(us_qot_right),
+            "cn_qot_right": QotRight.to_string(cn_qot_right),
+            "is_need_agree_disclaimer": is_need_agree_disclaimer
+        }
+        return RET_OK, "", data
+
+
+class Verification:
+    """
+    拉验证码
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, verification_type, verification_op, code, conn_id):
+        from futu.common.pb.Verification_pb2 import Request
+        req = Request()
+        req.c2s.type = VerificationType.to_number(verification_type)
+        req.c2s.op = VerificationType.to_number(verification_op)
+        if code is not None and len(code) != 0:
+            req.c2s.code = code
+        return pack_pb_req(req, ProtoId.Verification, conn_id)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+            return rsp_pb.retType, rsp_pb.retMsg, None
+

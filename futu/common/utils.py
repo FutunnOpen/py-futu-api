@@ -266,6 +266,14 @@ class ProtobufMap(dict):
         from futu.common.pb.KeepAlive_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.KeepAlive] = Response()
 
+        """ GetUserInfo = 1005  # 获取全局状态 """
+        from futu.common.pb.GetUserInfo_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.GetUserInfo] = Response()
+
+        """ GetUserInfo = 1006  # 获取用户信息 """
+        from futu.common.pb.Verification_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Verification] = Response()
+
         """ Trd_GetAccList = 2001  # 获取业务账户列表 """
         from futu.common.pb.Trd_GetAccList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetAccList] = Response()
