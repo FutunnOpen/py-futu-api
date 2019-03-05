@@ -1618,3 +1618,9 @@ class ProgramStatusType(FtEnum):
             self.READY: GetGlobalState_pb2.ProgramStatusType_Ready,
             self.FORCE_LOGOUT: GetGlobalState_pb2.ProgramStatusType_ForceLogout
         }
+
+class ContextStatus:
+    START = 'START'
+    CONNECTING = 'CONNECTING'
+    READY = 'READY'
+    CLOSED = 'CLOSED'

@@ -17,16 +17,12 @@ from futu.quote.quote_query import KeepAlive, parse_head
 from futu.common.conn_mng import FutuConnMng
 from futu.common.network_manager import NetManager
 from .err import Err
+from .constant import ContextStatus
 from .callback_executor import CallbackExecutor, CallbackItem
 from .ft_logger import *
 
 _SyncReqRet = namedtuple('_SyncReqRet', ('ret', 'msg'))
 
-class ContextStatus:
-    Start = 0
-    Connecting = 1
-    Ready = 2
-    Closed = 3
 
 class OpenContextBase(object):
     """Base class for set context"""
@@ -40,7 +36,7 @@ class OpenContextBase(object):
         self._net_mgr = NetManager.default()
         self._handler_ctx = HandlerContext(self._is_proc_run)
         self._lock = RLock()
-        self._status = ContextStatus.Start
+        self._status = ContextStatus.START
         self._proc_run = True
         self._sync_req_ret = None
         self._sync_conn_id = 0
@@ -48,6 +44,7 @@ class OpenContextBase(object):
         self._keep_alive_interval = 10
         self._last_keep_alive_time = datetime.now()
         self._reconnect_timer = None
+        self._sync_query_connect_timeout = None
         self._keep_alive_fail_count = 0
         self._is_encrypt = is_encrypt
         if self.is_encrypt():
@@ -57,7 +54,7 @@ class OpenContextBase(object):
 
         while True:
             with self._lock:
-                if self._status == ContextStatus.Ready:
+                if self._status == ContextStatus.READY or self._status == ContextStatus.CLOSED:
                     break
             sleep(0.02)
 
@@ -71,6 +68,15 @@ class OpenContextBase(object):
 
     def __del__(self):
         self._close()
+
+    @property
+    def status(self):
+        with self._lock:
+            return self._status
+
+    def set_sync_query_connect_timeout(self, timeout):
+        with self._lock:
+            self._sync_query_connect_timeout = timeout
 
     @abstractmethod
     def close(self):
@@ -89,9 +95,9 @@ class OpenContextBase(object):
 
     def _close(self):
         with self._lock:
-            if self._status == ContextStatus.Closed:
+            if self._status == ContextStatus.CLOSED:
                 return
-            self._status = ContextStatus.Closed
+            self._status = ContextStatus.CLOSED
             net_mgr = self._net_mgr
             conn_id = self._conn_id
             self._conn_id = 0
@@ -167,12 +173,20 @@ class OpenContextBase(object):
 
         def sync_query_processor(**kargs):
             """sync query processor"""
+            start_time = datetime.now()
             while True:
                 with self._lock:
-                    if self._status == ContextStatus.Ready:
+                    if self._status == ContextStatus.READY:
                         net_mgr = self._net_mgr
                         conn_id = self._conn_id
                         break
+                    elif self._status == ContextStatus.CLOSED:
+                        return RET_ERROR, Err.ConnectionClosed.text, None
+
+                if self._sync_query_connect_timeout is not None:
+                    elapsed_time = datetime.now() - start_time
+                    if elapsed_time.total_seconds() >= self._sync_query_connect_timeout:
+                        return RET_ERROR, Err.Timeout.text, None
                 sleep(0.01)
 
             try:
@@ -199,7 +213,7 @@ class OpenContextBase(object):
         conn_id = 0
         net_mgr = None
         with self._lock:
-            if self._status != ContextStatus.Ready:
+            if self._status != ContextStatus.READY:
                 return RET_ERROR, 'Context closed or not ready'
             conn_id = self._conn_id
             net_mgr = self._net_mgr
@@ -212,7 +226,7 @@ class OpenContextBase(object):
         """
         logger.info("Start connecting: host={}; port={};".format(self.__host, self.__port))
         with self._lock:
-            self._status = ContextStatus.Connecting
+            self._status = ContextStatus.CONNECTING
             # logger.info("try connecting: host={}; port={};".format(self.__host, self.__port))
             ret, msg, conn_id = self._net_mgr.connect((self.__host, self.__port), self, 5, self.is_encrypt())
             if ret == RET_OK:
@@ -225,7 +239,7 @@ class OpenContextBase(object):
                 with self._lock:
                     if self._sync_req_ret is not None:
                         if self._sync_req_ret.ret == RET_OK:
-                            self._status = ContextStatus.Ready
+                            self._status = ContextStatus.READY
                         else:
                             ret, msg = self._sync_req_ret.ret, self._sync_req_ret.msg
                         self._sync_req_ret = None
@@ -319,7 +333,7 @@ class OpenContextBase(object):
     def on_error(self, conn_id, err):
         logger.warning('Connect error: conn_id={0}; err={1};'.format(conn_id, err))
         with self._lock:
-            if self._status != ContextStatus.Connecting:
+            if self._status != ContextStatus.CONNECTING:
                 self._wait_reconnect()
             else:
                 self._sync_req_ret = _SyncReqRet(RET_ERROR, str(err))
@@ -327,7 +341,7 @@ class OpenContextBase(object):
     def on_closed(self, conn_id):
         logger.warning('Connect closed: conn_id={0}'.format(conn_id))
         with self._lock:
-            if self._status != ContextStatus.Connecting:
+            if self._status != ContextStatus.CONNECTING:
                 self._wait_reconnect()
             else:
                 self._sync_req_ret = _SyncReqRet(RET_ERROR, 'Connection closed')
@@ -348,7 +362,7 @@ class OpenContextBase(object):
 
     def on_activate(self, conn_id, now):
         with self._lock:
-            if self._status != ContextStatus.Ready:
+            if self._status != ContextStatus.READY:
                 return
             time_elapsed = now - self._last_keep_alive_time
             if time_elapsed.total_seconds() < self._keep_alive_interval:
@@ -367,7 +381,7 @@ class OpenContextBase(object):
 
     def packet_callback(self, proto_id, rsp_pb):
         with self._lock:
-            if self._status != ContextStatus.Ready:
+            if self._status != ContextStatus.READY:
                 return
 
             handler_ctx = self._handler_ctx
@@ -414,14 +428,14 @@ class OpenContextBase(object):
         net_mgr = None
         conn_id = 0
         with self._lock:
-            if self._status == ContextStatus.Closed or self._reconnect_timer is not None:
+            if self._status == ContextStatus.CLOSED or self._reconnect_timer is not None:
                 return
             logger.info('Wait reconnect in {} seconds: host={}; port={};'.format(wait_reconnect_interval,
                                                                                  self.__host,
                                                                                  self.__port))
             net_mgr = self._net_mgr
             conn_id = self._conn_id
-            self._status = ContextStatus.Connecting
+            self._status = ContextStatus.CONNECTING
             self._sync_conn_id = 0
             self._conn_id = 0
             self._keep_alive_fail_count = 0
@@ -434,7 +448,7 @@ class OpenContextBase(object):
         with self._lock:
             self._reconnect_timer.cancel()
             self._reconnect_timer = None
-            if self._status != ContextStatus.Connecting:
+            if self._status != ContextStatus.CONNECTING:
                 return
 
         self._socket_reconnect_and_wait_ready()
