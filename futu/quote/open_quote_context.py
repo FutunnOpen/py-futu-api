@@ -91,7 +91,7 @@ class OpenQuoteContext(OpenContextBase):
         # 重定阅失败，重连
         if ret_code != RET_OK:
             logger.error("reconnect subscribe error, close connect and retry!!")
-            self._status = ContextStatus.Start
+            self._status = ContextStatus.START
             self._wait_reconnect()
         return ret_code, ret_msg
 
