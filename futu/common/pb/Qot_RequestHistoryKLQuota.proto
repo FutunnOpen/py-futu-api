@@ -18,8 +18,9 @@ message C2S
 
 message S2C
 {
-	required int32 usedQuota = 1;				//已使用过的额度，即当前周期内已经下载过多少只股票。
-	repeated DetailItem detailList = 2;			//每只拉取过的股票的下载时间
+	required int32 usedQuota = 1;	      //已使用过的额度，即当前周期内已经下载过多少只股票。
+	required int32 remainQuota = 2;       //剩余额度
+	repeated DetailItem detailList = 3;	  //每只拉取过的股票的下载时间
 }
 
 message Request

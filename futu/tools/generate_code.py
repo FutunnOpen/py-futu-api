@@ -5,8 +5,8 @@ import os
 from abc import abstractmethod
 from bidict import bidict
 
-__JsonFileName__ = "Qot_Common.proto.json"
-__PBPrefixName__ = "Qot_Common_pb2."
+__JsonFileName__ = "GetGlobalState.proto.json"
+__PBPrefixName__ = "GetGlobalState_pb2."
 __TemplateCodeFileName__ = "template_code.txt"
 __TemplateFileHeadName__ = "template_head.txt"
 __TemplateRstName__ = "rst_template.txt"
@@ -174,8 +174,8 @@ if __name__ =="__main__":
     c = GenerateCode()
     c.load()
     path = os.path.dirname(os.path.realpath(__file__))
-    c.py(os.path.join(path, "Qot_Common.py"))
-    c.rst(os.path.join(path, "Qot_Common.rst"))
+    c.py(os.path.join(path, "GetGlobalState.py"))
+    c.rst(os.path.join(path, "GetGlobalState.rst"))
 
 # if __name__ =="__main__":
 #     print(SortField.to_string("hhh"))
