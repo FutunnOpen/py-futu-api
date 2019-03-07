@@ -1338,7 +1338,7 @@ class GlobalStateQuery:
         program_status_type = ProgramStatusType.NONE
         program_status_desc = ""
         if state.HasField('programStatus'):
-            program_status_type = ProgramStatusType.to_string(state.programStatus.type)
+            program_status_type = ProgramStatusType.to_string2(state.programStatus.type)
             if state.programStatus.HasField("strExtDesc"):
                 program_status_desc = state.programStatus.strExtDesc
 
@@ -1924,9 +1924,9 @@ class GetUserInfo:
             "nick_name": nick_name,
             "avatar_url": avatar_url,
             "api_level": api_level,
-            "hk_qot_right": QotRight.to_string(hk_qot_right),
-            "us_qot_right": QotRight.to_string(us_qot_right),
-            "cn_qot_right": QotRight.to_string(cn_qot_right),
+            "hk_qot_right": QotRight.to_string2(hk_qot_right),
+            "us_qot_right": QotRight.to_string2(us_qot_right),
+            "cn_qot_right": QotRight.to_string2(cn_qot_right),
             "is_need_agree_disclaimer": is_need_agree_disclaimer
         }
         return RET_OK, "", data
@@ -1945,7 +1945,7 @@ class Verification:
         from futu.common.pb.Verification_pb2 import Request
         req = Request()
         req.c2s.type = VerificationType.to_number(verification_type)
-        req.c2s.op = VerificationType.to_number(verification_op)
+        req.c2s.op = VerificationOp.to_number(verification_op)
         if code is not None and len(code) != 0:
             req.c2s.code = code
         return pack_pb_req(req, ProtoId.Verification, conn_id)
