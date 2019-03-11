@@ -15,14 +15,14 @@ from futu.quote.quote_query import *
 class OpenQuoteContext(OpenContextBase):
     """行情上下文对象类"""
 
-    def __init__(self, host='127.0.0.1', port=11111, is_encrypt=None):
+    def __init__(self, host='127.0.0.1', port=11111, is_encrypt=None, is_async_connect=False):
         """
         初始化Context对象
         :param host: host地址
         :param port: 端口
         """
         self._ctx_subscribe = {}
-        super(OpenQuoteContext, self).__init__(host, port, True, is_encrypt)
+        super(OpenQuoteContext, self).__init__(host, port, is_async_connect, is_encrypt)
 
     def close(self):
         """
