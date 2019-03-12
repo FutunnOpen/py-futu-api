@@ -1944,8 +1944,18 @@ class Verification:
     def pack_req(cls, verification_type, verification_op, code, conn_id):
         from futu.common.pb.Verification_pb2 import Request
         req = Request()
-        req.c2s.type = VerificationType.to_number(verification_type)
-        req.c2s.op = VerificationOp.to_number(verification_op)
+        ret, data = VerificationType.to_number(verification_type)
+        if ret:
+            req.c2s.type = data
+        else:
+            return RET_ERROR, data, None
+
+        ret, data = VerificationOp.to_number(verification_op)
+        if ret:
+            req.c2s.op = data
+        else:
+            return RET_ERROR, data, None
+
         if code is not None and len(code) != 0:
             req.c2s.code = code
         return pack_pb_req(req, ProtoId.Verification, conn_id)
