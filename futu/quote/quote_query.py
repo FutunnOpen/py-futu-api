@@ -1893,9 +1893,91 @@ class HistoryKLQuota:
         return RET_OK, "", data
 
 
+class RequestRehab:
+    """
+    获取除权信息
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, stock, conn_id):
+        ret_code, content = split_stock_str(stock)
+        if ret_code != RET_OK:
+            msg = content
+            error_str = ERROR_STR_PREFIX + msg
+            return RET_ERROR, error_str, None
+        market, code = content
+
+        if market not in QUOTE.REV_MKT_MAP:
+            error_str = ERROR_STR_PREFIX + "market is %s, which is not valid. (%s)" \
+                                           % (market, ",".join([x for x in MKT_MAP]))
+            return RET_ERROR, error_str, None
+
+        from futu.common.pb.Qot_RequestRehab_pb2 import Request
+        req = Request()
+        req.c2s.security.market = market
+        req.c2s.security.code = code
+        return pack_pb_req(req, ProtoId.Qot_RequestRehab, conn_id)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        class KLRehabFlag(object):
+            SPLIT = 1
+            JOIN = 2
+            BONUS = 4
+            TRANSFER = 8
+            ALLOT = 16
+            ADD = 32
+            DIVIDED = 64
+            SP_DIVIDED = 128
+
+        rehab_list = list()
+        for rehab in rsp_pb.s2c.rehabList:
+            stock_rehab_tmp = {}
+            stock_rehab_tmp['ex_div_date'] = rehab.time.split()[0] #时间字符串
+            stock_rehab_tmp['forward_adj_factorA'] = rehab.fwdFactorA
+            stock_rehab_tmp['forward_adj_factorB'] = rehab.fwdFactorB
+            stock_rehab_tmp['backward_adj_factorA'] = rehab.bwdFactorA
+            stock_rehab_tmp['backward_adj_factorB'] = rehab.bwdFactorB
+
+            act_flag = rehab.companyActFlag
+            if act_flag == 0:
+                continue
+
+            if act_flag & KLRehabFlag.SP_DIVIDED:
+                stock_rehab_tmp['special_dividend'] = rehab.spDividend
+            if act_flag & KLRehabFlag.DIVIDED:
+                stock_rehab_tmp['per_cash_div'] = rehab.dividend
+            if act_flag & KLRehabFlag.ADD:
+                stock_rehab_tmp['stk_spo_ratio'] = rehab.addBase / rehab.addErt
+                stock_rehab_tmp['stk_spo_price'] = rehab.addPrice
+            if act_flag & KLRehabFlag.ALLOT:
+                stock_rehab_tmp['allotment_ratio'] = rehab.allotBase / rehab.allotErt
+                stock_rehab_tmp['allotment_price'] = rehab.allotPrice
+            if act_flag & KLRehabFlag.TRANSFER:
+                stock_rehab_tmp['per_share_trans_ratio'] = rehab.transferBase / rehab.transferErt
+            if act_flag & KLRehabFlag.BONUS:
+                stock_rehab_tmp['per_share_div_ratio'] = rehab.bonusBase / rehab.bonusErt
+            if act_flag & KLRehabFlag.JOIN:
+                stock_rehab_tmp['join_ratio'] = rehab.joinBase / rehab.joinErt
+            if act_flag & KLRehabFlag.SPLIT:
+                stock_rehab_tmp['split_ratio'] = rehab.splitBase / rehab.splitErt
+
+            rehab_list.append(stock_rehab_tmp)
+
+        return RET_OK, "", rehab_list
+
+"""-------------------------------------------------------------"""
+
 class GetUserInfo:
     """
-    拉取限额
+    拉取用户信息
     """
 
     def __init__(self):

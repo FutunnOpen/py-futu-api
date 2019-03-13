@@ -1903,6 +1903,58 @@ class OpenQuoteContext(OpenContextBase):
             detail_list = data["detail_list"]
             return ret_code, (used_quota, remain_quota, detail_list)
 
+
+    def get_rehab(self, code):
+        """获取除权信息"""
+
+        """
+        获取给定股票列表的复权因子
+
+        :param code_list: 股票列表，例如['HK.00700']
+        :return: (ret, data)
+
+                ret == RET_OK 返回pd dataframe数据，data.DataFrame数据, 数据列格式如下
+
+                ret != RET_OK 返回错误字符串
+
+                =====================   ===========   =================================================================================
+                参数                      类型                        说明
+                =====================   ===========   =================================================================================
+                ex_div_date             str            除权除息日
+                split_ratio             float          拆合股比例（该字段为比例字段，默认不展示%），例如，对于5股合1股为1/5，对于1股拆5股为5/1
+                per_cash_div            float          每股派现
+                per_share_div_ratio     float          每股送股比例（该字段为比例字段，默认不展示%）
+                per_share_trans_ratio   float          每股转增股比例（该字段为比例字段，默认不展示%）
+                allotment_ratio         float          每股配股比例（该字段为比例字段，默认不展示%）
+                allotment_price         float          配股价
+                stk_spo_ratio           float          增发比例（该字段为比例字段，默认不展示%）
+                stk_spo_price           float          增发价格
+                forward_adj_factorA     float          前复权因子A
+                forward_adj_factorB     float          前复权因子B
+                backward_adj_factorA    float          后复权因子A
+                backward_adj_factorB    float          后复权因子B
+                =====================   ===========   =================================================================================
+        """
+        query_processor = self._get_sync_query_processor(RequestRehab.pack_req, RequestRehab.unpack_rsp)
+        kargs = {
+            "stock": code,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, data = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return ret_code, msg
+        else:
+            col_list = [
+                'ex_div_date', 'split_ratio', 'per_cash_div',
+                'per_share_div_ratio', 'per_share_trans_ratio', 'allotment_ratio',
+                'allotment_price', 'stk_spo_ratio', 'stk_spo_price',
+                'forward_adj_factorA', 'forward_adj_factorB',
+                'backward_adj_factorA', 'backward_adj_factorB'
+            ]
+            exr_frame_table = pd.DataFrame(data, columns=col_list)
+            return ret_code, exr_frame_table
+
+
     def get_user_info(self, info_type=0, user_id=0):
         """获取用户信息（内部保留函数）"""
         query_processor = self._get_sync_query_processor(GetUserInfo.pack_req, GetUserInfo.unpack_rsp)
