@@ -1,23 +1,17 @@
 syntax = "proto2";
-package Qot_GetRehab;
+package Qot_RequestRehab;
 
 import "Common.proto";
 import "Qot_Common.proto";
 
 message C2S
 {
-	repeated Qot_Common.Security securityList = 1; //股票
-}
-
-message SecurityRehab
-{
 	required Qot_Common.Security security = 1; //股票
-	repeated Qot_Common.Rehab rehabList = 2; //复权信息
 }
 
 message S2C
 {
-	repeated SecurityRehab securityRehabList = 1; //多支股票的复权信息
+	repeated Qot_Common.Rehab rehabList = 1; //复权信息
 }
 
 message Request

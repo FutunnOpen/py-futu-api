@@ -28,11 +28,10 @@ class OpenContextBase(object):
     """Base class for set context"""
     metaclass__ = ABCMeta
 
-    def __init__(self, host, port, async_enable, is_encrypt=None):
+    def __init__(self, host, port, is_async_connect, is_encrypt=None):
         self.__host = host
         self.__port = port
         self._callback_executor = CallbackExecutor()
-        self.__async_socket_enable = async_enable
         self._net_mgr = NetManager.default()
         self._handler_ctx = HandlerContext(self._is_proc_run)
         self._lock = RLock()
@@ -50,13 +49,17 @@ class OpenContextBase(object):
         if self.is_encrypt():
             assert SysConfig.INIT_RSA_FILE != '', Err.NotSetRSAFile.text
         self._net_mgr.start()
-        self._socket_reconnect_and_wait_ready()
 
-        while True:
-            with self._lock:
-                if self._status == ContextStatus.READY or self._status == ContextStatus.CLOSED:
-                    break
-            sleep(0.02)
+        if not is_async_connect:
+            self._socket_reconnect_and_wait_ready()
+
+            while True:
+                with self._lock:
+                    if self._status == ContextStatus.READY or self._status == ContextStatus.CLOSED:
+                        break
+                sleep(0.02)
+        else:
+            self._wait_reconnect(0)
 
     def get_login_user_id(self):
         """
@@ -423,8 +426,7 @@ class OpenContextBase(object):
         if should_reconnect:
             self._wait_reconnect()
 
-    def _wait_reconnect(self):
-        wait_reconnect_interval = 8
+    def _wait_reconnect(self, wait_reconnect_interval=8):
         net_mgr = None
         conn_id = 0
         with self._lock:

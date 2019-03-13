@@ -760,6 +760,7 @@ class ProtoId(object):
     Qot_GetRehab = 3102  # 获取复权信息
     Qot_RequestHistoryKL = 3103 # 拉取历史K线
     Qot_RequestHistoryKLQuota = 3104  # 拉取历史K线已经用掉的额度
+    Qot_RequestRehab = 3105  # 获取除权信息
 
     # 其他行情数据
     Qot_GetTradeDate = 3200         # 获取市场交易日
