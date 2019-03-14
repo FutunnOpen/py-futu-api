@@ -2000,7 +2000,7 @@ class GetUserInfo:
         hk_qot_right = rsp_pb.s2c.hkQotRight
         us_qot_right = rsp_pb.s2c.usQotRight
         cn_qot_right = rsp_pb.s2c.cnQotRight
-        is_need_agree_disclaimer = rsp_pb.s2c.is_need_agree_disclaimer
+        is_need_agree_disclaimer = rsp_pb.s2c.isNeedAgreeDisclaimer
 
         data = {
             "nick_name": nick_name,
