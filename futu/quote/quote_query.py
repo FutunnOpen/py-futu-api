@@ -2001,7 +2001,7 @@ class GetUserInfo:
         us_qot_right = rsp_pb.s2c.usQotRight
         cn_qot_right = rsp_pb.s2c.cnQotRight
         is_need_agree_disclaimer = rsp_pb.s2c.isNeedAgreeDisclaimer
-
+        user_id = rsp_pb.s2c.userID
         data = {
             "nick_name": nick_name,
             "avatar_url": avatar_url,
@@ -2009,7 +2009,8 @@ class GetUserInfo:
             "hk_qot_right": QotRight.to_string2(hk_qot_right),
             "us_qot_right": QotRight.to_string2(us_qot_right),
             "cn_qot_right": QotRight.to_string2(cn_qot_right),
-            "is_need_agree_disclaimer": is_need_agree_disclaimer
+            "is_need_agree_disclaimer": is_need_agree_disclaimer,
+            "user_id": user_id
         }
         return RET_OK, "", data
 
