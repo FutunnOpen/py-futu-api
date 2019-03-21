@@ -36,7 +36,7 @@ class OpenContextBase(object):
         self._handler_ctx = HandlerContext(self._is_proc_run)
         self._lock = RLock()
         self._status = ContextStatus.START
-        self._connect_err_msg = None
+        self._connect_err = None  # rsa加密失败时为Err.RsaErr, 否则为str
         self._proc_run = True
         self._sync_req_ret = None
         self._sync_conn_id = 0
@@ -81,7 +81,13 @@ class OpenContextBase(object):
     @property
     def connect_err_msg(self):
         with self._lock:
-            return self._connect_err_msg
+            if self._connect_err is Err.RsaErr:
+                return Err.RsaErr.text
+            return self._connect_err
+
+    @property
+    def connect_err(self):
+        return self._connect_err
 
     def set_sync_query_connect_timeout(self, timeout):
         with self._lock:
@@ -190,8 +196,8 @@ class OpenContextBase(object):
                         conn_id = self._conn_id
                         break
                     elif self._status == ContextStatus.CLOSED:
-                        if self._connect_err_msg is not None:
-                            return RET_ERROR, self._connect_err_msg, None
+                        if self.connect_err_msg is not None:
+                            return RET_ERROR, self.connect_err_msg, None
                         else:
                             return RET_ERROR, Err.ConnectionClosed.text, None
 
@@ -341,7 +347,7 @@ class OpenContextBase(object):
         if ret != RET_OK:
             with self._lock:
                 self._sync_req_ret = _SyncReqRet(RET_ERROR, msg)
-                self._connect_err_msg = msg
+                self._connect_err = Err.RsaErr
             self.close()
 
     def on_error(self, conn_id, err):
@@ -427,7 +433,7 @@ class OpenContextBase(object):
                 logger.info(FTLog.make_log_msg("InitConnect ok", conn_id=conn_id, info=conn_info))
             else:
                 logger.warning(FTLog.make_log_msg("InitConnect error", msg=msg))
-                self._connect_err_msg = msg
+                self._connect_err = msg
                 self.close()
 
     def _handle_keep_alive(self, conn_id, proto_info, ret_code, msg, rsp_pb):
