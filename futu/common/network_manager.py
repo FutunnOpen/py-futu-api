@@ -243,8 +243,10 @@ class NetManager:
 
     def _thread_func(self):
         while True:
-            if not self.is_alive():
-                break
+            with self._lock:
+                if not self.is_alive():
+                    self._thread = None
+                    break
             self.poll()
 
     def start(self):
