@@ -26,6 +26,7 @@ message S2C
 	required int32 usQotRight = 5; //美股行情权限, QotRight
 	required int32 cnQotRight = 6; //A股行情权限, QotRight
 	required bool isNeedAgreeDisclaimer = 7; //已开户用户需要同意免责声明，未开户或已同意的用户返回false
+	required int64 userID = 8; //用户牛牛号
 }
 
 message Request

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='GetUserInfo.proto',
   package='GetUserInfo',
   syntax='proto2',
-  serialized_pb=_b('\n\x11GetUserInfo.proto\x12\x0bGetUserInfo\x1a\x0c\x43ommon.proto\"\x15\n\x03\x43\x32S\x12\x0e\n\x06userID\x18\x01 \x02(\x04\"\x97\x01\n\x03S2C\x12\x10\n\x08nickName\x18\x01 \x02(\t\x12\x11\n\tavatarUrl\x18\x02 \x02(\t\x12\x10\n\x08\x61piLevel\x18\x03 \x02(\t\x12\x12\n\nhkQotRight\x18\x04 \x02(\x05\x12\x12\n\nusQotRight\x18\x05 \x02(\x05\x12\x12\n\ncnQotRight\x18\x06 \x02(\x05\x12\x1d\n\x15isNeedAgreeDisclaimer\x18\x07 \x02(\x08\"(\n\x07Request\x12\x1d\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x10.GetUserInfo.C2S\"a\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1d\n\x03s2c\x18\x04 \x01(\x0b\x32\x10.GetUserInfo.S2C*[\n\x08QotRight\x12\x13\n\x0fQotRight_Unknow\x10\x00\x12\x10\n\x0cQotRight_Bmp\x10\x01\x12\x13\n\x0fQotRight_Level1\x10\x02\x12\x13\n\x0fQotRight_Level2\x10\x03')
+  serialized_pb=_b('\n\x11GetUserInfo.proto\x12\x0bGetUserInfo\x1a\x0c\x43ommon.proto\"\x15\n\x03\x43\x32S\x12\x0e\n\x06userID\x18\x01 \x02(\x04\"\xa7\x01\n\x03S2C\x12\x10\n\x08nickName\x18\x01 \x02(\t\x12\x11\n\tavatarUrl\x18\x02 \x02(\t\x12\x10\n\x08\x61piLevel\x18\x03 \x02(\t\x12\x12\n\nhkQotRight\x18\x04 \x02(\x05\x12\x12\n\nusQotRight\x18\x05 \x02(\x05\x12\x12\n\ncnQotRight\x18\x06 \x02(\x05\x12\x1d\n\x15isNeedAgreeDisclaimer\x18\x07 \x02(\x08\x12\x0e\n\x06userID\x18\x08 \x02(\x03\"(\n\x07Request\x12\x1d\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x10.GetUserInfo.C2S\"a\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1d\n\x03s2c\x18\x04 \x01(\x0b\x32\x10.GetUserInfo.S2C*[\n\x08QotRight\x12\x13\n\x0fQotRight_Unknow\x10\x00\x12\x10\n\x0cQotRight_Bmp\x10\x01\x12\x13\n\x0fQotRight_Level1\x10\x02\x12\x13\n\x0fQotRight_Level2\x10\x03')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,])
 
@@ -50,8 +50,8 @@ _QOTRIGHT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=366,
-  serialized_end=457,
+  serialized_start=382,
+  serialized_end=473,
 )
 _sym_db.RegisterEnumDescriptor(_QOTRIGHT)
 
@@ -150,6 +150,13 @@ _S2C = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='userID', full_name='GetUserInfo.S2C.userID', index=7,
+      number=8, type=3, cpp_type=2, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -163,7 +170,7 @@ _S2C = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=72,
-  serialized_end=223,
+  serialized_end=239,
 )
 
 
@@ -193,8 +200,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=225,
-  serialized_end=265,
+  serialized_start=241,
+  serialized_end=281,
 )
 
 
@@ -245,8 +252,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=267,
-  serialized_end=364,
+  serialized_start=283,
+  serialized_end=380,
 )
 
 _REQUEST.fields_by_name['c2s'].message_type = _C2S
