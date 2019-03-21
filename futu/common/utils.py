@@ -540,16 +540,19 @@ def _joint_head(proto_id, proto_fmt_type, body_len, str_body, conn_id, serial_no
     sha20 = hashlib.sha1(str_body).digest()
 
     # init connect 需要用rsa加密
-    if proto_id == ProtoId.InitConnect:
-        if SysConfig.INIT_RSA_FILE != '':
-            str_body = RsaCrypt.encrypt(str_body)
-            body_len = len(str_body)
-    else:
-        if is_encrypt:
-            ret, msg, str_body = FutuConnMng.encrypt_conn_data(conn_id, str_body)
-            body_len = len(str_body)
-            if ret != RET_OK:
-                return ret, msg, str_body
+    try:
+        if proto_id == ProtoId.InitConnect:
+            if SysConfig.INIT_RSA_FILE != '':
+                str_body = RsaCrypt.encrypt(str_body)
+                body_len = len(str_body)
+        else:
+            if is_encrypt:
+                ret, msg, str_body = FutuConnMng.encrypt_conn_data(conn_id, str_body)
+                body_len = len(str_body)
+                if ret != RET_OK:
+                    return ret, msg, str_body
+    except Exception as e:
+        return RET_ERROR, str(e), None
 
     fmt = "%s%ds" % (MESSAGE_HEAD_FMT, body_len)
 
