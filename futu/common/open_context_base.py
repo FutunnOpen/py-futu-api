@@ -44,6 +44,7 @@ class OpenContextBase(object):
         self._keep_alive_interval = 10
         self._last_keep_alive_time = datetime.now()
         self._reconnect_timer = None
+        self._reconnect_interval = 8  # 重试连接的间隔
         self._sync_query_connect_timeout = None
         self._keep_alive_fail_count = 0
         self._is_encrypt = is_encrypt
@@ -92,6 +93,16 @@ class OpenContextBase(object):
     def set_sync_query_connect_timeout(self, timeout):
         with self._lock:
             self._sync_query_connect_timeout = timeout
+
+    @property
+    def reconnect_interval(self):
+        with self._lock:
+            return self._reconnect_interval
+
+    @reconnect_interval.setter
+    def reconnect_interval(self, value):
+        with self._lock:
+            self._reconnect_interval = value
 
     @abstractmethod
     def close(self):
@@ -267,7 +278,7 @@ class OpenContextBase(object):
         if ret == RET_OK:
             ret, msg = self.on_api_socket_reconnected()
         else:
-            self._wait_reconnect()
+            self._wait_reconnect(self.reconnect_interval)
         return RET_OK, ''
 
     def get_sync_conn_id(self):
