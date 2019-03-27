@@ -939,7 +939,7 @@ class OpenQuoteContext(OpenContextBase):
         """
         if code is None or is_str(code) is False:
             error_str = ERROR_STR_PREFIX + "the type of param in code is wrong"
-            return RET_ERROR, error_str
+            return RET_ERROR, error_str, error_str
 
         query_processor = self._get_sync_query_processor(
             BrokerQueueQuery.pack_req, BrokerQueueQuery.unpack_rsp)
