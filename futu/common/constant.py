@@ -1539,8 +1539,8 @@ from futu.common.pb import GetUserInfo_pb2
 class QotRight(FtEnum):
     NONE = "N/A"                                       # 未知
     BMP = "BMP"                                        # Bmp，无法订阅
-    LEVEL1 = "LEVEL1"                                  # Level1
-    LEVEL2 = "LEVEL2"                                  # Level2
+    LEVEL1 = "LV1"                                  # Level1
+    LEVEL2 = "LV2"                                  # Level2
 
     def load_dic(self):
         return {
