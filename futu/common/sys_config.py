@@ -128,7 +128,8 @@ class SysConfig(object):
 
         """
         SysConfig.INIT_RSA_FILE = str(file)
-        pass
+        SysConfig.RSA_OBJ = None
+        RsaCrypt.CHIPPER = None
 
     @classmethod
     def get_init_rsa_obj(cls):

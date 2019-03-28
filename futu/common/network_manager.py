@@ -32,10 +32,11 @@ class SyncReqRspInfo:
 
 
 class Connection:
-    def __init__(self, conn_id, sock, addr, handler):
+    def __init__(self, conn_id, sock, addr, handler, is_encrypt):
         self._conn_id = conn_id
         self.opend_conn_id = 0
         self.sock = sock
+        self.is_encrypt = is_encrypt
         self.handler = handler
         self._peer_addr = addr
         self.status = ConnStatus.Start
@@ -147,7 +148,7 @@ class NetManager:
         self._r_sock, self._w_sock = make_ctrl_socks()
         self._selector.register(self._r_sock, selectors.EVENT_READ)
 
-    def connect(self, addr, handler, timeout):
+    def connect(self, addr, handler, timeout, is_encrypt):
         with self._lock:
             conn_id = self._next_conn_id
             self._next_conn_id += 1
@@ -155,7 +156,7 @@ class NetManager:
         def work():
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 1024 * 1024)
-            conn = Connection(conn_id, sock, addr, handler)
+            conn = Connection(conn_id, sock, addr, handler, is_encrypt)
             conn.status = ConnStatus.Connecting
             conn.start_time = datetime.now()
             conn.timeout = timeout
@@ -242,8 +243,10 @@ class NetManager:
 
     def _thread_func(self):
         while True:
-            if not self.is_alive():
-                break
+            with self._lock:
+                if not self.is_alive():
+                    self._thread = None
+                    break
             self.poll()
 
     def start(self):
@@ -263,15 +266,8 @@ class NetManager:
 
     def stop(self):
         with self._mgr_lock:
-            is_quit = False
             with self._lock:
                 self._use_count = max(self._use_count - 1, 0)
-                is_quit = not self.is_alive()
-
-            if is_quit and self._thread is not None:
-                self._thread.join()
-                self._close_all()
-                self._thread = None
 
     def is_alive(self):
         with self._lock:
@@ -440,13 +436,14 @@ class NetManager:
         return proto_info
 
     def _get_conn(self, conn_id):
-        for sock, sel_key in self._selector.get_map().items():
-            if sel_key.fileobj == self._r_sock:
-                continue
-            conn = sel_key.data
-            if conn.conn_id == conn_id:
-                return conn
-        return None
+        with self._lock:
+            for sock, sel_key in self._selector.get_map().items():
+                if sel_key.fileobj == self._r_sock:
+                    continue
+                conn = sel_key.data
+                if conn.conn_id == conn_id:
+                    return conn
+            return None
 
     def _on_read(self, conn):
         start_time = time.time()
@@ -545,7 +542,7 @@ class NetManager:
         proto_info = ProtoInfo(head_dict['proto_id'], head_dict['serial_no'])
         rsp_pb = None
         if err_code == Err.Ok.code:
-            ret_decrypt, msg_decrypt, rsp_body = decrypt_rsp_body(rsp_body_data, head_dict, conn.opend_conn_id)
+            ret_decrypt, msg_decrypt, rsp_body = decrypt_rsp_body(rsp_body_data, head_dict, conn.opend_conn_id, conn.is_encrypt)
             if ret_decrypt == RET_OK:
                 rsp_pb = binary2pb(rsp_body, head_dict['proto_id'], head_dict['proto_fmt_type'])
             else:

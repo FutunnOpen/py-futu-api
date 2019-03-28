@@ -18,7 +18,8 @@ class Err:
     PacketDataErr = _ErrField(4, 'Packet data error')
     ConnectionClosed = _ErrField(5, 'Connection closed')
     ParamErr = _ErrField(6, 'Parameter error')
-
+    NotSetRSAFile = _ErrField(7, 'Conn is encrypted, but no RSA private key file is set. Call SysConfig.set_init_rsa_file.')
+    RsaErr = _ErrField(8, 'RSA key is invalid')
     NoNeedUnlock = _ErrField(2000, 'No need to unlock, because REAL trade is not supported in this market')
 
 

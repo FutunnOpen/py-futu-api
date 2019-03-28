@@ -4,6 +4,7 @@
 """
 
 from futu.common.utils import *
+from ..common.pb import Common_pb2
 
 # 无数据时的值
 NoneDataType = 'N/A'
@@ -17,13 +18,19 @@ class InitConnect:
         pass
 
     @classmethod
-    def pack_req(cls, client_ver, client_id, recv_notify=False):
+    def pack_req(cls, client_ver, client_id, recv_notify, is_encrypt):
 
         from futu.common.pb.InitConnect_pb2 import Request
         req = Request()
         req.c2s.clientVer = client_ver
         req.c2s.clientID = client_id
         req.c2s.recvNotify = recv_notify
+
+        if is_encrypt:
+            req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_FTAES_ECB
+        else:
+            req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_None
+
         return pack_pb_req(req, ProtoId.InitConnect, 0)
 
     @classmethod
@@ -257,7 +264,18 @@ class MarketSnapshotQuery:
             snapshot_tmp['bid_price'] = record.basic.bidPrice
             snapshot_tmp['ask_vol'] = record.basic.askVol
             snapshot_tmp['bid_vol'] = record.basic.bidVol
-
+            # 2019.02.25 增加一批数据
+            if record.basic.HasField("enableMargin"):
+                snapshot_tmp['enable_margin'] = record.basic.enableMargin  # 是否可融资，如果为true，后两个字段才有意
+                if snapshot_tmp['enable_margin'] is True:
+                    snapshot_tmp['mortgage_ratio'] = record.basic.mortgageRatio
+                    snapshot_tmp['long_margin_initial_ratio'] = record.basic.longMarginInitialRatio
+            if record.basic.HasField("enableShortSell"):
+                snapshot_tmp['enable_short_sell'] = record.basic.enableShortSell  # 是否可卖空，如果为true，后三个字段才有意义
+                if snapshot_tmp['enable_short_sell'] is True:
+                    snapshot_tmp['short_sell_rate'] = record.basic.shortSellRate
+                    snapshot_tmp['short_available_volume'] = record.basic.shortAvailableVolume
+                    snapshot_tmp['short_margin_initial_ratio'] = record.basic.shortMarginInitialRatio
 
             snapshot_tmp['equity_valid'] = False
             # equityExData
@@ -1317,6 +1335,13 @@ class GlobalStateQuery:
             return RET_ERROR, rsp_pb.retMsg, None
 
         state = rsp_pb.s2c
+        program_status_type = ProgramStatusType.NONE
+        program_status_desc = ""
+        if state.HasField('programStatus'):
+            program_status_type = ProgramStatusType.to_string2(state.programStatus.type)
+            if state.programStatus.HasField("strExtDesc"):
+                program_status_desc = state.programStatus.strExtDesc
+
         state_dict = {
             'market_sz': QUOTE.REV_MARKET_STATE_MAP[state.marketSZ]
                     if state.marketSZ in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
@@ -1334,6 +1359,8 @@ class GlobalStateQuery:
             'timestamp': str(state.time),
             'qot_logined': "1" if state.qotLogined else "0",
             'local_timestamp': state.localTime if state.HasField('localTime') else time.time(),
+            'program_status_type': program_status_type,
+            'program_status_desc': program_status_desc
         }
         return RET_OK, "", state_dict
 
@@ -1804,7 +1831,6 @@ class OrderDetail:
         return RET_OK, "", data
 
 
-
 class QuoteWarrant:
     """
     拉取涡轮
@@ -1828,3 +1854,196 @@ class QuoteWarrant:
     def unpack_rsp(cls, rsp_pb):
         from futu.quote.quote_get_warrant import Response as WarrantResponse
         return WarrantResponse.unpack_response_pb(rsp_pb)
+
+
+class HistoryKLQuota:
+    """
+    拉取限额
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, get_detail, conn_id):
+        from futu.common.pb.Qot_RequestHistoryKLQuota_pb2 import Request
+        req = Request()
+        req.c2s.bGetDetail = get_detail
+        return pack_pb_req(req, ProtoId.Qot_RequestHistoryKLQuota, conn_id)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        used_quota = rsp_pb.s2c.usedQuota
+        remain_quota = rsp_pb.s2c.remainQuota
+        detail_list = []
+
+        details = rsp_pb.s2c.detailList
+        for item in details:
+            code = merge_qot_mkt_stock_str(int(item.security.market), item.security.code)
+            request_time = str(item.requestTime)
+            detail_list.append({"code": code, "request_time": request_time})
+
+        data = {
+            "used_quota": used_quota,
+            "remain_quota": remain_quota,
+            "detail_list": detail_list
+        }
+        return RET_OK, "", data
+
+
+class RequestRehab:
+    """
+    获取除权信息
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, stock, conn_id):
+        ret_code, content = split_stock_str(stock)
+        if ret_code != RET_OK:
+            msg = content
+            error_str = ERROR_STR_PREFIX + msg
+            return RET_ERROR, error_str, None
+        market, code = content
+
+        if market not in QUOTE.REV_MKT_MAP:
+            error_str = ERROR_STR_PREFIX + "market is %s, which is not valid. (%s)" \
+                                           % (market, ",".join([x for x in MKT_MAP]))
+            return RET_ERROR, error_str, None
+
+        from futu.common.pb.Qot_RequestRehab_pb2 import Request
+        req = Request()
+        req.c2s.security.market = market
+        req.c2s.security.code = code
+        return pack_pb_req(req, ProtoId.Qot_RequestRehab, conn_id)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        class KLRehabFlag(object):
+            SPLIT = 1
+            JOIN = 2
+            BONUS = 4
+            TRANSFER = 8
+            ALLOT = 16
+            ADD = 32
+            DIVIDED = 64
+            SP_DIVIDED = 128
+
+        rehab_list = list()
+        for rehab in rsp_pb.s2c.rehabList:
+            stock_rehab_tmp = {}
+            stock_rehab_tmp['ex_div_date'] = rehab.time.split()[0] #时间字符串
+            stock_rehab_tmp['forward_adj_factorA'] = rehab.fwdFactorA
+            stock_rehab_tmp['forward_adj_factorB'] = rehab.fwdFactorB
+            stock_rehab_tmp['backward_adj_factorA'] = rehab.bwdFactorA
+            stock_rehab_tmp['backward_adj_factorB'] = rehab.bwdFactorB
+
+            act_flag = rehab.companyActFlag
+            if act_flag == 0:
+                continue
+
+            if act_flag & KLRehabFlag.SP_DIVIDED:
+                stock_rehab_tmp['special_dividend'] = rehab.spDividend
+            if act_flag & KLRehabFlag.DIVIDED:
+                stock_rehab_tmp['per_cash_div'] = rehab.dividend
+            if act_flag & KLRehabFlag.ADD:
+                stock_rehab_tmp['stk_spo_ratio'] = rehab.addBase / rehab.addErt
+                stock_rehab_tmp['stk_spo_price'] = rehab.addPrice
+            if act_flag & KLRehabFlag.ALLOT:
+                stock_rehab_tmp['allotment_ratio'] = rehab.allotBase / rehab.allotErt
+                stock_rehab_tmp['allotment_price'] = rehab.allotPrice
+            if act_flag & KLRehabFlag.TRANSFER:
+                stock_rehab_tmp['per_share_trans_ratio'] = rehab.transferBase / rehab.transferErt
+            if act_flag & KLRehabFlag.BONUS:
+                stock_rehab_tmp['per_share_div_ratio'] = rehab.bonusBase / rehab.bonusErt
+            if act_flag & KLRehabFlag.JOIN:
+                stock_rehab_tmp['join_ratio'] = rehab.joinBase / rehab.joinErt
+            if act_flag & KLRehabFlag.SPLIT:
+                stock_rehab_tmp['split_ratio'] = rehab.splitBase / rehab.splitErt
+
+            rehab_list.append(stock_rehab_tmp)
+
+        return RET_OK, "", rehab_list
+
+"""-------------------------------------------------------------"""
+
+class GetUserInfo:
+    """
+    拉取用户信息
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, info_type, user_id, conn_id):
+        from futu.common.pb.GetUserInfo_pb2 import Request
+        req = Request()
+        req.c2s.userID = user_id
+        return pack_pb_req(req, ProtoId.GetUserInfo, conn_id)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        nick_name = rsp_pb.s2c.nickName
+        avatar_url = rsp_pb.s2c.avatarUrl
+        api_level = rsp_pb.s2c.apiLevel
+        hk_qot_right = rsp_pb.s2c.hkQotRight
+        us_qot_right = rsp_pb.s2c.usQotRight
+        cn_qot_right = rsp_pb.s2c.cnQotRight
+        is_need_agree_disclaimer = rsp_pb.s2c.isNeedAgreeDisclaimer
+        user_id = rsp_pb.s2c.userID
+        data = {
+            "nick_name": nick_name,
+            "avatar_url": avatar_url,
+            "api_level": api_level,
+            "hk_qot_right": QotRight.to_string2(hk_qot_right),
+            "us_qot_right": QotRight.to_string2(us_qot_right),
+            "cn_qot_right": QotRight.to_string2(cn_qot_right),
+            "is_need_agree_disclaimer": is_need_agree_disclaimer,
+            "user_id": user_id
+        }
+        return RET_OK, "", data
+
+
+class Verification:
+    """
+    拉验证码
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, verification_type, verification_op, code, conn_id):
+        from futu.common.pb.Verification_pb2 import Request
+        req = Request()
+        ret, data = VerificationType.to_number(verification_type)
+        if ret:
+            req.c2s.type = data
+        else:
+            return RET_ERROR, data, None
+
+        ret, data = VerificationOp.to_number(verification_op)
+        if ret:
+            req.c2s.op = data
+        else:
+            return RET_ERROR, data, None
+
+        if code is not None and len(code) != 0:
+            req.c2s.code = code
+        return pack_pb_req(req, ProtoId.Verification, conn_id)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+            return rsp_pb.retType, rsp_pb.retMsg, None
+

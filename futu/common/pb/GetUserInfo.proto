@@ -1,0 +1,44 @@
+syntax = "proto2";
+package GetUserInfo;
+
+import "Common.proto";
+
+//行情权限
+enum QotRight
+{
+	QotRight_Unknow = 0; //未知
+	QotRight_Bmp = 1; //Bmp，无法订阅
+	QotRight_Level1 = 2; //Level1
+	QotRight_Level2 = 3; //Level2
+}
+
+message C2S
+{
+	required uint64 userID = 1; //需要跟FutuOpenD登陆的牛牛用户ID一致，否则会返回失败
+}
+
+message S2C
+{
+	required string nickName = 1; //用户昵称
+	required string avatarUrl = 2; //用户头像url
+	required string apiLevel = 3; //api用户等级描述
+	required int32 hkQotRight = 4; //港股行情权限, QotRight
+	required int32 usQotRight = 5; //美股行情权限, QotRight
+	required int32 cnQotRight = 6; //A股行情权限, QotRight
+	required bool isNeedAgreeDisclaimer = 7; //已开户用户需要同意免责声明，未开户或已同意的用户返回false
+	required int64 userID = 8; //用户牛牛号
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //返回结果，参见Common.RetType的枚举定义
+	optional string retMsg = 2; //返回结果描述
+	optional int32 errCode = 3; //错误码，客户端一般通过retType和retMsg来判断结果和详情，errCode只做日志记录，仅在个别协议失败时对账用
+	
+	optional S2C s2c = 4;
+}

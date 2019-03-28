@@ -56,9 +56,6 @@ class FutuConnMng(object):
 
     @classmethod
     def encrypt_conn_data(cls, conn_id, data):
-        if not SysConfig.is_proto_encrypt():
-            return RET_OK, '', data
-
         if type(data) is not bytes:
             data = bytes_utf8(str(data))
 
@@ -84,9 +81,6 @@ class FutuConnMng(object):
 
     @classmethod
     def decrypt_conn_data(cls, conn_id, data):
-        if not SysConfig.is_proto_encrypt():
-            return RET_OK, '', data
-
         # tail的未尾字节记录解密数据的最一个数据块真实的长度
         data_real = data[:len(data) - 16]
         data_tail = data[-1:]
@@ -111,6 +105,13 @@ class FutuConnMng(object):
             return RET_OK, '', de_data
 
         return RET_ERROR, 'AES decrypt error, conn_id:{}'.format(conn_id), data
+
+    @classmethod
+    def is_conn_encrypt(cls, conn_id):
+        conn_info = cls.get_conn_info(conn_id)
+        if conn_info:
+            return conn_info['is_encrypt']
+        return SysConfig.is_proto_encrypt()
 
 
 

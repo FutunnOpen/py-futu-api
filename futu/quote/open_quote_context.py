@@ -15,14 +15,14 @@ from futu.quote.quote_query import *
 class OpenQuoteContext(OpenContextBase):
     """行情上下文对象类"""
 
-    def __init__(self, host='127.0.0.1', port=11111):
+    def __init__(self, host='127.0.0.1', port=11111, is_encrypt=None, is_async_connect=False):
         """
         初始化Context对象
         :param host: host地址
         :param port: 端口
         """
         self._ctx_subscribe = {}
-        super(OpenQuoteContext, self).__init__(host, port, True)
+        super(OpenQuoteContext, self).__init__(host, port, is_async_connect, is_encrypt)
 
     def close(self):
         """
@@ -91,7 +91,7 @@ class OpenQuoteContext(OpenContextBase):
         # 重定阅失败，重连
         if ret_code != RET_OK:
             logger.error("reconnect subscribe error, close connect and retry!!")
-            self._status = ContextStatus.Start
+            self._status = ContextStatus.START
             self._wait_reconnect()
         return ret_code, ret_msg
 
@@ -733,7 +733,14 @@ class OpenQuoteContext(OpenContextBase):
             'ask_price',
             'bid_price',
             'ask_vol',
-            'bid_vol'
+            'bid_vol',
+            'enable_margin',
+            'mortgage_ratio',
+            'long_margin_initial_ratio',
+            'enable_short_sell',
+            'short_sell_rate',
+            'short_available_volume',
+            'short_margin_initial_ratio'
         ]
 
         col_list.append('equity_valid')
@@ -932,7 +939,7 @@ class OpenQuoteContext(OpenContextBase):
         """
         if code is None or is_str(code) is False:
             error_str = ERROR_STR_PREFIX + "the type of param in code is wrong"
-            return RET_ERROR, error_str
+            return RET_ERROR, error_str, error_str
 
         query_processor = self._get_sync_query_processor(
             BrokerQueueQuery.pack_req, BrokerQueueQuery.unpack_rsp)
@@ -993,7 +1000,7 @@ class OpenQuoteContext(OpenContextBase):
         :param code_list: 需要订阅的股票代码列表
         :param subtype_list: 需要订阅的数据类型列表，参见SubType
         :param is_first_push: 订阅成功后是否马上推送一次数据
-        :param subscribe_push: 订阅后不推送
+        :param subscribe_push: 订阅后推送
         :return: (ret, err_message)
 
                 ret == RET_OK err_message为None
@@ -1844,7 +1851,6 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, order_detail
 
-
     def get_warrant(self, stock_owner='', req=None):
         """
         :param stock_owner:所属正股
@@ -1857,7 +1863,6 @@ class OpenQuoteContext(OpenContextBase):
 
         if stock_owner is not None:
             req.stock_owner = stock_owner
-
 
         query_processor = self._get_sync_query_processor(QuoteWarrant.pack_req, QuoteWarrant.unpack_rsp)
         kargs = {
@@ -1880,6 +1885,115 @@ class OpenQuoteContext(OpenContextBase):
             warrant_data_frame = pd.DataFrame(warrant_data_list, columns=col_list)
             #1120400921001028854
             return ret_code, (warrant_data_frame, last_page, all_count)
+
+    def get_history_kl_quota(self, get_detail=False):
+        """拉取历史K线已经用掉的额度"""
+        # self.get_login_user_id()
+        query_processor = self._get_sync_query_processor(HistoryKLQuota.pack_req, HistoryKLQuota.unpack_rsp)
+        kargs = {
+            "get_detail": get_detail,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, data = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return ret_code, msg
+        else:
+            used_quota = data["used_quota"]
+            remain_quota = data["remain_quota"]
+            detail_list = data["detail_list"]
+            return ret_code, (used_quota, remain_quota, detail_list)
+
+
+    def get_rehab(self, code):
+        """获取除权信息"""
+
+        """
+        获取给定股票列表的复权因子
+
+        :param code_list: 股票列表，例如['HK.00700']
+        :return: (ret, data)
+
+                ret == RET_OK 返回pd dataframe数据，data.DataFrame数据, 数据列格式如下
+
+                ret != RET_OK 返回错误字符串
+
+                =====================   ===========   =================================================================================
+                参数                      类型                        说明
+                =====================   ===========   =================================================================================
+                ex_div_date             str            除权除息日
+                split_ratio             float          拆合股比例（该字段为比例字段，默认不展示%），例如，对于5股合1股为1/5，对于1股拆5股为5/1
+                per_cash_div            float          每股派现
+                per_share_div_ratio     float          每股送股比例（该字段为比例字段，默认不展示%）
+                per_share_trans_ratio   float          每股转增股比例（该字段为比例字段，默认不展示%）
+                allotment_ratio         float          每股配股比例（该字段为比例字段，默认不展示%）
+                allotment_price         float          配股价
+                stk_spo_ratio           float          增发比例（该字段为比例字段，默认不展示%）
+                stk_spo_price           float          增发价格
+                forward_adj_factorA     float          前复权因子A
+                forward_adj_factorB     float          前复权因子B
+                backward_adj_factorA    float          后复权因子A
+                backward_adj_factorB    float          后复权因子B
+                =====================   ===========   =================================================================================
+        """
+        query_processor = self._get_sync_query_processor(RequestRehab.pack_req, RequestRehab.unpack_rsp)
+        kargs = {
+            "stock": code,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, data = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return ret_code, msg
+        else:
+            col_list = [
+                'ex_div_date', 'split_ratio', 'per_cash_div',
+                'per_share_div_ratio', 'per_share_trans_ratio', 'allotment_ratio',
+                'allotment_price', 'stk_spo_ratio', 'stk_spo_price',
+                'forward_adj_factorA', 'forward_adj_factorB',
+                'backward_adj_factorA', 'backward_adj_factorB'
+            ]
+            exr_frame_table = pd.DataFrame(data, columns=col_list)
+            return ret_code, exr_frame_table
+
+
+    def get_user_info(self, info_type=0, user_id=0):
+        """获取用户信息（内部保留函数）"""
+        query_processor = self._get_sync_query_processor(GetUserInfo.pack_req, GetUserInfo.unpack_rsp)
+        kargs = {
+            "user_id": user_id,
+            "info_type": info_type,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, data = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return ret_code, msg
+        else:
+            return ret_code, data
+
+    def verification(self, verification_type=VerificationType.NONE, verification_op=VerificationOp.NONE, code=""):
+        """图形验证码下载之后会将其存至固定路径，请到该路径下查看验证码
+        Windows平台：%appdata%/com.futunn.FutuOpenD/F3CNN/PicVerifyCode.png
+        非Windows平台：~/.com.futunn.FutuOpenD/F3CNN/PicVerifyCode.png
+        注意：只有最后一次请求验证码会生效，重复请求只有最后一次的验证码有效"""
+
+        """required int32 type = 1; //验证码类型, VerificationType
+        required int32 op = 2; //操作, VerificationOp
+        optional string code = 3; //验证码，请求验证码时忽略该字段，输入时必填"""
+
+        query_processor = self._get_sync_query_processor(Verification.pack_req, Verification.unpack_rsp)
+        kargs = {
+            "verification_type": verification_type,
+            "verification_op": verification_op,
+            "code": code,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, data = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return ret_code, msg
+        else:
+            return ret_code, data
+
+
+
 
 
 
