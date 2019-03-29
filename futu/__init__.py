@@ -15,6 +15,8 @@
 # limitations under the License.
 
 import os.path
+import signal
+import os
 
 #import data querying APIs and response handle base class
 from futu.quote.open_quote_context import OpenQuoteContext
@@ -40,3 +42,10 @@ with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'VERSION.txt
 
 def set_futu_debug_model(on_off=True):
     common.set_debug_model(on_off)
+
+
+def quit_handler(sig, frame):
+    os._exit(0)
+
+
+signal.signal(signal.SIGINT, quit_handler)
