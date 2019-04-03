@@ -1,0 +1,96 @@
+##########class_function##########
+    def {function_name}(self, {parameter}):
+        """
+{notes}
+        """
+{warning_filter}
+
+        query_processor = self._get_sync_query_processor(
+            {class_name}Query.pack_req,
+            {class_name}Query.unpack,
+        )
+
+        kargs = {{
+{kargs}
+            "conn_id": self.get_sync_conn_id()
+        }}
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+{get_function_return}
+		
+	"""
+	===============================================================================
+	===============================================================================
+	"""	
+		
+	class {class_name}Query:
+    """
+    Query {class_name}.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, {parameter}, conn_id):
+{pack_req_filter}
+		# 开始组包
+        from futu.common.pb.{pb_file_name}_pb2 import Request
+        req = Request()
+{pack_req_add}
+        return pack_pb_req(req, ProtoId.{pb_file_name}, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+	    if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+{get_unpack_code}		
+        {get_unpack_return}
+	
+##########class_function##########
+
+##########list_return##########
+        if isinstance(ret,list):
+            col_list = [
+{var_name}
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+		else:
+			return RET_ERROR, "empty data"
+##########list_return##########
+
+
+##########dict_return##########
+        if isinstance(ret,dict):
+            col_list = [
+{var_name}
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list, index=[0])
+            return RET_OK, ret_frame
+		else:
+			return RET_ERROR, "empty data"
+##########dict_return##########
+
+
+##########class_unpack_list_add##########
+@@@@@@@@@@专用于返回结果单一列表转换为平面结构@@@@@@@@@@
+		{list_name} = list()
+{unpack_var}
+{unpack_add}
+##########class_unpack_list_add##########
+
+
+##########class_unpack_var_add##########
+@@@@@@@@@@专用于返回结果转换为平面结构@@@@@@@@@@
+		ret = dict()
+{unpack_code}
+##########class_unpack_var_add##########
+
+
+
+##########class_unpack_code##########
+@@@@@@@@@@股票id合并专用@@@@@@@@@@
+stock_code = merge_qot_mkt_stock_str(rsp_pb.s2c.{name}.market,rsp_pb.s2c.{name}.code)
+##########class_unpack_code##########
