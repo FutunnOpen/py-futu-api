@@ -15,10 +15,12 @@ __TemplateRstName__ = "rst_template.txt"
 __TemplateFileFunctionName__ = "template_function.txt"
 
 
-template = load_template.FutuTemplate()
+template = load_template.FutuTemplate("function.template")
+
 
 
 def change_variable_name(listx):  # 修改变量名
+    """把骆驼变量名变成下划线的方式（全大写）"""
     listy = listx[0]
     for i in range(1, len(listx) - 1):
 
@@ -41,6 +43,7 @@ def change_variable_name(listx):  # 修改变量名
 
 
 def code_add_space(code, space_count=1, space_str="	"):  # 逐行加空格
+    """传入字符串，逐行加入空格，符合python规范"""
     ls = code.split('\n')
     ret_code = space_line = ""
     for i in range(space_count):
@@ -53,6 +56,133 @@ def code_add_space(code, space_count=1, space_str="	"):  # 逐行加空格
             ret_code += "\n"
 
     return ret_code[:-1]
+
+class ClassItemStruct(object):
+
+    def __init__(self, json_obj, class_type, pb_prefix_name):
+        self.name = json_obj["longName"]
+        self.full_name = json_obj["fullName"]
+        self.description = json_obj["description"]
+        self.json_obj = json_obj
+        self.pb_prefix_name = pb_prefix_name
+        self.class_type = class_type
+        self.repeated_count = 0
+        self.repeated_var_list = list()
+        self.vars_dict = dict()
+        self.values = list()
+
+        if class_type == "enums":
+            for v in json_obj["values"]:
+                s = EnumsItemStruct(v, self.name, self.pb_prefix_name)
+                self.values.append(s)
+
+        if class_type == "class":
+            for v in json_obj["fields"]:
+                s = ParameterItem(v, self)
+                if s.label == "repeated":
+                    #self.has_repeated = True
+                    self.repeated_count += 1
+                self.values.append(s)
+
+    def get_only_repeated_item(self):
+        for item in self.values:
+            if item.trim_type == "list":
+                return item
+
+    # def is_repeated_type(self, full_name):
+    #     for item in self.values:
+    #         if item.full_type == full_name:
+    #             return True
+    #     return False
+
+    def set_parameter_class(self, class_obj):
+        for item in self.values:
+            item.set_class(class_obj)
+
+    def get_function_return(self):
+        """函数返回，主要是组成pd和解析"""
+        if self.repeated_count == 1:
+            list_name = "ret_list"
+            ls = self.vars_dict[list_name]
+            if isinstance(ls, list):
+                str_code = '\'' + '\',\n\''.join(ls) + '\''
+            return template["list_return"].format(var_name=code_add_space(str_code, 4))
+        elif self.repeated_count == 0:
+            ls = self.vars_dict["ret"]
+            if isinstance(ls, list):
+                str_code = '\'' + '\',\n\''.join(ls) + '\''
+            return template["dict_return"].format(var_name=code_add_space(str_code, 4))
+
+    def get_unpack_code(self):
+        self.repeated_var_list.clear()
+        self.vars_dict.clear()
+
+        if self.repeated_count == 1:
+            """如果有多个重复数据（列表项），这种方式就不适合了"""
+            unpack_add = ""
+            list_name = "ret_list"
+            code, var_list = self.get_only_repeated_item().sub_list(list_name)
+            ls = list()
+            for item in var_list:
+                ls.append(item.trim_name)
+            self.vars_dict[list_name] = ls
+            unpack_add += code_add_space(code, 1)
+            return template["class_unpack_list_add"].format(unpack_add=unpack_add.rstrip('\n'),
+                                                            list_name=list_name)
+
+        elif self.repeated_count == 0:
+            unpack_code = ""
+            self.vars_dict["ret"] = list()
+            """开始遍历赋值"""
+            for item in self.values:
+                unpack_code += item.get_unpack_dict_code("ret")
+                self.vars_dict["ret"].append(item.trim_name)
+            return template["class_unpack_var_add"].format(unpack_code=unpack_code.rstrip('\n'))
+
+        elif self.repeated_count > 1:
+            """如果有多个重复数据（列表项），可以用元组返回"""
+            unpack_var = unpack_add = ""
+            self.repeated_var_list.clear()
+            for item in self.values:
+                unpack_var += item.get_unpack_var()
+
+            """开始遍历列表"""
+            for item in self.values:
+                if item.label == "repeated":
+                    list_name = item.trim_name
+                    self.repeated_var_list.append(list_name)
+                    s_code, _ = item.get_unpack_list_add(list_name)
+                    for v in self.values:
+                        if v.trim_name not in self.repeated_var_list and v.label != "repeated":
+                            """其他元素压平合并进去"""
+                            s_code += v.get_unpack_add()
+
+                    s_code += "\n"
+                    unpack_add += s_code
+
+            return unpack_var + unpack_add
+
+    def get_unpack_return(self):
+        if self.repeated_count == 1:
+            return "return RET_OK, \"\", ret_list"
+        elif self.repeated_count == 0:
+            return "return RET_OK, \"\", ret"
+        elif self.repeated_count > 1:
+            return "return RET_OK, \"\", ({})".format(','.join(self.repeated_var_list))
+
+
+class BaseClass(ClassItemStruct):
+    def __init__(self, full_type):
+        self.name = full_type
+        self.description = "base type " + full_type
+        self.json_obj = None
+        self.pb_prefix_name = None
+        self.class_type = "class"
+        self.repeated_count = 0
+        self.repeated_var_list = list()
+        self.vars_dict = dict()
+        self.full_name = full_type
+        self.values = list()
 
 
 class EnumsItemStruct(object):
@@ -92,309 +222,249 @@ class ParameterItem(object):
     def __init__(self, obj, class_owner):
         self.obj = obj
         self.class_owner = class_owner
-        self.class_name = class_owner.name  # 所属的类名
         self.pb_prefix_name = class_owner.pb_prefix_name
+        self.self_class = None
+        # self.repeated_class = None
+
         self.name = obj["name"] # 原始变量名
         self.full_type = obj["fullType"] # 原始变量名
-        self.long_type = obj["longType"]  # 原始变量名
+        self.trim_type = obj["longType"]  # 原始变量名
         self.trim_name = change_variable_name(self.name).lower() # 整理后的名字
-        self.trim_type = self.long_type
         self.description = obj["description"]
         self.label = obj["label"]
-        self.warning_filter = ""
-        self.repeated_class = None
+
         self.trim()
 
     def trim(self):
         if self.obj is None:
             return
-        # 股票名特殊处理
-        if self.full_type == "Qot_Common.Security":
-            if self.label == "repeated":  # 股票列表
-                self.trim_type = "list"
-                self.trim_name = "code_list"
-
-            else:  # 单个股票
-                self.trim_name = "code"
-                self.trim_type = "string"
-
         # 嵌套了复杂类型list
-        elif self.label == "repeated":
-            self.trim_type = "list"
+        if self.label == "repeated":
+            if self.full_type == "Qot_Common.Security":
+                self.trim_type = "code_list"
+            else:
+                self.trim_type = "list"
+        # 股票代码类型需要特殊处理
+        elif self.full_type == "Qot_Common.Security":
+            self.trim_type = "code"
+        # timestamp类型需要跳过
+        elif self.full_type == "double" and self.name.lower().find("timestamp") != -1:
+            self.trim_type = "timestamp"
 
-        elif self.name == "time":
-            self.trim_name = "{}_time".format(change_variable_name(self.class_name).lower())
+        # 时间特殊处理，因为time、code太笼统
+        if self.trim_name == "time" or self.trim_name == "code":
+            self.trim_name = "{}_{}".format(change_variable_name(self.class_owner.name).lower(), self.trim_name)
+
+        # 注释太短了的不知所云
+        if len(self.description) < 5:
             if len(self.class_owner.description) > 0:
                 self.description = self.class_owner.description + "  " + self.description
 
-    def is_timestamp(self):
-        """有两种数据类型时，timestamp需要过滤掉"""
-        if self.long_type == "double" and self.name.lower().find("timestamp") != -1:
-            return True
-        return False
+        #名字太短了容易撞车
+        if len(self.trim_name) < 5:
+            owner_name = change_variable_name(self.class_owner.name).lower()
+            if owner_name != "s2c" and owner_name != "c2s" and owner_name != "":
+                self.trim_name = "{}_{}".format(owner_name, self.trim_name)
+
+        if self.trim_type in ["int32", "int64", "double",
+                              "float", "string", "bool", "bytes", "code_list",
+                              "code", "timestamp"]:
+            self.self_class = BaseClass(self.trim_type)
 
     def get_args(self):
         return "            \"{}\": {},".format(self.trim_name, self.trim_name)
 
     def get_warning_filter(self):
-        if self.trim_name == "code_list":
-            self.warning_filter = "        if is_str(code_list):\n" \
-                                  "            code_list = code_list.split(',')\n" \
-                                  "        elif isinstance(code_list, list):\n" \
-                                  "            pass\n" \
-                                  "        else:\n" \
-                                  "            return RET_ERROR, " \
-                                  "\"code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'\"\n" \
-                                  "        code_list = unique_and_normalize_list(code_list)\n" \
-                                  "        for code in code_list:\n" \
-                                  "            if code is None or is_str(code) is False:\n" \
-                                  "                error_str = ERROR_STR_PREFIX + " \
-                                  "\"the type of param in code_list is wrong\"\n" \
-                                  "                return RET_ERROR, error_str\n"
-        elif self.trim_name == "code":
-            self.warning_filter = "        if code is None or is_str(code) is False:\n" \
-                                  "            error_str = ERROR_STR_PREFIX + 'the type of code param is wrong'\n" \
-                                  "            return RET_ERROR, error_str\n"
-        return self.warning_filter
+        if self.trim_type == "code_list":
+            warning_filter = template.get("code_list_warning_filter", 2)
+        elif self.trim_type == "code":
+            warning_filter = template.get("code_warning_filter", 2)
+        return warning_filter
+
+    def get_parameter_name(self):
+        if self.trim_type == "code_list":
+            return "code_list"
+        elif self.trim_type == "code":
+            return "stock_code"
+        return self.trim_name
 
     def get_pack_req_filter(self):
-        if self.trim_name == "code_list":
-            return "        stock_tuple_list = []\n" \
-                   "        failure_tuple_list = []\n" \
-                   "        for stock_str in code_list:\n" \
-                   "            ret_code, content = split_stock_str(stock_str)\n" \
-                   "            if ret_code != RET_OK:\n" \
-                   "                error_str = content\n" \
-                   "                failure_tuple_list.append((ret_code, error_str))\n" \
-                   "                continue\n" \
-                   "            market_code, stock_code = content\n" \
-                   "            stock_tuple_list.append((market_code, stock_code))\n" \
-                   "        if len(failure_tuple_list) > 0:\n" \
-                   "            error_str = '\\n'.join([x[1] for x in failure_tuple_list])\n" \
-                   "            return RET_ERROR, error_str, None\n"
-
-        elif self.trim_name == "code":
-            return "        ret, content = split_stock_str(code)\n" \
-                   "        if ret == RET_ERROR:\n" \
-                   "            error_str = content\n" \
-                   "            return RET_ERROR, error_str, None\n" \
-                   "        market_code, stock_code = content\n"
+        if self.trim_type == "code_list":
+            return template.get("pack_code_list_filter", 2)
+        elif self.trim_type == "code":
+            return template.get("pack_code_filter", 2)
 
     def get_pack_req_add(self):
-        if self.trim_name == "code_list":
-            return "        for market_code, stock_code in stock_tuple_list:\n" \
-                   "            stock_inst = req.c2s.{}.add()\n" \
-                   "            stock_inst.market = market_code\n" \
-                   "            stock_inst.code = stock_code\n".format(self.name)
-        elif self.trim_name == "code":
+        if self.trim_type == "code_list":
+            return template.get("pack_code_list_add", 2).format(name=self.name)
+        elif self.trim_type == "code":
             return "        req.c2s.{0}.market = market_code\n" \
                    "        req.c2s.{0}.code = stock_code".format(self.name)
         else:
             return "        req.c2s.{0} = {1}\n".format(self.name, self.trim_name)
 
-    def set_repeated(self, class_obj):
-        if self.repeated_class is None and self.full_type == class_obj.full_name:
-            self.repeated_class = class_obj
+    def set_class(self, class_obj):
+        print(class_obj.full_name)
+        if (self.self_class is None) and (self.full_type == class_obj.full_name):
+            self.self_class = class_obj
+        """遍历问问子节点"""
+        if (self.self_class is not None) and (not isinstance(self.self_class, BaseClass)):
+            for item in self.self_class.values:
+                item.set_class(class_obj)
 
-    def get_unpack_var(self):
-        if self.is_timestamp():
+    def get_unpack_var(self, parents_name="rsp_pb.s2c"):
+        if self.trim_type == "timestamp":
             return ""
         else:
             if self.full_type == "Qot_Common.Security":
-                s_code = template["class_unpack_code"].format(name=self.name)
+                s_code = template["class_unpack_code"].format(trim_name=self.trim_name,
+                                                              name=self.name,
+                                                              parents_name=parents_name)
             else:
-                s_code = "#  {description} type={long_type}\n" \
-                         "{trim_name}=rsp_pb.s2c.{name}\n".\
+                s_code = "#  {description} type = {trim_type}\n" \
+                         "{trim_name} = {parents_name}.{name}\n".\
                     format(description=self.description,
-                           long_type=self.long_type,
+                           trim_type=self.full_type,
                            trim_name=self.trim_name,
+                           parents_name=parents_name,
                            name=self.name)
-            return code_add_space(s_code, 2)
+            return code_add_space(s_code, 1)
 
-    def get_unpack_list_add(self, ret_list_name):
-        """用于列表遍历"""
-        name_list = list()
-        if self.trim_type == "list" and self.repeated_class is not None:
-            str_code = ""
-            for item in self.repeated_class.values:
-                if item.is_timestamp():
-                    continue
-                str_code += "#  {description} type={long_type}\n" \
-                            "data[\"{trim_name}\"]=item.{name}\n". \
-                    format(description=item.description,
-                           long_type=item.long_type,
-                           trim_name=item.trim_name,
-                           name=item.name)
-                name_list.append(item.trim_name)
+    def sub_list(self, list_name, sub_item_name="item", add_code=""):
+        if self.self_class.repeated_count > 1:
+            raise Exception("不能支持子节点有多个列表的情况")
 
-            if len(str_code) > 0:
-                head_code = "for item in {trim_name}:\n" \
-                    "	data = dict()\n" \
-                    "	{list_name}.append(data)\n".\
-                    format(trim_name=self.trim_name, list_name=ret_list_name)
-                return code_add_space(head_code, 2) + code_add_space(str_code, 3), name_list
+        head_code = str_code = for_code = ""
+        ret_list = list()
 
-        return "", name_list
+        if self.self_class.repeated_count == 1:
+            my_add_code = ""
+            if sub_item_name == "item":  # 顶级节点
+                for item in self.class_owner.values:
+                    if item.trim_type != "list":
+                        ret_list.append(item)
+                        head_code += item.get_unpack_var()
+                        my_add_code += code_add_space(("data[\"{0}\"] = {0}\n".format(item.trim_name)), 1)
+            for item in self.self_class.values:
+                str_code += item.get_unpack_var(sub_item_name)
+                if item.trim_type != "list":
+                    ret_list.append(item)
+                    my_add_code += code_add_space(("data[\"{0}\"] = {0}\n".format(item.trim_name)), 1)
+            sub_sub_item_name = "sub_" + sub_item_name
+            add_code += my_add_code
 
-    def get_unpack_add(self, ret_list_name):
-        if self.is_timestamp() or self.trim_type == "list":
+            s, l = self.self_class.get_only_repeated_item().sub_list(list_name, sub_sub_item_name, add_code)
+            str_code += s
+            ret_list.extend(l)
+
+        elif self.self_class.repeated_count == 0:
+            """理解为最后一层"""
+            for item in self.self_class.values:
+                str_code += code_add_space(item.get_item_unpack_add(sub_item_name), 1)
+                ret_list.append(item)
+            str_code += add_code
+
+        for_code = "for {sub_item} in {trim_name}:\n". \
+            format(trim_name=self.trim_name,
+                   sub_item=sub_item_name)
+        if self.self_class.repeated_count == 0:
+            for_code += "	{list_name}.append(data)\n". \
+                format(list_name=list_name)
+
+        return head_code + code_add_space(for_code + str_code, 1), ret_list
+
+    def get_item_unpack_add(self, item_name=""):
+        if self.trim_type == "timestamp" or self.trim_type == "list":
             return ""
         else:
-            if self.full_type == "Qot_Common.Security":
-                name = "stock_code"
+            if len(item_name) > 0:
+                item_name += "."
+            if self.trim_type == "code" and item_name != "":
+                s_code = "merge_qot_mkt_stock_str({parents_name}.{name}.market,{parents_name}.{name}.code)".\
+                    format(name=self.name,
+                           parents_name=item_name).rstrip('\n')
+
+                return "#  {description} type = {trim_type}\n" \
+                       "data[\"{trim_name}\"] = {code}\n".\
+                    format(description=self.description,
+                           trim_type=self.trim_type,
+                           trim_name=self.trim_name,
+                           code=s_code)
             else:
-                name = self.name
-            s_code = "#  {description} type={long_type}\n" \
-                     "data[\"{trim_name}\"]={name}\n".\
-                format(description=self.description,
-                       long_type=self.long_type,
-                       trim_name=self.trim_name,
-                       name=name)
-            return code_add_space(s_code, 3)
+                return "#  {description} type = {trim_type}\n" \
+                       "data[\"{trim_name}\"] = {item_name}{name}\n".\
+                    format(description=self.description,
+                           trim_type=self.trim_type,
+                           trim_name=self.trim_name,
+                           item_name=item_name,
+                           name=self.name)
+
+
+
+    # def get_unpack_list_add(self, ret_list_name):
+    #     """用于列表遍历"""
+    #     name_list = list()
+    #     if self.trim_type == "list" and self.self_class is not None:
+    #         str_code = ""
+    #         for item in self.self_class.values:
+    #             if self.trim_type == "timestamp":
+    #                 continue
+    #             if item.trim_type == "list":
+    #                 sub_item_name = "sub_item"
+    #                 s, l = self._sub_list(item, sub_item_name, ret_list_name)
+    #                 str_code += code_add_space(s, 1)
+    #                 name_list.extend(l)
+    #             else:
+    #                 str_code += item.get_item_unpack_add("item.")
+    #             name_list.append(item.trim_name)
+    #
+    #         if self.self_class.repeated_count == 0:
+    #             head_code = "for item in {trim_name}:\n" \
+    #                 "	data = dict()\n" \
+    #                 "	{list_name}.append(data)\n".\
+    #                 format(trim_name=self.trim_name, list_name=ret_list_name)
+    #             return code_add_space(head_code, 2) + code_add_space(str_code, 3), name_list
+    #
+    #     return "", name_list
+
+    # def get_unpack_sub_list_add(self, ret_list_name, sub_item_name):
+    #     """用于列表的列表遍历"""
+    #     name_list = list()
+    #     str_code = ""
+    #     for item in self.self_class.values:
+    #         if self.trim_type == "timestamp":
+    #             continue
+    #         if item.trim_type == "list":
+    #             sub_sub_item_name = "sub_" + sub_item_name
+    #             s, l = self._sub_list(item, sub_sub_item_name, ret_list_name)
+    #         else:
+    #             str_code += item.get_item_unpack_add("item.")
+    #         name_list.append(item.trim_name)
+    #     return code_add_space(str_code, 1), name_list
+
+    # def get_unpack_add(self):
+    #     return code_add_space(self.get_item_unpack_add(), 3)
 
     def get_unpack_dict_code(self, ret_name):
-        if self.is_timestamp():
+        if self.trim_type == "timestamp":
             return ""
         else:
             if self.full_type == "Qot_Common.Security":
-                s_code = "#  {description} type={long_type}\n" \
-                         "{ret_name}[\"stock_code\"]= merge_qot_mkt_stock_str({trim_name}.market, {trim_name}.code)\n". \
+                s_code = "#  {description} type={trim_type}\n" \
+                         "{ret_name}[\"{trim_name}\"]= merge_qot_mkt_stock_str({trim_name}.market, {trim_name}.code)\n". \
                     format(description=self.description,
-                           long_type=self.long_type,
+                           trim_type=self.trim_type,
                            trim_name=self.trim_name,
                            ret_name=ret_name)
             else:
-                s_code = "#  {description} type={long_type}\n" \
+                s_code = "#  {description} type={trim_type}\n" \
                          "{ret_name}[\"{trim_name}\"]=rsp_pb.s2c.{name}\n".\
                     format(description=self.description,
-                           long_type=self.long_type,
+                           trim_type=self.trim_type,
                            trim_name=self.trim_name,
                            name=self.name,
                            ret_name=ret_name)
             return code_add_space(s_code, 2)
-
-
-class ClassItemStruct(object):
-
-    def __init__(self, json_obj, class_type, pb_prefix_name):
-        self.name = json_obj["longName"]
-        self.full_name = json_obj["fullName"]
-        self.description = json_obj["description"]
-        self.json_obj = json_obj
-        self.pb_prefix_name = pb_prefix_name
-        self.class_type = class_type
-        self.has_repeated = False
-        self.repeated_count = 0
-        self.repeated_var_list = list()
-        self.vars_dict = dict()
-
-        if class_type == "enums":
-            self.values = list()
-            for v in json_obj["values"]:
-                s = EnumsItemStruct(v, self.name, self.pb_prefix_name)
-                self.values.append(s)
-
-        if class_type == "class":
-            self.values = list()
-            for v in json_obj["fields"]:
-                s = ParameterItem(v, self)
-                if s.label == "repeated":
-                    self.has_repeated = True
-                    self.repeated_count += 1
-                self.values.append(s)
-
-    def is_repeated_type(self, full_name):
-        for item in self.values:
-            if item.full_type == full_name:
-                return True
-        return False
-
-    def set_repeated(self, class_obj):
-        for item in self.values:
-            if item.full_type == class_obj.full_name:
-                item.set_repeated(class_obj)
-
-    def get_function_return(self):
-        """函数返回，主要是组成pd和解析"""
-        if self.repeated_count == 1:
-            list_name = "ret_list"
-            ls = self.vars_dict[list_name]
-            if isinstance(ls, list):
-                str_code = '\'' + '\',\n\''.join(ls) + '\''
-            return template["list_return"].format(var_name=code_add_space(str_code, 4))
-        elif self.repeated_count == 0:
-            ls = self.vars_dict["ret"]
-            if isinstance(ls, list):
-                str_code = '\'' + '\',\n\''.join(ls) + '\''
-            return template["dict_return"].format(var_name=code_add_space(str_code, 4))
-
-    def get_unpack_code(self):
-        self.repeated_var_list.clear()
-        self.vars_dict.clear()
-
-        if self.repeated_count == 1:
-            """如果有多个重复数据（列表项），这种方式就不适合了"""
-            unpack_var = unpack_add = ""
-            list_name = "ret_list"
-            self.vars_dict[list_name] = list()
-            for item in self.values:
-                unpack_var += item.get_unpack_var()
-            """开始遍历赋值,先枚举列表内的数据"""
-            for item in self.values:
-                if item.label == "repeated":
-                    code, names = item.get_unpack_list_add(list_name)
-                    if code is not None:
-                        unpack_add += code
-                    self.vars_dict[list_name].extend(names)
-                    break
-            for item in self.values:
-                if item.label != "repeated":
-                    code = item.get_unpack_add(list_name)
-                    if len(code) > 0:
-                        unpack_add += code
-                        self.vars_dict[list_name].append(item.trim_name)
-
-            return template["class_unpack_list_add"].format(unpack_var=unpack_var.rstrip('\n'),
-                                                            unpack_add=unpack_add.rstrip('\n'),
-                                                            list_name=list_name)
-        elif self.repeated_count == 0:
-            unpack_code = ""
-            self.vars_dict["ret"] = list()
-            """开始遍历赋值"""
-            for item in self.values:
-                unpack_code += item.get_unpack_dict_code("ret")
-                self.vars_dict["ret"].append(item.trim_name)
-            return template["class_unpack_var_add"].format(unpack_code=unpack_code.rstrip('\n'))
-
-        elif self.repeated_count > 1:
-            """如果有多个重复数据（列表项），可以用元组返回"""
-            unpack_var = unpack_add = ""
-            self.repeated_var_list.clear()
-            for item in self.values:
-                unpack_var += item.get_unpack_var()
-
-            """开始遍历列表"""
-            for item in self.values:
-                if item.label == "repeated":
-                    list_name = item.trim_name
-                    self.repeated_var_list.append(list_name)
-                    s_code = item.get_unpack_list_add(list_name)
-                    for v in self.values:
-                        if v.trim_name not in self.repeated_var_list and v.label != "repeated":
-                            s_code += v.get_unpack_add(list_name)
-
-                    s_code += "\n"
-                    unpack_add += s_code
-
-            return unpack_var + unpack_add
-
-    def get_unpack_return(self):
-        if self.repeated_count == 1:
-            return "return RET_OK, \"\", ret_list"
-        elif self.repeated_count == 0:
-            return "return RET_OK, \"\", ret"
-        elif self.repeated_count > 1:
-            return "return RET_OK, \"\", ({})".format(','.join(self.repeated_var_list))
 
 
 class GenerateCode(object):
@@ -418,9 +488,10 @@ class GenerateCode(object):
             self.obj = json.load(load_f)
             self.load_enums()
             self.load_parameter()
-            self.load_repeated_parameter(self.obj)  # 嵌套重复元素
+            self.set_parameter_class(self.obj)  # 嵌套重复元素
+            self.set_parameter_class(self.obj)  # 嵌套重复元素
         with open(os.path.join(self.local_path, "Qot_Common.proto.json"), 'r', encoding='UTF-8') as load_f:
-            self.load_repeated_parameter(json.load(load_f))
+            self.set_parameter_class(json.load(load_f))
 
     def load_enums(self):
         self.enums.clear()
@@ -443,24 +514,17 @@ class GenerateCode(object):
                 if long_name == "S2C":
                     self.s2c = ClassItemStruct(item, "class", self.pb_prefix_name)
 
-    def load_repeated_parameter(self, obj):
+    def set_parameter_class(self, obj):
         if obj is None or self.s2c is None or self.c2s is None:
             return
 
         files_json = obj["files"]
         messages_json = files_json[0]["messages"]
 
-        if self.s2c.has_repeated:
-            for item in messages_json:
-                full_name = item["fullName"]
-                if self.s2c.is_repeated_type(full_name):
-                    self.s2c.set_repeated(ClassItemStruct(item, "class", self.pb_prefix_name))
-
-        if self.c2s.has_repeated:
-            for item in messages_json:
-                full_name = item["fullName"]
-                if self.c2s.is_repeated_type(full_name):
-                    self.c2s.set_repeated(ClassItemStruct(item, "class", self.pb_prefix_name))
+        for item in messages_json:
+            class_obj = ClassItemStruct(item, "class", self.pb_prefix_name)
+            self.s2c.set_parameter_class(class_obj)
+            self.c2s.set_parameter_class(class_obj)
 
     def out_class(self):
         if self.c2s is None or self.s2c is None:
@@ -479,21 +543,21 @@ class GenerateCode(object):
         else:
             pb_file_name = "{}".format(self.class_name)
 
-        if len(self.c2s.values) < 5:  # 大于5的时候变成结构体
-            for i in range(len(self.c2s.values)):
-                v = self.c2s.values[i]
-                parameter += v.trim_name
-                warning_filter += v.get_warning_filter()
-                kargs += v.get_args()
+        # 大于5的时候变成结构体
+        for i in range(len(self.c2s.values)):
+            v = self.c2s.values[i]
+            parameter += v.get_parameter_name()
+            warning_filter += v.get_warning_filter()
+            kargs += v.get_args()
 
-                s = v.get_pack_req_filter()
-                pack_req_filter += '        \"\"\"check {1} {0}\"\"\"\n'.format(v.description, v.trim_name)
-                pack_req_filter += s
+            s = v.get_pack_req_filter()
+            pack_req_filter += '        \"\"\"check {1} {0}\"\"\"\n'.format(v.description, v.trim_name)
+            pack_req_filter += s
 
-                pack_req_add += v.get_pack_req_add()
-                if i < (len(self.c2s.values) - 1):
-                    parameter += ","
-                    kargs += ",\n"
+            pack_req_add += v.get_pack_req_add()
+            if i < (len(self.c2s.values) - 1):
+                parameter += ","
+                kargs += ",\n"
 
         # with open(os.path.join(self.local_path, __TemplateFileFunctionName__), 'r', encoding='UTF-8') as load_f:
         template_code = template["class_function"]
@@ -588,21 +652,9 @@ class GenerateCode(object):
 
 
 if __name__ =="__main__":
-    # import pandas as pd
-    # df = pd.DataFrame({'A': 1, 'B': 1}, index=[0])  # 'A'是columns，对应的是list
-    # print(df)
-
-    c = GenerateCode("GetCapitalDistribution", "Qot")
+    c = GenerateCode("GetOwnerPlate", "Qot")
     c.load()
     c.save()
-
-# if __name__ =="__main__":
-#     print(SortField.to_string("hhh"))
-#     print(SortField.to_string(1))
-#     print(SortField.to_number("CODE"))
-#     print(SortField.to_number(SortField.CODE))
-#     print(SortField.to_number(list()))
-#     print("-------------------------------------------------------------------")
 
 
 

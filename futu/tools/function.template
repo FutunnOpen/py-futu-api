@@ -4,7 +4,6 @@
 {notes}
         """
 {warning_filter}
-
         query_processor = self._get_sync_query_processor(
             {class_name}Query.pack_req,
             {class_name}Query.unpack,
@@ -77,7 +76,6 @@
 ##########class_unpack_list_add##########
 @@@@@@@@@@专用于返回结果单一列表转换为平面结构@@@@@@@@@@
 		{list_name} = list()
-{unpack_var}
 {unpack_add}
 ##########class_unpack_list_add##########
 
@@ -90,7 +88,92 @@
 
 
 
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+////////////////////////////////////////////////////////////////////////////////////////////
+##########code_warning_filter##########
+@@@@@@@@@@股票名称检查函数@@@@@@@@@@
+if code is None or is_str(code) is False:
+	error_str = ERROR_STR_PREFIX + 'the type of code param is wrong'
+	return RET_ERROR, error_str	
+##########code_warning_filter##########	
+
+##########code_list_warning_filter##########
+if is_str(code_list):
+	code_list = code_list.split(',')
+elif isinstance(code_list, list):
+	pass
+else:
+	return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
+code_list = unique_and_normalize_list(code_list)
+for code in code_list:
+	if code is None or is_str(code) is False:
+		error_str = ERROR_STR_PREFIX + "the type of param in code_list is wrong"
+		return RET_ERROR, error_str
+##########code_list_warning_filter##########
+
+
+##########pack_code_list_filter##########
+stock_tuple_list = []
+failure_tuple_list = []
+for stock_str in code_list:
+	ret_code, content = split_stock_str(stock_str)
+	if ret_code != RET_OK:
+		error_str = content
+		failure_tuple_list.append((ret_code, error_str))
+		continue
+	market_code, stock_code = content
+	stock_tuple_list.append((market_code, stock_code))
+if len(failure_tuple_list) > 0:
+	error_str = '\n'.join([x[1] for x in failure_tuple_list])
+	return RET_ERROR, error_str, None
+##########pack_code_list_filter##########
+
+##########pack_code_list_add##########
+for market_code, stock_code in stock_tuple_list:
+	stock_inst = req.c2s.{name}.add()
+	stock_inst.market = market_code
+	stock_inst.code = stock_code
+##########pack_code_list_add##########
+
+
+##########pack_code_filter##########
+ret, content = split_stock_str(code)
+if ret == RET_ERROR:
+	error_str = content
+	return RET_ERROR, error_str, None
+market_code, stock_code = content
+##########pack_code_filter##########
+
+
 ##########class_unpack_code##########
 @@@@@@@@@@股票id合并专用@@@@@@@@@@
-stock_code = merge_qot_mkt_stock_str(rsp_pb.s2c.{name}.market,rsp_pb.s2c.{name}.code)
+{trim_name} = merge_qot_mkt_stock_str({parents_name}.{name}.market,{parents_name}.{name}.code)
 ##########class_unpack_code##########
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
