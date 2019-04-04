@@ -73,11 +73,23 @@
 ##########dict_return##########
 
 
-##########class_unpack_list_add##########
-@@@@@@@@@@专用于返回结果单一列表转换为平面结构@@@@@@@@@@
-		{list_name} = list()
-{unpack_add}
-##########class_unpack_list_add##########
+##########list_list_return##########
+        if isinstance(ret,dict):
+			ret_dic = dict()
+{code}
+            return RET_OK, ret_dic
+		else:
+			return RET_ERROR, "empty data"
+##########list_list_return##########
+
+##########list_list_item_return##########
+			#{description}
+			col_{name}_list = [
+{var_name}
+			]
+			ret_dic["{trim_name}"] = pd.DataFrame(ret["{name}"], columns=col_{name}_list)
+##########list_list_item_return##########
+
 
 
 ##########class_unpack_var_add##########
@@ -86,15 +98,13 @@
 {unpack_code}
 ##########class_unpack_var_add##########
 
+##########class_more_list_add##########
+@@@@@@@@@@专用于多个列表的情况@@@@@@@@@@
+# {description}  列表类型
+{list_name} = list()
+ret_dic["{var_name}"] = {list_name}
+##########class_more_list_add##########
 
-
-
-
-
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-////////////////////////////////////////////////////////////////////////////////////////////
 ##########code_warning_filter##########
 @@@@@@@@@@股票名称检查函数@@@@@@@@@@
 if code is None or is_str(code) is False:
