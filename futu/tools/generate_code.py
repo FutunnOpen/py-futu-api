@@ -3,8 +3,6 @@
 import json
 import os
 import load_template
-from abc import abstractmethod
-from bidict import bidict
 
 
 #__PBPrefixName__ = "GetGlobalState_pb2."
@@ -12,8 +10,6 @@ from bidict import bidict
 __TemplateCodeFileName__ = "template_code.txt"
 __TemplateFileHeadName__ = "template_head.txt"
 __TemplateRstName__ = "rst_template.txt"
-__TemplateFileFunctionName__ = "template_function.txt"
-
 
 template = load_template.FutuTemplate("function.template")
 
@@ -145,7 +141,7 @@ class ClassItemStruct(object):
             head_code = code_add_space("{} = list()\n".format(list_name), 1)
             head_code += self.get_list_head()
 
-            unpack_add_code += code_add_space(code, 1)
+            unpack_add_code += code
             head_code = code_add_space(head_code, 1)
             return head_code + unpack_add_code
 
@@ -207,7 +203,7 @@ class EnumsItemStruct(object):
         self.pb_prefix_name = pb_prefix_name
         self.full_name = obj["name"] # 原始变量名
         self.number = int(obj["number"])
-        self.description = obj["description"]
+        self.description = obj["description"].replace('\n', '')
 
         self.trim_name = self.full_name  # 整理后的变量名，主要是去掉前面的类名头
         self.pb_value = self.pb_prefix_name + self.full_name # 对应的pb里面的变量名
@@ -244,7 +240,7 @@ class ParameterItem(object):
         self.full_type = obj["fullType"] # 原始变量名
         self.trim_type = obj["longType"]  # 原始变量名
         self.trim_name = change_variable_name(self.name).lower() # 整理后的名字
-        self.description = obj["description"]
+        self.description = obj["description"].replace('\n', '')
         self.label = obj["label"]
 
         self.trim()
@@ -456,6 +452,7 @@ class GenerateCode(object):
 
     def __init__(self, class_name, prefix=""):
         self.local_path = os.path.dirname(os.path.realpath(__file__))
+        self.common_pb_path = os.path.abspath(os.path.join(self.local_path, "../common/pb/"))
         self.enums = list()
         self.class_name = class_name
         self.prefix = prefix
@@ -469,13 +466,15 @@ class GenerateCode(object):
 
     def load(self):
         self.obj = None
-        with open(os.path.join(self.local_path, self.json_filename), 'r', encoding='UTF-8') as load_f:
+        with open(os.path.join(self.common_pb_path, self.json_filename), 'r', encoding='UTF-8') as load_f:
             self.obj = json.load(load_f)
             self.load_enums()
             self.load_parameter()
-            self.set_parameter_class(self.obj)  # 嵌套重复元素
-            self.set_parameter_class(self.obj)  # 嵌套重复元素
-        with open(os.path.join(self.local_path, "Qot_Common.proto.json"), 'r', encoding='UTF-8') as load_f:
+            for i in range(10):
+                self.set_parameter_class(self.obj)  # 嵌套重复元素
+        with open(os.path.join(self.common_pb_path, "Qot_Common.proto.json"), 'r', encoding='UTF-8') as load_f:
+            self.set_parameter_class(json.load(load_f))
+        with open(os.path.join(self.common_pb_path, "Trd_Common.proto.json"), 'r', encoding='UTF-8') as load_f:
             self.set_parameter_class(json.load(load_f))
 
     def load_enums(self):
@@ -634,12 +633,89 @@ class GenerateCode(object):
         self.rst_enums()
 
 
+class Generate(object):
+    def __init__(self):
+        self.local_path = os.path.dirname(os.path.realpath(__file__))
+        self.common_pb_path = os.path.abspath(os.path.join(self.local_path, "../common/pb/"))
+        self.pb_list = list()
+
+        """统统载入进来再说"""
+        f_list = os.listdir(self.common_pb_path)
+        for f in f_list:
+            if os.path.splitext(f)[1] == '.proto':
+                self.pb_list.append(f)
+
+    def find_pb_by_names(self, names):
+        f_list = list()
+        for f in self.pb_list:
+            (_, file_name) = os.path.split(f)
+            for s in names:
+                if f.find(s) != -1:
+                    f_list.append(f)
+                    break
+        return f_list
+
+    def generate_json(self, names=None):
+        if names is not None:
+            f_list = self.find_pb_by_names(names)
+        else:
+            f_list = self.pb_list
+
+        for f in f_list:
+            (_, file_name) = os.path.split(f)
+
+            cmd = '''cd /d {work_path} & \
+                  protoc.exe -I=. --python_out=./  {file_name} & \
+                  protoc.exe --doc_out=. --doc_opt=json,{file_name}.json ./{file_name} &'''\
+                .format(file_name=file_name,
+                        work_path=self.common_pb_path)
+            os.system(cmd)
+            print(cmd)
+
+    def generate_code(self, names):
+        if names is not None:
+            pb_list = self.find_pb_by_names(names)
+        else:
+            pb_list = self.pb_list
+
+        for f in pb_list:
+            (_, file_name) = os.path.split(f)
+            json_file_path = os.path.join(self.common_pb_path, file_name + ".json")
+            if not os.path.exists(json_file_path):
+                print(json_file_path + " not exists")
+                continue
+            (name, _) = os.path.splitext(file_name)
+
+            if name.find("Qot_") == 0:
+                prefix = "Qot"
+                class_name = name[4:]
+            elif name.find("Trd_") == 0:
+                prefix = "Trd"
+                class_name = name[4:]
+            else:
+                prefix = ""
+                class_name = name
+
+            if class_name in ["Common", "Sub"]:
+                continue
+            code = GenerateCode(class_name, prefix)
+            code.load()
+            code.save()
+
+
+def generate(names):
+    if isinstance(names, str):
+        names = [names]
+    gener = Generate()
+    gener.generate_json(names)
+    gener.generate_code(names)
 
 
 if __name__ =="__main__":
-    c = GenerateCode("GetOwnerPlate", "Qot")
-    c.load()
-    c.save()
+    generate(["GetTicker", "GetBroker"])
+    # c = GenerateCode("GetOwnerPlate", "Qot")
+    # c.load()
+    # c.save()
 
 
 
