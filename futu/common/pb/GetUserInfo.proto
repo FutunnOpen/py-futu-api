@@ -12,21 +12,41 @@ enum QotRight
 	QotRight_Level2 = 3; //Level2
 }
 
+enum UpdateType
+{
+	UpdateType_None = 0; //无需升级
+	UpdateType_Advice = 1; //建议升级
+	UpdateType_Force = 2; //强制升级
+}
+
+enum UserInfoField
+{
+	UserInfoField_Basic = 1; //昵称，用户头像，牛牛号
+	UserInfoField_API = 2; //API信息
+	UserInfoField_QotRight = 4; //市场的行情权限
+	UserInfoField_Disclaimer = 8; //免责
+	UserInfoField_Update = 16; //升级类型
+
+	UserInfoField_WebKey = 2048;
+}
+
 message C2S
 {
-	required uint64 userID = 1; //需要跟FutuOpenD登陆的牛牛用户ID一致，否则会返回失败
+	optional int32 flag = 2; //UserInfoField集合，不设置默认返回全部信息
 }
 
 message S2C
 {
-	required string nickName = 1; //用户昵称
-	required string avatarUrl = 2; //用户头像url
-	required string apiLevel = 3; //api用户等级描述
-	required int32 hkQotRight = 4; //港股行情权限, QotRight
-	required int32 usQotRight = 5; //美股行情权限, QotRight
-	required int32 cnQotRight = 6; //A股行情权限, QotRight
-	required bool isNeedAgreeDisclaimer = 7; //已开户用户需要同意免责声明，未开户或已同意的用户返回false
-	required int64 userID = 8; //用户牛牛号
+	optional string nickName = 1; //用户昵称
+	optional string avatarUrl = 2; //用户头像url
+	optional string apiLevel = 3; //api用户等级描述
+	optional int32 hkQotRight = 4; //港股行情权限, QotRight
+	optional int32 usQotRight = 5; //美股行情权限, QotRight
+	optional int32 cnQotRight = 6; //A股行情权限, QotRight
+	optional bool isNeedAgreeDisclaimer = 7; //已开户用户需要同意免责声明，未开户或已同意的用户返回false
+	optional int64 userID = 8; //用户牛牛号
+	optional int32 updateType = 9; //升级类型，UpdateType
+	optional string webKey = 10; 
 }
 
 message Request

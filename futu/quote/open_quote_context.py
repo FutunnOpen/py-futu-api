@@ -1955,12 +1955,11 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, exr_frame_table
 
 
-    def get_user_info(self, info_type=0, user_id=0):
+    def get_user_info(self, info_field=[]):
         """获取用户信息（内部保留函数）"""
         query_processor = self._get_sync_query_processor(GetUserInfo.pack_req, GetUserInfo.unpack_rsp)
         kargs = {
-            "user_id": user_id,
-            "info_type": info_type,
+            "info_field": info_field,
             "conn_id": self.get_sync_conn_id()
         }
         ret_code, msg, data = query_processor(**kargs)

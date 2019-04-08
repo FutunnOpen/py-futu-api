@@ -1627,3 +1627,35 @@ class ContextStatus:
     CONNECTING = 'CONNECTING'
     READY = 'READY'
     CLOSED = 'CLOSED'
+    
+class UserInfoField:
+    BASIC = 1
+    API = 2
+    QOTRIGHT = 4
+    DISCLAIMER = 8
+    UPDATE = 16
+    WEBKEY = 2048
+
+    @classmethod
+    def fields_to_flag_val(cls, fields):
+        list_ret = []
+        for x in fields:
+            if x not in list_ret:
+                list_ret.append(x)
+
+        ret_flags = 0
+        for x in list_ret:
+            ret_flags += x
+        return ret_flags
+
+class UpdateType(FtEnum):
+    NO = "NO"
+    ADVICE = "ADVICE"
+    FORCE = "FORCE"
+    
+    def load_dic(self):
+        return {
+            self.NO: GetUserInfo_pb2.UpdateType_None,
+            self.ADVICE: GetUserInfo_pb2.UpdateType_Advice,
+            self.FORCE: GetUserInfo_pb2.UpdateType_Force
+        }

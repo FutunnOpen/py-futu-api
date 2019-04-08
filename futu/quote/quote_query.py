@@ -1990,24 +1990,26 @@ class GetUserInfo:
         pass
 
     @classmethod
-    def pack_req(cls, info_type, user_id, conn_id):
+    def pack_req(cls, info_field, conn_id):
         from futu.common.pb.GetUserInfo_pb2 import Request
         req = Request()
-        req.c2s.userID = user_id
+        req.c2s.flag = UserInfoField.fields_to_flag_val(info_field)
         return pack_pb_req(req, ProtoId.GetUserInfo, conn_id)
 
     @classmethod
     def unpack_rsp(cls, rsp_pb):
         if rsp_pb.retType != RET_OK:
             return RET_ERROR, rsp_pb.retMsg, None
-        nick_name = rsp_pb.s2c.nickName
-        avatar_url = rsp_pb.s2c.avatarUrl
-        api_level = rsp_pb.s2c.apiLevel
-        hk_qot_right = rsp_pb.s2c.hkQotRight
-        us_qot_right = rsp_pb.s2c.usQotRight
-        cn_qot_right = rsp_pb.s2c.cnQotRight
-        is_need_agree_disclaimer = rsp_pb.s2c.isNeedAgreeDisclaimer
-        user_id = rsp_pb.s2c.userID
+        nick_name = rsp_pb.s2c.nickName if rsp_pb.s2c.HasField('nickName') else "N/A"
+        avatar_url = rsp_pb.s2c.avatarUrl if rsp_pb.s2c.HasField('avatarUrl') else "N/A"
+        api_level = rsp_pb.s2c.apiLevel if rsp_pb.s2c.HasField('apiLevel') else "N/A"
+        hk_qot_right = rsp_pb.s2c.hkQotRight if rsp_pb.s2c.HasField('hkQotRight') else "N/A"
+        us_qot_right = rsp_pb.s2c.usQotRight if rsp_pb.s2c.HasField('usQotRight') else "N/A"
+        cn_qot_right = rsp_pb.s2c.cnQotRight if rsp_pb.s2c.HasField('cnQotRight') else "N/A"
+        is_need_agree_disclaimer = rsp_pb.s2c.isNeedAgreeDisclaimer if rsp_pb.s2c.HasField('isNeedAgreeDisclaimer') else "N/A"
+        user_id = rsp_pb.s2c.userID if rsp_pb.s2c.HasField('userID') else "N/A"
+        update_type = rsp_pb.s2c.updateType if rsp_pb.s2c.HasField('updateType') else "N/A"
+        web_key = rsp_pb.s2c.webKey if rsp_pb.s2c.HasField('webKey') else "N/A"
         data = {
             "nick_name": nick_name,
             "avatar_url": avatar_url,
@@ -2016,7 +2018,9 @@ class GetUserInfo:
             "us_qot_right": QotRight.to_string2(us_qot_right),
             "cn_qot_right": QotRight.to_string2(cn_qot_right),
             "is_need_agree_disclaimer": is_need_agree_disclaimer,
-            "user_id": user_id
+            "user_id": user_id,
+            "update_type": UpdateType.to_string2(update_type),
+            "web_key": web_key
         }
         return RET_OK, "", data
 
