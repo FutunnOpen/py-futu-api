@@ -1993,7 +1993,10 @@ class GetUserInfo:
     def pack_req(cls, info_field, conn_id):
         from futu.common.pb.GetUserInfo_pb2 import Request
         req = Request()
-        req.c2s.flag = UserInfoField.fields_to_flag_val(info_field)
+        if info_field is None:
+            req.c2s.flag = 0
+        else:
+            req.c2s.flag = UserInfoField.fields_to_flag_val(info_field)
         return pack_pb_req(req, ProtoId.GetUserInfo, conn_id)
 
     @classmethod
