@@ -1,7 +1,4 @@
-import json
 import os
-from abc import abstractmethod
-from bidict import bidict
 
 
 class FutuTemplate(object):
@@ -35,7 +32,7 @@ class FutuTemplate(object):
 
 
     @classmethod
-    def code_add_space(cls, code, space_count=0, space_str="	"):  # 逐行加空格
+    def code_add_space(cls, code, space_count=0, space_str="    "):  # 逐行加空格
         """传入字符串，逐行加入空格，符合python规范"""
         if space_count == 0:
             return code

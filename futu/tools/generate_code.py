@@ -38,7 +38,7 @@ def change_variable_name(listx):  # 修改变量名
     return listy.upper()
 
 
-def code_add_space(code, space_count=1, space_str="	"):  # 逐行加空格
+def code_add_space(code, space_count=1, space_str=" "):  # 逐行加空格
     """传入字符串，逐行加入空格，符合python规范"""
     ls = code.split('\n')
     ret_code = space_line = ""
@@ -297,7 +297,7 @@ class ParameterItem(object):
         if self.trim_type == "code_list":
             warning_filter = template.get("code_list_warning_filter", 2)
         elif self.trim_type == "code":
-            warning_filter = template.get("code_warning_filter", 2)
+            warning_filter = template.get("code_warning_filter", 2).format(trim_name=self.trim_name)
         return warning_filter
 
     def get_parameter_name(self):
@@ -451,8 +451,13 @@ class ParameterItem(object):
 class GenerateCode(object):
 
     def __init__(self, class_name, prefix=""):
+        print("GenerateCode class_name = {} | prefix = {}".format(class_name, prefix))
         self.local_path = os.path.dirname(os.path.realpath(__file__))
         self.common_pb_path = os.path.abspath(os.path.join(self.local_path, "../common/pb/"))
+        self.out_put_path = os.path.join(self.local_path, "code")
+        if not os.path.exists(self.out_put_path):
+            os.makedirs(self.out_put_path)
+
         self.enums = list()
         self.class_name = class_name
         self.prefix = prefix
@@ -514,7 +519,7 @@ class GenerateCode(object):
         if self.c2s is None or self.s2c is None:
             return
 
-        export_file = os.path.join(self.local_path, "{}.py".
+        export_file = os.path.join(self.out_put_path, "{}.py".
                                    format(change_variable_name(self.class_name).lower()))
         code_file = open(export_file, 'w', encoding='utf-8')
         function_name = change_variable_name(self.class_name).lower()  # 函数名
@@ -535,7 +540,7 @@ class GenerateCode(object):
             kargs += v.get_args()
 
             s = v.get_pack_req_filter()
-            pack_req_filter += '        \"\"\"check {1} {0}\"\"\"\n'.format(v.description, v.trim_name)
+            pack_req_filter += '        \"\"\"check {1} {0}\"\"\"\n'.format(v.description, v.trim_name)
             pack_req_filter += s
 
             pack_req_add += v.get_pack_req_add()
@@ -565,7 +570,7 @@ class GenerateCode(object):
     def out_enums(self):
         if len(self.enums) == 0:
             return
-        export_file = os.path.join(self.local_path, "{}_enums.py".format(change_variable_name(self.class_name).lower()))
+        export_file = os.path.join(self.out_put_path, "{}_enums.py".format(change_variable_name(self.class_name).lower()))
         with open(os.path.join(self.local_path, __TemplateCodeFileName__), 'r', encoding='UTF-8') as load_f:
             template_code = load_f.read()
         code_file = open(export_file, 'w', encoding='utf-8')
@@ -606,7 +611,7 @@ class GenerateCode(object):
     def rst_enums(self):
         if len(self.enums) == 0:
             return
-        export_file = os.path.join(self.local_path, "{}_enums.rst".format(change_variable_name(self.class_name).lower()))
+        export_file = os.path.join(self.out_put_path, "{}_enums.rst".format(change_variable_name(self.class_name).lower()))
         rst_template= ""
         with open(os.path.join(self.local_path, __TemplateRstName__), 'r', encoding='UTF-8') as load_f:
             rst_template = load_f.read()
@@ -712,7 +717,7 @@ def generate(names):
 
 
 if __name__ =="__main__":
-    generate(["GetTicker", "GetBroker"])
+    generate(["GetCapitalDistribution", "GetCapitalFlow"])
     # c = GenerateCode("GetOwnerPlate", "Qot")
     # c.load()
     # c.save()

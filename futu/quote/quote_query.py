@@ -2015,6 +2015,97 @@ class GetUserInfo:
         return RET_OK, "", data
 
 
+class GetCapitalDistributionQuery:
+    """
+    Query GetCapitalDistribution.
+    个股资金分布
+    """
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code, conn_id):
+        """check stock_code 股票"""
+        ret, content = split_stock_str(code)
+        if ret == RET_ERROR:
+            error_str = content
+            return RET_ERROR, error_str, None
+        market_code, stock_code = content
+
+        # 开始组包
+        from futu.common.pb.Qot_GetCapitalDistribution_pb2 import Request
+        req = Request()
+        req.c2s.security.market = market_code
+        req.c2s.security.code = stock_code
+        return pack_pb_req(req, ProtoId.Qot_GetCapitalDistribution, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        ret = dict()
+        #  流入资金额度，大单 type=double
+        ret["capital_in_big"]=rsp_pb.s2c.capitalInBig
+        #  流入资金额度，中单 type=double
+        ret["capital_in_mid"]=rsp_pb.s2c.capitalInMid
+        #  流入资金额度，小单 type=double
+        ret["capital_in_small"]=rsp_pb.s2c.capitalInSmall
+        #  流出资金额度，大单 type=double
+        ret["capital_out_big"]=rsp_pb.s2c.capitalOutBig
+        #  流出资金额度，中单 type=double
+        ret["capital_out_mid"]=rsp_pb.s2c.capitalOutMid
+        #  流出资金额度，小单 type=double
+        ret["capital_out_small"]=rsp_pb.s2c.capitalOutSmall
+        #  更新时间字符串 type=string
+        ret["update_time"]=rsp_pb.s2c.updateTime
+        return RET_OK, "", ret
+
+
+class GetCapitalFlowQuery:
+    """
+    Query GetCapitalFlow.
+    个股资金流入流出
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code, conn_id):
+        """check stock_code 股票"""
+        ret, content = split_stock_str(code)
+        if ret == RET_ERROR:
+            error_str = content
+            return RET_ERROR, error_str, None
+        market_code, stock_code = content
+
+        # 开始组包
+        from futu.common.pb.Qot_GetCapitalFlow_pb2 import Request
+        req = Request()
+        req.c2s.security.market = market_code
+        req.c2s.security.code = stock_code
+        return pack_pb_req(req, ProtoId.Qot_GetCapitalFlow, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        ret_list = list()
+        #  资金流向 type = Qot_GetCapitalFlow.CapitalFlowItem
+        flow_item_list = rsp_pb.s2c.flowItemList
+        #  数据最后有效时间字符串 type = string
+        last_valid_time = rsp_pb.s2c.lastValidTime
+        for item in flow_item_list:
+            data = dict()
+            ret_list.append(data)
+            #  净流入的资金额度 type = double
+            data["in_flow"] = item.inFlow
+            #  开始时间字符串,以分钟为单位 type = string
+            data["capital_flow_item_time"] = item.time
+            data["last_valid_time"] = last_valid_time
+            return RET_OK, "", ret_list
+
+
 class Verification:
     """
     拉验证码

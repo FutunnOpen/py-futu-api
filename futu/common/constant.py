@@ -777,7 +777,9 @@ class ProtoId(object):
     Qot_GetOrderDetail = 3016           # 获取委托明细
     Qot_UpdateOrderDetail = 3017        # 推送委托明细
 
-    Qot_GetWarrantData = 3210        # 拉取涡轮信息
+    Qot_GetWarrantData = 3210          # 拉取涡轮信息
+    Qot_GetCapitalFlow = 3211          # 获取资金流向
+    Qot_GetCapitalDistribution = 3212  # 获取资金分布
 
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]

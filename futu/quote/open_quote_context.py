@@ -1969,6 +1969,75 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return ret_code, data
 
+    def get_capital_distribution(self, stock_code):
+        """
+        个股资金分布
+        GetCapitalDistribution
+        """
+        if stock_code is None or is_str(stock_code) is False:
+            error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
+            return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            GetCapitalDistributionQuery.pack_req,
+            GetCapitalDistributionQuery.unpack,
+        )
+
+        kargs = {
+            "code": stock_code,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, dict):
+            col_list = [
+                'capital_in_big',
+                'capital_in_mid',
+                'capital_in_small',
+                'capital_out_big',
+                'capital_out_mid',
+                'capital_out_small',
+                'update_time',
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list, index=[0])
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
+
+    def get_capital_flow(self, stock_code):
+        """
+        个股资金流入流出
+        GetCapitalFlow
+        """
+        if stock_code is None or is_str(stock_code) is False:
+            error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
+            return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            GetCapitalFlowQuery.pack_req,
+            GetCapitalFlowQuery.unpack,
+        )
+
+        kargs = {
+            "code": stock_code,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+            'last_valid_time',
+            'in_flow',
+            'capital_flow_item_time',
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
+
+
     def verification(self, verification_type=VerificationType.NONE, verification_op=VerificationOp.NONE, code=""):
         """图形验证码下载之后会将其存至固定路径，请到该路径下查看验证码
         Windows平台：%appdata%/com.futunn.FutuOpenD/F3CNN/PicVerifyCode.png
