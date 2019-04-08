@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetSuspend.proto',
   package='Qot_GetSuspend',
   syntax='proto2',
-  serialized_pb=_b('\n\x14Qot_GetSuspend.proto\x12\x0eQot_GetSuspend\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"U\n\x03\x43\x32S\x12*\n\x0csecurityList\x18\x01 \x03(\x0b\x32\x14.Qot_Common.Security\x12\x11\n\tbeginTime\x18\x02 \x02(\t\x12\x0f\n\x07\x65ndTime\x18\x03 \x02(\t\"\x17\n\x07Suspend\x12\x0c\n\x04time\x18\x01 \x02(\t\"g\n\x0fSecuritySuspend\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12,\n\x0bsuspendList\x18\x02 \x03(\x0b\x32\x17.Qot_GetSuspend.Suspend\"C\n\x03S2C\x12<\n\x13SecuritySuspendList\x18\x01 \x03(\x0b\x32\x1f.Qot_GetSuspend.SecuritySuspend\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.Qot_GetSuspend.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.Qot_GetSuspend.S2C')
+  serialized_pb=_b('\n\x14Qot_GetSuspend.proto\x12\x0eQot_GetSuspend\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"U\n\x03\x43\x32S\x12*\n\x0csecurityList\x18\x01 \x03(\x0b\x32\x14.Qot_Common.Security\x12\x11\n\tbeginTime\x18\x02 \x02(\t\x12\x0f\n\x07\x65ndTime\x18\x03 \x02(\t\"*\n\x07Suspend\x12\x0c\n\x04time\x18\x01 \x02(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x01\"g\n\x0fSecuritySuspend\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12,\n\x0bsuspendList\x18\x02 \x03(\x0b\x32\x17.Qot_GetSuspend.Suspend\"C\n\x03S2C\x12<\n\x13SecuritySuspendList\x18\x01 \x03(\x0b\x32\x1f.Qot_GetSuspend.SecuritySuspend\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.Qot_GetSuspend.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.Qot_GetSuspend.S2C')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -87,6 +87,13 @@ _SUSPEND = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='timestamp', full_name='Qot_GetSuspend.Suspend.timestamp', index=1,
+      number=2, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -100,7 +107,7 @@ _SUSPEND = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=159,
-  serialized_end=182,
+  serialized_end=201,
 )
 
 
@@ -137,8 +144,8 @@ _SECURITYSUSPEND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=184,
-  serialized_end=287,
+  serialized_start=203,
+  serialized_end=306,
 )
 
 
@@ -168,8 +175,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=289,
-  serialized_end=356,
+  serialized_start=308,
+  serialized_end=375,
 )
 
 
@@ -199,8 +206,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=358,
-  serialized_end=401,
+  serialized_start=377,
+  serialized_end=420,
 )
 
 
@@ -251,8 +258,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=403,
-  serialized_end=503,
+  serialized_start=422,
+  serialized_end=522,
 )
 
 _C2S.fields_by_name['securityList'].message_type = Qot__Common__pb2._SECURITY

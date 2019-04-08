@@ -1249,6 +1249,8 @@ class OrderBookQuery:
 
         order_book = {}
         order_book['code'] = merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code)
+        order_book['svr_recv_time_bid'] = rsp_pb.s2c.svrRecvTimeBid
+        order_book['svr_recv_time_ask'] = rsp_pb.s2c.svrRecvTimeAsk
         order_book['Bid'] = []
         order_book['Ask'] = []
 
@@ -1814,6 +1816,8 @@ class OrderDetail:
         code = merge_qot_mkt_stock_str(int(rsp_pb.s2c.security.market), rsp_pb.s2c.security.code)
         ask = [0, []]
         bid = [0, []]
+        svr_recv_time_bid = rsp_pb.s2c.svrRecvTimeBid
+        svr_recv_time_ask = rsp_pb.s2c.svrRecvTimeAsk
 
         ask[0] = rsp_pb.s2c.orderDetailAsk.orderCount
         for vol in rsp_pb.s2c.orderDetailAsk.orderVol:
@@ -1826,7 +1830,9 @@ class OrderDetail:
         data = {
             'code': code,
             'Ask': ask,
-            'Bid': bid
+            'Bid': bid,
+            'svr_recv_time_ask': svr_recv_time_ask,
+            'svr_recv_time_bid': svr_recv_time_bid
         }
         return RET_OK, "", data
 

@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetOptionChain.proto',
   package='Qot_GetOptionChain',
   syntax='proto2',
-  serialized_pb=_b('\n\x18Qot_GetOptionChain.proto\x12\x12Qot_GetOptionChain\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"o\n\x03\x43\x32S\x12#\n\x05owner\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04type\x18\x02 \x01(\x05\x12\x11\n\tcondition\x18\x03 \x01(\x05\x12\x11\n\tbeginTime\x18\x04 \x02(\t\x12\x0f\n\x07\x65ndTime\x18\x05 \x02(\t\"g\n\nOptionItem\x12,\n\x04\x63\x61ll\x18\x01 \x01(\x0b\x32\x1e.Qot_Common.SecurityStaticInfo\x12+\n\x03put\x18\x02 \x01(\x0b\x32\x1e.Qot_Common.SecurityStaticInfo\"Q\n\x0bOptionChain\x12\x12\n\nstrikeTime\x18\x01 \x02(\t\x12.\n\x06option\x18\x02 \x03(\x0b\x32\x1e.Qot_GetOptionChain.OptionItem\";\n\x03S2C\x12\x34\n\x0boptionChain\x18\x01 \x03(\x0b\x32\x1f.Qot_GetOptionChain.OptionChain\"/\n\x07Request\x12$\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x17.Qot_GetOptionChain.C2S\"h\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12$\n\x03s2c\x18\x04 \x01(\x0b\x32\x17.Qot_GetOptionChain.S2C*b\n\x0eOptionCondType\x12\x19\n\x15OptionCondType_Unknow\x10\x00\x12\x19\n\x15OptionCondType_WithIn\x10\x01\x12\x1a\n\x16OptionCondType_Outside\x10\x02')
+  serialized_pb=_b('\n\x18Qot_GetOptionChain.proto\x12\x12Qot_GetOptionChain\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"o\n\x03\x43\x32S\x12#\n\x05owner\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04type\x18\x02 \x01(\x05\x12\x11\n\tcondition\x18\x03 \x01(\x05\x12\x11\n\tbeginTime\x18\x04 \x02(\t\x12\x0f\n\x07\x65ndTime\x18\x05 \x02(\t\"g\n\nOptionItem\x12,\n\x04\x63\x61ll\x18\x01 \x01(\x0b\x32\x1e.Qot_Common.SecurityStaticInfo\x12+\n\x03put\x18\x02 \x01(\x0b\x32\x1e.Qot_Common.SecurityStaticInfo\"j\n\x0bOptionChain\x12\x12\n\nstrikeTime\x18\x01 \x02(\t\x12.\n\x06option\x18\x02 \x03(\x0b\x32\x1e.Qot_GetOptionChain.OptionItem\x12\x17\n\x0fstrikeTimestamp\x18\x03 \x01(\x01\";\n\x03S2C\x12\x34\n\x0boptionChain\x18\x01 \x03(\x0b\x32\x1f.Qot_GetOptionChain.OptionChain\"/\n\x07Request\x12$\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x17.Qot_GetOptionChain.C2S\"h\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12$\n\x03s2c\x18\x04 \x01(\x0b\x32\x17.Qot_GetOptionChain.S2C*b\n\x0eOptionCondType\x12\x19\n\x15OptionCondType_Unknow\x10\x00\x12\x19\n\x15OptionCondType_WithIn\x10\x01\x12\x1a\n\x16OptionCondType_Outside\x10\x02')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -47,8 +47,8 @@ _OPTIONCONDTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=597,
-  serialized_end=695,
+  serialized_start=622,
+  serialized_end=720,
 )
 _sym_db.RegisterEnumDescriptor(_OPTIONCONDTYPE)
 
@@ -177,6 +177,13 @@ _OPTIONCHAIN = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='strikeTimestamp', full_name='Qot_GetOptionChain.OptionChain.strikeTimestamp', index=2,
+      number=3, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -190,7 +197,7 @@ _OPTIONCHAIN = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=298,
-  serialized_end=379,
+  serialized_end=404,
 )
 
 
@@ -220,8 +227,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=381,
-  serialized_end=440,
+  serialized_start=406,
+  serialized_end=465,
 )
 
 
@@ -251,8 +258,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=442,
-  serialized_end=489,
+  serialized_start=467,
+  serialized_end=514,
 )
 
 
@@ -303,8 +310,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=491,
-  serialized_end=595,
+  serialized_start=516,
+  serialized_end=620,
 )
 
 _C2S.fields_by_name['owner'].message_type = Qot__Common__pb2._SECURITY
