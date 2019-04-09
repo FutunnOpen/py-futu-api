@@ -2061,6 +2061,63 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return ret_code, data
 
+    def get_delay_statistics(self, type_list, qot_push_stage, segment_list):
+        """
+        GetDelayStatistics
+        """
+
+        query_processor = self._get_sync_query_processor(
+            GetDelayStatisticsQuery.pack_req,
+            GetDelayStatisticsQuery.unpack,
+        )
+
+        kargs = {
+            "type_list": type_list,
+            "qot_push_stage": qot_push_stage,
+            "segment_list": segment_list,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, dict):
+            ret_dic = dict()
+            # 行情推送延迟统计
+            col_qot_push_statistics_list_list = [
+                'qot_push_type',
+                'begin',
+                'delay_statistics_item_end',
+                'count',
+                'proportion',
+                'cumulative_ratio'
+            ]
+            ret_dic["qot_push_statistics_list"] = pd.DataFrame(ret["qot_push_statistics_list"],
+                                                               columns=col_qot_push_statistics_list_list)
+            # 请求延迟统计
+            col_req_reply_statistics_list_list = [
+                'proto_id',
+                'count',
+                'total_cost_avg',
+                'open_d_cost_avg',
+                'net_delay_avg',
+                'is_local_reply'
+            ]
+            ret_dic["req_reply_statistics_list"] = pd.DataFrame(ret["req_reply_statistics_list"],
+                                                                columns=col_req_reply_statistics_list_list)
+            # 下单延迟统计
+            col_place_order_statistics_list_list = [
+                'order_id',
+                'total_cost',
+                'open_d_cost',
+                'net_delay',
+                'update_cost'
+            ]
+            ret_dic["place_order_statistics_list"] = pd.DataFrame(ret["place_order_statistics_list"],
+                                                                  columns=col_place_order_statistics_list_list)
+            return RET_OK, ret_dic
+        else:
+            return RET_ERROR, "empty data"
+
 
 
 

@@ -274,6 +274,10 @@ class ProtobufMap(dict):
         from futu.common.pb.Verification_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Verification] = Response()
 
+        """ GetUserInfo = 1007  # 获取延迟统计 """
+        from futu.common.pb.GetDelayStatistics_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.GetDelayStatistics] = Response()
+
         """ Trd_GetAccList = 2001  # 获取业务账户列表 """
         from futu.common.pb.Trd_GetAccList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetAccList] = Response()

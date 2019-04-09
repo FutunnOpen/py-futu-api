@@ -2109,7 +2109,105 @@ class GetCapitalFlowQuery:
             #  开始时间字符串,以分钟为单位 type = string
             data["capital_flow_item_time"] = item.time
             data["last_valid_time"] = last_valid_time
-            return RET_OK, "", ret_list
+        return RET_OK, "", ret_list
+
+
+class GetDelayStatisticsQuery:
+    """
+    Query GetDelayStatistics.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, type_list, qot_push_stage, segment_list, conn_id):
+        """check type_list 统计数据类型，DelayStatisticsType"""
+        """check qot_push_stage 行情推送统计的区间，行情推送统计时有效，QotPushStage"""
+        """check segment_list 统计分段，默认100ms以下以2ms分段，100ms以上以500，1000，2000，-1分段，-1表示无穷大。"""
+
+        # 开始组包
+        from futu.common.pb.GetDelayStatistics_pb2 import Request
+        req = Request()
+        for t in type_list:
+            r, v = DelayStatisticsType.to_number(t)
+            req.c2s.typeList.append(v)
+
+        req.c2s.qotPushStage = qot_push_stage
+
+        for t in segment_list:
+            req.c2s.segmentList.append(t)
+
+        return pack_pb_req(req, ProtoId.GetDelayStatistics, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        ret_dic = dict()
+        #  行情推送延迟统计 type = GetDelayStatistics.DelayStatistics
+        qot_push_statistics_list = rsp_pb.s2c.qotPushStatisticsList
+        #  请求延迟统计 type = GetDelayStatistics.ReqReplyStatisticsItem
+        req_reply_statistics_list = rsp_pb.s2c.reqReplyStatisticsList
+        #  下单延迟统计 type = GetDelayStatistics.PlaceOrderStatisticsItem
+        place_order_statistics_list = rsp_pb.s2c.placeOrderStatisticsList
+        # 行情推送延迟统计  列表类型
+        ret_list_qot_push_statistics_list = list()
+        ret_dic["qot_push_statistics_list"] = ret_list_qot_push_statistics_list
+        # 请求延迟统计  列表类型
+        ret_list_req_reply_statistics_list = list()
+        ret_dic["req_reply_statistics_list"] = ret_list_req_reply_statistics_list
+        # 下单延迟统计  列表类型
+        ret_list_place_order_statistics_list = list()
+        ret_dic["place_order_statistics_list"] = ret_list_place_order_statistics_list
+        for item in qot_push_statistics_list:
+            #  行情推送类型,QotPushType type = int32
+            qot_push_type = item.qotPushType
+            #  统计信息 type = GetDelayStatistics.DelayStatisticsItem
+            item_list = item.itemList
+            for sub_item in item_list:
+                data = dict()
+                ret_list_qot_push_statistics_list.append(data)
+                #  范围左闭右开，[begin,end)耗时范围起点，毫秒单位 type = int32
+                data["begin"] = sub_item.begin
+                #  耗时范围结束，毫秒单位 type = int32
+                data["delay_statistics_item_end"] = sub_item.end
+                #  个数 type = int32
+                data["count"] = sub_item.count
+                #  占比, % type = float
+                data["proportion"] = sub_item.proportion
+                #  累计占比, % type = float
+                data["cumulative_ratio"] = sub_item.cumulativeRatio
+                data["qot_push_type"] = qot_push_type
+        for item in req_reply_statistics_list:
+            data = dict()
+            ret_list_req_reply_statistics_list.append(data)
+            #  协议ID type = int32
+            data["proto_id"] = item.protoID
+            #  请求个数 type = int32
+            data["count"] = item.count
+            #  平均总耗时，毫秒单位 type = float
+            data["total_cost_avg"] = item.totalCostAvg
+            #  平均OpenD耗时，毫秒单位 type = float
+            data["open_d_cost_avg"] = item.openDCostAvg
+            #  平均网络耗时，非当时实际请求网络耗时，毫秒单位 type = float
+            data["net_delay_avg"] = item.netDelayAvg
+            #  是否本地直接回包，没有向服务器请求数据 type = bool
+            data["is_local_reply"] = item.isLocalReply
+        for item in place_order_statistics_list:
+            data = dict()
+            ret_list_place_order_statistics_list.append(data)
+            #  订单ID type = string
+            data["order_id"] = item.orderID
+            #  总耗时，毫秒单位 type = float
+            data["total_cost"] = item.totalCost
+            #  OpenD耗时，毫秒单位 type = float
+            data["open_d_cost"] = item.openDCost
+            #  网络耗时，非当时实际请求网络耗时，毫秒单位 type = float
+            data["net_delay"] = item.netDelay
+            #  订单回包后到接收到订单下到交易所的耗时，毫秒单位 type = float
+            data["update_cost"] = item.updateCost
+        return RET_OK, "", ret_dic
 
 
 class Verification:
