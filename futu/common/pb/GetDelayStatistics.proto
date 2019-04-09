@@ -57,6 +57,7 @@ message DelayStatistics
 	required int32 qotPushType = 1; //行情推送类型,QotPushType
 	repeated DelayStatisticsItem itemList = 2; //统计信息
 	required float delayAvg = 3; //平均延迟
+	required int32 count = 4; //总包数
 }
 
 message ReqReplyStatisticsItem

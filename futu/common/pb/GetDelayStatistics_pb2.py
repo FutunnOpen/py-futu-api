@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='GetDelayStatistics.proto',
   package='GetDelayStatistics',
   syntax='proto2',
-  serialized_pb=_b('\n\x18GetDelayStatistics.proto\x12\x12GetDelayStatistics\x1a\x0c\x43ommon.proto\"B\n\x03\x43\x32S\x12\x10\n\x08typeList\x18\x01 \x03(\x05\x12\x14\n\x0cqotPushStage\x18\x02 \x01(\x05\x12\x13\n\x0bsegmentList\x18\x03 \x03(\x05\"m\n\x13\x44\x65layStatisticsItem\x12\r\n\x05\x62\x65gin\x18\x01 \x02(\x05\x12\x0b\n\x03\x65nd\x18\x02 \x02(\x05\x12\r\n\x05\x63ount\x18\x03 \x02(\x05\x12\x12\n\nproportion\x18\x04 \x02(\x02\x12\x17\n\x0f\x63umulativeRatio\x18\x05 \x02(\x02\"s\n\x0f\x44\x65layStatistics\x12\x13\n\x0bqotPushType\x18\x01 \x02(\x05\x12\x39\n\x08itemList\x18\x02 \x03(\x0b\x32\'.GetDelayStatistics.DelayStatisticsItem\x12\x10\n\x08\x64\x65layAvg\x18\x03 \x02(\x02\"\x8f\x01\n\x16ReqReplyStatisticsItem\x12\x0f\n\x07protoID\x18\x01 \x02(\x05\x12\r\n\x05\x63ount\x18\x02 \x02(\x05\x12\x14\n\x0ctotalCostAvg\x18\x03 \x02(\x02\x12\x14\n\x0copenDCostAvg\x18\x04 \x02(\x02\x12\x13\n\x0bnetDelayAvg\x18\x05 \x02(\x02\x12\x14\n\x0cisLocalReply\x18\x06 \x02(\x08\"w\n\x18PlaceOrderStatisticsItem\x12\x0f\n\x07orderID\x18\x01 \x02(\t\x12\x11\n\ttotalCost\x18\x02 \x02(\x02\x12\x11\n\topenDCost\x18\x03 \x02(\x02\x12\x10\n\x08netDelay\x18\x04 \x02(\x02\x12\x12\n\nupdateCost\x18\x05 \x02(\x02\"\xe5\x01\n\x03S2C\x12\x42\n\x15qotPushStatisticsList\x18\x01 \x03(\x0b\x32#.GetDelayStatistics.DelayStatistics\x12J\n\x16reqReplyStatisticsList\x18\x02 \x03(\x0b\x32*.GetDelayStatistics.ReqReplyStatisticsItem\x12N\n\x18placeOrderStatisticsList\x18\x03 \x03(\x0b\x32,.GetDelayStatistics.PlaceOrderStatisticsItem\"/\n\x07Request\x12$\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x17.GetDelayStatistics.C2S\"h\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12$\n\x03s2c\x18\x04 \x01(\x0b\x32\x17.GetDelayStatistics.S2C*\x9c\x01\n\x13\x44\x65layStatisticsType\x12\x1e\n\x1a\x44\x65layStatisticsType_Unkonw\x10\x00\x12\x1f\n\x1b\x44\x65layStatisticsType_QotPush\x10\x01\x12 \n\x1c\x44\x65layStatisticsType_ReqReply\x10\x02\x12\"\n\x1e\x44\x65layStatisticsType_PlaceOrder\x10\x03*\x9f\x01\n\x0cQotPushStage\x12\x17\n\x13QotPushStage_Unkonw\x10\x00\x12\x16\n\x12QotPushStage_SR2SS\x10\x01\x12\x16\n\x12QotPushStage_SS2CR\x10\x02\x12\x16\n\x12QotPushStage_CR2CS\x10\x03\x12\x16\n\x12QotPushStage_SS2CS\x10\x04\x12\x16\n\x12QotPushStage_SR2CS\x10\x05*\x87\x01\n\x0bQotPushType\x12\x16\n\x12QotPushType_Unkonw\x10\x00\x12\x15\n\x11QotPushType_Price\x10\x01\x12\x16\n\x12QotPushType_Ticker\x10\x02\x12\x19\n\x15QotPushType_OrderBook\x10\x03\x12\x16\n\x12QotPushType_Broker\x10\x04')
+  serialized_pb=_b('\n\x18GetDelayStatistics.proto\x12\x12GetDelayStatistics\x1a\x0c\x43ommon.proto\"B\n\x03\x43\x32S\x12\x10\n\x08typeList\x18\x01 \x03(\x05\x12\x14\n\x0cqotPushStage\x18\x02 \x01(\x05\x12\x13\n\x0bsegmentList\x18\x03 \x03(\x05\"m\n\x13\x44\x65layStatisticsItem\x12\r\n\x05\x62\x65gin\x18\x01 \x02(\x05\x12\x0b\n\x03\x65nd\x18\x02 \x02(\x05\x12\r\n\x05\x63ount\x18\x03 \x02(\x05\x12\x12\n\nproportion\x18\x04 \x02(\x02\x12\x17\n\x0f\x63umulativeRatio\x18\x05 \x02(\x02\"\x82\x01\n\x0f\x44\x65layStatistics\x12\x13\n\x0bqotPushType\x18\x01 \x02(\x05\x12\x39\n\x08itemList\x18\x02 \x03(\x0b\x32\'.GetDelayStatistics.DelayStatisticsItem\x12\x10\n\x08\x64\x65layAvg\x18\x03 \x02(\x02\x12\r\n\x05\x63ount\x18\x04 \x02(\x05\"\x8f\x01\n\x16ReqReplyStatisticsItem\x12\x0f\n\x07protoID\x18\x01 \x02(\x05\x12\r\n\x05\x63ount\x18\x02 \x02(\x05\x12\x14\n\x0ctotalCostAvg\x18\x03 \x02(\x02\x12\x14\n\x0copenDCostAvg\x18\x04 \x02(\x02\x12\x13\n\x0bnetDelayAvg\x18\x05 \x02(\x02\x12\x14\n\x0cisLocalReply\x18\x06 \x02(\x08\"w\n\x18PlaceOrderStatisticsItem\x12\x0f\n\x07orderID\x18\x01 \x02(\t\x12\x11\n\ttotalCost\x18\x02 \x02(\x02\x12\x11\n\topenDCost\x18\x03 \x02(\x02\x12\x10\n\x08netDelay\x18\x04 \x02(\x02\x12\x12\n\nupdateCost\x18\x05 \x02(\x02\"\xe5\x01\n\x03S2C\x12\x42\n\x15qotPushStatisticsList\x18\x01 \x03(\x0b\x32#.GetDelayStatistics.DelayStatistics\x12J\n\x16reqReplyStatisticsList\x18\x02 \x03(\x0b\x32*.GetDelayStatistics.ReqReplyStatisticsItem\x12N\n\x18placeOrderStatisticsList\x18\x03 \x03(\x0b\x32,.GetDelayStatistics.PlaceOrderStatisticsItem\"/\n\x07Request\x12$\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x17.GetDelayStatistics.C2S\"h\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12$\n\x03s2c\x18\x04 \x01(\x0b\x32\x17.GetDelayStatistics.S2C*\x9c\x01\n\x13\x44\x65layStatisticsType\x12\x1e\n\x1a\x44\x65layStatisticsType_Unkonw\x10\x00\x12\x1f\n\x1b\x44\x65layStatisticsType_QotPush\x10\x01\x12 \n\x1c\x44\x65layStatisticsType_ReqReply\x10\x02\x12\"\n\x1e\x44\x65layStatisticsType_PlaceOrder\x10\x03*\x9f\x01\n\x0cQotPushStage\x12\x17\n\x13QotPushStage_Unkonw\x10\x00\x12\x16\n\x12QotPushStage_SR2SS\x10\x01\x12\x16\n\x12QotPushStage_SS2CR\x10\x02\x12\x16\n\x12QotPushStage_CR2CS\x10\x03\x12\x16\n\x12QotPushStage_SS2CS\x10\x04\x12\x16\n\x12QotPushStage_SR2CS\x10\x05*\x87\x01\n\x0bQotPushType\x12\x16\n\x12QotPushType_Unkonw\x10\x00\x12\x15\n\x11QotPushType_Price\x10\x01\x12\x16\n\x12QotPushType_Ticker\x10\x02\x12\x19\n\x15QotPushType_OrderBook\x10\x03\x12\x16\n\x12QotPushType_Broker\x10\x04')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,])
 
@@ -50,8 +50,8 @@ _DELAYSTATISTICSTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1013,
-  serialized_end=1169,
+  serialized_start=1029,
+  serialized_end=1185,
 )
 _sym_db.RegisterEnumDescriptor(_DELAYSTATISTICSTYPE)
 
@@ -89,8 +89,8 @@ _QOTPUSHSTAGE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1172,
-  serialized_end=1331,
+  serialized_start=1188,
+  serialized_end=1347,
 )
 _sym_db.RegisterEnumDescriptor(_QOTPUSHSTAGE)
 
@@ -124,8 +124,8 @@ _QOTPUSHTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1334,
-  serialized_end=1469,
+  serialized_start=1350,
+  serialized_end=1485,
 )
 _sym_db.RegisterEnumDescriptor(_QOTPUSHTYPE)
 
@@ -280,6 +280,13 @@ _DELAYSTATISTICS = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='count', full_name='GetDelayStatistics.DelayStatistics.count', index=3,
+      number=4, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -292,8 +299,8 @@ _DELAYSTATISTICS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=241,
-  serialized_end=356,
+  serialized_start=242,
+  serialized_end=372,
 )
 
 
@@ -358,8 +365,8 @@ _REQREPLYSTATISTICSITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=359,
-  serialized_end=502,
+  serialized_start=375,
+  serialized_end=518,
 )
 
 
@@ -417,8 +424,8 @@ _PLACEORDERSTATISTICSITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=504,
-  serialized_end=623,
+  serialized_start=520,
+  serialized_end=639,
 )
 
 
@@ -462,8 +469,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=626,
-  serialized_end=855,
+  serialized_start=642,
+  serialized_end=871,
 )
 
 
@@ -493,8 +500,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=857,
-  serialized_end=904,
+  serialized_start=873,
+  serialized_end=920,
 )
 
 
@@ -545,8 +552,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=906,
-  serialized_end=1010,
+  serialized_start=922,
+  serialized_end=1026,
 )
 
 _DELAYSTATISTICS.fields_by_name['itemList'].message_type = _DELAYSTATISTICSITEM

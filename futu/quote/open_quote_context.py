@@ -2084,39 +2084,9 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         if isinstance(ret, dict):
             ret_dic = dict()
-            # 行情推送延迟统计
-            col_qot_push_statistics_list_list = [
-                'qot_push_type',
-                'begin',
-                'end',
-                'count',
-                'proportion',
-                'cumulative_ratio',
-                'delay_avg'
-            ]
-            ret_dic["qot_push_statistics_list"] = pd.DataFrame(ret["qot_push_statistics_list"],
-                                                               columns=col_qot_push_statistics_list_list)
-            # 请求延迟统计
-            col_req_reply_statistics_list_list = [
-                'proto_id',
-                'count',
-                'total_cost_avg',
-                'open_d_cost_avg',
-                'net_delay_avg',
-                'is_local_reply'
-            ]
-            ret_dic["req_reply_statistics_list"] = pd.DataFrame(ret["req_reply_statistics_list"],
-                                                                columns=col_req_reply_statistics_list_list)
-            # 下单延迟统计
-            col_place_order_statistics_list_list = [
-                'order_id',
-                'total_cost',
-                'open_d_cost',
-                'net_delay',
-                'update_cost'
-            ]
-            ret_dic["place_order_statistics_list"] = pd.DataFrame(ret["place_order_statistics_list"],
-                                                                  columns=col_place_order_statistics_list_list)
+            ret_dic["qot_push"] = ret["qot_push_all_statistics_list"]
+            ret_dic["req_reply"] = ret["req_reply_statistics_list"]
+            ret_dic["place_order"] = ret["place_order_statistics_list"]
             return RET_OK, ret_dic
         else:
             return RET_ERROR, "empty data"

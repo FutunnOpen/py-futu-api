@@ -2161,25 +2161,40 @@ class GetDelayStatisticsQuery:
         req_reply_statistics_list = rsp_pb.s2c.reqReplyStatisticsList
         #  下单延迟统计 type = GetDelayStatistics.PlaceOrderStatisticsItem
         place_order_statistics_list = rsp_pb.s2c.placeOrderStatisticsList
-        # 行情推送延迟统计  列表类型
-        ret_list_qot_push_statistics_list = list()
-        ret_dic["qot_push_statistics_list"] = ret_list_qot_push_statistics_list
         # 请求延迟统计  列表类型
         ret_list_req_reply_statistics_list = list()
         ret_dic["req_reply_statistics_list"] = ret_list_req_reply_statistics_list
         # 下单延迟统计  列表类型
         ret_list_place_order_statistics_list = list()
         ret_dic["place_order_statistics_list"] = ret_list_place_order_statistics_list
+
+        # 行情推送延迟统计 总表  列表类型
+        qot_push_all_statistics_list = list()
+        ret_dic["qot_push_all_statistics_list"] = qot_push_all_statistics_list
+
         for item in qot_push_statistics_list:
+            #  平均延迟和总包数加入总表
+            info = dict()
+            qot_push_all_statistics_list.append(info)
+
             #  行情推送类型,QotPushType type = int32
             qot_push_type = item.qotPushType
+            info["qot_push_type"] = qot_push_type
             #  统计信息 type = GetDelayStatistics.DelayStatisticsItem
             item_list = item.itemList
             #  平均延迟 type = float
             delay_avg = item.delayAvg
+            info["delay_avg"] = delay_avg
+            #  总包数 type = int32
+            count = item.count
+            info["count"] = count
+            #  区段列表
+            ls = list()
+            info["list"] = ls
+
             for sub_item in item_list:
                 data = dict()
-                ret_list_qot_push_statistics_list.append(data)
+                ls.append(data)
                 #  范围左闭右开，[begin,end)耗时范围起点，毫秒单位 type = int32
                 data["begin"] = sub_item.begin
                 #  耗时范围结束，毫秒单位 type = int32
@@ -2190,8 +2205,6 @@ class GetDelayStatisticsQuery:
                 data["proportion"] = sub_item.proportion
                 #  累计占比, % type = float
                 data["cumulative_ratio"] = sub_item.cumulativeRatio
-                data["qot_push_type"] = qot_push_type
-                data["delay_avg"] = delay_avg
         for item in req_reply_statistics_list:
             data = dict()
             ret_list_req_reply_statistics_list.append(data)
