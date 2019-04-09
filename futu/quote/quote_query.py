@@ -2138,9 +2138,12 @@ class GetDelayStatisticsQuery:
         req = Request()
         for t in type_list:
             r, v = DelayStatisticsType.to_number(t)
-            req.c2s.typeList.append(v)
+            if r:
+                req.c2s.typeList.append(v)
 
-        req.c2s.qotPushStage = qot_push_stage
+        r, v = QotPushStage.to_number(qot_push_stage)
+        if r:
+            req.c2s.qotPushStage = v
 
         for t in segment_list:
             req.c2s.segmentList.append(t)
@@ -2180,7 +2183,7 @@ class GetDelayStatisticsQuery:
                 #  范围左闭右开，[begin,end)耗时范围起点，毫秒单位 type = int32
                 data["begin"] = sub_item.begin
                 #  耗时范围结束，毫秒单位 type = int32
-                data["begin"] = sub_item.end
+                data["end"] = sub_item.end
                 #  个数 type = int32
                 data["count"] = sub_item.count
                 #  占比, % type = float

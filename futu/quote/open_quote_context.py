@@ -2063,6 +2063,9 @@ class OpenQuoteContext(OpenContextBase):
     def get_delay_statistics(self, type_list, qot_push_stage, segment_list):
         """
         GetDelayStatistics
+        qot_push_stage 行情推送统计的区间，行情推送统计时有效，QotPushStage
+        type_list 统计数据类型，DelayStatisticsType [DelayStatisticsType.QOT_PUSH, DelayStatisticsType.REQ_REPLY]
+        check segment_list 统计分段，默认100ms以下以2ms分段，100ms以上以500，1000，2000，-1分段，-1表示无穷大。
         """
 
         query_processor = self._get_sync_query_processor(
