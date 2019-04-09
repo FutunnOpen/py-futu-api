@@ -2172,13 +2172,15 @@ class GetDelayStatisticsQuery:
             qot_push_type = item.qotPushType
             #  统计信息 type = GetDelayStatistics.DelayStatisticsItem
             item_list = item.itemList
+            #  平均延迟 type = float
+            delay_avg = item.delayAvg
             for sub_item in item_list:
                 data = dict()
                 ret_list_qot_push_statistics_list.append(data)
                 #  范围左闭右开，[begin,end)耗时范围起点，毫秒单位 type = int32
                 data["begin"] = sub_item.begin
                 #  耗时范围结束，毫秒单位 type = int32
-                data["delay_statistics_item_end"] = sub_item.end
+                data["begin"] = sub_item.end
                 #  个数 type = int32
                 data["count"] = sub_item.count
                 #  占比, % type = float
@@ -2186,6 +2188,7 @@ class GetDelayStatisticsQuery:
                 #  累计占比, % type = float
                 data["cumulative_ratio"] = sub_item.cumulativeRatio
                 data["qot_push_type"] = qot_push_type
+                data["delay_avg"] = delay_avg
         for item in req_reply_statistics_list:
             data = dict()
             ret_list_req_reply_statistics_list.append(data)

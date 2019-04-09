@@ -1659,3 +1659,65 @@ class UpdateType(FtEnum):
             self.ADVICE: GetUserInfo_pb2.UpdateType_Advice,
             self.FORCE: GetUserInfo_pb2.UpdateType_Force
         }
+
+'''-------------------------DelayStatisticsType----------------------------'''
+from futu.common.pb import GetDelayStatistics_pb2
+
+#
+class DelayStatisticsType(FtEnum):
+    NONE = "N/A"                                       # 未知类型
+    QOT_PUSH = "QOT_PUSH"                              # 行情推送统计
+    REQ_REPLY = "REQ_REPLY"                            # 请求回应统计
+    PLACE_ORDER = "PLACE_ORDER"                        # 下单统计
+
+    def load_dic(self):
+        return {
+            self.NONE: GetDelayStatistics_pb2.DelayStatisticsType_Unkonw,
+            self.QOT_PUSH: GetDelayStatistics_pb2.DelayStatisticsType_QotPush,
+            self.REQ_REPLY: GetDelayStatistics_pb2.DelayStatisticsType_ReqReply,
+            self.PLACE_ORDER: GetDelayStatistics_pb2.DelayStatisticsType_PlaceOrder
+        }
+
+
+'''-------------------------QotPushStage----------------------------'''
+
+
+# 某段时间的统计数据，SR表示服务器收到数据，目前只有港股支持SR字段，SS表示服务器发出数据，CR表示OpenD收到数据，CS表示OpenD发出数据
+class QotPushStage(FtEnum):
+    NONE = "N/A"                                       # 未知
+    SR2_SS = "SR2_SS"                                  # 统计服务端处理耗时
+    SS2_CR = "SS2_CR"                                  # 统计网络耗时
+    CR2_CS = "CR2_CS"                                  # 统计OpenD处理耗时
+    SS2_CS = "SS2_CS"                                  # 统计服务器发出到OpenD发出的处理耗时
+    SR2_CS = "SR2_CS"                                  # 统计服务器收到数据到OpenD发出的处理耗时
+
+    def load_dic(self):
+        return {
+            self.NONE: GetDelayStatistics_pb2.QotPushStage_Unkonw,
+            self.SR2_SS: GetDelayStatistics_pb2.QotPushStage_SR2SS,
+            self.SS2_CR: GetDelayStatistics_pb2.QotPushStage_SS2CR,
+            self.CR2_CS: GetDelayStatistics_pb2.QotPushStage_CR2CS,
+            self.SS2_CS: GetDelayStatistics_pb2.QotPushStage_SS2CS,
+            self.SR2_CS: GetDelayStatistics_pb2.QotPushStage_SR2CS
+        }
+
+
+'''-------------------------QotPushType----------------------------'''
+
+
+# 行情推送类型
+class QotPushType(FtEnum):
+    NONE = "N/A"                                       # 未知
+    PRICE = "PRICE"                                    # 最新价
+    TICKER = "TICKER"                                  # 逐笔
+    ORDER_BOOK = "ORDER_BOOK"                          # 摆盘
+    BROKER = "BROKER"                                  # 经纪队列
+
+    def load_dic(self):
+        return {
+            self.NONE: GetDelayStatistics_pb2.QotPushType_Unkonw,
+            self.PRICE: GetDelayStatistics_pb2.QotPushType_Price,
+            self.TICKER: GetDelayStatistics_pb2.QotPushType_Ticker,
+            self.ORDER_BOOK: GetDelayStatistics_pb2.QotPushType_OrderBook,
+            self.BROKER: GetDelayStatistics_pb2.QotPushType_Broker
+        }

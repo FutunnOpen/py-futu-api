@@ -2085,10 +2085,11 @@ class OpenQuoteContext(OpenContextBase):
             col_qot_push_statistics_list_list = [
                 'qot_push_type',
                 'begin',
-                'delay_statistics_item_end',
+                'end',
                 'count',
                 'proportion',
-                'cumulative_ratio'
+                'cumulative_ratio',
+                'delay_avg'
             ]
             ret_dic["qot_push_statistics_list"] = pd.DataFrame(ret["qot_push_statistics_list"],
                                                                columns=col_qot_push_statistics_list_list)
