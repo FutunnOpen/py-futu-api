@@ -243,8 +243,10 @@ class NetManager:
 
     def _thread_func(self):
         while True:
-            if not self.is_alive():
-                break
+            with self._lock:
+                if not self.is_alive():
+                    self._thread = None
+                    break
             self.poll()
 
     def start(self):
@@ -264,15 +266,8 @@ class NetManager:
 
     def stop(self):
         with self._mgr_lock:
-            is_quit = False
             with self._lock:
                 self._use_count = max(self._use_count - 1, 0)
-                is_quit = not self.is_alive()
-
-            if is_quit and self._thread is not None:
-                self._thread.join()
-                self._close_all()
-                self._thread = None
 
     def is_alive(self):
         with self._lock:
@@ -441,13 +436,14 @@ class NetManager:
         return proto_info
 
     def _get_conn(self, conn_id):
-        for sock, sel_key in self._selector.get_map().items():
-            if sel_key.fileobj == self._r_sock:
-                continue
-            conn = sel_key.data
-            if conn.conn_id == conn_id:
-                return conn
-        return None
+        with self._lock:
+            for sock, sel_key in self._selector.get_map().items():
+                if sel_key.fileobj == self._r_sock:
+                    continue
+                conn = sel_key.data
+                if conn.conn_id == conn_id:
+                    return conn
+            return None
 
     def _on_read(self, conn):
         start_time = time.time()

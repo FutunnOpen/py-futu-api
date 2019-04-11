@@ -36,6 +36,7 @@ class OpenContextBase(object):
         self._handler_ctx = HandlerContext(self._is_proc_run)
         self._lock = RLock()
         self._status = ContextStatus.START
+        self._connect_err = None  # rsa加密失败时为Err.RsaErr, 否则为str
         self._proc_run = True
         self._sync_req_ret = None
         self._sync_conn_id = 0
@@ -43,6 +44,7 @@ class OpenContextBase(object):
         self._keep_alive_interval = 10
         self._last_keep_alive_time = datetime.now()
         self._reconnect_timer = None
+        self._reconnect_interval = 8  # 重试连接的间隔
         self._sync_query_connect_timeout = None
         self._keep_alive_fail_count = 0
         self._is_encrypt = is_encrypt
@@ -77,9 +79,30 @@ class OpenContextBase(object):
         with self._lock:
             return self._status
 
+    @property
+    def connect_err_msg(self):
+        with self._lock:
+            if self._connect_err is Err.RsaErr:
+                return Err.RsaErr.text
+            return self._connect_err
+
+    @property
+    def connect_err(self):
+        return self._connect_err
+
     def set_sync_query_connect_timeout(self, timeout):
         with self._lock:
             self._sync_query_connect_timeout = timeout
+
+    @property
+    def reconnect_interval(self):
+        with self._lock:
+            return self._reconnect_interval
+
+    @reconnect_interval.setter
+    def reconnect_interval(self, value):
+        with self._lock:
+            self._reconnect_interval = value
 
     @abstractmethod
     def close(self):
@@ -184,7 +207,10 @@ class OpenContextBase(object):
                         conn_id = self._conn_id
                         break
                     elif self._status == ContextStatus.CLOSED:
-                        return RET_ERROR, Err.ConnectionClosed.text, None
+                        if self.connect_err_msg is not None:
+                            return RET_ERROR, self.connect_err_msg, None
+                        else:
+                            return RET_ERROR, Err.ConnectionClosed.text, None
 
                 if self._sync_query_connect_timeout is not None:
                     elapsed_time = datetime.now() - start_time
@@ -252,7 +278,7 @@ class OpenContextBase(object):
         if ret == RET_OK:
             ret, msg = self.on_api_socket_reconnected()
         else:
-            self._wait_reconnect()
+            self._wait_reconnect(self.reconnect_interval)
         return RET_OK, ''
 
     def get_sync_conn_id(self):
@@ -331,11 +357,15 @@ class OpenContextBase(object):
 
         if ret != RET_OK:
             with self._lock:
-                self._sync_req_ret = _SyncReqRet(ret, msg)
+                self._sync_req_ret = _SyncReqRet(RET_ERROR, msg)
+                self._connect_err = Err.RsaErr
+            self.close()
 
     def on_error(self, conn_id, err):
         logger.warning('Connect error: conn_id={0}; err={1};'.format(conn_id, err))
         with self._lock:
+            if self._status == ContextStatus.CLOSED:
+                return
             if self._status != ContextStatus.CONNECTING:
                 self._wait_reconnect()
             else:
@@ -344,6 +374,8 @@ class OpenContextBase(object):
     def on_closed(self, conn_id):
         logger.warning('Connect closed: conn_id={0}'.format(conn_id))
         with self._lock:
+            if self._status == ContextStatus.CLOSED:
+                return
             if self._status != ContextStatus.CONNECTING:
                 self._wait_reconnect()
             else:
@@ -355,6 +387,9 @@ class OpenContextBase(object):
             self._sync_req_ret = _SyncReqRet(RET_ERROR, Err.Timeout.text)
 
     def on_packet(self, conn_id, proto_info, ret_code, msg, rsp_pb):
+        with self._lock:
+            if self._status == ContextStatus.CLOSED:
+                return
         if proto_info.proto_id == ProtoId.InitConnect:
             self._handle_init_connect(conn_id, proto_info.proto_id, ret_code, msg, rsp_pb)
         elif proto_info.proto_id == ProtoId.KeepAlive:
@@ -409,7 +444,8 @@ class OpenContextBase(object):
                 logger.info(FTLog.make_log_msg("InitConnect ok", conn_id=conn_id, info=conn_info))
             else:
                 logger.warning(FTLog.make_log_msg("InitConnect error", msg=msg))
-                self._wait_reconnect()
+                self._connect_err = msg
+                self.close()
 
     def _handle_keep_alive(self, conn_id, proto_info, ret_code, msg, rsp_pb):
         should_reconnect = False

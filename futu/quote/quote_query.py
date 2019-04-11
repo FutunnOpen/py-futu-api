@@ -1249,6 +1249,8 @@ class OrderBookQuery:
 
         order_book = {}
         order_book['code'] = merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code)
+        order_book['svr_recv_time_bid'] = rsp_pb.s2c.svrRecvTimeBid
+        order_book['svr_recv_time_ask'] = rsp_pb.s2c.svrRecvTimeAsk
         order_book['Bid'] = []
         order_book['Ask'] = []
 
@@ -1814,6 +1816,8 @@ class OrderDetail:
         code = merge_qot_mkt_stock_str(int(rsp_pb.s2c.security.market), rsp_pb.s2c.security.code)
         ask = [0, []]
         bid = [0, []]
+        svr_recv_time_bid = rsp_pb.s2c.svrRecvTimeBid
+        svr_recv_time_ask = rsp_pb.s2c.svrRecvTimeAsk
 
         ask[0] = rsp_pb.s2c.orderDetailAsk.orderCount
         for vol in rsp_pb.s2c.orderDetailAsk.orderVol:
@@ -1826,7 +1830,9 @@ class OrderDetail:
         data = {
             'code': code,
             'Ask': ask,
-            'Bid': bid
+            'Bid': bid,
+            'svr_recv_time_ask': svr_recv_time_ask,
+            'svr_recv_time_bid': svr_recv_time_bid
         }
         return RET_OK, "", data
 
@@ -1984,24 +1990,29 @@ class GetUserInfo:
         pass
 
     @classmethod
-    def pack_req(cls, info_type, user_id, conn_id):
+    def pack_req(cls, info_field, conn_id):
         from futu.common.pb.GetUserInfo_pb2 import Request
         req = Request()
-        req.c2s.userID = user_id
+        if info_field is None:
+            req.c2s.flag = 0
+        else:
+            req.c2s.flag = UserInfoField.fields_to_flag_val(info_field)
         return pack_pb_req(req, ProtoId.GetUserInfo, conn_id)
 
     @classmethod
     def unpack_rsp(cls, rsp_pb):
         if rsp_pb.retType != RET_OK:
             return RET_ERROR, rsp_pb.retMsg, None
-        nick_name = rsp_pb.s2c.nickName
-        avatar_url = rsp_pb.s2c.avatarUrl
-        api_level = rsp_pb.s2c.apiLevel
-        hk_qot_right = rsp_pb.s2c.hkQotRight
-        us_qot_right = rsp_pb.s2c.usQotRight
-        cn_qot_right = rsp_pb.s2c.cnQotRight
-        is_need_agree_disclaimer = rsp_pb.s2c.is_need_agree_disclaimer
-
+        nick_name = rsp_pb.s2c.nickName if rsp_pb.s2c.HasField('nickName') else "N/A"
+        avatar_url = rsp_pb.s2c.avatarUrl if rsp_pb.s2c.HasField('avatarUrl') else "N/A"
+        api_level = rsp_pb.s2c.apiLevel if rsp_pb.s2c.HasField('apiLevel') else "N/A"
+        hk_qot_right = rsp_pb.s2c.hkQotRight if rsp_pb.s2c.HasField('hkQotRight') else "N/A"
+        us_qot_right = rsp_pb.s2c.usQotRight if rsp_pb.s2c.HasField('usQotRight') else "N/A"
+        cn_qot_right = rsp_pb.s2c.cnQotRight if rsp_pb.s2c.HasField('cnQotRight') else "N/A"
+        is_need_agree_disclaimer = rsp_pb.s2c.isNeedAgreeDisclaimer if rsp_pb.s2c.HasField('isNeedAgreeDisclaimer') else "N/A"
+        user_id = rsp_pb.s2c.userID if rsp_pb.s2c.HasField('userID') else "N/A"
+        update_type = rsp_pb.s2c.updateType if rsp_pb.s2c.HasField('updateType') else "N/A"
+        web_key = rsp_pb.s2c.webKey if rsp_pb.s2c.HasField('webKey') else "N/A"
         data = {
             "nick_name": nick_name,
             "avatar_url": avatar_url,
@@ -2009,9 +2020,220 @@ class GetUserInfo:
             "hk_qot_right": QotRight.to_string2(hk_qot_right),
             "us_qot_right": QotRight.to_string2(us_qot_right),
             "cn_qot_right": QotRight.to_string2(cn_qot_right),
-            "is_need_agree_disclaimer": is_need_agree_disclaimer
+            "is_need_agree_disclaimer": is_need_agree_disclaimer,
+            "user_id": user_id,
+            "update_type": UpdateType.to_string2(update_type),
+            "web_key": web_key
         }
         return RET_OK, "", data
+
+
+class GetCapitalDistributionQuery:
+    """
+    Query GetCapitalDistribution.
+    个股资金分布
+    """
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code, conn_id):
+        """check stock_code 股票"""
+        ret, content = split_stock_str(code)
+        if ret == RET_ERROR:
+            error_str = content
+            return RET_ERROR, error_str, None
+        market_code, stock_code = content
+
+        # 开始组包
+        from futu.common.pb.Qot_GetCapitalDistribution_pb2 import Request
+        req = Request()
+        req.c2s.security.market = market_code
+        req.c2s.security.code = stock_code
+        return pack_pb_req(req, ProtoId.Qot_GetCapitalDistribution, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        ret = dict()
+        #  流入资金额度，大单 type=double
+        ret["capital_in_big"]=rsp_pb.s2c.capitalInBig
+        #  流入资金额度，中单 type=double
+        ret["capital_in_mid"]=rsp_pb.s2c.capitalInMid
+        #  流入资金额度，小单 type=double
+        ret["capital_in_small"]=rsp_pb.s2c.capitalInSmall
+        #  流出资金额度，大单 type=double
+        ret["capital_out_big"]=rsp_pb.s2c.capitalOutBig
+        #  流出资金额度，中单 type=double
+        ret["capital_out_mid"]=rsp_pb.s2c.capitalOutMid
+        #  流出资金额度，小单 type=double
+        ret["capital_out_small"]=rsp_pb.s2c.capitalOutSmall
+        #  更新时间字符串 type=string
+        ret["update_time"]=rsp_pb.s2c.updateTime
+        return RET_OK, "", ret
+
+
+class GetCapitalFlowQuery:
+    """
+    Query GetCapitalFlow.
+    个股资金流入流出
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code, conn_id):
+        """check stock_code 股票"""
+        ret, content = split_stock_str(code)
+        if ret == RET_ERROR:
+            error_str = content
+            return RET_ERROR, error_str, None
+        market_code, stock_code = content
+
+        # 开始组包
+        from futu.common.pb.Qot_GetCapitalFlow_pb2 import Request
+        req = Request()
+        req.c2s.security.market = market_code
+        req.c2s.security.code = stock_code
+        return pack_pb_req(req, ProtoId.Qot_GetCapitalFlow, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        ret_list = list()
+        #  资金流向 type = Qot_GetCapitalFlow.CapitalFlowItem
+        flow_item_list = rsp_pb.s2c.flowItemList
+        #  数据最后有效时间字符串 type = string
+        last_valid_time = rsp_pb.s2c.lastValidTime
+        for item in flow_item_list:
+            data = dict()
+            ret_list.append(data)
+            #  净流入的资金额度 type = double
+            data["in_flow"] = item.inFlow
+            #  开始时间字符串,以分钟为单位 type = string
+            data["capital_flow_item_time"] = item.time
+            data["last_valid_time"] = last_valid_time
+        return RET_OK, "", ret_list
+
+
+class GetDelayStatisticsQuery:
+    """
+    Query GetDelayStatistics.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, type_list, qot_push_stage, segment_list, conn_id):
+        """check type_list 统计数据类型，DelayStatisticsType"""
+        """check qot_push_stage 行情推送统计的区间，行情推送统计时有效，QotPushStage"""
+        """check segment_list 统计分段，默认100ms以下以2ms分段，100ms以上以500，1000，2000，-1分段，-1表示无穷大。"""
+
+        # 开始组包
+        from futu.common.pb.GetDelayStatistics_pb2 import Request
+        req = Request()
+        for t in type_list:
+            r, v = DelayStatisticsType.to_number(t)
+            if r:
+                req.c2s.typeList.append(v)
+
+        r, v = QotPushStage.to_number(qot_push_stage)
+        if r:
+            req.c2s.qotPushStage = v
+
+        for t in segment_list:
+            req.c2s.segmentList.append(t)
+
+        return pack_pb_req(req, ProtoId.GetDelayStatistics, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        ret_dic = dict()
+        #  行情推送延迟统计 type = GetDelayStatistics.DelayStatistics
+        qot_push_statistics_list = rsp_pb.s2c.qotPushStatisticsList
+        #  请求延迟统计 type = GetDelayStatistics.ReqReplyStatisticsItem
+        req_reply_statistics_list = rsp_pb.s2c.reqReplyStatisticsList
+        #  下单延迟统计 type = GetDelayStatistics.PlaceOrderStatisticsItem
+        place_order_statistics_list = rsp_pb.s2c.placeOrderStatisticsList
+        # 请求延迟统计  列表类型
+        ret_list_req_reply_statistics_list = list()
+        ret_dic["req_reply_statistics_list"] = ret_list_req_reply_statistics_list
+        # 下单延迟统计  列表类型
+        ret_list_place_order_statistics_list = list()
+        ret_dic["place_order_statistics_list"] = ret_list_place_order_statistics_list
+
+        # 行情推送延迟统计 总表  列表类型
+        qot_push_all_statistics_list = list()
+        ret_dic["qot_push_all_statistics_list"] = qot_push_all_statistics_list
+
+        for item in qot_push_statistics_list:
+            #  平均延迟和总包数加入总表
+            info = dict()
+            qot_push_all_statistics_list.append(info)
+
+            #  行情推送类型,QotPushType type = int32
+            qot_push_type = item.qotPushType
+            info["qot_push_type"] = qot_push_type
+            #  统计信息 type = GetDelayStatistics.DelayStatisticsItem
+            item_list = item.itemList
+            #  平均延迟 type = float
+            delay_avg = item.delayAvg
+            info["delay_avg"] = delay_avg
+            #  总包数 type = int32
+            count = item.count
+            info["count"] = count
+            #  区段列表
+            ls = list()
+            info["list"] = ls
+
+            for sub_item in item_list:
+                data = dict()
+                ls.append(data)
+                #  范围左闭右开，[begin,end)耗时范围起点，毫秒单位 type = int32
+                data["begin"] = sub_item.begin
+                #  耗时范围结束，毫秒单位 type = int32
+                data["end"] = sub_item.end
+                #  个数 type = int32
+                data["count"] = sub_item.count
+                #  占比, % type = float
+                data["proportion"] = sub_item.proportion
+                #  累计占比, % type = float
+                data["cumulative_ratio"] = sub_item.cumulativeRatio
+        for item in req_reply_statistics_list:
+            data = dict()
+            ret_list_req_reply_statistics_list.append(data)
+            #  协议ID type = int32
+            data["proto_id"] = item.protoID
+            #  请求个数 type = int32
+            data["count"] = item.count
+            #  平均总耗时，毫秒单位 type = float
+            data["total_cost_avg"] = item.totalCostAvg
+            #  平均OpenD耗时，毫秒单位 type = float
+            data["open_d_cost_avg"] = item.openDCostAvg
+            #  平均网络耗时，非当时实际请求网络耗时，毫秒单位 type = float
+            data["net_delay_avg"] = item.netDelayAvg
+            #  是否本地直接回包，没有向服务器请求数据 type = bool
+            data["is_local_reply"] = item.isLocalReply
+        for item in place_order_statistics_list:
+            data = dict()
+            ret_list_place_order_statistics_list.append(data)
+            #  订单ID type = string
+            data["order_id"] = item.orderID
+            #  总耗时，毫秒单位 type = float
+            data["total_cost"] = item.totalCost
+            #  OpenD耗时，毫秒单位 type = float
+            data["open_d_cost"] = item.openDCost
+            #  网络耗时，非当时实际请求网络耗时，毫秒单位 type = float
+            data["net_delay"] = item.netDelay
+            #  订单回包后到接收到订单下到交易所的耗时，毫秒单位 type = float
+            data["update_cost"] = item.updateCost
+        return RET_OK, "", ret_dic
 
 
 class Verification:

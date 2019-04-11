@@ -20,7 +20,7 @@ message EquitySnapshotExData
     required int64 outstandingShares = 6; // 流通股本
 	required double outstandingMarketVal = 7; // 流通市值 =流通股本*当前价格
     required double netAssetPershare = 8; // 每股净资产
-    required double eyRate = 9; // 收益率
+    required double eyRate = 9; // 收益率（该字段为百分比字段，默认不展示%）
     required double peRate = 10; // 市盈率
     required double pbRate = 11; // 市净率
 	required double peTTMRate = 12; // 市盈率TTM
@@ -35,13 +35,13 @@ message WarrantSnapshotExData
     required string maturityTime = 4; //到期日时间字符串
     required string endTradeTime = 5; //最后交易日时间字符串
     required Qot_Common.Security owner = 6; //所属正股 
-    required double recoveryPrice = 7; //收回价
+    required double recoveryPrice = 7; //收回价,仅牛熊证支持该字段过滤
     required int64 streetVolumn = 8; //街货量
     required int64 issueVolumn = 9; //发行量
-    required double streetRate = 10; //街货占比
-    required double delta = 11; //对冲值
-    required double impliedVolatility = 12; //引申波幅
-    required double premium = 13; //溢价
+    required double streetRate = 10; //街货占比（该字段为百分比字段，默认不展示%）
+    required double delta = 11; //对冲值,仅认购认沽支持该字段过滤
+    required double impliedVolatility = 12; //引申波幅,仅认购认沽支持该字段过滤
+    required double premium = 13; //溢价（该字段为百分比字段，默认不展示%）
 	optional double maturityTimestamp = 14; //到期日时间戳
 	optional double endTradeTimestamp = 15; //最后交易日时间戳
 }
@@ -55,8 +55,8 @@ message OptionSnapshotExData
     required double strikePrice = 4; //行权价
 	required int32 contractSize = 5; //每份合约数
 	required int32 openInterest = 6; //未平仓合约数
-	required double impliedVolatility = 7; //隐含波动率
-	required double premium = 8; //溢价
+	required double impliedVolatility = 7; //隐含波动率（该字段为百分比字段，默认不展示%）
+	required double premium = 8; //溢价（该字段为百分比字段，默认不展示%）
 	required double delta = 9; //希腊值 Delta
     required double gamma = 10; //希腊值 Gamma
 	required double vega = 11; //希腊值 Vega
@@ -82,7 +82,7 @@ message SnapshotBasicData
 	required double curPrice = 12; //最新价
 	required int64 volume = 13; //成交量
 	required double turnover = 14; //成交额
-	required double turnoverRate = 15; //换手率
+	required double turnoverRate = 15; //换手率（该字段为百分比字段，默认不展示%）
 	optional double listTimestamp = 16; //上市时间戳
 	optional double updateTimestamp = 17; //更新时间戳
 	optional double askPrice = 18;//卖价
@@ -90,12 +90,12 @@ message SnapshotBasicData
 	optional int64 askVol = 20;//卖量
     optional int64 bidVol = 21;//买量
 	optional bool enableMargin = 22; // 是否可融资，如果为true，后两个字段才有意义
-    optional double mortgageRatio = 23; // 股票抵押率,是不带百分号的数字，例如50%是50
-    optional double longMarginInitialRatio = 24; // 融资初始保证金率,是不带百分号的数字，例如50%是50
+    optional double mortgageRatio = 23; // 股票抵押率（该字段为百分比字段，默认不展示%）
+    optional double longMarginInitialRatio = 24; // 融资初始保证金率（该字段为百分比字段，默认不展示%）
     optional bool enableShortSell = 25; // 是否可卖空，如果为true，后三个字段才有意义
-    optional double shortSellRate = 26; // 卖空参考利率,是不带百分号的数字，例如50%是50
+    optional double shortSellRate = 26; // 卖空参考利率（该字段为百分比字段，默认不展示%）
     optional int64 shortAvailableVolume = 27; // 剩余可卖空数量（股）
-    optional double shortMarginInitialRatio = 28; // 卖空（融券）初始保证金率,是不带百分号的数字，例如50%是50
+    optional double shortMarginInitialRatio = 28; // 卖空（融券）初始保证金率（该字段为百分比字段，默认不展示%）
 }
 
 message Snapshot

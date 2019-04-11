@@ -17,7 +17,7 @@ enum GtwEventType
 	GtwEventType_ForceUpdate = 3; //客户端版本过低
 	GtwEventType_LoginFailed = 4; //登录失败
 	GtwEventType_UnAgreeDisclaimer = 5; //未同意免责声明
-	GtwEventType_NetCfgMissing = 6; //缺少必要网络配置信息;例如控制订阅额度
+	GtwEventType_NetCfgMissing = 6; //缺少必要网络配置信息;例如控制订阅额度 //已优化，不会再出现该情况
 	GtwEventType_KickedOut = 7; //牛牛帐号在别处登录
 	GtwEventType_LoginPwdChanged = 8; //登录密码被修改
 	GtwEventType_BanLogin = 9; //用户被禁止登录

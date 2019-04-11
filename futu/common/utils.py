@@ -274,6 +274,10 @@ class ProtobufMap(dict):
         from futu.common.pb.Verification_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Verification] = Response()
 
+        """ GetUserInfo = 1007  # 获取延迟统计 """
+        from futu.common.pb.GetDelayStatistics_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.GetDelayStatistics] = Response()
+
         """ Trd_GetAccList = 2001  # 获取业务账户列表 """
         from futu.common.pb.Trd_GetAccList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetAccList] = Response()
@@ -464,7 +468,11 @@ class ProtobufMap(dict):
         from futu.common.pb.Qot_RequestRehab_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_RequestRehab] = Response()
 
+        from futu.common.pb.Qot_GetCapitalDistribution_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetCapitalDistribution] = Response()
 
+        from futu.common.pb.Qot_GetCapitalFlow_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetCapitalFlow] = Response()
 
     def __getitem__(self, key):
         return ProtobufMap.created_protobuf_map[key] if key in ProtobufMap.created_protobuf_map else None
@@ -546,16 +554,19 @@ def _joint_head(proto_id, proto_fmt_type, body_len, str_body, conn_id, serial_no
     sha20 = hashlib.sha1(str_body).digest()
 
     # init connect 需要用rsa加密
-    if proto_id == ProtoId.InitConnect:
-        if SysConfig.INIT_RSA_FILE != '':
-            str_body = RsaCrypt.encrypt(str_body)
-            body_len = len(str_body)
-    else:
-        if is_encrypt:
-            ret, msg, str_body = FutuConnMng.encrypt_conn_data(conn_id, str_body)
-            body_len = len(str_body)
-            if ret != RET_OK:
-                return ret, msg, str_body
+    try:
+        if proto_id == ProtoId.InitConnect:
+            if SysConfig.INIT_RSA_FILE != '':
+                str_body = RsaCrypt.encrypt(str_body)
+                body_len = len(str_body)
+        else:
+            if is_encrypt:
+                ret, msg, str_body = FutuConnMng.encrypt_conn_data(conn_id, str_body)
+                body_len = len(str_body)
+                if ret != RET_OK:
+                    return ret, msg, str_body
+    except Exception as e:
+        return RET_ERROR, str(e), None
 
     fmt = "%s%ds" % (MESSAGE_HEAD_FMT, body_len)
 

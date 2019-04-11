@@ -939,7 +939,7 @@ class OpenQuoteContext(OpenContextBase):
         """
         if code is None or is_str(code) is False:
             error_str = ERROR_STR_PREFIX + "the type of param in code is wrong"
-            return RET_ERROR, error_str
+            return RET_ERROR, error_str, error_str
 
         query_processor = self._get_sync_query_processor(
             BrokerQueueQuery.pack_req, BrokerQueueQuery.unpack_rsp)
@@ -1955,12 +1955,11 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, exr_frame_table
 
 
-    def get_user_info(self, info_type=0, user_id=0):
+    def get_user_info(self, info_field=[]):
         """获取用户信息（内部保留函数）"""
         query_processor = self._get_sync_query_processor(GetUserInfo.pack_req, GetUserInfo.unpack_rsp)
         kargs = {
-            "user_id": user_id,
-            "info_type": info_type,
+            "info_field": info_field,
             "conn_id": self.get_sync_conn_id()
         }
         ret_code, msg, data = query_processor(**kargs)
@@ -1968,6 +1967,75 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         else:
             return ret_code, data
+
+    def get_capital_distribution(self, stock_code):
+        """
+        个股资金分布
+        GetCapitalDistribution
+        """
+        if stock_code is None or is_str(stock_code) is False:
+            error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
+            return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            GetCapitalDistributionQuery.pack_req,
+            GetCapitalDistributionQuery.unpack,
+        )
+
+        kargs = {
+            "code": stock_code,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, dict):
+            col_list = [
+                'capital_in_big',
+                'capital_in_mid',
+                'capital_in_small',
+                'capital_out_big',
+                'capital_out_mid',
+                'capital_out_small',
+                'update_time',
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list, index=[0])
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
+
+    def get_capital_flow(self, stock_code):
+        """
+        个股资金流入流出
+        GetCapitalFlow
+        """
+        if stock_code is None or is_str(stock_code) is False:
+            error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
+            return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            GetCapitalFlowQuery.pack_req,
+            GetCapitalFlowQuery.unpack,
+        )
+
+        kargs = {
+            "code": stock_code,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+            'last_valid_time',
+            'in_flow',
+            'capital_flow_item_time',
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
+
 
     def verification(self, verification_type=VerificationType.NONE, verification_op=VerificationOp.NONE, code=""):
         """图形验证码下载之后会将其存至固定路径，请到该路径下查看验证码
@@ -1991,6 +2059,37 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         else:
             return ret_code, data
+
+    def get_delay_statistics(self, type_list, qot_push_stage, segment_list):
+        """
+        GetDelayStatistics
+        qot_push_stage 行情推送统计的区间，行情推送统计时有效，QotPushStage
+        type_list 统计数据类型，DelayStatisticsType [DelayStatisticsType.QOT_PUSH, DelayStatisticsType.REQ_REPLY]
+        check segment_list 统计分段，默认100ms以下以2ms分段，100ms以上以500，1000，2000，-1分段，-1表示无穷大。
+        """
+
+        query_processor = self._get_sync_query_processor(
+            GetDelayStatisticsQuery.pack_req,
+            GetDelayStatisticsQuery.unpack,
+        )
+
+        kargs = {
+            "type_list": type_list,
+            "qot_push_stage": qot_push_stage,
+            "segment_list": segment_list,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, dict):
+            ret_dic = dict()
+            ret_dic["qot_push"] = ret["qot_push_all_statistics_list"]
+            ret_dic["req_reply"] = ret["req_reply_statistics_list"]
+            ret_dic["place_order"] = ret["place_order_statistics_list"]
+            return RET_OK, ret_dic
+        else:
+            return RET_ERROR, "empty data"
 
 
 

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='GetUserInfo.proto',
   package='GetUserInfo',
   syntax='proto2',
-  serialized_pb=_b('\n\x11GetUserInfo.proto\x12\x0bGetUserInfo\x1a\x0c\x43ommon.proto\"\x15\n\x03\x43\x32S\x12\x0e\n\x06userID\x18\x01 \x02(\x04\"\x97\x01\n\x03S2C\x12\x10\n\x08nickName\x18\x01 \x02(\t\x12\x11\n\tavatarUrl\x18\x02 \x02(\t\x12\x10\n\x08\x61piLevel\x18\x03 \x02(\t\x12\x12\n\nhkQotRight\x18\x04 \x02(\x05\x12\x12\n\nusQotRight\x18\x05 \x02(\x05\x12\x12\n\ncnQotRight\x18\x06 \x02(\x05\x12\x1d\n\x15isNeedAgreeDisclaimer\x18\x07 \x02(\x08\"(\n\x07Request\x12\x1d\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x10.GetUserInfo.C2S\"a\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1d\n\x03s2c\x18\x04 \x01(\x0b\x32\x10.GetUserInfo.S2C*[\n\x08QotRight\x12\x13\n\x0fQotRight_Unknow\x10\x00\x12\x10\n\x0cQotRight_Bmp\x10\x01\x12\x13\n\x0fQotRight_Level1\x10\x02\x12\x13\n\x0fQotRight_Level2\x10\x03')
+  serialized_pb=_b('\n\x11GetUserInfo.proto\x12\x0bGetUserInfo\x1a\x0c\x43ommon.proto\"\x13\n\x03\x43\x32S\x12\x0c\n\x04\x66lag\x18\x02 \x01(\x05\"\xcb\x01\n\x03S2C\x12\x10\n\x08nickName\x18\x01 \x01(\t\x12\x11\n\tavatarUrl\x18\x02 \x01(\t\x12\x10\n\x08\x61piLevel\x18\x03 \x01(\t\x12\x12\n\nhkQotRight\x18\x04 \x01(\x05\x12\x12\n\nusQotRight\x18\x05 \x01(\x05\x12\x12\n\ncnQotRight\x18\x06 \x01(\x05\x12\x1d\n\x15isNeedAgreeDisclaimer\x18\x07 \x01(\x08\x12\x0e\n\x06userID\x18\x08 \x01(\x03\x12\x12\n\nupdateType\x18\t \x01(\x05\x12\x0e\n\x06webKey\x18\n \x01(\t\"(\n\x07Request\x12\x1d\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x10.GetUserInfo.C2S\"a\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1d\n\x03s2c\x18\x04 \x01(\x0b\x32\x10.GetUserInfo.S2C*[\n\x08QotRight\x12\x13\n\x0fQotRight_Unknow\x10\x00\x12\x10\n\x0cQotRight_Bmp\x10\x01\x12\x13\n\x0fQotRight_Level1\x10\x02\x12\x13\n\x0fQotRight_Level2\x10\x03*N\n\nUpdateType\x12\x13\n\x0fUpdateType_None\x10\x00\x12\x15\n\x11UpdateType_Advice\x10\x01\x12\x14\n\x10UpdateType_Force\x10\x02*\xae\x01\n\rUserInfoField\x12\x17\n\x13UserInfoField_Basic\x10\x01\x12\x15\n\x11UserInfoField_API\x10\x02\x12\x1a\n\x16UserInfoField_QotRight\x10\x04\x12\x1c\n\x18UserInfoField_Disclaimer\x10\x08\x12\x18\n\x14UserInfoField_Update\x10\x10\x12\x19\n\x14UserInfoField_WebKey\x10\x80\x10')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,])
 
@@ -50,16 +50,91 @@ _QOTRIGHT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=366,
-  serialized_end=457,
+  serialized_start=416,
+  serialized_end=507,
 )
 _sym_db.RegisterEnumDescriptor(_QOTRIGHT)
 
 QotRight = enum_type_wrapper.EnumTypeWrapper(_QOTRIGHT)
+_UPDATETYPE = _descriptor.EnumDescriptor(
+  name='UpdateType',
+  full_name='GetUserInfo.UpdateType',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='UpdateType_None', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UpdateType_Advice', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UpdateType_Force', index=2, number=2,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=509,
+  serialized_end=587,
+)
+_sym_db.RegisterEnumDescriptor(_UPDATETYPE)
+
+UpdateType = enum_type_wrapper.EnumTypeWrapper(_UPDATETYPE)
+_USERINFOFIELD = _descriptor.EnumDescriptor(
+  name='UserInfoField',
+  full_name='GetUserInfo.UserInfoField',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='UserInfoField_Basic', index=0, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UserInfoField_API', index=1, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UserInfoField_QotRight', index=2, number=4,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UserInfoField_Disclaimer', index=3, number=8,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UserInfoField_Update', index=4, number=16,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UserInfoField_WebKey', index=5, number=2048,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=590,
+  serialized_end=764,
+)
+_sym_db.RegisterEnumDescriptor(_USERINFOFIELD)
+
+UserInfoField = enum_type_wrapper.EnumTypeWrapper(_USERINFOFIELD)
 QotRight_Unknow = 0
 QotRight_Bmp = 1
 QotRight_Level1 = 2
 QotRight_Level2 = 3
+UpdateType_None = 0
+UpdateType_Advice = 1
+UpdateType_Force = 2
+UserInfoField_Basic = 1
+UserInfoField_API = 2
+UserInfoField_QotRight = 4
+UserInfoField_Disclaimer = 8
+UserInfoField_Update = 16
+UserInfoField_WebKey = 2048
 
 
 
@@ -71,8 +146,8 @@ _C2S = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='userID', full_name='GetUserInfo.C2S.userID', index=0,
-      number=1, type=4, cpp_type=4, label=2,
+      name='flag', full_name='GetUserInfo.C2S.flag', index=0,
+      number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -90,7 +165,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=48,
-  serialized_end=69,
+  serialized_end=67,
 )
 
 
@@ -103,50 +178,71 @@ _S2C = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='nickName', full_name='GetUserInfo.S2C.nickName', index=0,
-      number=1, type=9, cpp_type=9, label=2,
+      number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='avatarUrl', full_name='GetUserInfo.S2C.avatarUrl', index=1,
-      number=2, type=9, cpp_type=9, label=2,
+      number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='apiLevel', full_name='GetUserInfo.S2C.apiLevel', index=2,
-      number=3, type=9, cpp_type=9, label=2,
+      number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='hkQotRight', full_name='GetUserInfo.S2C.hkQotRight', index=3,
-      number=4, type=5, cpp_type=1, label=2,
+      number=4, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='usQotRight', full_name='GetUserInfo.S2C.usQotRight', index=4,
-      number=5, type=5, cpp_type=1, label=2,
+      number=5, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='cnQotRight', full_name='GetUserInfo.S2C.cnQotRight', index=5,
-      number=6, type=5, cpp_type=1, label=2,
+      number=6, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='isNeedAgreeDisclaimer', full_name='GetUserInfo.S2C.isNeedAgreeDisclaimer', index=6,
-      number=7, type=8, cpp_type=7, label=2,
+      number=7, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='userID', full_name='GetUserInfo.S2C.userID', index=7,
+      number=8, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='updateType', full_name='GetUserInfo.S2C.updateType', index=8,
+      number=9, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='webKey', full_name='GetUserInfo.S2C.webKey', index=9,
+      number=10, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
@@ -162,8 +258,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=72,
-  serialized_end=223,
+  serialized_start=70,
+  serialized_end=273,
 )
 
 
@@ -193,8 +289,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=225,
-  serialized_end=265,
+  serialized_start=275,
+  serialized_end=315,
 )
 
 
@@ -245,8 +341,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=267,
-  serialized_end=364,
+  serialized_start=317,
+  serialized_end=414,
 )
 
 _REQUEST.fields_by_name['c2s'].message_type = _C2S
@@ -256,6 +352,8 @@ DESCRIPTOR.message_types_by_name['S2C'] = _S2C
 DESCRIPTOR.message_types_by_name['Request'] = _REQUEST
 DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
 DESCRIPTOR.enum_types_by_name['QotRight'] = _QOTRIGHT
+DESCRIPTOR.enum_types_by_name['UpdateType'] = _UPDATETYPE
+DESCRIPTOR.enum_types_by_name['UserInfoField'] = _USERINFOFIELD
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 C2S = _reflection.GeneratedProtocolMessageType('C2S', (_message.Message,), dict(
