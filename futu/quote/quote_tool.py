@@ -14,7 +14,7 @@ class OpenQuoteTool(object):
             return
         html_file = open(file_path, 'w')
         local_path = os.path.dirname(os.path.realpath(__file__))
-        with open(os.path.join(local_path, "head.html"), 'r') as html_head_file:
+        with open(os.path.join(local_path, "head.html"), 'r', encoding='utf-8') as html_head_file:
             html_file.write(html_head_file.read())
 
         segment_list = [0, 2, 4, 6, 8, 10, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 
@@ -73,7 +73,7 @@ class OpenQuoteTool(object):
                     col_new_head = ['统计区间（ms）', '百分比', '总体延迟百分比']
                     df.columns = col_new_head
                     qot_push_type = QotPushType.to_string2(push["qot_push_type"])
-                    html_file.write("<div class='item'>{}</div>".format(QotPushType.get_describe(qot_push_type)))
+                    html_file.write("<div class='item'>{}推送耗时</div>".format(QotPushType.get_describe(qot_push_type)))
                     html_file.write(df.to_html(header=True, index=False))
                     html_file.write("<br>\n")
 
