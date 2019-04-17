@@ -1669,6 +1669,13 @@ class DelayStatisticsType(FtEnum):
     QOT_PUSH = "QOT_PUSH"                              # 行情推送统计
     REQ_REPLY = "REQ_REPLY"                            # 请求回应统计
     PLACE_ORDER = "PLACE_ORDER"                        # 下单统计
+    ALL = [QOT_PUSH, REQ_REPLY, PLACE_ORDER]
+
+    describe_dict = {
+        QOT_PUSH: "行情推送统计",
+        REQ_REPLY: "请求回应统计",
+        PLACE_ORDER: "下单统计",
+    }
 
     def load_dic(self):
         return {
@@ -1677,6 +1684,11 @@ class DelayStatisticsType(FtEnum):
             self.REQ_REPLY: GetDelayStatistics_pb2.DelayStatisticsType_ReqReply,
             self.PLACE_ORDER: GetDelayStatistics_pb2.DelayStatisticsType_PlaceOrder
         }
+
+    @classmethod
+    def get_describe(cls, t):
+        obj = cls()
+        return obj.describe_dict[t]
 
 
 '''-------------------------QotPushStage----------------------------'''
@@ -1690,6 +1702,15 @@ class QotPushStage(FtEnum):
     CR2_CS = "CR2_CS"                                  # 统计OpenD处理耗时
     SS2_CS = "SS2_CS"                                  # 统计服务器发出到OpenD发出的处理耗时
     SR2_CS = "SR2_CS"                                  # 统计服务器收到数据到OpenD发出的处理耗时
+    ALL = [SR2_SS, SS2_CR, CR2_CS, SS2_CS, SR2_CS]
+
+    describe_dict = {
+        SR2_SS: "统计服务端处理耗时",
+        SS2_CR: "统计网络耗时",
+        CR2_CS: "统计OpenD处理耗时",
+        SS2_CS: "统计服务器发出到OpenD发出的处理耗时",
+        SR2_CS: "统计服务器收到数据到OpenD发出的处理耗时",
+    }
 
     def load_dic(self):
         return {
@@ -1700,6 +1721,11 @@ class QotPushStage(FtEnum):
             self.SS2_CS: GetDelayStatistics_pb2.QotPushStage_SS2CS,
             self.SR2_CS: GetDelayStatistics_pb2.QotPushStage_SR2CS
         }
+
+    @classmethod
+    def get_describe(cls, t):
+        obj = cls()
+        return obj.describe_dict[t]
 
 
 '''-------------------------QotPushType----------------------------'''
@@ -1713,6 +1739,13 @@ class QotPushType(FtEnum):
     ORDER_BOOK = "ORDER_BOOK"                          # 摆盘
     BROKER = "BROKER"                                  # 经纪队列
 
+    describe_dict = {
+        PRICE: "最新价",
+        TICKER: "逐笔",
+        ORDER_BOOK: "摆盘",
+        BROKER: "经纪队列",
+    }
+
     def load_dic(self):
         return {
             self.NONE: GetDelayStatistics_pb2.QotPushType_Unkonw,
@@ -1721,3 +1754,8 @@ class QotPushType(FtEnum):
             self.ORDER_BOOK: GetDelayStatistics_pb2.QotPushType_OrderBook,
             self.BROKER: GetDelayStatistics_pb2.QotPushType_Broker
         }
+
+    @classmethod
+    def get_describe(cls, t):
+        obj = cls()
+        return obj.describe_dict[t]
