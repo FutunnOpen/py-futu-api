@@ -1709,7 +1709,7 @@ class QotPushStage(FtEnum):
         SS2_CR: "统计网络耗时",
         CR2_CS: "统计OpenD处理耗时",
         SS2_CS: "统计服务器发出到OpenD发出的处理耗时",
-        SR2_CS: "统计服务器收到数据到OpenD发出的处理耗时",
+        SR2_CS: "统计服务器收到数据到OpenD发出的处理耗时(也就是从交易所到用户的总时间，港股市场数据最全，A股和美股部分缺乏交易所下发时间）",
     }
 
     def load_dic(self):

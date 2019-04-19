@@ -62,7 +62,8 @@ class OpenQuoteTool(object):
                 for push in qot_pushes:
                     df = pd.DataFrame(push["list"], columns=col_list)
                     df.drop(df[df.proportion == 0.0].index, inplace=True)
-
+                    if len(df) == 0:
+                        continue
                     df['proportion'] = df['proportion'].map(lambda x: format(x/100, '.2%'))
                     df['cumulative_ratio'] = df['cumulative_ratio'].map(lambda x: format(x / 100, '.2%'))
 
@@ -71,7 +72,7 @@ class OpenQuoteTool(object):
                     try:
                         df["interval"] = df.apply(lambda x: str(x.begin) + 'ms - ' + str(x.end) + "ms", axis=1)
                     except Exception as e:
-                        print("df.apply error", e, df)
+                        print("df.apply error", e)
                         pass
 
                     df.drop(['begin', 'end'], axis=1, inplace=True)  # 删除begin、end
