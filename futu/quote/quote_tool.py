@@ -68,7 +68,12 @@ class OpenQuoteTool(object):
 
                     # df["cumulative_ratio"] = df["begin"].map(str) + ' - ' + df["end"].map(str)
                     df.insert(0, 'interval', '')
-                    df["interval"] = df.apply(lambda x: str(x.begin) + 'ms - ' + str(x.end) + "ms", axis=1)
+                    try:
+                        df["interval"] = df.apply(lambda x: str(x.begin) + 'ms - ' + str(x.end) + "ms", axis=1)
+                    except Exception as e:
+                        print("df.apply error", e, df)
+                        pass
+
                     df.drop(['begin', 'end'], axis=1, inplace=True)  # 删除begin、end
                     col_new_head = ['统计区间（ms）', '百分比', '总体延迟百分比']
                     df.columns = col_new_head
