@@ -28,6 +28,7 @@ class OpenQuoteTool(object):
         push_head_describe = [("begin", "速度区间ms（开始）"),
                               ("end", "速度区间ms（结束）"),
                               ("proportion", "当前区段占比"),
+                              ("count", "包数"),
                               ("cumulative_ratio", "累计占比")]
 
         for stage_type in QotPushStage.ALL[::-1]:
@@ -76,7 +77,7 @@ class OpenQuoteTool(object):
                         pass
 
                     df.drop(['begin', 'end'], axis=1, inplace=True)  # 删除begin、end
-                    col_new_head = ['统计区间（ms）', '百分比', '总体延迟百分比']
+                    col_new_head = ['统计区间（ms）', '百分比', '包数', '总体延迟百分比']
                     df.columns = col_new_head
                     qot_push_type = QotPushType.to_string2(push["qot_push_type"])
                     html_file.write("<div class='item'>{}推送耗时</div>".format(QotPushType.get_describe(qot_push_type)))
