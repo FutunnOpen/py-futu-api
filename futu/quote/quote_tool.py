@@ -12,7 +12,7 @@ class OpenQuoteTool(object):
     def save_delay_statistics(self, file_path):
         if file_path is None:
             return
-        html_file = open(file_path, 'w')
+        html_file = open(file_path, 'w',encoding='utf-8')
         local_path = os.path.dirname(os.path.realpath(__file__))
         with open(os.path.join(local_path, "head.html"), 'r', encoding='utf-8') as html_head_file:
             html_file.write(html_head_file.read())
