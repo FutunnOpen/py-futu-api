@@ -82,7 +82,7 @@ class ClassItemStruct(object):
 
     def get_only_repeated_item(self):
         for item in self.values:
-            if item.trim_type == "list":
+            if item.trim_type == "list" or item.trim_type == "code_list":
                 return item
 
     # def is_repeated_type(self, full_name):
@@ -118,7 +118,7 @@ class ClassItemStruct(object):
                 str_code += template["list_list_item_return"].format(var_name=code_add_space(var_name, 4),
                                                                      trim_name=trim_name,
                                                                      name=trim_name,
-                                                                     description= item.description)
+                                                                     description=item.description)
 
             return template["list_list_return"].format(code=str_code)
 
@@ -717,7 +717,7 @@ def generate(names):
 
 
 if __name__ =="__main__":
-    generate(["GetCapitalDistribution", "GetCapitalFlow"])
+    generate(["Qot_GetUserSecurity", "Qot_ModifyUserSecurity"])
     # c = GenerateCode("GetOwnerPlate", "Qot")
     # c.load()
     # c.save()
