@@ -15,7 +15,7 @@ message S2C
 	required Qot_Common.Security security = 1; //股票
 	repeated Qot_Common.OrderBook orderBookAskList = 2; //卖盘
 	repeated Qot_Common.OrderBook orderBookBidList = 3; //买盘
-	optional string svrRecvTimeBid = 4; // 富途服务器从交易所收到数据的时间(for bid) 以秒为单位，提供毫秒时间精度。部分数据的接收时间为零，例如服务器重启或第一次推送的缓存数据。
+	optional string svrRecvTimeBid = 4; // 富途服务器从交易所收到数据的时间(for bid)部分数据的接收时间为零，例如服务器重启或第一次推送的缓存数据。该字段暂时只支持港股。
 	optional double svrRecvTimeBidTimestamp = 5; // 富途服务器从交易所收到数据的时间戳(for bid)
 	optional string svrRecvTimeAsk = 6; // 富途服务器从交易所收到数据的时间(for ask)
 	optional double svrRecvTimeAskTimestamp = 7; // 富途服务器从交易所收到数据的时间戳(for ask)

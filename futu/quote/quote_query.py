@@ -4,7 +4,7 @@
 """
 
 from futu.common.utils import *
-from ..common.pb import Common_pb2
+from futu.common.pb import Common_pb2
 
 # 无数据时的值
 NoneDataType = 'N/A'
@@ -845,33 +845,50 @@ class SubscriptionQuery:
         pass
 
     @classmethod
-    def pack_sub_or_unsub_req(cls, code_list, subtype_list, is_sub, conn_id, is_first_push, reg_or_unreg_push):
+    def pack_sub_or_unsub_req(cls,
+                              code_list,
+                              subtype_list,
+                              is_sub,
+                              conn_id,
+                              is_first_push,
+                              reg_or_unreg_push,
+                              unsub_all=False):
 
         stock_tuple_list = []
-        for code in code_list:
-            ret_code, content = split_stock_str(code)
-            if ret_code != RET_OK:
-                return ret_code, content, None
-            market_code, stock_code = content
-            stock_tuple_list.append((market_code, stock_code))
+
+        if code_list is not None:
+            for code in code_list:
+                ret_code, content = split_stock_str(code)
+                if ret_code != RET_OK:
+                    return ret_code, content, None
+                market_code, stock_code = content
+                stock_tuple_list.append((market_code, stock_code))
 
         from futu.common.pb.Qot_Sub_pb2 import Request
         req = Request()
-        for market_code, stock_code in stock_tuple_list:
-            stock_inst = req.c2s.securityList.add()
-            stock_inst.code = stock_code
-            stock_inst.market = market_code
-        for subtype in subtype_list:
-            req.c2s.subTypeList.append(SUBTYPE_MAP[subtype])
-        req.c2s.isSubOrUnSub = is_sub
-        req.c2s.isFirstPush = is_first_push
-        req.c2s.isRegOrUnRegPush = reg_or_unreg_push
+
+        if unsub_all is True:
+            req.c2s.isUnsubAll = True
+        else:
+            for market_code, stock_code in stock_tuple_list:
+                stock_inst = req.c2s.securityList.add()
+                stock_inst.code = stock_code
+                stock_inst.market = market_code
+            for subtype in subtype_list:
+                req.c2s.subTypeList.append(SUBTYPE_MAP[subtype])
+            req.c2s.isSubOrUnSub = is_sub
+            req.c2s.isFirstPush = is_first_push
+            req.c2s.isRegOrUnRegPush = reg_or_unreg_push
 
         return pack_pb_req(req, ProtoId.Qot_Sub, conn_id)
 
     @classmethod
     def pack_subscribe_req(cls, code_list, subtype_list, conn_id, is_first_push, subscribe_push):
-        return SubscriptionQuery.pack_sub_or_unsub_req(code_list, subtype_list, True, conn_id, is_first_push,
+        return SubscriptionQuery.pack_sub_or_unsub_req(code_list,
+                                                       subtype_list,
+                                                       True,
+                                                       conn_id,
+                                                       is_first_push,
                                                        subscribe_push)  # True
 
     @classmethod
@@ -883,9 +900,15 @@ class SubscriptionQuery:
         return RET_OK, "", None
 
     @classmethod
-    def pack_unsubscribe_req(cls, code_list, subtype_list, conn_id):
+    def pack_unsubscribe_req(cls, code_list, subtype_list, unsub_all, conn_id):
 
-        return SubscriptionQuery.pack_sub_or_unsub_req(code_list, subtype_list, False, conn_id, False, False)
+        return SubscriptionQuery.pack_sub_or_unsub_req(code_list,
+                                                       subtype_list,
+                                                       False,
+                                                       conn_id,
+                                                       False,
+                                                       False,
+                                                       unsub_all=unsub_all)
 
     @classmethod
     def unpack_unsubscribe_rsp(cls, rsp_pb):

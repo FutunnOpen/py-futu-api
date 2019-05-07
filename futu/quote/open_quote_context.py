@@ -147,9 +147,9 @@ class OpenQuoteContext(OpenContextBase):
         :param code_list: 如果不为None，应该是股票code的iterable类型，将只返回指定的股票信息
         :return: (ret_code, content)
                 ret_code 等于RET_OK时， content为Pandas.DataFrame数据, 否则为错误原因字符串, 数据列格式如下
-            =================   ===========   ==============================================================================
+            =================   ===========   ==========================================================================
             参数                  类型                        说明
-            =================   ===========   ==============================================================================
+            =================   ===========   ==========================================================================
             code                str            股票代码
             name                str            名字
             lot_size            int            每手数量
@@ -163,7 +163,7 @@ class OpenQuoteContext(OpenContextBase):
             listing_date        str            上市时间
             stock_id            int            股票id
             delisting           bool           是否退市
-            =================   ===========   ==============================================================================
+            =================   ===========   ==========================================================================
 
         :example:
 
@@ -1107,7 +1107,7 @@ class OpenQuoteContext(OpenContextBase):
 
         return ret_code, ret_data
 
-    def unsubscribe(self, code_list, subtype_list):
+    def unsubscribe(self, code_list, subtype_list, unsubscribe_all=False):
         """
         取消订阅
         :param code_list: 取消订阅的股票代码列表
@@ -1129,6 +1129,7 @@ class OpenQuoteContext(OpenContextBase):
         kargs = {
             'code_list': code_list,
             'subtype_list': subtype_list,
+            'unsub_all': unsubscribe_all,
             "conn_id": self.get_sync_conn_id()
         }
 
@@ -1155,6 +1156,10 @@ class OpenQuoteContext(OpenContextBase):
             return RET_ERROR, msg
 
         return RET_OK, None
+
+    def unsubscribe_all(self):
+        return self.unsubscribe(None, None, True)
+
 
     def query_subscription(self, is_all_conn=True):
         """
@@ -2090,6 +2095,9 @@ class OpenQuoteContext(OpenContextBase):
             return RET_OK, ret_dic
         else:
             return RET_ERROR, "empty data"
+
+
+
 
 
 
