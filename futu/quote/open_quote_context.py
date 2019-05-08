@@ -1959,7 +1959,6 @@ class OpenQuoteContext(OpenContextBase):
             exr_frame_table = pd.DataFrame(data, columns=col_list)
             return ret_code, exr_frame_table
 
-
     def get_user_info(self, info_field=[]):
         """获取用户信息（内部保留函数）"""
         query_processor = self._get_sync_query_processor(GetUserInfo.pack_req, GetUserInfo.unpack_rsp)
@@ -2032,15 +2031,14 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         if isinstance(ret, list):
             col_list = [
-            'last_valid_time',
-            'in_flow',
-            'capital_flow_item_time',
+                'last_valid_time',
+                'in_flow',
+                'capital_flow_item_time',
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)
             return RET_OK, ret_frame
         else:
             return RET_ERROR, "empty data"
-
 
     def verification(self, verification_type=VerificationType.NONE, verification_op=VerificationOp.NONE, code=""):
         """图形验证码下载之后会将其存至固定路径，请到该路径下查看验证码
@@ -2093,6 +2091,74 @@ class OpenQuoteContext(OpenContextBase):
             ret_dic["req_reply"] = ret["req_reply_statistics_list"]
             ret_dic["place_order"] = ret["place_order_statistics_list"]
             return RET_OK, ret_dic
+        else:
+            return RET_ERROR, "empty data"
+
+    def modify_user_security(self, group_name, op, code_list):
+        """
+        ModifyUserSecurity
+        修改用户自选股列表信息
+        """
+        if is_str(code_list):
+            code_list = code_list.split(',')
+        elif isinstance(code_list, list):
+            pass
+        else:
+            return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
+        code_list = unique_and_normalize_list(code_list)
+        for code in code_list:
+            if code is None or is_str(code) is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in code_list is wrong"
+                return RET_ERROR, error_str
+
+        ret, op_value = ModifyUserSecurityOp.to_number(op)
+        if ret is not True:
+            return RET_ERROR, op_value
+
+        query_processor = self._get_sync_query_processor(
+            ModifyUserSecurityQuery.pack_req,
+            ModifyUserSecurityQuery.unpack,
+        )
+
+        kargs = {
+            "group_name": group_name,
+            "op": op_value,
+            "code_list": code_list,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        else:
+            return RET_OK, "success"
+
+    def get_user_security(self, group_name):
+        """
+        GetUserSecurity
+        """
+        if not isinstance(group_name, str):
+            return RET_ERROR, "group_name need str"
+
+        query_processor = self._get_sync_query_processor(
+            GetUserSecurityQuery.pack_req,
+            GetUserSecurityQuery.unpack,
+        )
+
+        kargs = {
+            "group_name": group_name,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+                'code', 'name', 'lot_size', 'stock_type', 'stock_child_type', 'stock_owner',
+                'option_type', 'strike_time', 'strike_price', 'suspension',
+                'listing_date', 'stock_id', 'delisting'
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
         else:
             return RET_ERROR, "empty data"
 

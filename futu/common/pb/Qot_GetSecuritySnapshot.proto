@@ -52,7 +52,7 @@ message WarrantSnapshotExData
 	optional double itmOtmRatio = 17; // 价内/价外（该字段为百分比字段，默认不展示%）
 	optional double breakEvenPointPrice = 18; // 打和点
 	optional double entitlementPrice = 19;  // 换股价
-	optional double priceCallRatio = 20; // 距收回价
+	optional double priceCallRatio = 20; // 距收回价（该字段为百分比字段，默认不展示%）
 	optional double score = 21; // 综合评分
 }
 

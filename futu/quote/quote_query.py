@@ -125,7 +125,6 @@ class StockBasicInfoQuery:
     """
     Query Conversion for getting stock basic information.
     """
-
     def __init__(self):
         pass
 
@@ -199,7 +198,6 @@ class MarketSnapshotQuery:
     """
     Query Conversion for getting market snapshot.
     """
-
     def __init__(self):
         pass
 
@@ -2291,3 +2289,106 @@ class Verification:
     def unpack_rsp(cls, rsp_pb):
             return rsp_pb.retType, rsp_pb.retMsg, None
 
+
+    """
+    ===============================================================================
+    ===============================================================================
+    """
+
+
+class ModifyUserSecurityQuery:
+    """
+    Query ModifyUserSecurity.
+    """
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, group_name, op_value, code_list, conn_id):
+        """check group_name 分组名,有同名的返回首个"""
+        """check op ModifyUserSecurityOp,操作类型"""
+        """check code_list 新增或删除该分组下的股票"""
+        stock_tuple_list = []
+        failure_tuple_list = []
+        for stock_str in code_list:
+            ret_code, content = split_stock_str(stock_str)
+            if ret_code != RET_OK:
+                error_str = content
+                failure_tuple_list.append((ret_code, error_str))
+                continue
+            market_code, stock_code = content
+            stock_tuple_list.append((market_code, stock_code))
+        if len(failure_tuple_list) > 0:
+            error_str = '\n'.join([x[1] for x in failure_tuple_list])
+            return RET_ERROR, error_str, None
+
+        # 开始组包
+        from futu.common.pb.Qot_ModifyUserSecurity_pb2 import Request
+        req = Request()
+        req.c2s.groupName = group_name
+        req.c2s.op = op_value
+        for market_code, stock_code in stock_tuple_list:
+            stock_inst = req.c2s.securityList.add()
+            stock_inst.market = market_code
+            stock_inst.code = stock_code
+
+        return pack_pb_req(req, ProtoId.Qot_ModifyUserSecurity, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        return RET_OK, "", None
+
+
+class GetUserSecurityQuery:
+        """
+        Query GetUserSecurity.
+        """
+
+        def __init__(self):
+            pass
+
+        @classmethod
+        def pack_req(cls, group_name, conn_id):
+            """check group_name 分组名,有同名的返回首个"""
+            # 开始组包
+            from futu.common.pb.Qot_GetUserSecurity_pb2 import Request
+            req = Request()
+            req.c2s.groupName = group_name
+            return pack_pb_req(req, ProtoId.Qot_GetUserSecurity, conn_id)
+
+        @classmethod
+        def unpack(cls, rsp_pb):
+            if rsp_pb.retType != RET_OK:
+                return RET_ERROR, rsp_pb.retMsg, None
+            #  自选股分组下的股票列表 type = Qot_Common.SecurityStaticInfo
+            static_info_list = rsp_pb.s2c.staticInfoList
+            #  基本股票静态信息 type = SecurityStaticBasic
+            basic_info_list = [{
+                "code": merge_qot_mkt_stock_str(record.basic.security.market,
+                                                record.basic.security.code),
+                "stock_id": record.basic.id,
+                "name": record.basic.name,
+                "lot_size": record.basic.lotSize,
+                "stock_type": QUOTE.REV_SEC_TYPE_MAP[record.basic.secType]
+                if record.basic.secType in QUOTE.REV_SEC_TYPE_MAP else SecurityType.NONE,
+
+                "stock_child_type": WrtType.to_string2(record.warrantExData.type),
+                "stock_owner": merge_qot_mkt_stock_str(
+                    record.warrantExData.owner.market,
+                    record.warrantExData.owner.code) if record.HasField('warrantExData') else (
+                    merge_qot_mkt_stock_str(
+                        record.optionExData.owner.market,
+                        record.optionExData.owner.code) if record.HasField('optionExData')
+                    else ""),
+                "listing_date": "N/A" if record.HasField('optionExData') else record.basic.listTime,
+                "option_type": QUOTE.REV_OPTION_TYPE_CLASS_MAP[record.optionExData.type]
+                if record.HasField('optionExData') else "",
+                "strike_time": record.optionExData.strikeTime,
+                "strike_price": record.optionExData.strikePrice if record.HasField(
+                    'optionExData') else NoneDataType,
+                "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
+                "delisting": record.basic.delisting if record.basic.HasField('delisting') else NoneDataType
+            } for record in static_info_list]
+            return RET_OK, "", basic_info_list

@@ -22,7 +22,7 @@ enum PacketEncAlgo
 message PacketID
 {
 	required uint64 connID = 1; //当前TCP连接的连接ID，一条连接的唯一标识，InitConnect协议会返回
-	required uint32 serialNo = 2; //包头中的包自增序列号
+	required uint32 serialNo = 2; //自增序列号
 }
 
 enum ProgramStatusType

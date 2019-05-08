@@ -781,6 +781,9 @@ class ProtoId(object):
     Qot_GetCapitalFlow = 3211          # 获取资金流向
     Qot_GetCapitalDistribution = 3212  # 获取资金分布
 
+    Qot_GetUserSecurity = 3213  # 获取自选股分组下的股票
+    Qot_ModifyUserSecurity = 3214  # 修改自选股分组下的股票
+
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
 
@@ -1759,3 +1762,21 @@ class QotPushType(FtEnum):
     def get_describe(cls, t):
         obj = cls()
         return obj.describe_dict[t]
+
+
+'''-------------------------ModifyUserSecurityOp----------------------------'''
+from futu.common.pb import Qot_ModifyUserSecurity_pb2
+
+
+# 自选股操作
+class ModifyUserSecurityOp(FtEnum):
+    NONE = "N/A"                                       # 未知
+    ADD = "ADD"                                        # 新增
+    DEL = "DEL"                                        # 删除
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Unknown,
+            self.ADD: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Add,
+            self.DEL: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Del
+        }
