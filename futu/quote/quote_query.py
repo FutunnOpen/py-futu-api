@@ -2304,7 +2304,7 @@ class ModifyUserSecurityQuery:
         pass
 
     @classmethod
-    def pack_req(cls, group_name, op_value, code_list, conn_id):
+    def pack_req(cls, group_name, op, code_list, conn_id):
         """check group_name 分组名,有同名的返回首个"""
         """check op ModifyUserSecurityOp,操作类型"""
         """check code_list 新增或删除该分组下的股票"""
@@ -2326,7 +2326,7 @@ class ModifyUserSecurityQuery:
         from futu.common.pb.Qot_ModifyUserSecurity_pb2 import Request
         req = Request()
         req.c2s.groupName = group_name
-        req.c2s.op = op_value
+        req.c2s.op = op
         for market_code, stock_code in stock_tuple_list:
             stock_inst = req.c2s.securityList.add()
             stock_inst.market = market_code
