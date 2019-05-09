@@ -1118,11 +1118,10 @@ class OpenQuoteContext(OpenContextBase):
 
                 ret != RET_OK err_message为错误描述字符串
         """
-
-        ret, msg, code_list, subtype_list = self._check_subscribe_param(code_list, subtype_list)
-        if ret != RET_OK:
-            return ret, msg
-
+        if not unsubscribe_all:
+            ret, msg, code_list, subtype_list = self._check_subscribe_param(code_list, subtype_list)
+            if ret != RET_OK:
+                return ret, msg
         query_processor = self._get_sync_query_processor(SubscriptionQuery.pack_unsubscribe_req,
                                                          SubscriptionQuery.unpack_unsubscribe_rsp)
 
@@ -1133,19 +1132,23 @@ class OpenQuoteContext(OpenContextBase):
             "conn_id": self.get_sync_conn_id()
         }
 
-        for subtype in subtype_list:
-            if subtype not in self._ctx_subscribe:
-                continue
-            code_set = self._ctx_subscribe[subtype]
-            for code in code_list:
-                if code not in code_set:
+        if not unsubscribe_all:
+            for subtype in subtype_list:
+                if subtype not in self._ctx_subscribe:
                     continue
-                code_set.remove(code)
+                code_set = self._ctx_subscribe[subtype]
+                for code in code_list:
+                    if code not in code_set:
+                        continue
+                    code_set.remove(code)
 
         ret_code, msg, _ = query_processor(**kargs)
 
         if ret_code != RET_OK:
             return RET_ERROR, msg
+
+        if unsubscribe_all:  # 反订阅全部别的参数不重要
+            return RET_OK, None
 
         ret_code, msg, unpush_req_str = SubscriptionQuery.pack_unpush_req(code_list, subtype_list, self.get_async_conn_id())
         if ret_code != RET_OK:
