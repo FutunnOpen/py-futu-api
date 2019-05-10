@@ -867,6 +867,7 @@ class SubscriptionQuery:
 
         if unsub_all is True:
             req.c2s.isUnsubAll = True
+            req.c2s.isSubOrUnSub = False
         else:
             for market_code, stock_code in stock_tuple_list:
                 stock_inst = req.c2s.securityList.add()
@@ -898,7 +899,7 @@ class SubscriptionQuery:
         return RET_OK, "", None
 
     @classmethod
-    def pack_unsubscribe_req(cls, code_list, subtype_list, unsub_all, conn_id):
+    def pack_unsubscribe_req(cls, code_list, subtype_list, unsubscribe_all, conn_id):
 
         return SubscriptionQuery.pack_sub_or_unsub_req(code_list,
                                                        subtype_list,
@@ -906,7 +907,7 @@ class SubscriptionQuery:
                                                        conn_id,
                                                        False,
                                                        False,
-                                                       unsub_all=unsub_all)
+                                                       unsubscribe_all)
 
     @classmethod
     def unpack_unsubscribe_rsp(cls, rsp_pb):
