@@ -867,6 +867,7 @@ class SubscriptionQuery:
 
         if unsub_all is True:
             req.c2s.isUnsubAll = True
+            req.c2s.isSubOrUnSub = False
         else:
             for market_code, stock_code in stock_tuple_list:
                 stock_inst = req.c2s.securityList.add()
