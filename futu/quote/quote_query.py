@@ -274,86 +274,116 @@ class MarketSnapshotQuery:
                     snapshot_tmp['short_sell_rate'] = record.basic.shortSellRate
                     snapshot_tmp['short_available_volume'] = record.basic.shortAvailableVolume
                     snapshot_tmp['short_margin_initial_ratio'] = record.basic.shortMarginInitialRatio
+            # 2019.05.10 增加一批数据================================
+            #  振幅（该字段为百分比字段，默认不展示%） type=double
+            snapshot_tmp["amplitude_price"] = record.basic.amplitudePrice
+            #  平均价 type=double
+            snapshot_tmp["average_price"] = record.basic.averagePrice
+            #  委比（该字段为百分比字段，默认不展示%） type=double
+            snapshot_tmp["bid_ask_ratio"] = record.basic.bidAskRatio
+            #  量比 type=double
+            snapshot_tmp["volume_ratio"] = record.basic.volumeRatio
+            #  52周最高价 type=double
+            snapshot_tmp["highest52week_price"] = record.basic.highest52weekPrice
+            #  52周最低价 type=double
+            snapshot_tmp["lowest52week_price"] = record.basic.lowest52weekPrice
+            #  历史最高价 type=double
+            snapshot_tmp["highest_history_price"] = record.basic.highestHistoryPrice
+            #  历史最低价 type=double
+            snapshot_tmp["lowest_history_price"] = record.basic.lowestHistoryPrice           # ================================
 
             snapshot_tmp['equity_valid'] = False
             # equityExData
             if record.HasField('equityExData'):
                 snapshot_tmp['equity_valid'] = True
-                snapshot_tmp[
-                    'issued_shares'] = record.equityExData.issuedShares
-                snapshot_tmp[
-                    'total_market_val'] = record.equityExData.issuedMarketVal
+                snapshot_tmp['issued_shares'] = record.equityExData.issuedShares
+                snapshot_tmp['total_market_val'] = record.equityExData.issuedMarketVal
                 snapshot_tmp['net_asset'] = record.equityExData.netAsset
                 snapshot_tmp['net_profit'] = record.equityExData.netProfit
-                snapshot_tmp[
-                    'earning_per_share'] = record.equityExData.earningsPershare
-                snapshot_tmp[
-                    'outstanding_shares'] = record.equityExData.outstandingShares
-                snapshot_tmp[
-                    'circular_market_val'] = record.equityExData.outstandingMarketVal
-                snapshot_tmp[
-                    'net_asset_per_share'] = record.equityExData.netAssetPershare
+                snapshot_tmp['earning_per_share'] = record.equityExData.earningsPershare
+                snapshot_tmp['outstanding_shares'] = record.equityExData.outstandingShares
+                snapshot_tmp['circular_market_val'] = record.equityExData.outstandingMarketVal
+                snapshot_tmp['net_asset_per_share'] = record.equityExData.netAssetPershare
                 snapshot_tmp['ey_ratio'] = record.equityExData.eyRate
                 snapshot_tmp['pe_ratio'] = record.equityExData.peRate
                 snapshot_tmp['pb_ratio'] = record.equityExData.pbRate
                 snapshot_tmp['pe_ttm_ratio'] = record.equityExData.peTTMRate
+                snapshot_tmp["dividend_ttm"] = record.equityExData.dividendTTM
+                #  股息率TTM（该字段为百分比字段，默认不展示%） type=double
+                snapshot_tmp["dividend_ratio_ttm"] = record.equityExData.dividendRatioTTM
+                #  股息LFY，上一年度派息 type=double
+                snapshot_tmp["dividend_lfy"] = record.equityExData.dividendLFY
+                #  股息率LFY（该字段为百分比字段，默认不展示%） type=double
+                snapshot_tmp["dividend_lfy_ratio"] = record.equityExData.dividendLFYRatio
 
             snapshot_tmp['wrt_valid'] = False
             if record.basic.type == SEC_TYPE_MAP[SecurityType.WARRANT]:
                 snapshot_tmp['wrt_valid'] = True
-                snapshot_tmp[
-                    'wrt_conversion_ratio'] = record.warrantExData.conversionRate
+                snapshot_tmp['wrt_conversion_ratio'] = record.warrantExData.conversionRate
                 snapshot_tmp['wrt_type'] = WrtType.to_string2(record.warrantExData.warrantType)
-                snapshot_tmp[
-                    'wrt_strike_price'] = record.warrantExData.strikePrice
-                snapshot_tmp[
-                    'wrt_maturity_date'] = record.warrantExData.maturityTime
-                snapshot_tmp[
-                    'wrt_end_trade'] = record.warrantExData.endTradeTime
+                snapshot_tmp['wrt_strike_price'] = record.warrantExData.strikePrice
+                snapshot_tmp['wrt_maturity_date'] = record.warrantExData.maturityTime
+                snapshot_tmp['wrt_end_trade'] = record.warrantExData.endTradeTime
                 snapshot_tmp['stock_owner'] = merge_qot_mkt_stock_str(
                     record.warrantExData.owner.market,
                     record.warrantExData.owner.code)
-                snapshot_tmp[
-                    'wrt_recovery_price'] = record.warrantExData.recoveryPrice
-                snapshot_tmp[
-                    'wrt_street_vol'] = record.warrantExData.streetVolumn
-                snapshot_tmp[
-                    'wrt_issue_vol'] = record.warrantExData.issueVolumn
-                snapshot_tmp[
-                    'wrt_street_ratio'] = record.warrantExData.streetRate
+                snapshot_tmp['wrt_recovery_price'] = record.warrantExData.recoveryPrice
+                snapshot_tmp['wrt_street_vol'] = record.warrantExData.streetVolumn
+                snapshot_tmp['wrt_issue_vol'] = record.warrantExData.issueVolumn
+                snapshot_tmp['wrt_street_ratio'] = record.warrantExData.streetRate
                 snapshot_tmp['wrt_delta'] = record.warrantExData.delta
-                snapshot_tmp[
-                    'wrt_implied_volatility'] = record.warrantExData.impliedVolatility
+                snapshot_tmp['wrt_implied_volatility'] = record.warrantExData.impliedVolatility
                 snapshot_tmp['wrt_premium'] = record.warrantExData.premium
+                #  杠杆比率（倍） type=double
+                snapshot_tmp["leverage"] = record.warrantExData.leverage
+                #  价内/价外（该字段为百分比字段，默认不展示%） type=double
+                snapshot_tmp["itm_otm_ratio"] = record.warrantExData.itmOtmRatio
+                #  打和点 type=double
+                snapshot_tmp["break_even_point_price"] = record.warrantExData.breakEvenPointPrice
+                #  换股价 type=double
+                snapshot_tmp["entitlement_price"] = record.warrantExData.entitlementPrice
+                #  距收回价（该字段为百分比字段，默认不展示%） type=double
+                snapshot_tmp["price_call_ratio"] = record.warrantExData.priceCallRatio
+                #  综合评分 type=double
+                snapshot_tmp["score"] = record.warrantExData.score
 
             snapshot_tmp['option_valid'] = False
             if record.basic.type == SEC_TYPE_MAP[SecurityType.DRVT]:
                 snapshot_tmp['option_valid'] = True
-                snapshot_tmp[
-                    'option_type'] = QUOTE.REV_OPTION_TYPE_CLASS_MAP[record.optionExData.type]
+                snapshot_tmp['option_type'] = QUOTE.REV_OPTION_TYPE_CLASS_MAP[record.optionExData.type]
                 snapshot_tmp['stock_owner'] = merge_qot_mkt_stock_str(
                     record.optionExData.owner.market, record.optionExData.owner.code)
-                snapshot_tmp[
-                    'strike_time'] = record.optionExData.strikeTime
-                snapshot_tmp[
-                    'option_strike_price'] = record.optionExData.strikePrice
-                snapshot_tmp[
-                    'option_contract_size'] = record.optionExData.contractSize
-                snapshot_tmp[
-                    'option_open_interest'] = record.optionExData.openInterest
+                snapshot_tmp['strike_time'] = record.optionExData.strikeTime
+                snapshot_tmp['option_strike_price'] = record.optionExData.strikePrice
+                snapshot_tmp['option_contract_size'] = record.optionExData.contractSize
+                snapshot_tmp['option_open_interest'] = record.optionExData.openInterest
                 snapshot_tmp['option_implied_volatility'] = record.optionExData.impliedVolatility
-                snapshot_tmp[
-                    'option_premium'] = record.optionExData.premium
-                snapshot_tmp[
-                    'option_delta'] = record.optionExData.delta
-                snapshot_tmp[
-                    'option_gamma'] = record.optionExData.gamma
-                snapshot_tmp[
-                    'option_vega'] = record.optionExData.vega
+                snapshot_tmp['option_premium'] = record.optionExData.premium
+                snapshot_tmp['option_delta'] = record.optionExData.delta
+                snapshot_tmp['option_gamma'] = record.optionExData.gamma
+                snapshot_tmp['option_vega'] = record.optionExData.vega
                 snapshot_tmp['option_theta'] = record.optionExData.theta
-                snapshot_tmp['option_rho'] = record.optionExData.rho
-            else:
-                pass
+
+            snapshot_tmp['index_valid'] = False
+            if record.HasField('indexExData'):
+                snapshot_tmp['index_valid'] = True
+                #  指数类型上涨支数 type=int32
+                snapshot_tmp["index_raise_count"] = record.indexExData.raiseCount
+                #  指数类型下跌支数 type=int32
+                snapshot_tmp["index_fall_count"] = record.indexExData.fallCount
+                #  指数类型平盘支数 type=int32
+                snapshot_tmp["index_equal_count"] = record.indexExData.equalCount
+
+            snapshot_tmp['plate_valid'] = False
+            if record.HasField('plateExData'):
+                snapshot_tmp['plate_valid'] = True
+                #  板块类型上涨支数 type=int32
+                snapshot_tmp["plate_raise_count"] = record.plateExData.raiseCount
+                #  板块类型下跌支数 type=int32
+                snapshot_tmp["plate_fall_count"] = record.plateExData.fallCount
+                #  板块类型平盘支数 type=int32
+                snapshot_tmp["plate_equal_count"] = record.plateExData.equalCount
+
             snapshot_list.append(snapshot_tmp)
 
         return RET_OK, "", snapshot_list
