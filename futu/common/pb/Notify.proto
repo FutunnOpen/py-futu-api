@@ -7,6 +7,10 @@ enum NotifyType
 {
 	NotifyType_None = 0; //无
 	NotifyType_GtwEvent = 1; //OpenD运行事件通知
+	NotifyType_ProgramStatus = 2; //程序状态
+	NotifyType_ConnStatus = 3; //连接状态
+	NotifyType_QotRight = 4; //行情权限
+	NotifyType_APILevel = 5; //用户等级
 }
 
 enum GtwEventType
@@ -35,10 +39,37 @@ message GtwEvent
 	required string desc = 2; //事件描述
 }
 
+message ProgramStatus
+{
+	required Common.ProgramStatus programStatus = 1; //当前程序状态
+}
+
+message ConnectStatus
+{
+	required bool qotLogined = 1; //是否登陆行情服务器
+	required bool trdLogined = 2; //是否登陆交易服务器
+}
+
+message QotRight
+{
+	required int32 hkQotRight = 4; //港股行情权限, GetUserInfo.QotRight
+	required int32 usQotRight = 5; //美股行情权限, QotRight
+	required int32 cnQotRight = 6; //A股行情权限, QotRight
+}
+
+message APILevel
+{
+	required string apiLevel = 3; //api用户等级描述
+}
+
 message S2C
 {
 	required int32 type = 1; //通知类型
 	optional GtwEvent event = 2; //事件通息
+	optional ProgramStatus programStatus = 3; //程序状态
+	optional ConnectStatus connectStatus = 4; //连接状态
+	optional QotRight qotRight = 5; //行情权限
+	optional APILevel apiLevel = 6; //用户等级
 }
 
 message Response

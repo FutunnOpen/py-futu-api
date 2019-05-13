@@ -474,6 +474,12 @@ class ProtobufMap(dict):
         from futu.common.pb.Qot_GetCapitalFlow_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetCapitalFlow] = Response()
 
+        from futu.common.pb.Qot_GetUserSecurity_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetUserSecurity] = Response()
+
+        from futu.common.pb.Qot_ModifyUserSecurity_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_ModifyUserSecurity] = Response()
+
     def __getitem__(self, key):
         return ProtobufMap.created_protobuf_map[key] if key in ProtobufMap.created_protobuf_map else None
 

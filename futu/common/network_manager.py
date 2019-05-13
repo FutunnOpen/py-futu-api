@@ -274,7 +274,7 @@ class NetManager:
             return self._use_count > 0
 
     def do_send(self, conn_id, proto_info, data):
-        logger.debug('Send: conn_id={}; proto_id={}; serial_no={}; total_len={};'.format(conn_id, proto_info.proto_id,
+        logger.debug2(FTLog.ONLY_FILE, 'Send: conn_id={}; proto_id={}; serial_no={}; total_len={};'.format(conn_id, proto_info.proto_id,
                                                                                          proto_info.serial_no,
                                                                                          len(data)))
         now = datetime.now()
@@ -490,7 +490,7 @@ class NetManager:
             self.close(conn.conn_id)
             conn.handler.on_error(conn.conn_id, err)
         end_time = time.time()
-        logger.debug('conn_id={}; elapsed={}; recv_len={}; buf_len={}; packet={};'.format(conn.conn_id, end_time-start_time, recv_len, buf_len, packet_count))
+        logger.debug2(FTLog.ONLY_FILE, 'conn_id={}; elapsed={}; recv_len={}; buf_len={}; packet={};'.format(conn.conn_id, end_time-start_time, recv_len, buf_len, packet_count))
 
     def _on_write(self, conn):
         if conn.status == ConnStatus.Closed:
@@ -557,7 +557,7 @@ class NetManager:
                                                                                                  rsp_body_data) if rsp_body_data else 0,
                                                                                              msg)
         if err_code == Err.Ok.code:
-            logger.debug(log_msg)
+            logger.debug2(FTLog.ONLY_FILE, log_msg)
         else:
             logger.warning(log_msg)
 

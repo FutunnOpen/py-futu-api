@@ -4,7 +4,7 @@
 """
 
 from futu.common.utils import *
-from ..common.pb import Common_pb2
+from futu.common.pb import Common_pb2
 
 # 无数据时的值
 NoneDataType = 'N/A'
@@ -125,7 +125,6 @@ class StockBasicInfoQuery:
     """
     Query Conversion for getting stock basic information.
     """
-
     def __init__(self):
         pass
 
@@ -199,7 +198,6 @@ class MarketSnapshotQuery:
     """
     Query Conversion for getting market snapshot.
     """
-
     def __init__(self):
         pass
 
@@ -276,86 +274,116 @@ class MarketSnapshotQuery:
                     snapshot_tmp['short_sell_rate'] = record.basic.shortSellRate
                     snapshot_tmp['short_available_volume'] = record.basic.shortAvailableVolume
                     snapshot_tmp['short_margin_initial_ratio'] = record.basic.shortMarginInitialRatio
+            # 2019.05.10 增加一批数据================================
+            #  振幅（该字段为百分比字段，默认不展示%） type=double
+            snapshot_tmp["amplitude_price"] = record.basic.amplitudePrice
+            #  平均价 type=double
+            snapshot_tmp["average_price"] = record.basic.averagePrice
+            #  委比（该字段为百分比字段，默认不展示%） type=double
+            snapshot_tmp["bid_ask_ratio"] = record.basic.bidAskRatio
+            #  量比 type=double
+            snapshot_tmp["volume_ratio"] = record.basic.volumeRatio
+            #  52周最高价 type=double
+            snapshot_tmp["highest52week_price"] = record.basic.highest52weekPrice
+            #  52周最低价 type=double
+            snapshot_tmp["lowest52week_price"] = record.basic.lowest52weekPrice
+            #  历史最高价 type=double
+            snapshot_tmp["highest_history_price"] = record.basic.highestHistoryPrice
+            #  历史最低价 type=double
+            snapshot_tmp["lowest_history_price"] = record.basic.lowestHistoryPrice           # ================================
 
             snapshot_tmp['equity_valid'] = False
             # equityExData
             if record.HasField('equityExData'):
                 snapshot_tmp['equity_valid'] = True
-                snapshot_tmp[
-                    'issued_shares'] = record.equityExData.issuedShares
-                snapshot_tmp[
-                    'total_market_val'] = record.equityExData.issuedMarketVal
+                snapshot_tmp['issued_shares'] = record.equityExData.issuedShares
+                snapshot_tmp['total_market_val'] = record.equityExData.issuedMarketVal
                 snapshot_tmp['net_asset'] = record.equityExData.netAsset
                 snapshot_tmp['net_profit'] = record.equityExData.netProfit
-                snapshot_tmp[
-                    'earning_per_share'] = record.equityExData.earningsPershare
-                snapshot_tmp[
-                    'outstanding_shares'] = record.equityExData.outstandingShares
-                snapshot_tmp[
-                    'circular_market_val'] = record.equityExData.outstandingMarketVal
-                snapshot_tmp[
-                    'net_asset_per_share'] = record.equityExData.netAssetPershare
+                snapshot_tmp['earning_per_share'] = record.equityExData.earningsPershare
+                snapshot_tmp['outstanding_shares'] = record.equityExData.outstandingShares
+                snapshot_tmp['circular_market_val'] = record.equityExData.outstandingMarketVal
+                snapshot_tmp['net_asset_per_share'] = record.equityExData.netAssetPershare
                 snapshot_tmp['ey_ratio'] = record.equityExData.eyRate
                 snapshot_tmp['pe_ratio'] = record.equityExData.peRate
                 snapshot_tmp['pb_ratio'] = record.equityExData.pbRate
                 snapshot_tmp['pe_ttm_ratio'] = record.equityExData.peTTMRate
+                snapshot_tmp["dividend_ttm"] = record.equityExData.dividendTTM
+                #  股息率TTM（该字段为百分比字段，默认不展示%） type=double
+                snapshot_tmp["dividend_ratio_ttm"] = record.equityExData.dividendRatioTTM
+                #  股息LFY，上一年度派息 type=double
+                snapshot_tmp["dividend_lfy"] = record.equityExData.dividendLFY
+                #  股息率LFY（该字段为百分比字段，默认不展示%） type=double
+                snapshot_tmp["dividend_lfy_ratio"] = record.equityExData.dividendLFYRatio
 
             snapshot_tmp['wrt_valid'] = False
             if record.basic.type == SEC_TYPE_MAP[SecurityType.WARRANT]:
                 snapshot_tmp['wrt_valid'] = True
-                snapshot_tmp[
-                    'wrt_conversion_ratio'] = record.warrantExData.conversionRate
+                snapshot_tmp['wrt_conversion_ratio'] = record.warrantExData.conversionRate
                 snapshot_tmp['wrt_type'] = WrtType.to_string2(record.warrantExData.warrantType)
-                snapshot_tmp[
-                    'wrt_strike_price'] = record.warrantExData.strikePrice
-                snapshot_tmp[
-                    'wrt_maturity_date'] = record.warrantExData.maturityTime
-                snapshot_tmp[
-                    'wrt_end_trade'] = record.warrantExData.endTradeTime
+                snapshot_tmp['wrt_strike_price'] = record.warrantExData.strikePrice
+                snapshot_tmp['wrt_maturity_date'] = record.warrantExData.maturityTime
+                snapshot_tmp['wrt_end_trade'] = record.warrantExData.endTradeTime
                 snapshot_tmp['stock_owner'] = merge_qot_mkt_stock_str(
                     record.warrantExData.owner.market,
                     record.warrantExData.owner.code)
-                snapshot_tmp[
-                    'wrt_recovery_price'] = record.warrantExData.recoveryPrice
-                snapshot_tmp[
-                    'wrt_street_vol'] = record.warrantExData.streetVolumn
-                snapshot_tmp[
-                    'wrt_issue_vol'] = record.warrantExData.issueVolumn
-                snapshot_tmp[
-                    'wrt_street_ratio'] = record.warrantExData.streetRate
+                snapshot_tmp['wrt_recovery_price'] = record.warrantExData.recoveryPrice
+                snapshot_tmp['wrt_street_vol'] = record.warrantExData.streetVolumn
+                snapshot_tmp['wrt_issue_vol'] = record.warrantExData.issueVolumn
+                snapshot_tmp['wrt_street_ratio'] = record.warrantExData.streetRate
                 snapshot_tmp['wrt_delta'] = record.warrantExData.delta
-                snapshot_tmp[
-                    'wrt_implied_volatility'] = record.warrantExData.impliedVolatility
+                snapshot_tmp['wrt_implied_volatility'] = record.warrantExData.impliedVolatility
                 snapshot_tmp['wrt_premium'] = record.warrantExData.premium
+                #  杠杆比率（倍） type=double
+                snapshot_tmp["leverage"] = record.warrantExData.leverage
+                #  价内/价外（该字段为百分比字段，默认不展示%） type=double
+                snapshot_tmp["itm_otm_ratio"] = record.warrantExData.itmOtmRatio
+                #  打和点 type=double
+                snapshot_tmp["break_even_point_price"] = record.warrantExData.breakEvenPointPrice
+                #  换股价 type=double
+                snapshot_tmp["entitlement_price"] = record.warrantExData.entitlementPrice
+                #  距收回价（该字段为百分比字段，默认不展示%） type=double
+                snapshot_tmp["price_call_ratio"] = record.warrantExData.priceCallRatio
+                #  综合评分 type=double
+                snapshot_tmp["score"] = record.warrantExData.score
 
             snapshot_tmp['option_valid'] = False
             if record.basic.type == SEC_TYPE_MAP[SecurityType.DRVT]:
                 snapshot_tmp['option_valid'] = True
-                snapshot_tmp[
-                    'option_type'] = QUOTE.REV_OPTION_TYPE_CLASS_MAP[record.optionExData.type]
+                snapshot_tmp['option_type'] = QUOTE.REV_OPTION_TYPE_CLASS_MAP[record.optionExData.type]
                 snapshot_tmp['stock_owner'] = merge_qot_mkt_stock_str(
                     record.optionExData.owner.market, record.optionExData.owner.code)
-                snapshot_tmp[
-                    'strike_time'] = record.optionExData.strikeTime
-                snapshot_tmp[
-                    'option_strike_price'] = record.optionExData.strikePrice
-                snapshot_tmp[
-                    'option_contract_size'] = record.optionExData.contractSize
-                snapshot_tmp[
-                    'option_open_interest'] = record.optionExData.openInterest
+                snapshot_tmp['strike_time'] = record.optionExData.strikeTime
+                snapshot_tmp['option_strike_price'] = record.optionExData.strikePrice
+                snapshot_tmp['option_contract_size'] = record.optionExData.contractSize
+                snapshot_tmp['option_open_interest'] = record.optionExData.openInterest
                 snapshot_tmp['option_implied_volatility'] = record.optionExData.impliedVolatility
-                snapshot_tmp[
-                    'option_premium'] = record.optionExData.premium
-                snapshot_tmp[
-                    'option_delta'] = record.optionExData.delta
-                snapshot_tmp[
-                    'option_gamma'] = record.optionExData.gamma
-                snapshot_tmp[
-                    'option_vega'] = record.optionExData.vega
+                snapshot_tmp['option_premium'] = record.optionExData.premium
+                snapshot_tmp['option_delta'] = record.optionExData.delta
+                snapshot_tmp['option_gamma'] = record.optionExData.gamma
+                snapshot_tmp['option_vega'] = record.optionExData.vega
                 snapshot_tmp['option_theta'] = record.optionExData.theta
-                snapshot_tmp['option_rho'] = record.optionExData.rho
-            else:
-                pass
+
+            snapshot_tmp['index_valid'] = False
+            if record.HasField('indexExData'):
+                snapshot_tmp['index_valid'] = True
+                #  指数类型上涨支数 type=int32
+                snapshot_tmp["index_raise_count"] = record.indexExData.raiseCount
+                #  指数类型下跌支数 type=int32
+                snapshot_tmp["index_fall_count"] = record.indexExData.fallCount
+                #  指数类型平盘支数 type=int32
+                snapshot_tmp["index_equal_count"] = record.indexExData.equalCount
+
+            snapshot_tmp['plate_valid'] = False
+            if record.HasField('plateExData'):
+                snapshot_tmp['plate_valid'] = True
+                #  板块类型上涨支数 type=int32
+                snapshot_tmp["plate_raise_count"] = record.plateExData.raiseCount
+                #  板块类型下跌支数 type=int32
+                snapshot_tmp["plate_fall_count"] = record.plateExData.fallCount
+                #  板块类型平盘支数 type=int32
+                snapshot_tmp["plate_equal_count"] = record.plateExData.equalCount
+
             snapshot_list.append(snapshot_tmp)
 
         return RET_OK, "", snapshot_list
@@ -845,33 +873,51 @@ class SubscriptionQuery:
         pass
 
     @classmethod
-    def pack_sub_or_unsub_req(cls, code_list, subtype_list, is_sub, conn_id, is_first_push, reg_or_unreg_push):
+    def pack_sub_or_unsub_req(cls,
+                              code_list,
+                              subtype_list,
+                              is_sub,
+                              conn_id,
+                              is_first_push,
+                              reg_or_unreg_push,
+                              unsub_all=False):
 
         stock_tuple_list = []
-        for code in code_list:
-            ret_code, content = split_stock_str(code)
-            if ret_code != RET_OK:
-                return ret_code, content, None
-            market_code, stock_code = content
-            stock_tuple_list.append((market_code, stock_code))
+
+        if code_list is not None:
+            for code in code_list:
+                ret_code, content = split_stock_str(code)
+                if ret_code != RET_OK:
+                    return ret_code, content, None
+                market_code, stock_code = content
+                stock_tuple_list.append((market_code, stock_code))
 
         from futu.common.pb.Qot_Sub_pb2 import Request
         req = Request()
-        for market_code, stock_code in stock_tuple_list:
-            stock_inst = req.c2s.securityList.add()
-            stock_inst.code = stock_code
-            stock_inst.market = market_code
-        for subtype in subtype_list:
-            req.c2s.subTypeList.append(SUBTYPE_MAP[subtype])
-        req.c2s.isSubOrUnSub = is_sub
-        req.c2s.isFirstPush = is_first_push
-        req.c2s.isRegOrUnRegPush = reg_or_unreg_push
+
+        if unsub_all is True:
+            req.c2s.isUnsubAll = True
+            req.c2s.isSubOrUnSub = False
+        else:
+            for market_code, stock_code in stock_tuple_list:
+                stock_inst = req.c2s.securityList.add()
+                stock_inst.code = stock_code
+                stock_inst.market = market_code
+            for subtype in subtype_list:
+                req.c2s.subTypeList.append(SUBTYPE_MAP[subtype])
+            req.c2s.isSubOrUnSub = is_sub
+            req.c2s.isFirstPush = is_first_push
+            req.c2s.isRegOrUnRegPush = reg_or_unreg_push
 
         return pack_pb_req(req, ProtoId.Qot_Sub, conn_id)
 
     @classmethod
     def pack_subscribe_req(cls, code_list, subtype_list, conn_id, is_first_push, subscribe_push):
-        return SubscriptionQuery.pack_sub_or_unsub_req(code_list, subtype_list, True, conn_id, is_first_push,
+        return SubscriptionQuery.pack_sub_or_unsub_req(code_list,
+                                                       subtype_list,
+                                                       True,
+                                                       conn_id,
+                                                       is_first_push,
                                                        subscribe_push)  # True
 
     @classmethod
@@ -883,9 +929,15 @@ class SubscriptionQuery:
         return RET_OK, "", None
 
     @classmethod
-    def pack_unsubscribe_req(cls, code_list, subtype_list, conn_id):
+    def pack_unsubscribe_req(cls, code_list, subtype_list, unsubscribe_all, conn_id):
 
-        return SubscriptionQuery.pack_sub_or_unsub_req(code_list, subtype_list, False, conn_id, False, False)
+        return SubscriptionQuery.pack_sub_or_unsub_req(code_list,
+                                                       subtype_list,
+                                                       False,
+                                                       conn_id,
+                                                       False,
+                                                       False,
+                                                       unsubscribe_all)
 
     @classmethod
     def unpack_unsubscribe_rsp(cls, rsp_pb):
@@ -1399,18 +1451,37 @@ class SysNotifyPush:
         if rsp_pb.retType != RET_OK:
             return RET_ERROR, rsp_pb.retMsg,
 
-        tmp_type = rsp_pb.s2c.type
-
-        notify_type = SysNoitfy.REV_SYS_EVENT_TYPE_MAP[tmp_type] if tmp_type in SysNoitfy.REV_SYS_EVENT_TYPE_MAP else SysNotifyType.NONE
-        sub_type = GtwEventType.NONE
-        msg = ""
+        pb_type = rsp_pb.s2c.type
+        data = None
+        notify_type = SysNoitfy.REV_SYS_EVENT_TYPE_MAP[pb_type] if pb_type in SysNoitfy.REV_SYS_EVENT_TYPE_MAP else SysNotifyType.NONE
         if notify_type == SysNotifyType.GTW_EVENT:
-            tmp_type = rsp_pb.s2c.event.eventType
-            if tmp_type in SysNoitfy.REV_GTW_EVENT_MAP:
-                sub_type = SysNoitfy.REV_GTW_EVENT_MAP[tmp_type]
-            msg = rsp_pb.s2c.event.desc
+            if rsp_pb.s2c.event:
+                pb_event = rsp_pb.s2c.event.eventType
+                event = SysNoitfy.REV_GTW_EVENT_MAP[pb_event] if pb_event in SysNoitfy.REV_GTW_EVENT_MAP else GtwEventType.NONE
+                data = {'event': event, 'msg': rsp_pb.s2c.event.desc}
+        elif notify_type == SysNotifyType.PROGRAM_STATUS:
+            if rsp_pb.s2c.programStatus:
+                ret, status = ProgramStatusType.to_string(rsp_pb.s2c.programStatus)
+                if not ret:
+                    status = ProgramStatusType.NONE
+                data = status
+        elif notify_type == SysNotifyType.CONN_STATUS:
+            if rsp_pb.s2c.connectStatus:
+                data = {'qot_logined': rsp_pb.s2c.connectStatus.qotLogined,
+                        'trd_logined': rsp_pb.s2c.connectStatus.trdLogined}
+        elif notify_type == SysNotifyType.QOT_RIGHT:
+            if rsp_pb.s2c.qotRight:
+                data = {'hk_qot_right': rsp_pb.s2c.hkQotRight,
+                        'us_qot_right': rsp_pb.s2c.usQotRight,
+                        'cn_qot_right': rsp_pb.s2c.cnQotRight}
+        elif notify_type == SysNotifyType.API_LEVEL:
+            if rsp_pb.s2c.apiLevel:
+                data = {'api_level': rsp_pb.s2c.apiLevel.apiLevel}
 
-        return RET_OK, (notify_type, sub_type, msg)
+        if data is None:
+            logger.warning("SysNotifyPush data is None: notify_type={}".format(notify_type))
+
+        return RET_OK, (notify_type, data)
 
 
 class MultiPointsHisKLine:
@@ -2268,3 +2339,106 @@ class Verification:
     def unpack_rsp(cls, rsp_pb):
             return rsp_pb.retType, rsp_pb.retMsg, None
 
+
+    """
+    ===============================================================================
+    ===============================================================================
+    """
+
+
+class ModifyUserSecurityQuery:
+    """
+    Query ModifyUserSecurity.
+    """
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, group_name, op, code_list, conn_id):
+        """check group_name 分组名,有同名的返回首个"""
+        """check op ModifyUserSecurityOp,操作类型"""
+        """check code_list 新增或删除该分组下的股票"""
+        stock_tuple_list = []
+        failure_tuple_list = []
+        for stock_str in code_list:
+            ret_code, content = split_stock_str(stock_str)
+            if ret_code != RET_OK:
+                error_str = content
+                failure_tuple_list.append((ret_code, error_str))
+                continue
+            market_code, stock_code = content
+            stock_tuple_list.append((market_code, stock_code))
+        if len(failure_tuple_list) > 0:
+            error_str = '\n'.join([x[1] for x in failure_tuple_list])
+            return RET_ERROR, error_str, None
+
+        # 开始组包
+        from futu.common.pb.Qot_ModifyUserSecurity_pb2 import Request
+        req = Request()
+        req.c2s.groupName = group_name
+        req.c2s.op = op
+        for market_code, stock_code in stock_tuple_list:
+            stock_inst = req.c2s.securityList.add()
+            stock_inst.market = market_code
+            stock_inst.code = stock_code
+
+        return pack_pb_req(req, ProtoId.Qot_ModifyUserSecurity, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        return RET_OK, "", None
+
+
+class GetUserSecurityQuery:
+        """
+        Query GetUserSecurity.
+        """
+
+        def __init__(self):
+            pass
+
+        @classmethod
+        def pack_req(cls, group_name, conn_id):
+            """check group_name 分组名,有同名的返回首个"""
+            # 开始组包
+            from futu.common.pb.Qot_GetUserSecurity_pb2 import Request
+            req = Request()
+            req.c2s.groupName = group_name
+            return pack_pb_req(req, ProtoId.Qot_GetUserSecurity, conn_id)
+
+        @classmethod
+        def unpack(cls, rsp_pb):
+            if rsp_pb.retType != RET_OK:
+                return RET_ERROR, rsp_pb.retMsg, None
+            #  自选股分组下的股票列表 type = Qot_Common.SecurityStaticInfo
+            static_info_list = rsp_pb.s2c.staticInfoList
+            #  基本股票静态信息 type = SecurityStaticBasic
+            basic_info_list = [{
+                "code": merge_qot_mkt_stock_str(record.basic.security.market,
+                                                record.basic.security.code),
+                "stock_id": record.basic.id,
+                "name": record.basic.name,
+                "lot_size": record.basic.lotSize,
+                "stock_type": QUOTE.REV_SEC_TYPE_MAP[record.basic.secType]
+                if record.basic.secType in QUOTE.REV_SEC_TYPE_MAP else SecurityType.NONE,
+
+                "stock_child_type": WrtType.to_string2(record.warrantExData.type),
+                "stock_owner": merge_qot_mkt_stock_str(
+                    record.warrantExData.owner.market,
+                    record.warrantExData.owner.code) if record.HasField('warrantExData') else (
+                    merge_qot_mkt_stock_str(
+                        record.optionExData.owner.market,
+                        record.optionExData.owner.code) if record.HasField('optionExData')
+                    else ""),
+                "listing_date": "N/A" if record.HasField('optionExData') else record.basic.listTime,
+                "option_type": QUOTE.REV_OPTION_TYPE_CLASS_MAP[record.optionExData.type]
+                if record.HasField('optionExData') else "",
+                "strike_time": record.optionExData.strikeTime,
+                "strike_price": record.optionExData.strikePrice if record.HasField(
+                    'optionExData') else NoneDataType,
+                "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
+                "delisting": record.basic.delisting if record.basic.HasField('delisting') else NoneDataType
+            } for record in static_info_list]
+            return RET_OK, "", basic_info_list

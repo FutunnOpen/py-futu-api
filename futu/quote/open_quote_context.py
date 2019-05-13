@@ -147,9 +147,9 @@ class OpenQuoteContext(OpenContextBase):
         :param code_list: 如果不为None，应该是股票code的iterable类型，将只返回指定的股票信息
         :return: (ret_code, content)
                 ret_code 等于RET_OK时， content为Pandas.DataFrame数据, 否则为错误原因字符串, 数据列格式如下
-            =================   ===========   ==============================================================================
+            =================   ===========   ==========================================================================
             参数                  类型                        说明
-            =================   ===========   ==============================================================================
+            =================   ===========   ==========================================================================
             code                str            股票代码
             name                str            名字
             lot_size            int            每手数量
@@ -163,7 +163,7 @@ class OpenQuoteContext(OpenContextBase):
             listing_date        str            上市时间
             stock_id            int            股票id
             delisting           bool           是否退市
-            =================   ===========   ==============================================================================
+            =================   ===========   ==========================================================================
 
         :example:
 
@@ -1107,7 +1107,7 @@ class OpenQuoteContext(OpenContextBase):
 
         return ret_code, ret_data
 
-    def unsubscribe(self, code_list, subtype_list):
+    def unsubscribe(self, code_list, subtype_list, unsubscribe_all=False):
         """
         取消订阅
         :param code_list: 取消订阅的股票代码列表
@@ -1118,33 +1118,37 @@ class OpenQuoteContext(OpenContextBase):
 
                 ret != RET_OK err_message为错误描述字符串
         """
-
-        ret, msg, code_list, subtype_list = self._check_subscribe_param(code_list, subtype_list)
-        if ret != RET_OK:
-            return ret, msg
-
+        if not unsubscribe_all:
+            ret, msg, code_list, subtype_list = self._check_subscribe_param(code_list, subtype_list)
+            if ret != RET_OK:
+                return ret, msg
         query_processor = self._get_sync_query_processor(SubscriptionQuery.pack_unsubscribe_req,
                                                          SubscriptionQuery.unpack_unsubscribe_rsp)
 
         kargs = {
             'code_list': code_list,
             'subtype_list': subtype_list,
+            'unsubscribe_all': unsubscribe_all,
             "conn_id": self.get_sync_conn_id()
         }
 
-        for subtype in subtype_list:
-            if subtype not in self._ctx_subscribe:
-                continue
-            code_set = self._ctx_subscribe[subtype]
-            for code in code_list:
-                if code not in code_set:
+        if not unsubscribe_all:
+            for subtype in subtype_list:
+                if subtype not in self._ctx_subscribe:
                     continue
-                code_set.remove(code)
+                code_set = self._ctx_subscribe[subtype]
+                for code in code_list:
+                    if code not in code_set:
+                        continue
+                    code_set.remove(code)
 
         ret_code, msg, _ = query_processor(**kargs)
 
         if ret_code != RET_OK:
             return RET_ERROR, msg
+
+        if unsubscribe_all:  # 反订阅全部别的参数不重要
+            return RET_OK, None
 
         ret_code, msg, unpush_req_str = SubscriptionQuery.pack_unpush_req(code_list, subtype_list, self.get_async_conn_id())
         if ret_code != RET_OK:
@@ -1155,6 +1159,10 @@ class OpenQuoteContext(OpenContextBase):
             return RET_ERROR, msg
 
         return RET_OK, None
+
+    def unsubscribe_all(self):
+        return self.unsubscribe(None, None, True)
+
 
     def query_subscription(self, is_all_conn=True):
         """
@@ -1954,7 +1962,6 @@ class OpenQuoteContext(OpenContextBase):
             exr_frame_table = pd.DataFrame(data, columns=col_list)
             return ret_code, exr_frame_table
 
-
     def get_user_info(self, info_field=[]):
         """获取用户信息（内部保留函数）"""
         query_processor = self._get_sync_query_processor(GetUserInfo.pack_req, GetUserInfo.unpack_rsp)
@@ -2027,15 +2034,14 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         if isinstance(ret, list):
             col_list = [
-            'last_valid_time',
-            'in_flow',
-            'capital_flow_item_time',
+                'last_valid_time',
+                'in_flow',
+                'capital_flow_item_time',
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)
             return RET_OK, ret_frame
         else:
             return RET_ERROR, "empty data"
-
 
     def verification(self, verification_type=VerificationType.NONE, verification_op=VerificationOp.NONE, code=""):
         """图形验证码下载之后会将其存至固定路径，请到该路径下查看验证码
@@ -2090,6 +2096,77 @@ class OpenQuoteContext(OpenContextBase):
             return RET_OK, ret_dic
         else:
             return RET_ERROR, "empty data"
+
+    def modify_user_security(self, group_name, op, code_list):
+        """
+        ModifyUserSecurity
+        修改用户自选股列表信息
+        """
+        if is_str(code_list):
+            code_list = code_list.split(',')
+        elif isinstance(code_list, list):
+            pass
+        else:
+            return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
+        code_list = unique_and_normalize_list(code_list)
+        for code in code_list:
+            if code is None or is_str(code) is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in code_list is wrong"
+                return RET_ERROR, error_str
+
+        ret, op_value = ModifyUserSecurityOp.to_number(op)
+        if ret is not True:
+            return RET_ERROR, op_value
+
+        query_processor = self._get_sync_query_processor(
+            ModifyUserSecurityQuery.pack_req,
+            ModifyUserSecurityQuery.unpack,
+        )
+
+        kargs = {
+            "group_name": group_name,
+            "op": op_value,
+            "code_list": code_list,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        else:
+            return RET_OK, "success"
+
+    def get_user_security(self, group_name):
+        """
+        GetUserSecurity
+        """
+        if not isinstance(group_name, str):
+            return RET_ERROR, "group_name need str"
+
+        query_processor = self._get_sync_query_processor(
+            GetUserSecurityQuery.pack_req,
+            GetUserSecurityQuery.unpack,
+        )
+
+        kargs = {
+            "group_name": group_name,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+                'code', 'name', 'lot_size', 'stock_type', 'stock_child_type', 'stock_owner',
+                'option_type', 'strike_time', 'strike_price', 'suspension',
+                'listing_date', 'stock_id', 'delisting'
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
+
+
+
 
 
 

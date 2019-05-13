@@ -82,7 +82,7 @@ class ClassItemStruct(object):
 
     def get_only_repeated_item(self):
         for item in self.values:
-            if item.trim_type == "list":
+            if item.trim_type == "list" or item.trim_type == "code_list":
                 return item
 
     # def is_repeated_type(self, full_name):
@@ -118,7 +118,7 @@ class ClassItemStruct(object):
                 str_code += template["list_list_item_return"].format(var_name=code_add_space(var_name, 4),
                                                                      trim_name=trim_name,
                                                                      name=trim_name,
-                                                                     description= item.description)
+                                                                     description=item.description)
 
             return template["list_list_return"].format(code=str_code)
 
@@ -239,6 +239,7 @@ class ParameterItem(object):
         self.name = obj["name"] # 原始变量名
         self.full_type = obj["fullType"] # 原始变量名
         self.trim_type = obj["longType"]  # 原始变量名
+        self.python_type = obj["longType"]  # python对应的变量名
         self.trim_name = change_variable_name(self.name).lower() # 整理后的名字
         self.description = obj["description"].replace('\n', '')
         self.label = obj["label"]
@@ -288,6 +289,13 @@ class ParameterItem(object):
 
         elif self.full_type in ["int32", "int64", "double", "float", "string", "bool", "bytes"]:
             self.self_class = BaseClass(self.full_type)
+
+        self.python_type = self.trim_type
+        if self.trim_type in ["int32", "int64"]:
+            self.python_type = "int"
+        if self.trim_type in ["double", "float"]:
+            self.python_type = "float"
+
 
     def get_args(self):
         return "            \"{}\": {},".format(self.trim_name, self.trim_name)
@@ -632,10 +640,30 @@ class GenerateCode(object):
             code_file.write(c)
         code_file.close()
 
+    def rst_class(self):
+        if self.c2s is None or self.s2c is None:
+            return
+
+        export_file = os.path.join(self.out_put_path, "{}.rst".
+                                   format(change_variable_name(self.class_name).lower()))
+        code_file = open(export_file, 'w', encoding='utf-8')
+        code_str = ""
+        for i in range(len(self.s2c.values)):
+            v = self.s2c.values[i]
+            description = v.description
+            python_type = v.python_type
+            name = v.trim_name
+            line = " {:<32}{:<15}{}\n".format(name, python_type, description)
+            code_str += line
+
+        code_file.write(code_str)
+        code_file.close()
+
     def save(self):
         self.out_enums()
         self.out_class()
         self.rst_enums()
+        self.rst_class()
 
 
 class Generate(object):
@@ -717,7 +745,7 @@ def generate(names):
 
 
 if __name__ =="__main__":
-    generate(["GetCapitalDistribution", "GetCapitalFlow"])
+    generate(["ModifyUserSecurity"])
     # c = GenerateCode("GetOwnerPlate", "Qot")
     # c.load()
     # c.save()

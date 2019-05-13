@@ -3,15 +3,6 @@ package GetUserInfo;
 
 import "Common.proto";
 
-//行情权限
-enum QotRight
-{
-	QotRight_Unknow = 0; //未知
-	QotRight_Bmp = 1; //Bmp，无法订阅
-	QotRight_Level1 = 2; //Level1
-	QotRight_Level2 = 3; //Level2
-}
-
 enum UpdateType
 {
 	UpdateType_None = 0; //无需升级

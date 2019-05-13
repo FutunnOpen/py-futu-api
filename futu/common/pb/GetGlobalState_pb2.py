@@ -3,7 +3,6 @@
 
 import sys
 _b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
-from google.protobuf.internal import enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
@@ -22,124 +21,11 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='GetGlobalState.proto',
   package='GetGlobalState',
   syntax='proto2',
-  serialized_pb=_b('\n\x14GetGlobalState.proto\x12\x0eGetGlobalState\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"T\n\rProgramStatus\x12/\n\x04type\x18\x01 \x02(\x0e\x32!.GetGlobalState.ProgramStatusType\x12\x12\n\nstrExtDesc\x18\x02 \x01(\t\"\x15\n\x03\x43\x32S\x12\x0e\n\x06userID\x18\x01 \x02(\x04\"\x8e\x02\n\x03S2C\x12\x10\n\x08marketHK\x18\x01 \x02(\x05\x12\x10\n\x08marketUS\x18\x02 \x02(\x05\x12\x10\n\x08marketSH\x18\x03 \x02(\x05\x12\x10\n\x08marketSZ\x18\x04 \x02(\x05\x12\x16\n\x0emarketHKFuture\x18\x05 \x02(\x05\x12\x12\n\nqotLogined\x18\x06 \x02(\x08\x12\x12\n\ntrdLogined\x18\x07 \x02(\x08\x12\x11\n\tserverVer\x18\x08 \x02(\x05\x12\x15\n\rserverBuildNo\x18\t \x02(\x05\x12\x0c\n\x04time\x18\n \x02(\x03\x12\x11\n\tlocalTime\x18\x0b \x01(\x01\x12\x34\n\rprogramStatus\x18\x0c \x01(\x0b\x32\x1d.GetGlobalState.ProgramStatus\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.GetGlobalState.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.GetGlobalState.S2C*\xc4\x03\n\x11ProgramStatusType\x12\x1a\n\x16ProgramStatusType_None\x10\x00\x12\x1c\n\x18ProgramStatusType_Loaded\x10\x01\x12\x1c\n\x18ProgramStatusType_Loging\x10\x02\x12\'\n#ProgramStatusType_NeedPicVerifyCode\x10\x03\x12)\n%ProgramStatusType_NeedPhoneVerifyCode\x10\x04\x12!\n\x1dProgramStatusType_LoginFailed\x10\x05\x12!\n\x1dProgramStatusType_ForceUpdate\x10\x06\x12*\n&ProgramStatusType_NessaryDataPreparing\x10\x07\x12(\n$ProgramStatusType_NessaryDataMissing\x10\x08\x12\'\n#ProgramStatusType_UnAgreeDisclaimer\x10\t\x12\x1b\n\x17ProgramStatusType_Ready\x10\n\x12!\n\x1dProgramStatusType_ForceLogout\x10\x0b')
+  serialized_pb=_b('\n\x14GetGlobalState.proto\x12\x0eGetGlobalState\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x15\n\x03\x43\x32S\x12\x0e\n\x06userID\x18\x01 \x02(\x04\"\x86\x02\n\x03S2C\x12\x10\n\x08marketHK\x18\x01 \x02(\x05\x12\x10\n\x08marketUS\x18\x02 \x02(\x05\x12\x10\n\x08marketSH\x18\x03 \x02(\x05\x12\x10\n\x08marketSZ\x18\x04 \x02(\x05\x12\x16\n\x0emarketHKFuture\x18\x05 \x02(\x05\x12\x12\n\nqotLogined\x18\x06 \x02(\x08\x12\x12\n\ntrdLogined\x18\x07 \x02(\x08\x12\x11\n\tserverVer\x18\x08 \x02(\x05\x12\x15\n\rserverBuildNo\x18\t \x02(\x05\x12\x0c\n\x04time\x18\n \x02(\x03\x12\x11\n\tlocalTime\x18\x0b \x01(\x01\x12,\n\rprogramStatus\x18\x0c \x01(\x0b\x32\x15.Common.ProgramStatus\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.GetGlobalState.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.GetGlobalState.S2C')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
-_PROGRAMSTATUSTYPE = _descriptor.EnumDescriptor(
-  name='ProgramStatusType',
-  full_name='GetGlobalState.ProgramStatusType',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='ProgramStatusType_None', index=0, number=0,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ProgramStatusType_Loaded', index=1, number=1,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ProgramStatusType_Loging', index=2, number=2,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ProgramStatusType_NeedPicVerifyCode', index=3, number=3,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ProgramStatusType_NeedPhoneVerifyCode', index=4, number=4,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ProgramStatusType_LoginFailed', index=5, number=5,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ProgramStatusType_ForceUpdate', index=6, number=6,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ProgramStatusType_NessaryDataPreparing', index=7, number=7,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ProgramStatusType_NessaryDataMissing', index=8, number=8,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ProgramStatusType_UnAgreeDisclaimer', index=9, number=9,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ProgramStatusType_Ready', index=10, number=10,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ProgramStatusType_ForceLogout', index=11, number=11,
-      options=None,
-      type=None),
-  ],
-  containing_type=None,
-  options=None,
-  serialized_start=602,
-  serialized_end=1054,
-)
-_sym_db.RegisterEnumDescriptor(_PROGRAMSTATUSTYPE)
 
-ProgramStatusType = enum_type_wrapper.EnumTypeWrapper(_PROGRAMSTATUSTYPE)
-ProgramStatusType_None = 0
-ProgramStatusType_Loaded = 1
-ProgramStatusType_Loging = 2
-ProgramStatusType_NeedPicVerifyCode = 3
-ProgramStatusType_NeedPhoneVerifyCode = 4
-ProgramStatusType_LoginFailed = 5
-ProgramStatusType_ForceUpdate = 6
-ProgramStatusType_NessaryDataPreparing = 7
-ProgramStatusType_NessaryDataMissing = 8
-ProgramStatusType_UnAgreeDisclaimer = 9
-ProgramStatusType_Ready = 10
-ProgramStatusType_ForceLogout = 11
-
-
-
-_PROGRAMSTATUS = _descriptor.Descriptor(
-  name='ProgramStatus',
-  full_name='GetGlobalState.ProgramStatus',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='type', full_name='GetGlobalState.ProgramStatus.type', index=0,
-      number=1, type=14, cpp_type=8, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='strExtDesc', full_name='GetGlobalState.ProgramStatus.strExtDesc', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=72,
-  serialized_end=156,
-)
 
 
 _C2S = _descriptor.Descriptor(
@@ -168,8 +54,8 @@ _C2S = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=158,
-  serialized_end=179,
+  serialized_start=72,
+  serialized_end=93,
 )
 
 
@@ -276,8 +162,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=182,
-  serialized_end=452,
+  serialized_start=96,
+  serialized_end=358,
 )
 
 
@@ -307,8 +193,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=454,
-  serialized_end=497,
+  serialized_start=360,
+  serialized_end=403,
 )
 
 
@@ -359,28 +245,18 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=499,
-  serialized_end=599,
+  serialized_start=405,
+  serialized_end=505,
 )
 
-_PROGRAMSTATUS.fields_by_name['type'].enum_type = _PROGRAMSTATUSTYPE
-_S2C.fields_by_name['programStatus'].message_type = _PROGRAMSTATUS
+_S2C.fields_by_name['programStatus'].message_type = Common__pb2._PROGRAMSTATUS
 _REQUEST.fields_by_name['c2s'].message_type = _C2S
 _RESPONSE.fields_by_name['s2c'].message_type = _S2C
-DESCRIPTOR.message_types_by_name['ProgramStatus'] = _PROGRAMSTATUS
 DESCRIPTOR.message_types_by_name['C2S'] = _C2S
 DESCRIPTOR.message_types_by_name['S2C'] = _S2C
 DESCRIPTOR.message_types_by_name['Request'] = _REQUEST
 DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
-DESCRIPTOR.enum_types_by_name['ProgramStatusType'] = _PROGRAMSTATUSTYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
-
-ProgramStatus = _reflection.GeneratedProtocolMessageType('ProgramStatus', (_message.Message,), dict(
-  DESCRIPTOR = _PROGRAMSTATUS,
-  __module__ = 'GetGlobalState_pb2'
-  # @@protoc_insertion_point(class_scope:GetGlobalState.ProgramStatus)
-  ))
-_sym_db.RegisterMessage(ProgramStatus)
 
 C2S = _reflection.GeneratedProtocolMessageType('C2S', (_message.Message,), dict(
   DESCRIPTOR = _C2S,
