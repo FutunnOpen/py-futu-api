@@ -781,6 +781,9 @@ class ProtoId(object):
     Qot_GetCapitalFlow = 3211          # 获取资金流向
     Qot_GetCapitalDistribution = 3212  # 获取资金分布
 
+    Qot_GetUserSecurity = 3213         # 自选股拉取
+    Qot_ModifyUserSecurity = 3214      # 自选股修改
+
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
 
