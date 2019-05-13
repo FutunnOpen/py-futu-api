@@ -320,11 +320,7 @@ class SysNotifyHandlerBase(RspHandlerBase):
     def parse_rsp_pb(cls, rsp_pb):
         ret_code, content = SysNotifyPush.unpack_rsp(rsp_pb)
 
-        if ret_code != RET_OK:
-            return ret_code, content
-        else:
-            notify_type, sub_type, msg = content
-            return RET_OK, (notify_type, sub_type, msg)
+        return ret_code, content
 
     def on_recv_rsp(self, rsp_pb):
         """receive response callback function"""

@@ -914,10 +914,19 @@ class SysNotifyType(object):
     """
     NONE = "N/A"
     GTW_EVENT = "GTW_EVENT"
+    PROGRAM_STATUS = "PROGRAM_STATUS"
+    CONN_STATUS = "CONN_STATUS"
+    QOT_RIGHT = "QOT_RIGHT"
+    API_LEVEL = "API_LEVEL"
 
 
 SYS_EVENT_TYPE_MAP = {
-    SysNotifyType.NONE: 0, SysNotifyType.GTW_EVENT: 1
+    SysNotifyType.NONE: 0,
+    SysNotifyType.GTW_EVENT: 1,
+    SysNotifyType.PROGRAM_STATUS: 2,
+    SysNotifyType.CONN_STATUS: 3,
+    SysNotifyType.QOT_RIGHT: 4,
+    SysNotifyType.API_LEVEL: 5
 }
 
 
