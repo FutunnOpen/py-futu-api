@@ -278,19 +278,20 @@ class MarketSnapshotQuery:
             #  振幅（该字段为百分比字段，默认不展示%） type=double
             snapshot_tmp["amplitude_price"] = record.basic.amplitudePrice
             #  平均价 type=double
-            snapshot_tmp["average_price"] = record.basic.averagePrice
+            snapshot_tmp["avg_price"] = record.basic.avg_price
             #  委比（该字段为百分比字段，默认不展示%） type=double
             snapshot_tmp["bid_ask_ratio"] = record.basic.bidAskRatio
             #  量比 type=double
             snapshot_tmp["volume_ratio"] = record.basic.volumeRatio
             #  52周最高价 type=double
-            snapshot_tmp["highest52week_price"] = record.basic.highest52weekPrice
+            snapshot_tmp["highest52weeks_price"] = record.basic.highest52WeeksPrice
             #  52周最低价 type=double
-            snapshot_tmp["lowest52week_price"] = record.basic.lowest52weekPrice
+            snapshot_tmp["lowest52weeks_price"] = record.basic.lowest52WeeksPrice
             #  历史最高价 type=double
             snapshot_tmp["highest_history_price"] = record.basic.highestHistoryPrice
             #  历史最低价 type=double
-            snapshot_tmp["lowest_history_price"] = record.basic.lowestHistoryPrice           # ================================
+            snapshot_tmp["lowest_history_price"] = record.basic.lowestHistoryPrice
+            # ================================
 
             snapshot_tmp['equity_valid'] = False
             # equityExData
@@ -337,13 +338,13 @@ class MarketSnapshotQuery:
                 #  杠杆比率（倍） type=double
                 snapshot_tmp["leverage"] = record.warrantExData.leverage
                 #  价内/价外（该字段为百分比字段，默认不展示%） type=double
-                snapshot_tmp["itm_otm_ratio"] = record.warrantExData.itmOtmRatio
+                snapshot_tmp["ipop"] = record.warrantExData.ipop
                 #  打和点 type=double
-                snapshot_tmp["break_even_point_price"] = record.warrantExData.breakEvenPointPrice
+                snapshot_tmp["break_even_point"] = record.warrantExData.breakEvenPoint
                 #  换股价 type=double
-                snapshot_tmp["entitlement_price"] = record.warrantExData.entitlementPrice
+                snapshot_tmp["conversion_price"] = record.warrantExData.conversionPrice
                 #  距收回价（该字段为百分比字段，默认不展示%） type=double
-                snapshot_tmp["price_call_ratio"] = record.warrantExData.priceCallRatio
+                snapshot_tmp["price_recovery_ratio"] = record.warrantExData.priceRecoveryRatio
                 #  综合评分 type=double
                 snapshot_tmp["score"] = record.warrantExData.score
 
