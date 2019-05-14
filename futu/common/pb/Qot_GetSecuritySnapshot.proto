@@ -49,10 +49,10 @@ message WarrantSnapshotExData
 	optional double maturityTimestamp = 14; //到期日时间戳
 	optional double endTradeTimestamp = 15; //最后交易日时间戳
 	optional double leverage = 16;  // 杠杆比率（倍）
-	optional double itmOtmRatio = 17; // 价内/价外（该字段为百分比字段，默认不展示%）
-	optional double breakEvenPointPrice = 18; // 打和点
-	optional double entitlementPrice = 19;  // 换股价
-	optional double priceCallRatio = 20; // 距收回价（该字段为百分比字段，默认不展示%）
+	optional double ipop = 17; // 价内/价外（该字段为百分比字段，默认不展示%）
+	optional double breakEvenPoint = 18; // 打和点
+	optional double conversionPrice = 19;  // 换股价
+	optional double priceRecoveryRatio = 20; // 正股距收回价（该字段为百分比字段，默认不展示%）
 	optional double score = 21; // 综合评分
 }
 
@@ -123,11 +123,11 @@ message SnapshotBasicData
     optional int64 shortAvailableVolume = 27; // 剩余可卖空数量（股）
     optional double shortMarginInitialRatio = 28; // 卖空（融券）初始保证金率（该字段为百分比字段，默认不展示%）
 	optional double amplitudePrice = 29; // 振幅（该字段为百分比字段，默认不展示%）
-	optional double averagePrice = 30; // 平均价
+	optional double avgPrice = 30; // 平均价
 	optional double bidAskRatio = 31; // 委比（该字段为百分比字段，默认不展示%）
 	optional double volumeRatio = 32;  // 量比
-	optional double highest52weekPrice = 33;  // 52周最高价
-    optional double lowest52weekPrice = 34;  // 52周最低价
+	optional double highest52WeeksPrice = 33;  // 52周最高价
+    optional double lowest52WeeksPrice = 34;  // 52周最低价
 	optional double highestHistoryPrice = 35;  // 历史最高价
     optional double lowestHistoryPrice = 36;  // 历史最低价
 }

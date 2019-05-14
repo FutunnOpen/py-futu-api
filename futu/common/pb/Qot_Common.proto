@@ -180,7 +180,7 @@ enum TickerType
 	TickerType_T = 21; //T类交易(盘前和盘后交易)
 	TickerType_ExtendedTradingHours = 22; //延长交易时段
 	TickerType_Contingent = 23; //合单交易
-	TickerType_AveragePrice = 24; //平均价成交
+	TickerType_AvgPrice = 24; //平均价成交
 	TickerType_OTCSold = 25; //场外售出
 	TickerType_OddLotCrossMarket = 26; //碎股跨市场交易
 	TickerType_DerivativelyPriced = 27; //衍生工具定价
