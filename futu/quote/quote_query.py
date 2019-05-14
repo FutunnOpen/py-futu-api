@@ -1375,7 +1375,7 @@ class GlobalStateQuery:
         pass
 
     @classmethod
-    def pack_req(cls,user_id, conn_id):
+    def pack_req(cls, user_id, conn_id):
 
         from futu.common.pb.GetGlobalState_pb2 import Request
         req = Request()

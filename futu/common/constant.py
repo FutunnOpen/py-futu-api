@@ -875,7 +875,7 @@ TICKER_TYPE_MAP = {
     TickerType.T: Qot_Common_pb2.TickerType_T,
     TickerType.EXTENDED_TRADING_HOURS: Qot_Common_pb2.TickerType_ExtendedTradingHours,
     TickerType.CONTINGENT: Qot_Common_pb2.TickerType_Contingent,
-    TickerType.AVERAGE_PRICE: Qot_Common_pb2.TickerType_AveragePrice,
+    TickerType.AVERAGE_PRICE: Qot_Common_pb2.TickerType_AvgPrice,
     TickerType.OTC_SOLD: Qot_Common_pb2.TickerType_OTCSold,
     TickerType.ODD_LOT_CROSS_MARKET: Qot_Common_pb2.TickerType_OddLotCrossMarket,
     TickerType.DERIVATIVELY_PRICED: Qot_Common_pb2.TickerType_DerivativelyPriced,
@@ -1546,7 +1546,7 @@ class TradeDateType(FtEnum):
 
 
 '''-------------------------行情权限----------------------------'''
-from futu.common.pb import GetUserInfo_pb2
+from futu.common.pb import Qot_Common_pb2
 
 
 # 行情权限
@@ -1558,10 +1558,10 @@ class QotRight(FtEnum):
 
     def load_dic(self):
         return {
-            self.NONE: GetUserInfo_pb2.QotRight_Unknow,
-            self.BMP: GetUserInfo_pb2.QotRight_Bmp,
-            self.LEVEL1: GetUserInfo_pb2.QotRight_Level1,
-            self.LEVEL2: GetUserInfo_pb2.QotRight_Level2
+            self.NONE: Qot_Common_pb2.QotRight_Unknow,
+            self.BMP: Qot_Common_pb2.QotRight_Bmp,
+            self.LEVEL1: Qot_Common_pb2.QotRight_Level1,
+            self.LEVEL2: Qot_Common_pb2.QotRight_Level2
         }
 
 
@@ -1601,7 +1601,7 @@ class VerificationType(FtEnum):
 
 '''-------------------------被强制退出登录,例如修改了登录密码,中途打开设备锁等,详细原因在描述返回----------------------------'''
 
-from futu.common.pb import GetGlobalState_pb2
+from futu.common.pb import Common_pb2
 
 
 class ProgramStatusType(FtEnum):
@@ -1620,18 +1620,18 @@ class ProgramStatusType(FtEnum):
 
     def load_dic(self):
         return {
-            self.NONE: GetGlobalState_pb2.ProgramStatusType_None,
-            self.LOADED: GetGlobalState_pb2.ProgramStatusType_Loaded,
-            self.LOGING: GetGlobalState_pb2.ProgramStatusType_Loging,
-            self.NEED_PIC_VERIFY_CODE: GetGlobalState_pb2.ProgramStatusType_NeedPicVerifyCode,
-            self.NEED_PHONE_VERIFY_CODE: GetGlobalState_pb2.ProgramStatusType_NeedPhoneVerifyCode,
-            self.LOGIN_FAILED: GetGlobalState_pb2.ProgramStatusType_LoginFailed,
-            self.FORCE_UPDATE: GetGlobalState_pb2.ProgramStatusType_ForceUpdate,
-            self.NESSARY_DATA_PREPARING: GetGlobalState_pb2.ProgramStatusType_NessaryDataPreparing,
-            self.NESSARY_DATA_MISSING: GetGlobalState_pb2.ProgramStatusType_NessaryDataMissing,
-            self.UN_AGREE_DISCLAIMER: GetGlobalState_pb2.ProgramStatusType_UnAgreeDisclaimer,
-            self.READY: GetGlobalState_pb2.ProgramStatusType_Ready,
-            self.FORCE_LOGOUT: GetGlobalState_pb2.ProgramStatusType_ForceLogout
+            self.NONE: Common_pb2.ProgramStatusType_None,
+            self.LOADED: Common_pb2.ProgramStatusType_Loaded,
+            self.LOGING: Common_pb2.ProgramStatusType_Loging,
+            self.NEED_PIC_VERIFY_CODE: Common_pb2.ProgramStatusType_NeedPicVerifyCode,
+            self.NEED_PHONE_VERIFY_CODE: Common_pb2.ProgramStatusType_NeedPhoneVerifyCode,
+            self.LOGIN_FAILED: Common_pb2.ProgramStatusType_LoginFailed,
+            self.FORCE_UPDATE: Common_pb2.ProgramStatusType_ForceUpdate,
+            self.NESSARY_DATA_PREPARING: Common_pb2.ProgramStatusType_NessaryDataPreparing,
+            self.NESSARY_DATA_MISSING: Common_pb2.ProgramStatusType_NessaryDataMissing,
+            self.UN_AGREE_DISCLAIMER: Common_pb2.ProgramStatusType_UnAgreeDisclaimer,
+            self.READY: Common_pb2.ProgramStatusType_Ready,
+            self.FORCE_LOGOUT: Common_pb2.ProgramStatusType_ForceLogout
         }
 
 class ContextStatus:
