@@ -781,8 +781,8 @@ class ProtoId(object):
     Qot_GetCapitalFlow = 3211          # 获取资金流向
     Qot_GetCapitalDistribution = 3212  # 获取资金分布
 
-    Qot_GetUserSecurity = 3213         # 自选股拉取
-    Qot_ModifyUserSecurity = 3214      # 自选股修改
+    Qot_GetUserSecurity = 3213  # 获取自选股分组下的股票
+    Qot_ModifyUserSecurity = 3214  # 修改自选股分组下的股票
 
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
@@ -914,10 +914,19 @@ class SysNotifyType(object):
     """
     NONE = "N/A"
     GTW_EVENT = "GTW_EVENT"
+    PROGRAM_STATUS = "PROGRAM_STATUS"
+    CONN_STATUS = "CONN_STATUS"
+    QOT_RIGHT = "QOT_RIGHT"
+    API_LEVEL = "API_LEVEL"
 
 
 SYS_EVENT_TYPE_MAP = {
-    SysNotifyType.NONE: 0, SysNotifyType.GTW_EVENT: 1
+    SysNotifyType.NONE: 0,
+    SysNotifyType.GTW_EVENT: 1,
+    SysNotifyType.PROGRAM_STATUS: 2,
+    SysNotifyType.CONN_STATUS: 3,
+    SysNotifyType.QOT_RIGHT: 4,
+    SysNotifyType.API_LEVEL: 5
 }
 
 
@@ -1712,7 +1721,7 @@ class QotPushStage(FtEnum):
         SS2_CR: "统计网络耗时",
         CR2_CS: "统计OpenD处理耗时",
         SS2_CS: "统计服务器发出到OpenD发出的处理耗时",
-        SR2_CS: "统计服务器收到数据到OpenD发出的处理耗时",
+        SR2_CS: "统计服务器收到数据到OpenD发出的处理耗时(也就是从交易所到用户的总时间，港股市场数据最全，A股和美股部分缺乏交易所下发时间）",
     }
 
     def load_dic(self):
@@ -1762,3 +1771,21 @@ class QotPushType(FtEnum):
     def get_describe(cls, t):
         obj = cls()
         return obj.describe_dict[t]
+
+
+'''-------------------------ModifyUserSecurityOp----------------------------'''
+from futu.common.pb import Qot_ModifyUserSecurity_pb2
+
+
+# 自选股操作
+class ModifyUserSecurityOp(FtEnum):
+    NONE = "N/A"                                       # 未知
+    ADD = "ADD"                                        # 新增
+    DEL = "DEL"                                        # 删除
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Unknown,
+            self.ADD: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Add,
+            self.DEL: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Del
+        }
