@@ -1453,36 +1453,42 @@ class SysNotifyPush:
             return RET_ERROR, rsp_pb.retMsg,
 
         pb_type = rsp_pb.s2c.type
+        sub_type = None
         data = None
         notify_type = SysNoitfy.REV_SYS_EVENT_TYPE_MAP[pb_type] if pb_type in SysNoitfy.REV_SYS_EVENT_TYPE_MAP else SysNotifyType.NONE
         if notify_type == SysNotifyType.GTW_EVENT:
-            if rsp_pb.s2c.event:
+            if rsp_pb.s2c.HasField('event'):
                 pb_event = rsp_pb.s2c.event.eventType
-                event = SysNoitfy.REV_GTW_EVENT_MAP[pb_event] if pb_event in SysNoitfy.REV_GTW_EVENT_MAP else GtwEventType.NONE
-                data = {'event': event, 'msg': rsp_pb.s2c.event.desc}
+                sub_type = SysNoitfy.REV_GTW_EVENT_MAP[pb_event] if pb_event in SysNoitfy.REV_GTW_EVENT_MAP else GtwEventType.NONE
+                data = rsp_pb.s2c.event.desc
         elif notify_type == SysNotifyType.PROGRAM_STATUS:
-            if rsp_pb.s2c.programStatus:
-                ret, status = ProgramStatusType.to_string(rsp_pb.s2c.programStatus)
+            if rsp_pb.s2c.HasField('programStatus'):
+                ret, status_type = ProgramStatusType.to_string(rsp_pb.s2c.programStatus.programStatus.type)
                 if not ret:
-                    status = ProgramStatusType.NONE
-                data = status
+                    status_type = ProgramStatusType.NONE
+                if rsp_pb.s2c.programStatus.programStatus.HasField('strExtDesc'):
+                    status_desc = rsp_pb.s2c.programStatus.programStatus.strExtDesc
+                else:
+                    status_desc = ''
+                sub_type = status_type
+                data = status_desc
         elif notify_type == SysNotifyType.CONN_STATUS:
-            if rsp_pb.s2c.connectStatus:
+            if rsp_pb.s2c.HasField('connectStatus'):
                 data = {'qot_logined': rsp_pb.s2c.connectStatus.qotLogined,
                         'trd_logined': rsp_pb.s2c.connectStatus.trdLogined}
         elif notify_type == SysNotifyType.QOT_RIGHT:
-            if rsp_pb.s2c.qotRight:
-                data = {'hk_qot_right': rsp_pb.s2c.hkQotRight,
-                        'us_qot_right': rsp_pb.s2c.usQotRight,
-                        'cn_qot_right': rsp_pb.s2c.cnQotRight}
+            if rsp_pb.s2c.HasField('qotRight'):
+                data = {'hk_qot_right': rsp_pb.s2c.qotRight.hkQotRight,
+                        'us_qot_right': rsp_pb.s2c.qotRight.usQotRight,
+                        'cn_qot_right': rsp_pb.s2c.qotRight.cnQotRight}
         elif notify_type == SysNotifyType.API_LEVEL:
-            if rsp_pb.s2c.apiLevel:
+            if rsp_pb.s2c.HasField('apiLevel'):
                 data = {'api_level': rsp_pb.s2c.apiLevel.apiLevel}
 
         if data is None:
             logger.warning("SysNotifyPush data is None: notify_type={}".format(notify_type))
 
-        return RET_OK, (notify_type, data)
+        return RET_OK, (notify_type, sub_type, data)
 
 
 class MultiPointsHisKLine:
