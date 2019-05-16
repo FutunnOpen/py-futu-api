@@ -627,6 +627,10 @@ class OpenQuoteContext(OpenContextBase):
                 pe_ratio                   float          市盈率（该字段为比例字段，默认不展示%）
                 pb_ratio                   float          市净率（该字段为比例字段，默认不展示%）
                 pe_ttm_ratio               float          市盈率TTM（该字段为比例字段，默认不展示%）
+                dividend_ttm               float          股息TTM
+                dividend_ratio_ttm         float          股息率TTM（该字段为百分比字段，默认不展示%）
+                dividend_lfy               float          股息LFY，上一年度派息
+                dividend_lfy_ratio         float          股息率LFY（该字段为百分比字段，默认不展示
                 stock_owner                str            涡轮所属正股的代码或期权的标的股代码
                 wrt_valid                  bool           是否是窝轮（为true时以下涡轮相关的字段才有合法数据）
                 wrt_conversion_ratio       float          换股比率（该字段为比例字段，默认不展示%）
@@ -642,8 +646,33 @@ class OpenQuoteContext(OpenContextBase):
                 wrt_delta                  float          窝轮对冲值
                 wrt_implied_volatility     float          窝轮引伸波幅
                 wrt_premium                float          窝轮溢价
+                wrt_leverage               float          杠杆比率（倍）
+                wrt_ipop                   float          价内/价外（该字段为百分比字段，默认不展示%）
+                wrt_break_even_point       float          打和点
+                wrt_conversion_price       float          换股价
+                wrt_price_recovery_ratio   float          距收回价（该字段为百分比字段，默认不展示%）
+                wrt_score                  float          综合评分
                 lot_size                   int            每手股数
                 price_spread               float          当前摆盘价差亦即摆盘数据的买档或卖档的相邻档位的报价差
+                ask_price	               float	      卖价
+                bid_price	               float	      买价
+                ask_vol	                   float	      卖量
+                bid_vol	                   float	      买量
+                enable_margin	           bool	          是否可融资，如果为true，后两个字段才有意义
+                mortgage_ratio	           float	      股票抵押率（该字段为百分比字段，默认不展示%）
+                long_margin_initial_ratio  float	      融资初始保证金率（该字段为百分比字段，默认不展示%）
+                enable_short_sell	       bool	          是否可卖空，如果为true，后三个字段才有意义
+                short_sell_rate	           float	      卖空参考利率（该字段为百分比字段，默认不展示%）
+                short_available_volume	   int	          剩余可卖空数量
+                short_margin_initial_ratio float	      卖空（融券）初始保证金率（该字段为百分比字段，默认不展示%
+                amplitude                  float          振幅（该字段为百分比字段，默认不展示%）
+                avg_price                  float          平均价
+                bid_ask_ratio              float          委比（该字段为百分比字段，默认不展示%）
+                volume_ratio               float          量比
+                highest52weeks_price       float          52周最高价
+                lowest52weeks_price        float          52周最低价
+                highest_history_price      float          历史最高价
+                lowest_history_price       float          历史最低价
                 option_valid               bool           是否是期权（为true时以下期权相关的字段才有合法数值）
                 option_type                str            期权类型，参见OptionType
                 strike_time                str            行权日（美股默认是美东时间，港股A股默认是北京时间）
@@ -657,6 +686,12 @@ class OpenQuoteContext(OpenContextBase):
                 option_vega                float          希腊值 Vega
                 option_theta               float          希腊值 Theta
                 option_rho                 float          希腊值 Rho
+                index_raise_count          int            指数类型上涨支数
+                index_fall_count           int            指数类型下跌支数
+                index_requal_count         int            指数类型平盘支数
+                plate_raise_count          int            板块类型上涨支数
+                plate_fall_count           int            板块类型下跌支数
+                plate_equal_count          int            板块类型平盘支数
                 =======================   =============   ==============================================================================
         """
         code_list = unique_and_normalize_list(code_list)
@@ -686,7 +721,11 @@ class OpenQuoteContext(OpenContextBase):
                            'ey_ratio',
                            'pe_ratio',
                            'pb_ratio',
-                           'pe_ttm_ratio'
+                           'pe_ttm_ratio',
+                           'dividend_ttm',
+                           'dividend_ratio_ttm',
+                           'dividend_lfy',
+                           'dividend_lfy_ratio'
                            ]
         wrt_col_list = ['wrt_conversion_ratio',
                         'wrt_type',
@@ -699,7 +738,13 @@ class OpenQuoteContext(OpenContextBase):
                         'wrt_street_ratio',
                         'wrt_delta',
                         'wrt_implied_volatility',
-                        'wrt_premium'
+                        'wrt_premium',
+                        'wrt_leverage',
+                        'wrt_ipop',
+                        'wrt_break_even_point',
+                        'wrt_conversion_price',
+                        'wrt_price_recovery_ratio',
+                        'wrt_score'
                         ]
         option_col_list = ['option_type',
                            'strike_time',
@@ -714,6 +759,17 @@ class OpenQuoteContext(OpenContextBase):
                            'option_theta',
                            'option_rho'
                            ]
+
+        index_col_list = [ 'index_raise_count',
+                            'index_fall_count',
+                            'index_equal_count'
+                            ]
+
+        plate_col_list = ['plate_raise_count',
+                          'plate_fall_count',
+                          'plate_equal_count'
+                          ]
+
         col_list = [
             'code',
             'update_time',
@@ -740,7 +796,15 @@ class OpenQuoteContext(OpenContextBase):
             'enable_short_sell',
             'short_sell_rate',
             'short_available_volume',
-            'short_margin_initial_ratio'
+            'short_margin_initial_ratio',
+            'amplitude',
+            'avg_price',
+            'bid_ask_ratio',
+            'volume_ratio',
+            'highest52weeks_price',
+            'lowest52weeks_price',
+            'highest_history_price',
+            'lowest_history_price',
         ]
 
         col_list.append('equity_valid')
@@ -749,6 +813,10 @@ class OpenQuoteContext(OpenContextBase):
         col_list.extend(wrt_col_list)
         col_list.append('option_valid')
         col_list.extend(option_col_list)
+        col_list.append('index_valid')
+        col_list.extend(index_col_list)
+        col_list.append('plate_valid')
+        col_list.extend(plate_col_list)
 
         snapshot_frame_table = pd.DataFrame(snapshot_list, columns=col_list)
 

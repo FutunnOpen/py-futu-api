@@ -276,9 +276,9 @@ class MarketSnapshotQuery:
                     snapshot_tmp['short_margin_initial_ratio'] = record.basic.shortMarginInitialRatio
             # 2019.05.10 增加一批数据================================
             #  振幅（该字段为百分比字段，默认不展示%） type=double
-            snapshot_tmp["amplitude_price"] = record.basic.amplitudePrice
+            snapshot_tmp["amplitude"] = record.basic.amplitude
             #  平均价 type=double
-            snapshot_tmp["avg_price"] = record.basic.avg_price
+            snapshot_tmp["avg_price"] = record.basic.avgPrice
             #  委比（该字段为百分比字段，默认不展示%） type=double
             snapshot_tmp["bid_ask_ratio"] = record.basic.bidAskRatio
             #  量比 type=double
@@ -336,17 +336,17 @@ class MarketSnapshotQuery:
                 snapshot_tmp['wrt_implied_volatility'] = record.warrantExData.impliedVolatility
                 snapshot_tmp['wrt_premium'] = record.warrantExData.premium
                 #  杠杆比率（倍） type=double
-                snapshot_tmp["leverage"] = record.warrantExData.leverage
+                snapshot_tmp["wrt_leverage"] = record.warrantExData.leverage
                 #  价内/价外（该字段为百分比字段，默认不展示%） type=double
-                snapshot_tmp["ipop"] = record.warrantExData.ipop
+                snapshot_tmp["wrt_ipop"] = record.warrantExData.ipop
                 #  打和点 type=double
-                snapshot_tmp["break_even_point"] = record.warrantExData.breakEvenPoint
+                snapshot_tmp["wrt_break_even_point"] = record.warrantExData.breakEvenPoint
                 #  换股价 type=double
-                snapshot_tmp["conversion_price"] = record.warrantExData.conversionPrice
+                snapshot_tmp["wrt_conversion_price"] = record.warrantExData.conversionPrice
                 #  距收回价（该字段为百分比字段，默认不展示%） type=double
-                snapshot_tmp["price_recovery_ratio"] = record.warrantExData.priceRecoveryRatio
+                snapshot_tmp["wrt_price_recovery_ratio"] = record.warrantExData.priceRecoveryRatio
                 #  综合评分 type=double
-                snapshot_tmp["score"] = record.warrantExData.score
+                snapshot_tmp["wrt_score"] = record.warrantExData.score
 
             snapshot_tmp['option_valid'] = False
             if record.basic.type == SEC_TYPE_MAP[SecurityType.DRVT]:
