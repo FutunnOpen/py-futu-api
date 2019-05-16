@@ -1660,6 +1660,9 @@ class UserInfoField:
             ret_flags += x
         return ret_flags
 
+
+from futu.common.pb import GetUserInfo_pb2
+
 class UpdateType(FtEnum):
     NO = "NO"
     ADVICE = "ADVICE"
