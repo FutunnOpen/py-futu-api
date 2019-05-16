@@ -122,7 +122,7 @@ message SnapshotBasicData
     optional double shortSellRate = 26; // 卖空参考利率（该字段为百分比字段，默认不展示%）
     optional int64 shortAvailableVolume = 27; // 剩余可卖空数量（股）
     optional double shortMarginInitialRatio = 28; // 卖空（融券）初始保证金率（该字段为百分比字段，默认不展示%）
-	optional double amplitudePrice = 29; // 振幅（该字段为百分比字段，默认不展示%）
+	optional double amplitude = 29; // 振幅（该字段为百分比字段，默认不展示%）
 	optional double avgPrice = 30; // 平均价
 	optional double bidAskRatio = 31; // 委比（该字段为百分比字段，默认不展示%）
 	optional double volumeRatio = 32;  // 量比
