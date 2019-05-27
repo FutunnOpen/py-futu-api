@@ -1410,9 +1410,9 @@ class GlobalStateQuery:
                     if state.marketHKFuture in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
 
             'server_ver': str(state.serverVer),
-            'trd_logined': "1" if state.trdLogined else "0",
+            'trd_logined': state.trdLogined,
             'timestamp': str(state.time),
-            'qot_logined': "1" if state.qotLogined else "0",
+            'qot_logined': state.qotLogined,
             'local_timestamp': state.localTime if state.HasField('localTime') else time.time(),
             'program_status_type': program_status_type,
             'program_status_desc': program_status_desc
@@ -1478,9 +1478,9 @@ class SysNotifyPush:
                         'trd_logined': rsp_pb.s2c.connectStatus.trdLogined}
         elif notify_type == SysNotifyType.QOT_RIGHT:
             if rsp_pb.s2c.HasField('qotRight'):
-                data = {'hk_qot_right': rsp_pb.s2c.qotRight.hkQotRight,
-                        'us_qot_right': rsp_pb.s2c.qotRight.usQotRight,
-                        'cn_qot_right': rsp_pb.s2c.qotRight.cnQotRight}
+                data = {'hk_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.hkQotRight),
+                        'us_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.usQotRight),
+                        'cn_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.cnQotRight)}
         elif notify_type == SysNotifyType.API_LEVEL:
             if rsp_pb.s2c.HasField('apiLevel'):
                 data = {'api_level': rsp_pb.s2c.apiLevel.apiLevel}
