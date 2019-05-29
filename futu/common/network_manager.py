@@ -259,7 +259,6 @@ class NetManager:
                 self._use_count += 1
 
             if self._thread is None:
-                self._create_all()
                 self._thread = threading.Thread(target=self._thread_func)
                 self._thread.setDaemon(SysConfig.get_all_thread_daemon())
                 self._thread.start()
