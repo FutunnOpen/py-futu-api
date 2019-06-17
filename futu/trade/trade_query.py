@@ -340,6 +340,44 @@ class ModifyOrder:
         return RET_OK, "", modify_order_list
 
 
+class CancelOrder:
+    """modify order class"""
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, trd_env, acc_id, trd_mkt, conn_id):
+        """Convert from user request for place order to PLS request"""
+        from futu.common.pb.Trd_ModifyOrder_pb2 import Request
+        req = Request()
+        serial_no = get_unique_id32()
+        req.c2s.packetID.serialNo = serial_no
+        req.c2s.packetID.connID = conn_id
+
+        req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
+        req.c2s.header.accID = acc_id
+        req.c2s.header.trdMarket = TRD_MKT_MAP[trd_mkt]
+
+        req.c2s.orderID = 0
+        req.c2s.modifyOrderOp = MODIFY_ORDER_OP_MAP[ModifyOrderOp.CANCEL]
+        req.c2s.forAll = True
+        return pack_pb_req(req, ProtoId.Trd_ModifyOrder, conn_id, serial_no)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        """Convert from PLS response to user response"""
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        order_id = str(rsp_pb.s2c.orderID)
+        modify_order_list = [{
+            'trd_env': TRADE.REV_TRD_ENV_MAP[rsp_pb.s2c.header.trdEnv],
+            'order_id': order_id
+        }]
+
+        return RET_OK, "", modify_order_list
+
+
 class DealListQuery:
     """Class for """
     def __init__(self):

@@ -530,6 +530,38 @@ class OpenTradeContextBase(OpenContextBase):
 
         return RET_OK, modify_order_table
 
+    def cancel_all_order(self, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+        """
+        取消所有的订单
+        """
+        ret, msg = self._check_trd_env(trd_env)
+        if ret != RET_OK:
+            return ret, msg
+
+        ret, msg, acc_id = self._check_acc_id_and_acc_index(trd_env, acc_id, acc_index)
+        if ret != RET_OK:
+            return ret, msg
+
+        query_processor = self._get_sync_query_processor(
+            CancelOrder.pack_req, CancelOrder.unpack_rsp)
+
+        kargs = {
+            'trd_mkt': self.__trd_mkt,
+            'trd_env': trd_env,
+            'acc_id': acc_id,
+            'conn_id': self.get_sync_conn_id(),
+        }
+
+        ret_code, msg, modify_order_list = query_processor(**kargs)
+
+        if ret_code != RET_OK:
+            return RET_ERROR, msg
+
+        col_list = ['trd_env', 'order_id']
+        modify_order_table = pd.DataFrame(modify_order_list, columns=col_list)
+
+        return RET_OK, modify_order_table
+
     def change_order(self, order_id, price, qty, adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0):
         return self.modify_order(ModifyOrderOp.NORMAL, order_id=order_id, qty=qty, price=price,
                                  adjust_limit=adjust_limit, trd_env=trd_env, acc_id=acc_id)
