@@ -15,10 +15,10 @@ class OpenTradeContextBase(OpenContextBase):
         self.__last_acc_list = []
         self.__is_acc_sub_push = False
 
-        if host != "127.0.0.1" and host != "localhost" and is_encrypt is None:
-            '''非本地连接必须加密，以免远程攻击'''
-            print("{} is not local connection!".format(host))
-            raise Exception('Non-local connections must be encrypted')
+        # if host != "127.0.0.1" and host != "localhost" and is_encrypt is None:
+        #     '''非本地连接必须加密，以免远程攻击'''
+        #     print("{} is not local connection!".format(host))
+        #     raise Exception('Non-local connections must be encrypted')
 
         super(OpenTradeContextBase, self).__init__(host, port, False, is_encrypt=is_encrypt)
         self.set_pre_handler(AsyncHandler_TrdSubAccPush(self))
