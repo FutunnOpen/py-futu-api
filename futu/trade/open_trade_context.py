@@ -434,6 +434,9 @@ class OpenTradeContextBase(OpenContextBase):
         # ret, msg = self._check_trd_env(trd_env)
         # if ret != RET_OK:
         #     return ret, msg
+        ret, msg = self._check_trd_env(trd_env)
+        if ret != RET_OK:
+            return ret, msg
 
         ret, msg, acc_id = self._check_acc_id_and_acc_index(trd_env, acc_id, acc_index)
         if ret != RET_OK:
