@@ -1,0 +1,101 @@
+syntax = "proto2";
+package GetDelayStatistics;
+
+import "Common.proto";
+
+enum DelayStatisticsType
+{
+	DelayStatisticsType_Unkonw = 0; //未知类型
+	DelayStatisticsType_QotPush = 1; //行情推送统计
+	DelayStatisticsType_ReqReply = 2; //请求回应统计
+	DelayStatisticsType_PlaceOrder = 3; //下单统计
+}
+
+//某段时间的统计数据
+//SR表示服务器收到数据，目前只有港股支持SR字段，SS表示服务器发出数据
+//CR表示OpenD收到数据，CS表示OpenD发出数据
+enum QotPushStage
+{
+	QotPushStage_Unkonw = 0; // 未知
+	QotPushStage_SR2SS = 1; //统计服务端处理耗时
+	QotPushStage_SS2CR = 2; //统计网络耗时
+	QotPushStage_CR2CS = 3; //统计OpenD处理耗时
+	QotPushStage_SS2CS = 4; //统计服务器发出到OpenD发出的处理耗时
+	QotPushStage_SR2CS = 5; //统计服务器收到数据到OpenD发出的处理耗时
+}
+
+//行情推送类型
+enum QotPushType
+{
+	QotPushType_Unkonw = 0; // 未知
+	QotPushType_Price = 1; //最新价
+	QotPushType_Ticker = 2; //逐笔
+	QotPushType_OrderBook = 3; //摆盘
+	QotPushType_Broker = 4; //经纪队列
+}
+
+message C2S
+{
+	repeated int32 typeList = 1; //统计数据类型，DelayStatisticsType
+	optional int32 qotPushStage = 2; //行情推送统计的区间，行情推送统计时有效，QotPushStage
+	repeated int32 segmentList = 3; //统计分段，默认100ms以下以2ms分段，100ms以上以500，1000，2000，-1分段，-1表示无穷大。
+	//传入的分段范围0-100ms最小支持1ms，100-1000ms最小支持50ms，1000-5000ms最小支持500ms，5000ms以上无法指定
+}
+
+message DelayStatisticsItem
+{
+	//范围左闭右开，[begin,end)
+	required int32 begin = 1; //耗时范围起点，毫秒单位
+	required int32 end = 2; //耗时范围结束，毫秒单位
+	required int32 count = 3; //个数
+	required float proportion = 4; //占比, %
+	required float cumulativeRatio = 5; //累计占比, %
+}
+
+message DelayStatistics
+{
+	required int32 qotPushType = 1; //行情推送类型,QotPushType
+	repeated DelayStatisticsItem itemList = 2; //统计信息
+	required float delayAvg = 3; //平均延迟
+	required int32 count = 4; //总包数
+}
+
+message ReqReplyStatisticsItem
+{
+	required int32 protoID = 1; //协议ID
+	required int32 count = 2; //请求个数
+	required float totalCostAvg = 3; //平均总耗时，毫秒单位
+	required float openDCostAvg = 4; //平均OpenD耗时，毫秒单位
+	required float netDelayAvg = 5; //平均网络耗时，非当时实际请求网络耗时，毫秒单位
+	required bool isLocalReply = 6; //是否本地直接回包，没有向服务器请求数据
+}
+
+message PlaceOrderStatisticsItem
+{
+	required string orderID = 1; //订单ID
+	required float totalCost = 2; //总耗时，毫秒单位
+	required float openDCost = 3; //OpenD耗时，毫秒单位
+	required float netDelay = 4; //网络耗时，非当时实际请求网络耗时，毫秒单位
+	required float updateCost = 5; //订单回包后到接收到订单下到交易所的耗时，毫秒单位
+}
+
+message S2C
+{
+	repeated DelayStatistics qotPushStatisticsList = 1; //行情推送延迟统计
+	repeated ReqReplyStatisticsItem reqReplyStatisticsList = 2; //请求延迟统计
+	repeated PlaceOrderStatisticsItem placeOrderStatisticsList = 3; //下单延迟统计
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //返回结果，参见Common.RetType的枚举定义
+	optional string retMsg = 2; //返回结果描述
+	optional int32 errCode = 3; //错误码，客户端一般通过retType和retMsg来判断结果和详情，errCode只做日志记录，仅在个别协议失败时对账用
+	
+	optional S2C s2c = 4;
+}

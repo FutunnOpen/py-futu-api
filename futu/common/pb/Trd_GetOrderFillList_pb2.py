@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_GetOrderFillList.proto',
   package='Trd_GetOrderFillList',
   syntax='proto2',
-  serialized_pb=_b('\n\x1aTrd_GetOrderFillList.proto\x12\x14Trd_GetOrderFillList\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"g\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x39\n\x10\x66ilterConditions\x18\x02 \x01(\x0b\x32\x1f.Trd_Common.TrdFilterConditions\"Z\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12,\n\rorderFillList\x18\x02 \x03(\x0b\x32\x15.Trd_Common.OrderFill\"1\n\x07Request\x12&\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x19.Trd_GetOrderFillList.C2S\"j\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12&\n\x03s2c\x18\x04 \x01(\x0b\x32\x19.Trd_GetOrderFillList.S2C')
+  serialized_pb=_b('\n\x1aTrd_GetOrderFillList.proto\x12\x14Trd_GetOrderFillList\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"}\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x39\n\x10\x66ilterConditions\x18\x02 \x01(\x0b\x32\x1f.Trd_Common.TrdFilterConditions\x12\x14\n\x0crefreshCache\x18\x03 \x01(\x08\"Z\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12,\n\rorderFillList\x18\x02 \x03(\x0b\x32\x15.Trd_Common.OrderFill\"1\n\x07Request\x12&\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x19.Trd_GetOrderFillList.C2S\"j\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12&\n\x03s2c\x18\x04 \x01(\x0b\x32\x19.Trd_GetOrderFillList.S2C')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Trd__Common__pb2.DESCRIPTOR,])
 
@@ -49,6 +49,13 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='refreshCache', full_name='Trd_GetOrderFillList.C2S.refreshCache', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -62,7 +69,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=84,
-  serialized_end=187,
+  serialized_end=209,
 )
 
 
@@ -99,8 +106,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=189,
-  serialized_end=279,
+  serialized_start=211,
+  serialized_end=301,
 )
 
 
@@ -130,8 +137,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=281,
-  serialized_end=330,
+  serialized_start=303,
+  serialized_end=352,
 )
 
 
@@ -182,8 +189,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=332,
-  serialized_end=438,
+  serialized_start=354,
+  serialized_end=460,
 )
 
 _C2S.fields_by_name['header'].message_type = Trd__Common__pb2._TRDHEADER

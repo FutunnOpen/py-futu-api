@@ -13,9 +13,10 @@ enum RetType
 //包加密算法
 enum PacketEncAlgo
 {
-	PacketEncAlgo_FTAES_ECB = 0; //富途修改过的AES加密的ECB模式
+    PacketEncAlgo_FTAES_ECB = 0; //富途修改过的AES的ECB加密模式
 	PacketEncAlgo_None = -1; //不加密
-	PacketEncAlgo_AES_ECB = 1; //标准的AES加密的ECB模式
+	PacketEncAlgo_AES_ECB = 1; //标准的AES的ECB加密模式
+	PacketEncAlgo_AES_CBC = 2; //标准的AES的CBC加密模式
 }
 
 //包的唯一标识，用于回放攻击的识别和保护

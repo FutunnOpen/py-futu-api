@@ -10,6 +10,9 @@ message C2S
 	optional Trd_Common.TrdFilterConditions filterConditions = 2; //过滤条件
 	optional double filterPLRatioMin = 3; //过滤盈亏比例下限，高于此比例的会返回，如0.1，返回盈亏比例大于10%的持仓
 	optional double filterPLRatioMax = 4; //过滤盈亏比例上限，低于此比例的会返回，如0.2，返回盈亏比例小于20%的持仓
+	optional bool refreshCache = 5; //立即刷新OpenD缓存的此数据，默认不填。true向服务器获取最新数据更新缓存并返回；flase或没填则返回OpenD缓存的数据，不会向服务器请求。
+	//正常情况下，服务器有更新就会立即推送到OpenD，OpenD缓存着数据，API请求过来，返回同步的缓存数据，一般不需要指定刷新缓存，保证快速返回且减少对服务器的压力
+	//如果遇到丢包等情况，可能出现缓存数据与服务器不一致，用户如果发现数据更新有异样，可指定刷新缓存，解决数据同步的问题。
 }
 
 message S2C

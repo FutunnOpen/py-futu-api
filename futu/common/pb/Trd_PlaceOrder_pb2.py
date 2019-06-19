@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_PlaceOrder.proto',
   package='Trd_PlaceOrder',
   syntax='proto2',
-  serialized_pb=_b('\n\x14Trd_PlaceOrder.proto\x12\x0eTrd_PlaceOrder\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\xe2\x01\n\x03\x43\x32S\x12\"\n\x08packetID\x18\x01 \x02(\x0b\x32\x10.Common.PacketID\x12%\n\x06header\x18\x02 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x0f\n\x07trdSide\x18\x03 \x02(\x05\x12\x11\n\torderType\x18\x04 \x02(\x05\x12\x0c\n\x04\x63ode\x18\x05 \x02(\t\x12\x0b\n\x03qty\x18\x06 \x02(\x01\x12\r\n\x05price\x18\x07 \x01(\x01\x12\x13\n\x0b\x61\x64justPrice\x18\x08 \x01(\x08\x12\x1a\n\x12\x61\x64justSideAndLimit\x18\t \x01(\x01\x12\x11\n\tsecMarket\x18\n \x01(\x05\"=\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x0f\n\x07orderID\x18\x02 \x01(\x04\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.Trd_PlaceOrder.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.Trd_PlaceOrder.S2C')
+  serialized_pb=_b('\n\x14Trd_PlaceOrder.proto\x12\x0eTrd_PlaceOrder\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\xf2\x01\n\x03\x43\x32S\x12\"\n\x08packetID\x18\x01 \x02(\x0b\x32\x10.Common.PacketID\x12%\n\x06header\x18\x02 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x0f\n\x07trdSide\x18\x03 \x02(\x05\x12\x11\n\torderType\x18\x04 \x02(\x05\x12\x0c\n\x04\x63ode\x18\x05 \x02(\t\x12\x0b\n\x03qty\x18\x06 \x02(\x01\x12\r\n\x05price\x18\x07 \x01(\x01\x12\x13\n\x0b\x61\x64justPrice\x18\x08 \x01(\x08\x12\x1a\n\x12\x61\x64justSideAndLimit\x18\t \x01(\x01\x12\x11\n\tsecMarket\x18\n \x01(\x05\x12\x0e\n\x06remark\x18\x0b \x01(\t\"=\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x0f\n\x07orderID\x18\x02 \x01(\x04\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.Trd_PlaceOrder.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.Trd_PlaceOrder.S2C')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Trd__Common__pb2.DESCRIPTOR,])
 
@@ -105,6 +105,13 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='remark', full_name='Trd_PlaceOrder.C2S.remark', index=10,
+      number=11, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -118,7 +125,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=73,
-  serialized_end=299,
+  serialized_end=315,
 )
 
 
@@ -155,8 +162,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=301,
-  serialized_end=362,
+  serialized_start=317,
+  serialized_end=378,
 )
 
 
@@ -186,8 +193,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=364,
-  serialized_end=407,
+  serialized_start=380,
+  serialized_end=423,
 )
 
 
@@ -238,8 +245,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=409,
-  serialized_end=509,
+  serialized_start=425,
+  serialized_end=525,
 )
 
 _C2S.fields_by_name['packetID'].message_type = Common__pb2._PACKETID
