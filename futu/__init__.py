@@ -17,6 +17,7 @@
 import os.path
 import signal
 import os
+import threading
 
 #import data querying APIs and response handle base class
 from futu.quote.open_quote_context import OpenQuoteContext
@@ -48,4 +49,5 @@ def quit_handler(sig, frame):
     os._exit(0)
 
 
-signal.signal(signal.SIGINT, quit_handler)
+if threading.current_thread() is threading.main_thread():
+    signal.signal(signal.SIGINT, quit_handler)

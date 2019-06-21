@@ -15,10 +15,10 @@ class OpenTradeContextBase(OpenContextBase):
         self.__last_acc_list = []
         self.__is_acc_sub_push = False
 
-        if host != "127.0.0.1" and host != "localhost" and is_encrypt is None:
-            '''非本地连接必须加密，以免远程攻击'''
-            print("{} is not local connection!".format(host))
-            raise Exception('Non-local connections must be encrypted')
+        # if host != "127.0.0.1" and host != "localhost" and is_encrypt is None:
+        #     '''非本地连接必须加密，以免远程攻击'''
+        #     print("{} is not local connection!".format(host))
+        #     raise Exception('Non-local connections must be encrypted')
 
         super(OpenTradeContextBase, self).__init__(host, port, False, is_encrypt=is_encrypt)
         self.set_pre_handler(AsyncHandler_TrdSubAccPush(self))
@@ -434,6 +434,9 @@ class OpenTradeContextBase(OpenContextBase):
         # ret, msg = self._check_trd_env(trd_env)
         # if ret != RET_OK:
         #     return ret, msg
+        ret, msg = self._check_trd_env(trd_env)
+        if ret != RET_OK:
+            return ret, msg
 
         ret, msg, acc_id = self._check_acc_id_and_acc_index(trd_env, acc_id, acc_index)
         if ret != RET_OK:
@@ -552,15 +555,9 @@ class OpenTradeContextBase(OpenContextBase):
             'conn_id': self.get_sync_conn_id(),
         }
 
-        ret_code, msg, modify_order_list = query_processor(**kargs)
+        ret_code, msg = query_processor(**kargs)
+        return ret_code, msg
 
-        if ret_code != RET_OK:
-            return RET_ERROR, msg
-
-        col_list = ['trd_env', 'order_id']
-        modify_order_table = pd.DataFrame(modify_order_list, columns=col_list)
-
-        return RET_OK, modify_order_table
 
     def change_order(self, order_id, price, qty, adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0):
         return self.modify_order(ModifyOrderOp.NORMAL, order_id=order_id, qty=qty, price=price,
