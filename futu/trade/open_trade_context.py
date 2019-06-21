@@ -555,15 +555,9 @@ class OpenTradeContextBase(OpenContextBase):
             'conn_id': self.get_sync_conn_id(),
         }
 
-        ret_code, msg, modify_order_list = query_processor(**kargs)
+        ret_code, msg = query_processor(**kargs)
+        return ret_code, msg
 
-        if ret_code != RET_OK:
-            return RET_ERROR, msg
-
-        col_list = ['trd_env', 'order_id']
-        modify_order_table = pd.DataFrame(modify_order_list, columns=col_list)
-
-        return RET_OK, modify_order_table
 
     def change_order(self, order_id, price, qty, adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0):
         return self.modify_order(ModifyOrderOp.NORMAL, order_id=order_id, qty=qty, price=price,

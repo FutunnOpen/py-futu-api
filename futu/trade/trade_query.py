@@ -367,15 +367,8 @@ class CancelOrder:
     def unpack_rsp(cls, rsp_pb):
         """Convert from PLS response to user response"""
         if rsp_pb.retType != RET_OK:
-            return RET_ERROR, rsp_pb.retMsg, None
-
-        order_id = str(rsp_pb.s2c.orderID)
-        modify_order_list = [{
-            'trd_env': TRADE.REV_TRD_ENV_MAP[rsp_pb.s2c.header.trdEnv],
-            'order_id': order_id
-        }]
-
-        return RET_OK, "", modify_order_list
+            return RET_ERROR, rsp_pb.retMsg
+        return RET_OK, ""
 
 
 class DealListQuery:
