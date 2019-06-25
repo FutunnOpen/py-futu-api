@@ -367,8 +367,8 @@ class CancelOrder:
     def unpack_rsp(cls, rsp_pb):
         """Convert from PLS response to user response"""
         if rsp_pb.retType != RET_OK:
-            return RET_ERROR, rsp_pb.retMsg
-        return RET_OK, ""
+            return RET_ERROR, rsp_pb.retMsg, None
+        return RET_OK, "", None
 
 
 class DealListQuery:

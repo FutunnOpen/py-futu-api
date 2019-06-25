@@ -555,7 +555,7 @@ class OpenTradeContextBase(OpenContextBase):
             'conn_id': self.get_sync_conn_id(),
         }
 
-        ret_code, msg = query_processor(**kargs)
+        ret_code, msg, _ = query_processor(**kargs)
         return ret_code, msg
 
 
