@@ -368,7 +368,7 @@ class CancelOrder:
         """Convert from PLS response to user response"""
         if rsp_pb.retType != RET_OK:
             return RET_ERROR, rsp_pb.retMsg, None
-        return RET_OK, "", None
+        return RET_OK, "success", None
 
 
 class DealListQuery:
