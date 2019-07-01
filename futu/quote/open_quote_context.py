@@ -190,6 +190,8 @@ class OpenQuoteContext(OpenContextBase):
             else:
                 return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
 
+        code_list = unique_and_normalize_list(code_list)   # 去重
+
         query_processor = self._get_sync_query_processor(
             StockBasicInfoQuery.pack_req, StockBasicInfoQuery.unpack_rsp)
         kargs = {
