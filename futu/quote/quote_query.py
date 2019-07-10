@@ -486,7 +486,7 @@ class PlateStockQuery:
         pass
 
     @classmethod
-    def pack_req(cls, plate_code, conn_id):
+    def pack_req(cls, plate_code, sort_field, ascend, conn_id):
 
         ret_code, content = split_stock_str(plate_code)
         if ret_code != RET_OK:
@@ -499,11 +499,14 @@ class PlateStockQuery:
             error_str = ERROR_STR_PREFIX + "market is %s, which is not valid. (%s)" \
                                            % (market, ",".join([x for x in MKT_MAP]))
             return RET_ERROR, error_str, None
+
+        r, v = SortField.to_number(sort_field)
         from futu.common.pb.Qot_GetPlateSecurity_pb2 import Request
         req = Request()
         req.c2s.plate.market = market
         req.c2s.plate.code = code
-
+        req.c2s.sortField = v
+        req.c2s.ascend = ascend	
         return pack_pb_req(req, ProtoId.Qot_GetPlateSecurity, conn_id)
 
     @classmethod

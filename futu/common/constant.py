@@ -1368,7 +1368,17 @@ class SortField(FtEnum):
     WARRANT_NAME = "WARRANT_NAME"                      # 名称
     ISSUER = "ISSUER"                                  # 发行人
     LOT_SIZE = "LOT_SIZE"                              # 每手
-    ISSUE_SIZE = "ISSUE_SIZE"                          # 发行量
+    ISSUE_SIZE = "ISSUE_SIZE"                          # 发行量   
+    PRE_CUR_PRICE = "PRE_CUR_PRICE"                    #盘前最新价
+    AFTER_CUR_PRICE = "AFTER_CUR_PRICE"                #盘后最新价
+    PRE_PRICE_CHANGE_VAL = "PRE_PRICE_CHANGE_VAL"      #盘前涨跌额
+    AFTER_PRICE_CHANGE_VAL = "AFTER_PRICE_CHANGE_VAL"  #盘后涨跌额
+    PRE_CHANGE_RATE = "PRE_CHANGE_RATE"                #盘前涨跌幅%
+    AFTER_CHANGE_RATE = "AFTER_CHANGE_RATE"            #盘后涨跌幅%
+    PRE_AMPLITUDE = "PRE_AMPLITUDE"                    #盘前振幅%
+    AFTER_AMPLITUDE = "AFTER_AMPLITUDE"                #盘后振幅%
+    PRE_TURNOVER = "PRE_TURNOVER"                      #盘前成交额
+    AFTER_TURNOVER = "AFTER_TURNOVER"                  #盘后成交额
 
     def load_dic(self):
         return {
@@ -1406,9 +1416,18 @@ class SortField(FtEnum):
             self.WARRANT_NAME: Qot_Common_pb2.SortField_WarrantName,
             self.ISSUER: Qot_Common_pb2.SortField_Issuer,
             self.LOT_SIZE: Qot_Common_pb2.SortField_LotSize,
-            self.ISSUE_SIZE: Qot_Common_pb2.SortField_IssueSize
+            self.ISSUE_SIZE: Qot_Common_pb2.SortField_IssueSize,		
+			self.PRE_CUR_PRICE: Qot_Common_pb2.SortField_PreCurPrice,
+            self.AFTER_CUR_PRICE: Qot_Common_pb2.SortField_AfterCurPrice,
+            self.PRE_PRICE_CHANGE_VAL: Qot_Common_pb2.SortField_PrePriceChangeVal,
+            self.AFTER_PRICE_CHANGE_VAL: Qot_Common_pb2.SortField_AfterPriceChangeVal,
+            self.PRE_CHANGE_RATE: Qot_Common_pb2.SortField_PreChangeRate,
+            self.AFTER_CHANGE_RATE: Qot_Common_pb2.SortField_AfterChangeRate,	
+            self.PRE_AMPLITUDE: Qot_Common_pb2.SortField_PreAmplitude,
+			self.AFTER_AMPLITUDE: Qot_Common_pb2.SortField_AfterAmplitude,
+			self.PRE_TURNOVER: Qot_Common_pb2.SortField_PreTurnover,
+			self.AFTER_TURNOVER: Qot_Common_pb2.SortField_AfterTurnover
         }
-
 
 '''-------------------------IpoPeriod----------------------------'''
 
