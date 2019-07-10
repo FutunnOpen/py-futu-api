@@ -44,7 +44,9 @@ class GetAccountList:
         acc_list = [{
             'acc_id': record.accID,
             'trd_env': TRADE.REV_TRD_ENV_MAP[record.trdEnv] if record.trdEnv in TRADE.REV_TRD_ENV_MAP else "",
-            'trdMarket_list': [(TRADE.REV_TRD_MKT_MAP[trdMkt] if trdMkt in TRADE.REV_TRD_MKT_MAP else TrdMarket.NONE) for trdMkt in record.trdMarketAuthList]
+            'trdMarket_list': [(TRADE.REV_TRD_MKT_MAP[trdMkt] if trdMkt in TRADE.REV_TRD_MKT_MAP else TrdMarket.NONE) for trdMkt in record.trdMarketAuthList],
+            'acc_type': TrdAccType.to_string2(record.accType) if record.HasField("accType") else TrdAccType.UNKNOWN,
+            'card_num': record.cardNum if record.HasField("cardNum") else "N/A"
         } for record in raw_acc_list]
 
         return RET_OK, "", acc_list

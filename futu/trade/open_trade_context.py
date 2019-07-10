@@ -73,9 +73,11 @@ class OpenTradeContextBase(OpenContextBase):
             if self.__trd_mkt in trdMkt_list:
                 self.__last_acc_list.append({
                     "trd_env": record["trd_env"],
-                    "acc_id": record["acc_id"]})
+                    "acc_id": record["acc_id"],
+                    "acc_type": record["acc_type"],
+                    "card_num": record["card_num"]})
 
-        col_list = ["acc_id", "trd_env"]
+        col_list = ["acc_id", "trd_env", "acc_type", "card_num"]
 
         acc_table = pd.DataFrame(copy(self.__last_acc_list), columns=col_list)
 
