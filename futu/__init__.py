@@ -49,5 +49,6 @@ def quit_handler(sig, frame):
     os._exit(0)
 
 
-if threading.current_thread() is threading.main_thread():
-    signal.signal(signal.SIGINT, quit_handler)
+if not IS_PY2:
+    if threading.current_thread() is threading.main_thread():
+        signal.signal(signal.SIGINT, quit_handler)
