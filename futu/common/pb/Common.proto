@@ -1,5 +1,7 @@
 syntax = "proto2";
 package Common;
+option java_package = "com.futu.openapi.pb";
+
 
 //返回结果
 enum RetType
@@ -7,15 +9,18 @@ enum RetType
 	RetType_Succeed = 0; //成功
 	RetType_Failed = -1; //失败
 	RetType_TimeOut = -100; //超时
+	RetType_DisConnect = -200; //连接断开
 	RetType_Unknown = -400; //未知结果
+	RetType_Invalid = -500; //包内容非法
 }
 
 //包加密算法
 enum PacketEncAlgo
 {
-	PacketEncAlgo_FTAES_ECB = 0; //富途修改过的AES加密的ECB模式
+    PacketEncAlgo_FTAES_ECB = 0; //富途修改过的AES的ECB加密模式
 	PacketEncAlgo_None = -1; //不加密
-	PacketEncAlgo_AES_ECB = 1; //标准的AES加密的ECB模式
+	PacketEncAlgo_AES_ECB = 1; //标准的AES的ECB加密模式
+	PacketEncAlgo_AES_CBC = 2; //标准的AES的CBC加密模式
 }
 
 //包的唯一标识，用于回放攻击的识别和保护

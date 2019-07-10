@@ -46,13 +46,14 @@ enum TrdSide
 enum OrderType
 {
 	OrderType_Unknown = 0; //未知类型
-	OrderType_Normal = 1; //普通订单(港股的增强限价订单、A股的限价委托、美股的限价订单)
+	OrderType_Normal = 1; //普通订单(港股的增强限价单、A股的限价单、美股的限价单)
 	OrderType_Market = 2; //市价订单(目前仅美股)
 	
-	OrderType_AbsoluteLimit = 5; //绝对限价订单(目前仅港股)，只有价格完全匹配才成交，比如你下价格为5元的买单，卖单价格必须也要是5元才能成交，低于5元也不能成交。卖出同理
-	OrderType_Auction = 6; //竞价订单(目前仅港股)，A股的早盘竞价订单类型不变还是OrderType_Normal
-	OrderType_AuctionLimit = 7; //竞价限价订单(目前仅港股)
+	OrderType_AbsoluteLimit = 5; //绝对限价订单(目前仅港股)，只有价格完全匹配才成交，否则下单失败，比如你下价格为5元的买单，卖单价格必须也要是5元才能成交，低于5元也不能成交，下单失败。卖出同理
+	OrderType_Auction = 6; //竞价订单(目前仅港股)，仅港股早盘竞价和收盘竞价有效，A股的早盘竞价订单类型不变还是OrderType_Normal
+	OrderType_AuctionLimit = 7; //竞价限价订单(目前仅港股)，仅早盘竞价和收盘竞价有效，参与竞价，且要求满足指定价格才会成交
 	OrderType_SpecialLimit = 8; //特别限价订单(目前仅港股)，成交规则同增强限价订单，且部分成交后，交易所自动撤销订单
+	OrderType_SpecialLimit_All = 9; //特别限价且要求全部成交订单(目前仅港股)，要么全部成交，要么自动撤单
 }
 
 //订单状态
@@ -74,7 +75,16 @@ enum OrderStatus
 	OrderStatus_Failed = 21; //下单失败，服务拒绝
 	OrderStatus_Disabled = 22; //已失效
 	OrderStatus_Deleted = 23; //已删除，无成交的订单才能删除
+	OrderStatus_FillCancelled = 24; //成交被撤销，一般遇不到，意思是已经成交的订单被回滚撤销，成交无效变为废单
 };
+
+//一笔成交的状态
+enum OrderFillStatus
+{
+	OrderFillStatus_OK = 0; //正常
+	OrderFillStatus_Cancelled = 1; //成交被取消
+	OrderFillStatus_Changed = 2; //成交被更改
+}
 
 //持仓方向类型
 enum PositionSide
@@ -96,7 +106,6 @@ enum ModifyOrderOp
 	ModifyOrderOp_Delete = 5; //删除
 };
 
-//需要再次确认订单的原因枚举
 enum ReconfirmOrderReason
 {
 	ReconfirmOrderReason_Unknown = 0; //未知原因
@@ -133,7 +142,7 @@ message TrdAcc
 //账户资金结构
 message Funds
 {
-	required double power = 1; //购买力，3位精度，下同
+	required double power = 1; //最大购买力（做多），3位精度，下同
 	required double totalAssets = 2; //资产净值
 	required double cash = 3; //现金
 	required double marketVal = 4; //证券市值
@@ -156,7 +165,7 @@ message Position
 	required double val = 9; //市值，3位精度
     required double plVal = 10; //盈亏金额，3位精度
     optional double plRatio = 11; //盈亏比例，无精度限制，如果没传，代表此时此值无效（该字段为百分比字段，默认不展示%）
-	optional int32 secMarket = 12; //（2018/07/17新增）证券所属市场，参见TrdSecMarket的枚举定义
+	optional int32 secMarket = 12; //证券所属市场，参见TrdSecMarket的枚举定义
 	//以下是此持仓今日统计
 	optional double td_plVal = 21; //今日盈亏金额，3位精度，下同
 	optional double td_trdVal = 22; //今日交易额
@@ -164,6 +173,8 @@ message Position
 	optional double td_buyQty = 24; //今日买入总量
 	optional double td_sellVal = 25; //今日卖出总额
 	optional double td_sellQty = 26; //今日卖出总量
+	//新增补充
+	optional double avgPrice = 27; //平均买入价，平仓后重新计算
 }
 
 //订单结构
@@ -183,9 +194,10 @@ message Order
 	optional double fillQty = 12; //成交数量，2位精度，期权单位是"张"
 	optional double fillAvgPrice = 13; //成交均价，无精度限制
 	optional string lastErrMsg = 14; //最后的错误描述，如果有错误，会有此描述最后一次错误的原因，无错误为空
-	optional int32 secMarket = 15; //（2018/07/17新增）证券所属市场，参见TrdSecMarket的枚举定义
+	optional int32 secMarket = 15; //证券所属市场，参见TrdSecMarket的枚举定义
 	optional double createTimestamp = 16; //创建时间戳
 	optional double updateTimestamp = 17; //最后更新时间戳
+	optional string remark = 18; //用户备注字符串，最大长度64字节
 }
 
 //成交结构
@@ -203,8 +215,10 @@ message OrderFill
 	required string createTime = 10; //创建时间（成交时间），严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传
 	optional int32 counterBrokerID = 11; //对手经纪号，港股有效
 	optional string counterBrokerName = 12; //对手经纪名称，港股有效
-	optional int32 secMarket = 13; //（2018/07/17新增）证券所属市场，参见TrdSecMarket的枚举定义
-	optional double createTimestamp = 14; //时间戳
+	optional int32 secMarket = 13; //证券所属市场，参见TrdSecMarket的枚举定义
+	optional double createTimestamp = 14; //创建时间戳
+	optional double updateTimestamp = 15; //最后更新时间戳
+	optional int32 status = 16; //成交状态, 参见OrderFillStatus的枚举定义
 }
 
 //最大可交易数量

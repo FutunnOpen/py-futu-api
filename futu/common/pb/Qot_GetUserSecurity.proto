@@ -1,12 +1,13 @@
 syntax = "proto2";
 package Qot_GetUserSecurity;
+option java_package = "com.futu.openapi.pb";
 
 import "Common.proto";
 import "Qot_Common.proto";
 
 message C2S
 {
-	required string groupName = 1; //分组名,有同名的返回首个
+	required string groupName = 1; //分组名,有同名的返回排序首个
 }
 
 message S2C

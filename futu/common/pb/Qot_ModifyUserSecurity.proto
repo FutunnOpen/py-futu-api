@@ -1,5 +1,6 @@
 syntax = "proto2";
 package Qot_ModifyUserSecurity;
+option java_package = "com.futu.openapi.pb";
 
 import "Common.proto";
 import "Qot_Common.proto";
@@ -13,7 +14,7 @@ enum ModifyUserSecurityOp
 
 message C2S
 {
-	required string groupName = 1; //分组名,有同名的返回首个
+	required string groupName = 1; //分组名,有同名的返回排序的首个
 	required int32 op = 2; //ModifyUserSecurityOp,操作类型
 	repeated Qot_Common.Security securityList = 3; //新增或删除该分组下的股票
 }

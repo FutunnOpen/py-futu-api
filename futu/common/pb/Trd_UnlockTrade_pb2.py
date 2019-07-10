@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_UnlockTrade.proto',
   package='Trd_UnlockTrade',
   syntax='proto2',
-  serialized_pb=_b('\n\x15Trd_UnlockTrade.proto\x12\x0fTrd_UnlockTrade\x1a\x0c\x43ommon.proto\"%\n\x03\x43\x32S\x12\x0e\n\x06unlock\x18\x01 \x02(\x08\x12\x0e\n\x06pwdMD5\x18\x02 \x01(\t\"\x05\n\x03S2C\",\n\x07Request\x12!\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x14.Trd_UnlockTrade.C2S\"e\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12!\n\x03s2c\x18\x04 \x01(\x0b\x32\x14.Trd_UnlockTrade.S2C')
+  serialized_pb=_b('\n\x15Trd_UnlockTrade.proto\x12\x0fTrd_UnlockTrade\x1a\x0c\x43ommon.proto\"%\n\x03\x43\x32S\x12\x0e\n\x06unlock\x18\x01 \x02(\x08\x12\x0e\n\x06pwdMD5\x18\x02 \x01(\t\"\x05\n\x03S2C\",\n\x07Request\x12!\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x14.Trd_UnlockTrade.C2S\"e\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12!\n\x03s2c\x18\x04 \x01(\x0b\x32\x14.Trd_UnlockTrade.S2CB\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,])
 
@@ -208,4 +208,6 @@ Response = _reflection.GeneratedProtocolMessageType('Response', (_message.Messag
 _sym_db.RegisterMessage(Response)
 
 
+DESCRIPTOR.has_options = True
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
 # @@protoc_insertion_point(module_scope)

@@ -1,5 +1,6 @@
 syntax = "proto2";
 package Trd_ModifyOrder;
+option java_package = "com.futu.openapi.pb";
 
 import "Common.proto";
 import "Trd_Common.proto";
@@ -12,7 +13,7 @@ message C2S
 	required int32 modifyOrderOp = 4; //修改操作类型，参见Trd_Common.ModifyOrderOp的枚举定义
 	optional bool forAll = 5; //是否对此业务账户的全部订单操作，true是，false否(对单个订单)，无此字段代表false，仅对单个订单
 	
-	//下面的字段仅在modifyOrderOp为ModifyOrderOp_Normal有效
+	//下面的字段仅针对单个订单，且modifyOrderOp为ModifyOrderOp_Normal有效
 	optional double qty = 8; //数量，2位精度，期权单位是"张"
 	optional double price = 9; //价格，3位精度(A股2位)
 	//以下为调整价格使用，都传才有效，对港、A股有意义，因为港股有价位，A股2位精度，美股可不传
