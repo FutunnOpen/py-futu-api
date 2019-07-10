@@ -1796,13 +1796,13 @@ class ModifyUserSecurityOp(FtEnum):
 
 # 账户类型
 class TrdAccType(FtEnum):
-    UNKNOWN = 'UNKNOWN'     # 未知类型
+    NONE = 'N/A'     # 未知类型
     CASH = 'CASH'           # 现金账户
     MARGIN = 'MARGIN'       # 保证金账户
 
     def load_dic(self):
         return {
-            self.UNKNOWN: Trd_Common_pb2.TrdAccType_Unknown,
+            self.NONE: Trd_Common_pb2.TrdAccType_Unknown,
             self.CASH: Trd_Common_pb2.TrdAccType_Cash,
             self.MARGIN: Trd_Common_pb2.TrdAccType_Margin
         }
