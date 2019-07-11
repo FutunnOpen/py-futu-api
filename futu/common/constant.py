@@ -1105,6 +1105,7 @@ class OrderType(object):
     AUCTION = "AUCTION"                       # 港股_竞价
     AUCTION_LIMIT = "AUCTION_LIMIT"           # 港股_竞价限价
     SPECIAL_LIMIT = "SPECIAL_LIMIT"           # 港股_特别限价(即市价IOC, 订单到达交易所后，或全部成交， 或部分成交再撤单， 或下单失败)
+    SPECIAL_LIMIT_ALL = "SPECIAL_LIMIT_ALL"   # 港股_特别限价(要么全部成交，要么自动撤单)
 
 ORDER_TYPE_MAP = {
     OrderType.NONE: 0,
@@ -1114,6 +1115,7 @@ ORDER_TYPE_MAP = {
     OrderType.AUCTION: 6,
     OrderType.AUCTION_LIMIT: 7,
     OrderType.SPECIAL_LIMIT: 8,
+    OrderType.SPECIAL_LIMIT_ALL: 9,
 }
 
 

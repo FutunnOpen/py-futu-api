@@ -803,7 +803,7 @@ class OpenHKCCTradeContext(OpenTradeContextBase):
         return super(OpenHKCCTradeContext, self).order_list_query(order_id, status_filter_list, code, start, end, trd_env, acc_id, acc_index)
 
     def place_order(self, price, qty, code, trd_side=TrdSide.NONE, order_type=OrderType.NORMAL,
-                    adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+                    adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, remark=None):
         """
 
         :param price:
@@ -819,7 +819,7 @@ class OpenHKCCTradeContext(OpenTradeContextBase):
         """
         return super(OpenHKCCTradeContext, self).place_order(price=price, qty=qty, code=code, trd_side=trd_side,
                                    order_type=order_type, adjust_limit=adjust_limit,
-                                   trd_env=trd_env, acc_id=acc_id, acc_index=acc_index)
+                                   trd_env=trd_env, acc_id=acc_id, acc_index=acc_index, remark=remark)
 
     def modify_order(self, modify_order_op, order_id, qty, price, adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
         """
