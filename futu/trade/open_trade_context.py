@@ -4,7 +4,7 @@ import pandas as pd
 from futu.common.open_context_base import OpenContextBase
 from futu.trade.trade_query import *
 from futu.trade.trade_response_handler import AsyncHandler_TrdSubAccPush
-from futu.common.err import Err, make_msg
+from futu.common.err import *
 
 class OpenTradeContextBase(OpenContextBase):
     """Class for set context of HK stock trade"""
@@ -370,7 +370,7 @@ class OpenTradeContextBase(OpenContextBase):
         col_list = [
             "code", "stock_name", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
-            "dealt_qty", "dealt_avg_price", "last_err_msg"
+            "dealt_qty", "dealt_avg_price", "last_err_msg", "remark"
         ]
         order_list = ret_data
         order_list_table = pd.DataFrame(order_list, columns=col_list)
@@ -428,7 +428,7 @@ class OpenTradeContextBase(OpenContextBase):
         return RET_OK, order_list
 
     def place_order(self, price, qty, code, trd_side, order_type=OrderType.NORMAL,
-                    adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+                    adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, remark=None):
         """
         place order
         use  set_handle(HKTradeOrderHandlerBase) to recv order push !
@@ -448,6 +448,14 @@ class OpenTradeContextBase(OpenContextBase):
         if ret != RET_OK:
             return ret, content
 
+        if remark is not None:
+            if is_str(remark):
+                remark_utf8 = remark.encode('utf-8')
+                if len(remark_utf8) > 64:
+                    return RET_ERROR, make_wrong_value_msg_utf8_len_le('remark', 64)
+            else:
+                return RET_ERROR, make_wrong_type_msg('remark', 'str')
+
         market_str, stock_code = content
 
         query_processor = self._get_sync_query_processor(
@@ -465,7 +473,8 @@ class OpenTradeContextBase(OpenContextBase):
             'sec_mkt_str': market_str,
             'trd_env': trd_env,
             'acc_id': acc_id,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'remark': remark
         }
 
         ret_code, msg, order_id = query_processor(**kargs)
@@ -486,7 +495,7 @@ class OpenTradeContextBase(OpenContextBase):
         col_list = [
             "code", "stock_name", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
-            "dealt_qty", "dealt_avg_price", "last_err_msg"
+            "dealt_qty", "dealt_avg_price", "last_err_msg", "remark"
         ]
         order_list = [order_item]
         order_table = pd.DataFrame(order_list, columns=col_list)
@@ -645,7 +654,7 @@ class OpenTradeContextBase(OpenContextBase):
         col_list = [
             "code", "stock_name", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
-            "dealt_qty", "dealt_avg_price", "last_err_msg"
+            "dealt_qty", "dealt_avg_price", "last_err_msg", "remark"
         ]
         order_list_table = pd.DataFrame(order_list, columns=col_list)
 

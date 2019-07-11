@@ -237,7 +237,8 @@ class OrderListQuery:
             "updated_time": order.updateTime,
             "dealt_qty": order.fillQty,
             "dealt_avg_price": order.fillAvgPrice,
-            "last_err_msg": order.lastErrMsg
+            "last_err_msg": order.lastErrMsg,
+            "remark": order.remark if order.HasField("remark") else ""
         }
         return order_dict
 
@@ -259,7 +260,7 @@ class PlaceOrder:
 
     @classmethod
     def pack_req(cls, trd_side, order_type, price, qty,
-                 code, adjust_limit, trd_env, sec_mkt_str, acc_id, trd_mkt, conn_id):
+                 code, adjust_limit, trd_env, sec_mkt_str, acc_id, trd_mkt, conn_id, remark):
         """Convert from user request for place order to PLS request"""
         from futu.common.pb.Trd_PlaceOrder_pb2 import Request
         req = Request()
@@ -278,6 +279,8 @@ class PlaceOrder:
         req.c2s.price = price
         req.c2s.adjustPrice = adjust_limit != 0
         req.c2s.adjustSideAndLimit = adjust_limit
+        if remark is not None:
+            req.c2s.remark = remark
         proto_qot_mkt = MKT_MAP.get(sec_mkt_str, Qot_Common_pb2.QotMarket_Unknown)
         proto_trd_sec_mkt = QOT_MARKET_TO_TRD_SEC_MARKET_MAP.get(proto_qot_mkt,
                                                                  Trd_Common_pb2.TrdSecMarket_Unknown)
@@ -468,7 +471,8 @@ class HistoryOrderListQuery:
                       "updated_time": order.updateTime,
                       "dealt_qty": order.fillQty,
                       "dealt_avg_price": order.fillAvgPrice,
-                      "last_err_msg": order.lastErrMsg
+                      "last_err_msg": order.lastErrMsg,
+                      "remark": order.remark if order.HasField("remark") else ""
                       } for order in raw_order_list]
         return RET_OK, "", order_list
 
