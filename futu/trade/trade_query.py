@@ -187,6 +187,7 @@ class PositionListQuery:
                              "today_sell_val": position.td_sellVal if position.HasField('td_sellVal') else 0,
                              "position_side": TRADE.REV_POSITION_SIDE_MAP[position.positionSide]
                                 if position.positionSide in TRADE.REV_POSITION_SIDE_MAP else PositionSide.NONE,
+                             "avg_buy_price": position.avgPrice if position.HasField('avgPrice') else 0,
                          } for position in raw_position_list]
         return RET_OK, "", position_list
 
