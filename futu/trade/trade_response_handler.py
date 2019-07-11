@@ -35,7 +35,7 @@ class TradeDealHandlerBase(RspHandlerBase):
             deal_dict = ret_data
             col_list = ['trd_env', 'code', 'stock_name', 'deal_id', 'order_id',
                         'qty', 'price', 'trd_side', 'create_time', 'counter_broker_id',
-                        'counter_broker_name', 'trd_market',
+                        'counter_broker_name', 'trd_market', 'status'
                         ]
 
             trade_frame_table = pd.DataFrame([deal_dict], columns=col_list)

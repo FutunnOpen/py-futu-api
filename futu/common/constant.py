@@ -1192,6 +1192,20 @@ ORDER_STATUS_MAP = {
     OrderStatus.DELETED: 23,
 }
 
+
+class DealStatus(FtEnum):
+    OK = 'OK'                 # 正常
+    CANCELLED = 'CANCELLED'   # 成交被取消
+    CHANGED = 'CHANGED'       # 成交被更改
+
+    def load_dic(self):
+        return {
+            self.OK: Trd_Common_pb2.OrderFillStatus_OK,
+            self.CANCELLED: Trd_Common_pb2.OrderFillStatus_Cancelled,
+            self.CHANGED: Trd_Common_pb2.OrderFillStatus_Changed
+        }
+
+
 # 修改订单操作
 class ModifyOrderOp(object):
     """

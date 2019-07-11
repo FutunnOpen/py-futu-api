@@ -604,7 +604,7 @@ class OpenTradeContextBase(OpenContextBase):
 
         col_list = [
             "code", "stock_name", "deal_id", "order_id", "qty", "price",
-            "trd_side", "create_time", "counter_broker_id", "counter_broker_name"
+            "trd_side", "create_time", "counter_broker_id", "counter_broker_name", 'status'
         ]
         deal_list_table = pd.DataFrame(deal_list, columns=col_list)
 
@@ -697,7 +697,7 @@ class OpenTradeContextBase(OpenContextBase):
 
         col_list = [
             "code", "stock_name", "deal_id", "order_id", "qty", "price",
-            "trd_side", "create_time", "counter_broker_id", "counter_broker_name"
+            "trd_side", "create_time", "counter_broker_id", "counter_broker_name", 'status'
         ]
         deal_list_table = pd.DataFrame(deal_list, columns=col_list)
 
