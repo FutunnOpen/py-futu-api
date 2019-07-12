@@ -249,7 +249,7 @@ class OpenTradeContextBase(OpenContextBase):
                 return ret, msg, acc_id
         return RET_OK, "", acc_id
 
-    def accinfo_query(self, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+    def accinfo_query(self, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
         """
         :param trd_env:
         :param acc_id:
@@ -271,7 +271,8 @@ class OpenTradeContextBase(OpenContextBase):
             'acc_id': int(acc_id),
             'trd_env': trd_env,
             'trd_market': self.__trd_mkt,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'refresh_cache': refresh_cache
         }
 
         ret_code, msg, accinfo_list = query_processor(**kargs)
@@ -313,7 +314,7 @@ class OpenTradeContextBase(OpenContextBase):
             return RET_ERROR, error_str
 
     def position_list_query(self, code='', pl_ratio_min=None,
-                            pl_ratio_max=None, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+                            pl_ratio_max=None, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
         """for querying the position list"""
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
@@ -337,7 +338,8 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_mkt': self.__trd_mkt,
             'trd_env': trd_env,
             'acc_id': acc_id,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'refresh_cache': refresh_cache
         }
         ret_code, msg, position_list = query_processor(**kargs)
 
@@ -356,14 +358,15 @@ class OpenTradeContextBase(OpenContextBase):
         return RET_OK, position_list_table
 
     def order_list_query(self, order_id="", status_filter_list=[], code='', start='', end='',
-                         trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+                         trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
 
         ret, msg, acc_id = self._check_acc_id_and_acc_index(trd_env, acc_id, acc_index)
         if ret != RET_OK:
             return ret, msg
 
         ret_code, ret_data = self._order_list_query_impl(order_id, status_filter_list,
-                                                         code, start, end, trd_env, acc_id)
+                                                         code, start, end, trd_env, acc_id,
+                                                         refresh_cache)
         if ret_code != RET_OK:
             return ret_code, ret_data
 
@@ -377,7 +380,7 @@ class OpenTradeContextBase(OpenContextBase):
 
         return RET_OK, order_list_table
 
-    def _order_list_query_impl(self, order_id, status_filter_list, code, start, end, trd_env, acc_id):
+    def _order_list_query_impl(self, order_id, status_filter_list, code, start, end, trd_env, acc_id, refresh_cache):
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
             return ret, msg
@@ -418,7 +421,8 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_mkt': self.__trd_mkt,
             'trd_env': trd_env,
             'acc_id': acc_id,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'refresh_cache': refresh_cache
         }
         ret_code, msg, order_list = query_processor(**kargs)
 
@@ -574,7 +578,7 @@ class OpenTradeContextBase(OpenContextBase):
         return self.modify_order(ModifyOrderOp.NORMAL, order_id=order_id, qty=qty, price=price,
                                  adjust_limit=adjust_limit, trd_env=trd_env, acc_id=acc_id)
 
-    def deal_list_query(self, code="", trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+    def deal_list_query(self, code="", trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
         """for querying deal list"""
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
@@ -596,7 +600,8 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_mkt': self.__trd_mkt,
             'trd_env': trd_env,
             'acc_id': acc_id,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'refresh_cache': refresh_cache
             }
         ret_code, msg, deal_list = query_processor(**kargs)
         if ret_code != RET_OK:

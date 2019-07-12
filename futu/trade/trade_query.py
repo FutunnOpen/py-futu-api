@@ -108,12 +108,14 @@ class AccInfoQuery:
         pass
 
     @classmethod
-    def pack_req(cls, acc_id, trd_market, trd_env, conn_id):
+    def pack_req(cls, acc_id, trd_market, trd_env, conn_id, refresh_cache):
         from futu.common.pb.Trd_GetFunds_pb2 import Request
         req = Request()
         req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
         req.c2s.header.accID = acc_id
         req.c2s.header.trdMarket = TRD_MKT_MAP[trd_market]
+        if refresh_cache:
+            req.c2s.refreshCache = refresh_cache
 
         return pack_pb_req(req, ProtoId.Trd_GetFunds, conn_id)
 
@@ -143,7 +145,7 @@ class PositionListQuery:
 
     @classmethod
     def pack_req(cls, code, pl_ratio_min,
-                 pl_ratio_max, trd_env, acc_id, trd_mkt, conn_id):
+                 pl_ratio_max, trd_env, acc_id, trd_mkt, conn_id, refresh_cache):
         """Convert from user request for trading days to PLS request"""
         from futu.common.pb.Trd_GetPositionList_pb2 import Request
         req = Request()
@@ -156,6 +158,8 @@ class PositionListQuery:
             req.c2s.filterPLRatioMin = float(pl_ratio_min) / 100.0
         if pl_ratio_max is not None:
             req.c2s.filterPLRatioMax = float(pl_ratio_max) / 100.0
+        if refresh_cache:
+            req.c2s.refreshCache = refresh_cache
 
         return pack_pb_req(req, ProtoId.Trd_GetPositionList, conn_id)
 
@@ -199,7 +203,7 @@ class OrderListQuery:
 
     @classmethod
     def pack_req(cls, order_id, status_filter_list, code, start, end,
-                 trd_env, acc_id, trd_mkt, conn_id):
+                 trd_env, acc_id, trd_mkt, conn_id, refresh_cache):
         """Convert from user request for trading days to PLS request"""
         from futu.common.pb.Trd_GetOrderList_pb2 import Request
         req = Request()
@@ -216,6 +220,8 @@ class OrderListQuery:
             req.c2s.filterConditions.beginTime = start
         if end:
             req.c2s.filterConditions.endTime = end
+        if refresh_cache:
+            req.c2s.refreshCache = refresh_cache
 
         if len(status_filter_list):
             for order_status in status_filter_list:
@@ -383,7 +389,7 @@ class DealListQuery:
         pass
 
     @classmethod
-    def pack_req(cls, code, trd_env, acc_id, trd_mkt, conn_id):
+    def pack_req(cls, code, trd_env, acc_id, trd_mkt, conn_id, refresh_cache):
         """Convert from user request for place order to PLS request"""
         from futu.common.pb.Trd_GetOrderFillList_pb2 import Request
         req = Request()
@@ -393,6 +399,9 @@ class DealListQuery:
 
         if code:
             req.c2s.filterConditions.codeList.append(code)
+
+        if refresh_cache:
+            req.c2s.refreshCache = refresh_cache
 
         return pack_pb_req(req, ProtoId.Trd_GetOrderFillList, conn_id)
 
