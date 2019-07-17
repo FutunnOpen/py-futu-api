@@ -3,7 +3,6 @@
     Constant collection
 """
 from copy import copy
-from enum import Enum, unique
 from abc import abstractmethod
 
 

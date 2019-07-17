@@ -31,7 +31,7 @@ with open(join(dirname(__file__), 'futu/VERSION.txt'), 'rb') as f:
 
 install_requires = ["pandas",
                     "simplejson",
-                    "protobuf",
+                    "protobuf==3.5.1",
                     "PyCryptodome",
                     ]
 
