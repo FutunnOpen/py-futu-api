@@ -1,5 +1,6 @@
-﻿syntax = "proto2";
+syntax = "proto2";
 package Qot_Common;
+option java_package = "com.futu.openapi.pb";
 
 import "Common.proto";
 
@@ -228,6 +229,9 @@ enum SortField
     SortField_AskVol = 9; //卖量
     SortField_Volume = 10; //成交量
     SortField_Turnover = 11; //成交额
+	SortField_Amplitude = 30; //振幅%
+
+	//以下排序字段只支持用于Qot_GetWarrant协议
 	SortField_Score = 12; //综合评分
     SortField_Premium = 13; //溢价%
 	SortField_EffectiveLeverage = 14; //有效杠杆
@@ -246,11 +250,22 @@ enum SortField
     SortField_Change = 27; //换股比率
     SortField_StreetRate = 28; //街货比%
 	SortField_StreetVol = 29; //街货量
-    SortField_Amplitude = 30; //振幅%
-	SortField_WarrantName = 31; // 名称
+	SortField_WarrantName = 31; // 窝轮名称
     SortField_Issuer = 32; //发行人
 	SortField_LotSize = 33; // 每手
     SortField_IssueSize = 34; //发行量
+
+	//以下排序字段只支持用于Qot_GetPlateSecurity协议，并仅支持美股
+	SortField_PreCurPrice = 35; //盘前最新价
+	SortField_AfterCurPrice = 36; //盘后最新价
+	SortField_PrePriceChangeVal = 37; //盘前涨跌额
+	SortField_AfterPriceChangeVal = 38; //盘后涨跌额
+    SortField_PreChangeRate = 39; //盘前涨跌幅%
+	SortField_AfterChangeRate = 40; //盘后涨跌幅%
+	SortField_PreAmplitude = 41; //盘前振幅%
+	SortField_AfterAmplitude = 42; //盘后振幅%
+	SortField_PreTurnover = 43; //盘前成交额
+	SortField_AfterTurnover = 44; //盘后成交额
 }
 
 //涡轮发行人

@@ -3,7 +3,6 @@
     Constant collection
 """
 from copy import copy
-from enum import Enum, unique
 from abc import abstractmethod
 
 
@@ -1105,6 +1104,7 @@ class OrderType(object):
     AUCTION = "AUCTION"                       # 港股_竞价
     AUCTION_LIMIT = "AUCTION_LIMIT"           # 港股_竞价限价
     SPECIAL_LIMIT = "SPECIAL_LIMIT"           # 港股_特别限价(即市价IOC, 订单到达交易所后，或全部成交， 或部分成交再撤单， 或下单失败)
+    SPECIAL_LIMIT_ALL = "SPECIAL_LIMIT_ALL"   # 港股_特别限价(要么全部成交，要么自动撤单)
 
 ORDER_TYPE_MAP = {
     OrderType.NONE: 0,
@@ -1114,6 +1114,7 @@ ORDER_TYPE_MAP = {
     OrderType.AUCTION: 6,
     OrderType.AUCTION_LIMIT: 7,
     OrderType.SPECIAL_LIMIT: 8,
+    OrderType.SPECIAL_LIMIT_ALL: 9,
 }
 
 
@@ -1189,6 +1190,20 @@ ORDER_STATUS_MAP = {
     OrderStatus.DISABLED: 22,
     OrderStatus.DELETED: 23,
 }
+
+
+class DealStatus(FtEnum):
+    OK = 'OK'                 # 正常
+    CANCELLED = 'CANCELLED'   # 成交被取消
+    CHANGED = 'CHANGED'       # 成交被更改
+
+    def load_dic(self):
+        return {
+            self.OK: Trd_Common_pb2.OrderFillStatus_OK,
+            self.CANCELLED: Trd_Common_pb2.OrderFillStatus_Cancelled,
+            self.CHANGED: Trd_Common_pb2.OrderFillStatus_Changed
+        }
+
 
 # 修改订单操作
 class ModifyOrderOp(object):
@@ -1368,7 +1383,17 @@ class SortField(FtEnum):
     WARRANT_NAME = "WARRANT_NAME"                      # 名称
     ISSUER = "ISSUER"                                  # 发行人
     LOT_SIZE = "LOT_SIZE"                              # 每手
-    ISSUE_SIZE = "ISSUE_SIZE"                          # 发行量
+    ISSUE_SIZE = "ISSUE_SIZE"                          # 发行量   
+    PRE_CUR_PRICE = "PRE_CUR_PRICE"                    #盘前最新价
+    AFTER_CUR_PRICE = "AFTER_CUR_PRICE"                #盘后最新价
+    PRE_PRICE_CHANGE_VAL = "PRE_PRICE_CHANGE_VAL"      #盘前涨跌额
+    AFTER_PRICE_CHANGE_VAL = "AFTER_PRICE_CHANGE_VAL"  #盘后涨跌额
+    PRE_CHANGE_RATE = "PRE_CHANGE_RATE"                #盘前涨跌幅%
+    AFTER_CHANGE_RATE = "AFTER_CHANGE_RATE"            #盘后涨跌幅%
+    PRE_AMPLITUDE = "PRE_AMPLITUDE"                    #盘前振幅%
+    AFTER_AMPLITUDE = "AFTER_AMPLITUDE"                #盘后振幅%
+    PRE_TURNOVER = "PRE_TURNOVER"                      #盘前成交额
+    AFTER_TURNOVER = "AFTER_TURNOVER"                  #盘后成交额
 
     def load_dic(self):
         return {
@@ -1406,9 +1431,18 @@ class SortField(FtEnum):
             self.WARRANT_NAME: Qot_Common_pb2.SortField_WarrantName,
             self.ISSUER: Qot_Common_pb2.SortField_Issuer,
             self.LOT_SIZE: Qot_Common_pb2.SortField_LotSize,
-            self.ISSUE_SIZE: Qot_Common_pb2.SortField_IssueSize
+            self.ISSUE_SIZE: Qot_Common_pb2.SortField_IssueSize,		
+			self.PRE_CUR_PRICE: Qot_Common_pb2.SortField_PreCurPrice,
+            self.AFTER_CUR_PRICE: Qot_Common_pb2.SortField_AfterCurPrice,
+            self.PRE_PRICE_CHANGE_VAL: Qot_Common_pb2.SortField_PrePriceChangeVal,
+            self.AFTER_PRICE_CHANGE_VAL: Qot_Common_pb2.SortField_AfterPriceChangeVal,
+            self.PRE_CHANGE_RATE: Qot_Common_pb2.SortField_PreChangeRate,
+            self.AFTER_CHANGE_RATE: Qot_Common_pb2.SortField_AfterChangeRate,	
+            self.PRE_AMPLITUDE: Qot_Common_pb2.SortField_PreAmplitude,
+			self.AFTER_AMPLITUDE: Qot_Common_pb2.SortField_AfterAmplitude,
+			self.PRE_TURNOVER: Qot_Common_pb2.SortField_PreTurnover,
+			self.AFTER_TURNOVER: Qot_Common_pb2.SortField_AfterTurnover
         }
-
 
 '''-------------------------IpoPeriod----------------------------'''
 
@@ -1791,4 +1825,18 @@ class ModifyUserSecurityOp(FtEnum):
             self.NONE: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Unknown,
             self.ADD: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Add,
             self.DEL: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Del
+        }
+
+
+# 账户类型
+class TrdAccType(FtEnum):
+    NONE = 'N/A'     # 未知类型
+    CASH = 'CASH'           # 现金账户
+    MARGIN = 'MARGIN'       # 保证金账户
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.TrdAccType_Unknown,
+            self.CASH: Trd_Common_pb2.TrdAccType_Cash,
+            self.MARGIN: Trd_Common_pb2.TrdAccType_Margin
         }

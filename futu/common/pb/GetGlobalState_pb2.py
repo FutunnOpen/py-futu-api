@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='GetGlobalState.proto',
   package='GetGlobalState',
   syntax='proto2',
-  serialized_pb=_b('\n\x14GetGlobalState.proto\x12\x0eGetGlobalState\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x15\n\x03\x43\x32S\x12\x0e\n\x06userID\x18\x01 \x02(\x04\"\x86\x02\n\x03S2C\x12\x10\n\x08marketHK\x18\x01 \x02(\x05\x12\x10\n\x08marketUS\x18\x02 \x02(\x05\x12\x10\n\x08marketSH\x18\x03 \x02(\x05\x12\x10\n\x08marketSZ\x18\x04 \x02(\x05\x12\x16\n\x0emarketHKFuture\x18\x05 \x02(\x05\x12\x12\n\nqotLogined\x18\x06 \x02(\x08\x12\x12\n\ntrdLogined\x18\x07 \x02(\x08\x12\x11\n\tserverVer\x18\x08 \x02(\x05\x12\x15\n\rserverBuildNo\x18\t \x02(\x05\x12\x0c\n\x04time\x18\n \x02(\x03\x12\x11\n\tlocalTime\x18\x0b \x01(\x01\x12,\n\rprogramStatus\x18\x0c \x01(\x0b\x32\x15.Common.ProgramStatus\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.GetGlobalState.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.GetGlobalState.S2C')
+  serialized_pb=_b('\n\x14GetGlobalState.proto\x12\x0eGetGlobalState\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x15\n\x03\x43\x32S\x12\x0e\n\x06userID\x18\x01 \x02(\x04\"\xb2\x02\n\x03S2C\x12\x10\n\x08marketHK\x18\x01 \x02(\x05\x12\x10\n\x08marketUS\x18\x02 \x02(\x05\x12\x10\n\x08marketSH\x18\x03 \x02(\x05\x12\x10\n\x08marketSZ\x18\x04 \x02(\x05\x12\x16\n\x0emarketHKFuture\x18\x05 \x02(\x05\x12\x12\n\nqotLogined\x18\x06 \x02(\x08\x12\x12\n\ntrdLogined\x18\x07 \x02(\x08\x12\x11\n\tserverVer\x18\x08 \x02(\x05\x12\x15\n\rserverBuildNo\x18\t \x02(\x05\x12\x0c\n\x04time\x18\n \x02(\x03\x12\x11\n\tlocalTime\x18\x0b \x01(\x01\x12,\n\rprogramStatus\x18\x0c \x01(\x0b\x32\x15.Common.ProgramStatus\x12\x14\n\x0cqotSvrIpAddr\x18\r \x01(\t\x12\x14\n\x0ctrdSvrIpAddr\x18\x0e \x01(\t\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.GetGlobalState.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.GetGlobalState.S2CB\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -150,6 +150,20 @@ _S2C = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='qotSvrIpAddr', full_name='GetGlobalState.S2C.qotSvrIpAddr', index=12,
+      number=13, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='trdSvrIpAddr', full_name='GetGlobalState.S2C.trdSvrIpAddr', index=13,
+      number=14, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -163,7 +177,7 @@ _S2C = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=96,
-  serialized_end=358,
+  serialized_end=402,
 )
 
 
@@ -193,8 +207,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=360,
-  serialized_end=403,
+  serialized_start=404,
+  serialized_end=447,
 )
 
 
@@ -245,8 +259,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=405,
-  serialized_end=505,
+  serialized_start=449,
+  serialized_end=549,
 )
 
 _S2C.fields_by_name['programStatus'].message_type = Common__pb2._PROGRAMSTATUS
@@ -287,4 +301,6 @@ Response = _reflection.GeneratedProtocolMessageType('Response', (_message.Messag
 _sym_db.RegisterMessage(Response)
 
 
+DESCRIPTOR.has_options = True
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
 # @@protoc_insertion_point(module_scope)

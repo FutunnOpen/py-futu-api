@@ -44,7 +44,9 @@ class GetAccountList:
         acc_list = [{
             'acc_id': record.accID,
             'trd_env': TRADE.REV_TRD_ENV_MAP[record.trdEnv] if record.trdEnv in TRADE.REV_TRD_ENV_MAP else "",
-            'trdMarket_list': [(TRADE.REV_TRD_MKT_MAP[trdMkt] if trdMkt in TRADE.REV_TRD_MKT_MAP else TrdMarket.NONE) for trdMkt in record.trdMarketAuthList]
+            'trdMarket_list': [(TRADE.REV_TRD_MKT_MAP[trdMkt] if trdMkt in TRADE.REV_TRD_MKT_MAP else TrdMarket.NONE) for trdMkt in record.trdMarketAuthList],
+            'acc_type': TrdAccType.to_string2(record.accType) if record.HasField("accType") else TrdAccType.NONE,
+            'card_num': record.cardNum if record.HasField("cardNum") else "N/A"
         } for record in raw_acc_list]
 
         return RET_OK, "", acc_list
@@ -106,12 +108,14 @@ class AccInfoQuery:
         pass
 
     @classmethod
-    def pack_req(cls, acc_id, trd_market, trd_env, conn_id):
+    def pack_req(cls, acc_id, trd_market, trd_env, conn_id, refresh_cache):
         from futu.common.pb.Trd_GetFunds_pb2 import Request
         req = Request()
         req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
         req.c2s.header.accID = acc_id
         req.c2s.header.trdMarket = TRD_MKT_MAP[trd_market]
+        if refresh_cache:
+            req.c2s.refreshCache = refresh_cache
 
         return pack_pb_req(req, ProtoId.Trd_GetFunds, conn_id)
 
@@ -141,7 +145,7 @@ class PositionListQuery:
 
     @classmethod
     def pack_req(cls, code, pl_ratio_min,
-                 pl_ratio_max, trd_env, acc_id, trd_mkt, conn_id):
+                 pl_ratio_max, trd_env, acc_id, trd_mkt, conn_id, refresh_cache):
         """Convert from user request for trading days to PLS request"""
         from futu.common.pb.Trd_GetPositionList_pb2 import Request
         req = Request()
@@ -154,6 +158,8 @@ class PositionListQuery:
             req.c2s.filterPLRatioMin = float(pl_ratio_min) / 100.0
         if pl_ratio_max is not None:
             req.c2s.filterPLRatioMax = float(pl_ratio_max) / 100.0
+        if refresh_cache:
+            req.c2s.refreshCache = refresh_cache
 
         return pack_pb_req(req, ProtoId.Trd_GetPositionList, conn_id)
 
@@ -185,6 +191,7 @@ class PositionListQuery:
                              "today_sell_val": position.td_sellVal if position.HasField('td_sellVal') else 0,
                              "position_side": TRADE.REV_POSITION_SIDE_MAP[position.positionSide]
                                 if position.positionSide in TRADE.REV_POSITION_SIDE_MAP else PositionSide.NONE,
+                             "avg_buy_price": position.avgPrice if position.HasField('avgPrice') else 0,
                          } for position in raw_position_list]
         return RET_OK, "", position_list
 
@@ -196,7 +203,7 @@ class OrderListQuery:
 
     @classmethod
     def pack_req(cls, order_id, status_filter_list, code, start, end,
-                 trd_env, acc_id, trd_mkt, conn_id):
+                 trd_env, acc_id, trd_mkt, conn_id, refresh_cache):
         """Convert from user request for trading days to PLS request"""
         from futu.common.pb.Trd_GetOrderList_pb2 import Request
         req = Request()
@@ -213,6 +220,8 @@ class OrderListQuery:
             req.c2s.filterConditions.beginTime = start
         if end:
             req.c2s.filterConditions.endTime = end
+        if refresh_cache:
+            req.c2s.refreshCache = refresh_cache
 
         if len(status_filter_list):
             for order_status in status_filter_list:
@@ -235,7 +244,8 @@ class OrderListQuery:
             "updated_time": order.updateTime,
             "dealt_qty": order.fillQty,
             "dealt_avg_price": order.fillAvgPrice,
-            "last_err_msg": order.lastErrMsg
+            "last_err_msg": order.lastErrMsg,
+            "remark": order.remark if order.HasField("remark") else ""
         }
         return order_dict
 
@@ -257,7 +267,7 @@ class PlaceOrder:
 
     @classmethod
     def pack_req(cls, trd_side, order_type, price, qty,
-                 code, adjust_limit, trd_env, sec_mkt_str, acc_id, trd_mkt, conn_id):
+                 code, adjust_limit, trd_env, sec_mkt_str, acc_id, trd_mkt, conn_id, remark):
         """Convert from user request for place order to PLS request"""
         from futu.common.pb.Trd_PlaceOrder_pb2 import Request
         req = Request()
@@ -276,6 +286,8 @@ class PlaceOrder:
         req.c2s.price = price
         req.c2s.adjustPrice = adjust_limit != 0
         req.c2s.adjustSideAndLimit = adjust_limit
+        if remark is not None:
+            req.c2s.remark = remark
         proto_qot_mkt = MKT_MAP.get(sec_mkt_str, Qot_Common_pb2.QotMarket_Unknown)
         proto_trd_sec_mkt = QOT_MARKET_TO_TRD_SEC_MARKET_MAP.get(proto_qot_mkt,
                                                                  Trd_Common_pb2.TrdSecMarket_Unknown)
@@ -377,7 +389,7 @@ class DealListQuery:
         pass
 
     @classmethod
-    def pack_req(cls, code, trd_env, acc_id, trd_mkt, conn_id):
+    def pack_req(cls, code, trd_env, acc_id, trd_mkt, conn_id, refresh_cache):
         """Convert from user request for place order to PLS request"""
         from futu.common.pb.Trd_GetOrderFillList_pb2 import Request
         req = Request()
@@ -387,6 +399,9 @@ class DealListQuery:
 
         if code:
             req.c2s.filterConditions.codeList.append(code)
+
+        if refresh_cache:
+            req.c2s.refreshCache = refresh_cache
 
         return pack_pb_req(req, ProtoId.Trd_GetOrderFillList, conn_id)
 
@@ -403,6 +418,7 @@ class DealListQuery:
             "create_time": deal.createTime,
             "counter_broker_id": deal.counterBrokerID,
             "counter_broker_name": deal.counterBrokerName,
+            "status": DealStatus.to_string2(deal.status) if deal.HasField("status") else 'N/A'
         }
         return deal_dict
 
@@ -466,7 +482,8 @@ class HistoryOrderListQuery:
                       "updated_time": order.updateTime,
                       "dealt_qty": order.fillQty,
                       "dealt_avg_price": order.fillAvgPrice,
-                      "last_err_msg": order.lastErrMsg
+                      "last_err_msg": order.lastErrMsg,
+                      "remark": order.remark if order.HasField("remark") else ""
                       } for order in raw_order_list]
         return RET_OK, "", order_list
 
@@ -511,7 +528,8 @@ class HistoryDealListQuery:
                     "trd_side": TRADE.REV_TRD_SIDE_MAP[deal.trdSide] if deal.trdSide in TRADE.REV_TRD_SIDE_MAP else TrdSide.NONE,
                     "create_time": deal.createTime,
                     "counter_broker_id": deal.counterBrokerID,
-                    "counter_broker_name": deal.counterBrokerName
+                    "counter_broker_name": deal.counterBrokerName,
+                    "status": DealStatus.to_string2(deal.status) if deal.HasField('status') else 'N/A'
                      } for deal in raw_deal_list]
 
         return RET_OK, "", deal_list

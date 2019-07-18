@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Common.proto',
   package='Common',
   syntax='proto2',
-  serialized_pb=_b('\n\x0c\x43ommon.proto\x12\x06\x43ommon\",\n\x08PacketID\x12\x0e\n\x06\x63onnID\x18\x01 \x02(\x04\x12\x10\n\x08serialNo\x18\x02 \x02(\r\"L\n\rProgramStatus\x12\'\n\x04type\x18\x01 \x02(\x0e\x32\x19.Common.ProgramStatusType\x12\x12\n\nstrExtDesc\x18\x02 \x01(\t*w\n\x07RetType\x12\x13\n\x0fRetType_Succeed\x10\x00\x12\x1b\n\x0eRetType_Failed\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_TimeOut\x10\x9c\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Unknown\x10\xf0\xfc\xff\xff\xff\xff\xff\xff\xff\x01*h\n\rPacketEncAlgo\x12\x1b\n\x17PacketEncAlgo_FTAES_ECB\x10\x00\x12\x1f\n\x12PacketEncAlgo_None\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x19\n\x15PacketEncAlgo_AES_ECB\x10\x01*\xc4\x03\n\x11ProgramStatusType\x12\x1a\n\x16ProgramStatusType_None\x10\x00\x12\x1c\n\x18ProgramStatusType_Loaded\x10\x01\x12\x1c\n\x18ProgramStatusType_Loging\x10\x02\x12\'\n#ProgramStatusType_NeedPicVerifyCode\x10\x03\x12)\n%ProgramStatusType_NeedPhoneVerifyCode\x10\x04\x12!\n\x1dProgramStatusType_LoginFailed\x10\x05\x12!\n\x1dProgramStatusType_ForceUpdate\x10\x06\x12*\n&ProgramStatusType_NessaryDataPreparing\x10\x07\x12(\n$ProgramStatusType_NessaryDataMissing\x10\x08\x12\'\n#ProgramStatusType_UnAgreeDisclaimer\x10\t\x12\x1b\n\x17ProgramStatusType_Ready\x10\n\x12!\n\x1dProgramStatusType_ForceLogout\x10\x0b')
+  serialized_pb=_b('\n\x0c\x43ommon.proto\x12\x06\x43ommon\",\n\x08PacketID\x12\x0e\n\x06\x63onnID\x18\x01 \x02(\x04\x12\x10\n\x08serialNo\x18\x02 \x02(\r\"L\n\rProgramStatus\x12\'\n\x04type\x18\x01 \x02(\x0e\x32\x19.Common.ProgramStatusType\x12\x12\n\nstrExtDesc\x18\x02 \x01(\t*\xb6\x01\n\x07RetType\x12\x13\n\x0fRetType_Succeed\x10\x00\x12\x1b\n\x0eRetType_Failed\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_TimeOut\x10\x9c\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1f\n\x12RetType_DisConnect\x10\xb8\xfe\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Unknown\x10\xf0\xfc\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Invalid\x10\x8c\xfc\xff\xff\xff\xff\xff\xff\xff\x01*\x83\x01\n\rPacketEncAlgo\x12\x1b\n\x17PacketEncAlgo_FTAES_ECB\x10\x00\x12\x1f\n\x12PacketEncAlgo_None\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x19\n\x15PacketEncAlgo_AES_ECB\x10\x01\x12\x19\n\x15PacketEncAlgo_AES_CBC\x10\x02*\xc4\x03\n\x11ProgramStatusType\x12\x1a\n\x16ProgramStatusType_None\x10\x00\x12\x1c\n\x18ProgramStatusType_Loaded\x10\x01\x12\x1c\n\x18ProgramStatusType_Loging\x10\x02\x12\'\n#ProgramStatusType_NeedPicVerifyCode\x10\x03\x12)\n%ProgramStatusType_NeedPhoneVerifyCode\x10\x04\x12!\n\x1dProgramStatusType_LoginFailed\x10\x05\x12!\n\x1dProgramStatusType_ForceUpdate\x10\x06\x12*\n&ProgramStatusType_NessaryDataPreparing\x10\x07\x12(\n$ProgramStatusType_NessaryDataMissing\x10\x08\x12\'\n#ProgramStatusType_UnAgreeDisclaimer\x10\t\x12\x1b\n\x17ProgramStatusType_Ready\x10\n\x12!\n\x1dProgramStatusType_ForceLogout\x10\x0b\x42\x15\n\x13\x63om.futu.openapi.pb')
 )
 
 _RETTYPE = _descriptor.EnumDescriptor(
@@ -42,14 +42,22 @@ _RETTYPE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='RetType_Unknown', index=3, number=-400,
+      name='RetType_DisConnect', index=3, number=-200,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='RetType_Unknown', index=4, number=-400,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='RetType_Invalid', index=5, number=-500,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=148,
-  serialized_end=267,
+  serialized_start=149,
+  serialized_end=331,
 )
 _sym_db.RegisterEnumDescriptor(_RETTYPE)
 
@@ -72,11 +80,15 @@ _PACKETENCALGO = _descriptor.EnumDescriptor(
       name='PacketEncAlgo_AES_ECB', index=2, number=1,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PacketEncAlgo_AES_CBC', index=3, number=2,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=269,
-  serialized_end=373,
+  serialized_start=334,
+  serialized_end=465,
 )
 _sym_db.RegisterEnumDescriptor(_PACKETENCALGO)
 
@@ -138,8 +150,8 @@ _PROGRAMSTATUSTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=376,
-  serialized_end=828,
+  serialized_start=468,
+  serialized_end=920,
 )
 _sym_db.RegisterEnumDescriptor(_PROGRAMSTATUSTYPE)
 
@@ -147,10 +159,13 @@ ProgramStatusType = enum_type_wrapper.EnumTypeWrapper(_PROGRAMSTATUSTYPE)
 RetType_Succeed = 0
 RetType_Failed = -1
 RetType_TimeOut = -100
+RetType_DisConnect = -200
 RetType_Unknown = -400
+RetType_Invalid = -500
 PacketEncAlgo_FTAES_ECB = 0
 PacketEncAlgo_None = -1
 PacketEncAlgo_AES_ECB = 1
+PacketEncAlgo_AES_CBC = 2
 ProgramStatusType_None = 0
 ProgramStatusType_Loaded = 1
 ProgramStatusType_Loging = 2
@@ -264,4 +279,6 @@ ProgramStatus = _reflection.GeneratedProtocolMessageType('ProgramStatus', (_mess
 _sym_db.RegisterMessage(ProgramStatus)
 
 
+DESCRIPTOR.has_options = True
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
 # @@protoc_insertion_point(module_scope)

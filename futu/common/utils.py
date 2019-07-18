@@ -107,6 +107,13 @@ def normalize_start_end_date(start, end, delta_days=0, default_time_start="00:00
     return RET_OK, '', start, end
 
 
+def is_str(s):
+    if IS_PY2:
+        return isinstance(s, str) or isinstance(s, unicode)
+    else:
+        return isinstance(s, str)
+
+
 def extract_pls_rsp(rsp_str):
     """Extract the response of PLS"""
     try:

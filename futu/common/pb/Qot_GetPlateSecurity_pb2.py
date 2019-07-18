@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetPlateSecurity.proto',
   package='Qot_GetPlateSecurity',
   syntax='proto2',
-  serialized_pb=_b('\n\x1aQot_GetPlateSecurity.proto\x12\x14Qot_GetPlateSecurity\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"*\n\x03\x43\x32S\x12#\n\x05plate\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\"=\n\x03S2C\x12\x36\n\x0estaticInfoList\x18\x01 \x03(\x0b\x32\x1e.Qot_Common.SecurityStaticInfo\"1\n\x07Request\x12&\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x19.Qot_GetPlateSecurity.C2S\"j\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12&\n\x03s2c\x18\x04 \x01(\x0b\x32\x19.Qot_GetPlateSecurity.S2C')
+  serialized_pb=_b('\n\x1aQot_GetPlateSecurity.proto\x12\x14Qot_GetPlateSecurity\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"M\n\x03\x43\x32S\x12#\n\x05plate\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x11\n\tsortField\x18\x02 \x01(\x05\x12\x0e\n\x06\x61scend\x18\x03 \x01(\x08\"=\n\x03S2C\x12\x36\n\x0estaticInfoList\x18\x01 \x03(\x0b\x32\x1e.Qot_Common.SecurityStaticInfo\"1\n\x07Request\x12&\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x19.Qot_GetPlateSecurity.C2S\"j\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12&\n\x03s2c\x18\x04 \x01(\x0b\x32\x19.Qot_GetPlateSecurity.S2CB\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -42,6 +42,20 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='sortField', full_name='Qot_GetPlateSecurity.C2S.sortField', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='ascend', full_name='Qot_GetPlateSecurity.C2S.ascend', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -55,7 +69,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=84,
-  serialized_end=126,
+  serialized_end=161,
 )
 
 
@@ -85,8 +99,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=128,
-  serialized_end=189,
+  serialized_start=163,
+  serialized_end=224,
 )
 
 
@@ -116,8 +130,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=191,
-  serialized_end=240,
+  serialized_start=226,
+  serialized_end=275,
 )
 
 
@@ -168,8 +182,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=242,
-  serialized_end=348,
+  serialized_start=277,
+  serialized_end=383,
 )
 
 _C2S.fields_by_name['plate'].message_type = Qot__Common__pb2._SECURITY
@@ -211,4 +225,6 @@ Response = _reflection.GeneratedProtocolMessageType('Response', (_message.Messag
 _sym_db.RegisterMessage(Response)
 
 
+DESCRIPTOR.has_options = True
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
 # @@protoc_insertion_point(module_scope)

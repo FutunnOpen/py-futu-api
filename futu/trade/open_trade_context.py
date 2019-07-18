@@ -4,7 +4,7 @@ import pandas as pd
 from futu.common.open_context_base import OpenContextBase
 from futu.trade.trade_query import *
 from futu.trade.trade_response_handler import AsyncHandler_TrdSubAccPush
-from futu.common.err import Err, make_msg
+from futu.common.err import *
 
 class OpenTradeContextBase(OpenContextBase):
     """Class for set context of HK stock trade"""
@@ -73,9 +73,11 @@ class OpenTradeContextBase(OpenContextBase):
             if self.__trd_mkt in trdMkt_list:
                 self.__last_acc_list.append({
                     "trd_env": record["trd_env"],
-                    "acc_id": record["acc_id"]})
+                    "acc_id": record["acc_id"],
+                    "acc_type": record["acc_type"],
+                    "card_num": record["card_num"]})
 
-        col_list = ["acc_id", "trd_env"]
+        col_list = ["acc_id", "trd_env", "acc_type", "card_num"]
 
         acc_table = pd.DataFrame(copy(self.__last_acc_list), columns=col_list)
 
@@ -247,7 +249,7 @@ class OpenTradeContextBase(OpenContextBase):
                 return ret, msg, acc_id
         return RET_OK, "", acc_id
 
-    def accinfo_query(self, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+    def accinfo_query(self, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
         """
         :param trd_env:
         :param acc_id:
@@ -269,7 +271,8 @@ class OpenTradeContextBase(OpenContextBase):
             'acc_id': int(acc_id),
             'trd_env': trd_env,
             'trd_market': self.__trd_mkt,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'refresh_cache': refresh_cache
         }
 
         ret_code, msg, accinfo_list = query_processor(**kargs)
@@ -311,7 +314,7 @@ class OpenTradeContextBase(OpenContextBase):
             return RET_ERROR, error_str
 
     def position_list_query(self, code='', pl_ratio_min=None,
-                            pl_ratio_max=None, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+                            pl_ratio_max=None, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
         """for querying the position list"""
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
@@ -335,7 +338,8 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_mkt': self.__trd_mkt,
             'trd_env': trd_env,
             'acc_id': acc_id,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'refresh_cache': refresh_cache
         }
         ret_code, msg, position_list = query_processor(**kargs)
 
@@ -347,35 +351,36 @@ class OpenTradeContextBase(OpenContextBase):
             "cost_price_valid", "market_val", "nominal_price", "pl_ratio",
             "pl_ratio_valid", "pl_val", "pl_val_valid", "today_buy_qty",
             "today_buy_val", "today_pl_val", "today_sell_qty", "today_sell_val",
-            "position_side"
+            "position_side", "avg_buy_price"
         ]
 
         position_list_table = pd.DataFrame(position_list, columns=col_list)
         return RET_OK, position_list_table
 
     def order_list_query(self, order_id="", status_filter_list=[], code='', start='', end='',
-                         trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+                         trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
 
         ret, msg, acc_id = self._check_acc_id_and_acc_index(trd_env, acc_id, acc_index)
         if ret != RET_OK:
             return ret, msg
 
         ret_code, ret_data = self._order_list_query_impl(order_id, status_filter_list,
-                                                         code, start, end, trd_env, acc_id)
+                                                         code, start, end, trd_env, acc_id,
+                                                         refresh_cache)
         if ret_code != RET_OK:
             return ret_code, ret_data
 
         col_list = [
             "code", "stock_name", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
-            "dealt_qty", "dealt_avg_price", "last_err_msg"
+            "dealt_qty", "dealt_avg_price", "last_err_msg", "remark"
         ]
         order_list = ret_data
         order_list_table = pd.DataFrame(order_list, columns=col_list)
 
         return RET_OK, order_list_table
 
-    def _order_list_query_impl(self, order_id, status_filter_list, code, start, end, trd_env, acc_id):
+    def _order_list_query_impl(self, order_id, status_filter_list, code, start, end, trd_env, acc_id, refresh_cache):
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
             return ret, msg
@@ -416,7 +421,8 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_mkt': self.__trd_mkt,
             'trd_env': trd_env,
             'acc_id': acc_id,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'refresh_cache': refresh_cache
         }
         ret_code, msg, order_list = query_processor(**kargs)
 
@@ -426,7 +432,7 @@ class OpenTradeContextBase(OpenContextBase):
         return RET_OK, order_list
 
     def place_order(self, price, qty, code, trd_side, order_type=OrderType.NORMAL,
-                    adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+                    adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, remark=None):
         """
         place order
         use  set_handle(HKTradeOrderHandlerBase) to recv order push !
@@ -446,6 +452,14 @@ class OpenTradeContextBase(OpenContextBase):
         if ret != RET_OK:
             return ret, content
 
+        if remark is not None:
+            if is_str(remark):
+                remark_utf8 = remark.encode('utf-8')
+                if len(remark_utf8) > 64:
+                    return RET_ERROR, make_wrong_value_msg_utf8_len_le('remark', 64)
+            else:
+                return RET_ERROR, make_wrong_type_msg('remark', 'str')
+
         market_str, stock_code = content
 
         query_processor = self._get_sync_query_processor(
@@ -463,7 +477,8 @@ class OpenTradeContextBase(OpenContextBase):
             'sec_mkt_str': market_str,
             'trd_env': trd_env,
             'acc_id': acc_id,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'remark': remark
         }
 
         ret_code, msg, order_id = query_processor(**kargs)
@@ -484,7 +499,7 @@ class OpenTradeContextBase(OpenContextBase):
         col_list = [
             "code", "stock_name", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
-            "dealt_qty", "dealt_avg_price", "last_err_msg"
+            "dealt_qty", "dealt_avg_price", "last_err_msg", "remark"
         ]
         order_list = [order_item]
         order_table = pd.DataFrame(order_list, columns=col_list)
@@ -563,7 +578,7 @@ class OpenTradeContextBase(OpenContextBase):
         return self.modify_order(ModifyOrderOp.NORMAL, order_id=order_id, qty=qty, price=price,
                                  adjust_limit=adjust_limit, trd_env=trd_env, acc_id=acc_id)
 
-    def deal_list_query(self, code="", trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+    def deal_list_query(self, code="", trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
         """for querying deal list"""
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
@@ -585,7 +600,8 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_mkt': self.__trd_mkt,
             'trd_env': trd_env,
             'acc_id': acc_id,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'refresh_cache': refresh_cache
             }
         ret_code, msg, deal_list = query_processor(**kargs)
         if ret_code != RET_OK:
@@ -593,7 +609,7 @@ class OpenTradeContextBase(OpenContextBase):
 
         col_list = [
             "code", "stock_name", "deal_id", "order_id", "qty", "price",
-            "trd_side", "create_time", "counter_broker_id", "counter_broker_name"
+            "trd_side", "create_time", "counter_broker_id", "counter_broker_name", 'status'
         ]
         deal_list_table = pd.DataFrame(deal_list, columns=col_list)
 
@@ -643,7 +659,7 @@ class OpenTradeContextBase(OpenContextBase):
         col_list = [
             "code", "stock_name", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
-            "dealt_qty", "dealt_avg_price", "last_err_msg"
+            "dealt_qty", "dealt_avg_price", "last_err_msg", "remark"
         ]
         order_list_table = pd.DataFrame(order_list, columns=col_list)
 
@@ -686,7 +702,7 @@ class OpenTradeContextBase(OpenContextBase):
 
         col_list = [
             "code", "stock_name", "deal_id", "order_id", "qty", "price",
-            "trd_side", "create_time", "counter_broker_id", "counter_broker_name"
+            "trd_side", "create_time", "counter_broker_id", "counter_broker_name", 'status'
         ]
         deal_list_table = pd.DataFrame(deal_list, columns=col_list)
 
@@ -792,7 +808,7 @@ class OpenHKCCTradeContext(OpenTradeContextBase):
         return super(OpenHKCCTradeContext, self).order_list_query(order_id, status_filter_list, code, start, end, trd_env, acc_id, acc_index)
 
     def place_order(self, price, qty, code, trd_side=TrdSide.NONE, order_type=OrderType.NORMAL,
-                    adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+                    adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, remark=None):
         """
 
         :param price:
@@ -808,7 +824,7 @@ class OpenHKCCTradeContext(OpenTradeContextBase):
         """
         return super(OpenHKCCTradeContext, self).place_order(price=price, qty=qty, code=code, trd_side=trd_side,
                                    order_type=order_type, adjust_limit=adjust_limit,
-                                   trd_env=trd_env, acc_id=acc_id, acc_index=acc_index)
+                                   trd_env=trd_env, acc_id=acc_id, acc_index=acc_index, remark=remark)
 
     def modify_order(self, modify_order_op, order_id, qty, price, adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
         """

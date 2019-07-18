@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_GetPositionList.proto',
   package='Trd_GetPositionList',
   syntax='proto2',
-  serialized_pb=_b('\n\x19Trd_GetPositionList.proto\x12\x13Trd_GetPositionList\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\x9b\x01\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x39\n\x10\x66ilterConditions\x18\x02 \x01(\x0b\x32\x1f.Trd_Common.TrdFilterConditions\x12\x18\n\x10\x66ilterPLRatioMin\x18\x03 \x01(\x01\x12\x18\n\x10\x66ilterPLRatioMax\x18\x04 \x01(\x01\"X\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12*\n\x0cpositionList\x18\x02 \x03(\x0b\x32\x14.Trd_Common.Position\"0\n\x07Request\x12%\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x18.Trd_GetPositionList.C2S\"i\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12%\n\x03s2c\x18\x04 \x01(\x0b\x32\x18.Trd_GetPositionList.S2C')
+  serialized_pb=_b('\n\x19Trd_GetPositionList.proto\x12\x13Trd_GetPositionList\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\xb1\x01\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x39\n\x10\x66ilterConditions\x18\x02 \x01(\x0b\x32\x1f.Trd_Common.TrdFilterConditions\x12\x18\n\x10\x66ilterPLRatioMin\x18\x03 \x01(\x01\x12\x18\n\x10\x66ilterPLRatioMax\x18\x04 \x01(\x01\x12\x14\n\x0crefreshCache\x18\x05 \x01(\x08\"X\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12*\n\x0cpositionList\x18\x02 \x03(\x0b\x32\x14.Trd_Common.Position\"0\n\x07Request\x12%\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x18.Trd_GetPositionList.C2S\"i\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12%\n\x03s2c\x18\x04 \x01(\x0b\x32\x18.Trd_GetPositionList.S2CB\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Trd__Common__pb2.DESCRIPTOR,])
 
@@ -63,6 +63,13 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='refreshCache', full_name='Trd_GetPositionList.C2S.refreshCache', index=4,
+      number=5, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -76,7 +83,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=83,
-  serialized_end=238,
+  serialized_end=260,
 )
 
 
@@ -113,8 +120,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=240,
-  serialized_end=328,
+  serialized_start=262,
+  serialized_end=350,
 )
 
 
@@ -144,8 +151,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=330,
-  serialized_end=378,
+  serialized_start=352,
+  serialized_end=400,
 )
 
 
@@ -196,8 +203,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=380,
-  serialized_end=485,
+  serialized_start=402,
+  serialized_end=507,
 )
 
 _C2S.fields_by_name['header'].message_type = Trd__Common__pb2._TRDHEADER
@@ -241,4 +248,6 @@ Response = _reflection.GeneratedProtocolMessageType('Response', (_message.Messag
 _sym_db.RegisterMessage(Response)
 
 
+DESCRIPTOR.has_options = True
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
 # @@protoc_insertion_point(module_scope)
