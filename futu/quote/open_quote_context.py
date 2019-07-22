@@ -957,6 +957,11 @@ class OpenQuoteContext(OpenContextBase):
             error_str = ERROR_STR_PREFIX + "the type of code is wrong"
             return RET_ERROR, error_str
 
+        r, v = SortField.to_number(sort_field)
+        if (not r):
+            error_str = ERROR_STR_PREFIX + "the type of sort field is wrong"
+            return RET_ERROR, error_str
+
         query_processor = self._get_sync_query_processor(
             PlateStockQuery.pack_req, PlateStockQuery.unpack_rsp)
         kargs = {
