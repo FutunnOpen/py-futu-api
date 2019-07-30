@@ -351,7 +351,7 @@ class OpenTradeContextBase(OpenContextBase):
             "cost_price_valid", "market_val", "nominal_price", "pl_ratio",
             "pl_ratio_valid", "pl_val", "pl_val_valid", "today_buy_qty",
             "today_buy_val", "today_pl_val", "today_sell_qty", "today_sell_val",
-            "position_side", "avg_buy_price"
+            "position_side"
         ]
 
         position_list_table = pd.DataFrame(position_list, columns=col_list)

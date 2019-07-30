@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_UpdateOrderBook.proto',
   package='Qot_UpdateOrderBook',
   syntax='proto2',
-  serialized_pb=_b('\n\x19Qot_UpdateOrderBook.proto\x12\x13Qot_UpdateOrderBook\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x93\x02\n\x03S2C\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12/\n\x10orderBookAskList\x18\x02 \x03(\x0b\x32\x15.Qot_Common.OrderBook\x12/\n\x10orderBookBidList\x18\x03 \x03(\x0b\x32\x15.Qot_Common.OrderBook\x12\x16\n\x0esvrRecvTimeBid\x18\x04 \x01(\t\x12\x1f\n\x17svrRecvTimeBidTimestamp\x18\x05 \x01(\x01\x12\x16\n\x0esvrRecvTimeAsk\x18\x06 \x01(\t\x12\x1f\n\x17svrRecvTimeAskTimestamp\x18\x07 \x01(\x01\x12\x10\n\x08sequence\x18\x08 \x01(\x03\"i\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12%\n\x03s2c\x18\x04 \x01(\x0b\x32\x18.Qot_UpdateOrderBook.S2CB\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x19Qot_UpdateOrderBook.proto\x12\x13Qot_UpdateOrderBook\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x81\x02\n\x03S2C\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12/\n\x10orderBookAskList\x18\x02 \x03(\x0b\x32\x15.Qot_Common.OrderBook\x12/\n\x10orderBookBidList\x18\x03 \x03(\x0b\x32\x15.Qot_Common.OrderBook\x12\x16\n\x0esvrRecvTimeBid\x18\x04 \x01(\t\x12\x1f\n\x17svrRecvTimeBidTimestamp\x18\x05 \x01(\x01\x12\x16\n\x0esvrRecvTimeAsk\x18\x06 \x01(\t\x12\x1f\n\x17svrRecvTimeAskTimestamp\x18\x07 \x01(\x01\"i\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12%\n\x03s2c\x18\x04 \x01(\x0b\x32\x18.Qot_UpdateOrderBook.S2CB\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -84,13 +84,6 @@ _S2C = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='sequence', full_name='Qot_UpdateOrderBook.S2C.sequence', index=7,
-      number=8, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -104,7 +97,7 @@ _S2C = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=83,
-  serialized_end=358,
+  serialized_end=340,
 )
 
 
@@ -155,8 +148,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=360,
-  serialized_end=465,
+  serialized_start=342,
+  serialized_end=447,
 )
 
 _S2C.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY

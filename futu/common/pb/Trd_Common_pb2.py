@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_Common.proto',
   package='Trd_Common',
   syntax='proto2',
-  serialized_pb=_b('\n\x10Trd_Common.proto\x12\nTrd_Common\x1a\x0c\x43ommon.proto\"=\n\tTrdHeader\x12\x0e\n\x06trdEnv\x18\x01 \x02(\x05\x12\r\n\x05\x61\x63\x63ID\x18\x02 \x02(\x04\x12\x11\n\ttrdMarket\x18\x03 \x02(\x05\"d\n\x06TrdAcc\x12\x0e\n\x06trdEnv\x18\x01 \x02(\x05\x12\r\n\x05\x61\x63\x63ID\x18\x02 \x02(\x04\x12\x19\n\x11trdMarketAuthList\x18\x03 \x03(\x05\x12\x0f\n\x07\x61\x63\x63Type\x18\x04 \x01(\x05\x12\x0f\n\x07\x63\x61rdNum\x18\x05 \x01(\t\"\x8d\x01\n\x05\x46unds\x12\r\n\x05power\x18\x01 \x02(\x01\x12\x13\n\x0btotalAssets\x18\x02 \x02(\x01\x12\x0c\n\x04\x63\x61sh\x18\x03 \x02(\x01\x12\x11\n\tmarketVal\x18\x04 \x02(\x01\x12\x12\n\nfrozenCash\x18\x05 \x02(\x01\x12\x10\n\x08\x64\x65\x62tCash\x18\x06 \x02(\x01\x12\x19\n\x11\x61vlWithdrawalCash\x18\x07 \x02(\x01\"\xd8\x02\n\x08Position\x12\x12\n\npositionID\x18\x01 \x02(\x04\x12\x14\n\x0cpositionSide\x18\x02 \x02(\x05\x12\x0c\n\x04\x63ode\x18\x03 \x02(\t\x12\x0c\n\x04name\x18\x04 \x02(\t\x12\x0b\n\x03qty\x18\x05 \x02(\x01\x12\x12\n\ncanSellQty\x18\x06 \x02(\x01\x12\r\n\x05price\x18\x07 \x02(\x01\x12\x11\n\tcostPrice\x18\x08 \x01(\x01\x12\x0b\n\x03val\x18\t \x02(\x01\x12\r\n\x05plVal\x18\n \x02(\x01\x12\x0f\n\x07plRatio\x18\x0b \x01(\x01\x12\x11\n\tsecMarket\x18\x0c \x01(\x05\x12\x10\n\x08td_plVal\x18\x15 \x01(\x01\x12\x11\n\ttd_trdVal\x18\x16 \x01(\x01\x12\x11\n\ttd_buyVal\x18\x17 \x01(\x01\x12\x11\n\ttd_buyQty\x18\x18 \x01(\x01\x12\x12\n\ntd_sellVal\x18\x19 \x01(\x01\x12\x12\n\ntd_sellQty\x18\x1a \x01(\x01\x12\x10\n\x08\x61vgPrice\x18\x1b \x01(\x01\"\xd4\x02\n\x05Order\x12\x0f\n\x07trdSide\x18\x01 \x02(\x05\x12\x11\n\torderType\x18\x02 \x02(\x05\x12\x13\n\x0borderStatus\x18\x03 \x02(\x05\x12\x0f\n\x07orderID\x18\x04 \x02(\x04\x12\x11\n\torderIDEx\x18\x05 \x02(\t\x12\x0c\n\x04\x63ode\x18\x06 \x02(\t\x12\x0c\n\x04name\x18\x07 \x02(\t\x12\x0b\n\x03qty\x18\x08 \x02(\x01\x12\r\n\x05price\x18\t \x01(\x01\x12\x12\n\ncreateTime\x18\n \x02(\t\x12\x12\n\nupdateTime\x18\x0b \x02(\t\x12\x0f\n\x07\x66illQty\x18\x0c \x01(\x01\x12\x14\n\x0c\x66illAvgPrice\x18\r \x01(\x01\x12\x12\n\nlastErrMsg\x18\x0e \x01(\t\x12\x11\n\tsecMarket\x18\x0f \x01(\x05\x12\x17\n\x0f\x63reateTimestamp\x18\x10 \x01(\x01\x12\x17\n\x0fupdateTimestamp\x18\x11 \x01(\x01\x12\x0e\n\x06remark\x18\x12 \x01(\t\"\xb7\x02\n\tOrderFill\x12\x0f\n\x07trdSide\x18\x01 \x02(\x05\x12\x0e\n\x06\x66illID\x18\x02 \x02(\x04\x12\x10\n\x08\x66illIDEx\x18\x03 \x02(\t\x12\x0f\n\x07orderID\x18\x04 \x01(\x04\x12\x11\n\torderIDEx\x18\x05 \x01(\t\x12\x0c\n\x04\x63ode\x18\x06 \x02(\t\x12\x0c\n\x04name\x18\x07 \x02(\t\x12\x0b\n\x03qty\x18\x08 \x02(\x01\x12\r\n\x05price\x18\t \x02(\x01\x12\x12\n\ncreateTime\x18\n \x02(\t\x12\x17\n\x0f\x63ounterBrokerID\x18\x0b \x01(\x05\x12\x19\n\x11\x63ounterBrokerName\x18\x0c \x01(\t\x12\x11\n\tsecMarket\x18\r \x01(\x05\x12\x17\n\x0f\x63reateTimestamp\x18\x0e \x01(\x01\x12\x17\n\x0fupdateTimestamp\x18\x0f \x01(\x01\x12\x0e\n\x06status\x18\x10 \x01(\x05\"\x80\x01\n\nMaxTrdQtys\x12\x12\n\nmaxCashBuy\x18\x01 \x02(\x01\x12\x1b\n\x13maxCashAndMarginBuy\x18\x02 \x01(\x01\x12\x17\n\x0fmaxPositionSell\x18\x03 \x02(\x01\x12\x14\n\x0cmaxSellShort\x18\x04 \x01(\x01\x12\x12\n\nmaxBuyBack\x18\x05 \x01(\x01\"[\n\x13TrdFilterConditions\x12\x10\n\x08\x63odeList\x18\x01 \x03(\t\x12\x0e\n\x06idList\x18\x02 \x03(\x04\x12\x11\n\tbeginTime\x18\x03 \x01(\t\x12\x0f\n\x07\x65ndTime\x18\x04 \x01(\t*.\n\x06TrdEnv\x12\x13\n\x0fTrdEnv_Simulate\x10\x00\x12\x0f\n\x0bTrdEnv_Real\x10\x01*l\n\tTrdMarket\x12\x15\n\x11TrdMarket_Unknown\x10\x00\x12\x10\n\x0cTrdMarket_HK\x10\x01\x12\x10\n\x0cTrdMarket_US\x10\x02\x12\x10\n\x0cTrdMarket_CN\x10\x03\x12\x12\n\x0eTrdMarket_HKCC\x10\x04*\x82\x01\n\x0cTrdSecMarket\x12\x18\n\x14TrdSecMarket_Unknown\x10\x00\x12\x13\n\x0fTrdSecMarket_HK\x10\x01\x12\x13\n\x0fTrdSecMarket_US\x10\x02\x12\x16\n\x12TrdSecMarket_CN_SH\x10\x1f\x12\x16\n\x12TrdSecMarket_CN_SZ\x10 *m\n\x07TrdSide\x12\x13\n\x0fTrdSide_Unknown\x10\x00\x12\x0f\n\x0bTrdSide_Buy\x10\x01\x12\x10\n\x0cTrdSide_Sell\x10\x02\x12\x15\n\x11TrdSide_SellShort\x10\x03\x12\x13\n\x0fTrdSide_BuyBack\x10\x04*\xda\x01\n\tOrderType\x12\x15\n\x11OrderType_Unknown\x10\x00\x12\x14\n\x10OrderType_Normal\x10\x01\x12\x14\n\x10OrderType_Market\x10\x02\x12\x1b\n\x17OrderType_AbsoluteLimit\x10\x05\x12\x15\n\x11OrderType_Auction\x10\x06\x12\x1a\n\x16OrderType_AuctionLimit\x10\x07\x12\x1a\n\x16OrderType_SpecialLimit\x10\x08\x12\x1e\n\x1aOrderType_SpecialLimit_All\x10\t*\xfc\x03\n\x0bOrderStatus\x12\x1b\n\x17OrderStatus_Unsubmitted\x10\x00\x12 \n\x13OrderStatus_Unknown\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1d\n\x19OrderStatus_WaitingSubmit\x10\x01\x12\x1a\n\x16OrderStatus_Submitting\x10\x02\x12\x1c\n\x18OrderStatus_SubmitFailed\x10\x03\x12\x17\n\x13OrderStatus_TimeOut\x10\x04\x12\x19\n\x15OrderStatus_Submitted\x10\x05\x12\x1b\n\x17OrderStatus_Filled_Part\x10\n\x12\x1a\n\x16OrderStatus_Filled_All\x10\x0b\x12\x1f\n\x1bOrderStatus_Cancelling_Part\x10\x0c\x12\x1e\n\x1aOrderStatus_Cancelling_All\x10\r\x12\x1e\n\x1aOrderStatus_Cancelled_Part\x10\x0e\x12\x1d\n\x19OrderStatus_Cancelled_All\x10\x0f\x12\x16\n\x12OrderStatus_Failed\x10\x15\x12\x18\n\x14OrderStatus_Disabled\x10\x16\x12\x17\n\x13OrderStatus_Deleted\x10\x17\x12\x1d\n\x19OrderStatus_FillCancelled\x10\x18*e\n\x0fOrderFillStatus\x12\x16\n\x12OrderFillStatus_OK\x10\x00\x12\x1d\n\x19OrderFillStatus_Cancelled\x10\x01\x12\x1b\n\x17OrderFillStatus_Changed\x10\x02*`\n\x0cPositionSide\x12\x15\n\x11PositionSide_Long\x10\x00\x12!\n\x14PositionSide_Unknown\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x16\n\x12PositionSide_Short\x10\x01*\xad\x01\n\rModifyOrderOp\x12\x19\n\x15ModifyOrderOp_Unknown\x10\x00\x12\x18\n\x14ModifyOrderOp_Normal\x10\x01\x12\x18\n\x14ModifyOrderOp_Cancel\x10\x02\x12\x19\n\x15ModifyOrderOp_Disable\x10\x03\x12\x18\n\x14ModifyOrderOp_Enable\x10\x04\x12\x18\n\x14ModifyOrderOp_Delete\x10\x05*\x86\x01\n\x14ReconfirmOrderReason\x12 \n\x1cReconfirmOrderReason_Unknown\x10\x00\x12$\n ReconfirmOrderReason_QtyTooLarge\x10\x01\x12&\n\"ReconfirmOrderReason_PriceAbnormal\x10\x02*P\n\nTrdAccType\x12\x16\n\x12TrdAccType_Unknown\x10\x00\x12\x13\n\x0fTrdAccType_Cash\x10\x01\x12\x15\n\x11TrdAccType_Margin\x10\x02\x42\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x10Trd_Common.proto\x12\nTrd_Common\x1a\x0c\x43ommon.proto\"=\n\tTrdHeader\x12\x0e\n\x06trdEnv\x18\x01 \x02(\x05\x12\r\n\x05\x61\x63\x63ID\x18\x02 \x02(\x04\x12\x11\n\ttrdMarket\x18\x03 \x02(\x05\"d\n\x06TrdAcc\x12\x0e\n\x06trdEnv\x18\x01 \x02(\x05\x12\r\n\x05\x61\x63\x63ID\x18\x02 \x02(\x04\x12\x19\n\x11trdMarketAuthList\x18\x03 \x03(\x05\x12\x0f\n\x07\x61\x63\x63Type\x18\x04 \x01(\x05\x12\x0f\n\x07\x63\x61rdNum\x18\x05 \x01(\t\"\x8d\x01\n\x05\x46unds\x12\r\n\x05power\x18\x01 \x02(\x01\x12\x13\n\x0btotalAssets\x18\x02 \x02(\x01\x12\x0c\n\x04\x63\x61sh\x18\x03 \x02(\x01\x12\x11\n\tmarketVal\x18\x04 \x02(\x01\x12\x12\n\nfrozenCash\x18\x05 \x02(\x01\x12\x10\n\x08\x64\x65\x62tCash\x18\x06 \x02(\x01\x12\x19\n\x11\x61vlWithdrawalCash\x18\x07 \x02(\x01\"\xc6\x02\n\x08Position\x12\x12\n\npositionID\x18\x01 \x02(\x04\x12\x14\n\x0cpositionSide\x18\x02 \x02(\x05\x12\x0c\n\x04\x63ode\x18\x03 \x02(\t\x12\x0c\n\x04name\x18\x04 \x02(\t\x12\x0b\n\x03qty\x18\x05 \x02(\x01\x12\x12\n\ncanSellQty\x18\x06 \x02(\x01\x12\r\n\x05price\x18\x07 \x02(\x01\x12\x11\n\tcostPrice\x18\x08 \x01(\x01\x12\x0b\n\x03val\x18\t \x02(\x01\x12\r\n\x05plVal\x18\n \x02(\x01\x12\x0f\n\x07plRatio\x18\x0b \x01(\x01\x12\x11\n\tsecMarket\x18\x0c \x01(\x05\x12\x10\n\x08td_plVal\x18\x15 \x01(\x01\x12\x11\n\ttd_trdVal\x18\x16 \x01(\x01\x12\x11\n\ttd_buyVal\x18\x17 \x01(\x01\x12\x11\n\ttd_buyQty\x18\x18 \x01(\x01\x12\x12\n\ntd_sellVal\x18\x19 \x01(\x01\x12\x12\n\ntd_sellQty\x18\x1a \x01(\x01\"\xd4\x02\n\x05Order\x12\x0f\n\x07trdSide\x18\x01 \x02(\x05\x12\x11\n\torderType\x18\x02 \x02(\x05\x12\x13\n\x0borderStatus\x18\x03 \x02(\x05\x12\x0f\n\x07orderID\x18\x04 \x02(\x04\x12\x11\n\torderIDEx\x18\x05 \x02(\t\x12\x0c\n\x04\x63ode\x18\x06 \x02(\t\x12\x0c\n\x04name\x18\x07 \x02(\t\x12\x0b\n\x03qty\x18\x08 \x02(\x01\x12\r\n\x05price\x18\t \x01(\x01\x12\x12\n\ncreateTime\x18\n \x02(\t\x12\x12\n\nupdateTime\x18\x0b \x02(\t\x12\x0f\n\x07\x66illQty\x18\x0c \x01(\x01\x12\x14\n\x0c\x66illAvgPrice\x18\r \x01(\x01\x12\x12\n\nlastErrMsg\x18\x0e \x01(\t\x12\x11\n\tsecMarket\x18\x0f \x01(\x05\x12\x17\n\x0f\x63reateTimestamp\x18\x10 \x01(\x01\x12\x17\n\x0fupdateTimestamp\x18\x11 \x01(\x01\x12\x0e\n\x06remark\x18\x12 \x01(\t\"\xb7\x02\n\tOrderFill\x12\x0f\n\x07trdSide\x18\x01 \x02(\x05\x12\x0e\n\x06\x66illID\x18\x02 \x02(\x04\x12\x10\n\x08\x66illIDEx\x18\x03 \x02(\t\x12\x0f\n\x07orderID\x18\x04 \x01(\x04\x12\x11\n\torderIDEx\x18\x05 \x01(\t\x12\x0c\n\x04\x63ode\x18\x06 \x02(\t\x12\x0c\n\x04name\x18\x07 \x02(\t\x12\x0b\n\x03qty\x18\x08 \x02(\x01\x12\r\n\x05price\x18\t \x02(\x01\x12\x12\n\ncreateTime\x18\n \x02(\t\x12\x17\n\x0f\x63ounterBrokerID\x18\x0b \x01(\x05\x12\x19\n\x11\x63ounterBrokerName\x18\x0c \x01(\t\x12\x11\n\tsecMarket\x18\r \x01(\x05\x12\x17\n\x0f\x63reateTimestamp\x18\x0e \x01(\x01\x12\x17\n\x0fupdateTimestamp\x18\x0f \x01(\x01\x12\x0e\n\x06status\x18\x10 \x01(\x05\"\x80\x01\n\nMaxTrdQtys\x12\x12\n\nmaxCashBuy\x18\x01 \x02(\x01\x12\x1b\n\x13maxCashAndMarginBuy\x18\x02 \x01(\x01\x12\x17\n\x0fmaxPositionSell\x18\x03 \x02(\x01\x12\x14\n\x0cmaxSellShort\x18\x04 \x01(\x01\x12\x12\n\nmaxBuyBack\x18\x05 \x01(\x01\"[\n\x13TrdFilterConditions\x12\x10\n\x08\x63odeList\x18\x01 \x03(\t\x12\x0e\n\x06idList\x18\x02 \x03(\x04\x12\x11\n\tbeginTime\x18\x03 \x01(\t\x12\x0f\n\x07\x65ndTime\x18\x04 \x01(\t*.\n\x06TrdEnv\x12\x13\n\x0fTrdEnv_Simulate\x10\x00\x12\x0f\n\x0bTrdEnv_Real\x10\x01*l\n\tTrdMarket\x12\x15\n\x11TrdMarket_Unknown\x10\x00\x12\x10\n\x0cTrdMarket_HK\x10\x01\x12\x10\n\x0cTrdMarket_US\x10\x02\x12\x10\n\x0cTrdMarket_CN\x10\x03\x12\x12\n\x0eTrdMarket_HKCC\x10\x04*\x82\x01\n\x0cTrdSecMarket\x12\x18\n\x14TrdSecMarket_Unknown\x10\x00\x12\x13\n\x0fTrdSecMarket_HK\x10\x01\x12\x13\n\x0fTrdSecMarket_US\x10\x02\x12\x16\n\x12TrdSecMarket_CN_SH\x10\x1f\x12\x16\n\x12TrdSecMarket_CN_SZ\x10 *m\n\x07TrdSide\x12\x13\n\x0fTrdSide_Unknown\x10\x00\x12\x0f\n\x0bTrdSide_Buy\x10\x01\x12\x10\n\x0cTrdSide_Sell\x10\x02\x12\x15\n\x11TrdSide_SellShort\x10\x03\x12\x13\n\x0fTrdSide_BuyBack\x10\x04*\xda\x01\n\tOrderType\x12\x15\n\x11OrderType_Unknown\x10\x00\x12\x14\n\x10OrderType_Normal\x10\x01\x12\x14\n\x10OrderType_Market\x10\x02\x12\x1b\n\x17OrderType_AbsoluteLimit\x10\x05\x12\x15\n\x11OrderType_Auction\x10\x06\x12\x1a\n\x16OrderType_AuctionLimit\x10\x07\x12\x1a\n\x16OrderType_SpecialLimit\x10\x08\x12\x1e\n\x1aOrderType_SpecialLimit_All\x10\t*\xfc\x03\n\x0bOrderStatus\x12\x1b\n\x17OrderStatus_Unsubmitted\x10\x00\x12 \n\x13OrderStatus_Unknown\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1d\n\x19OrderStatus_WaitingSubmit\x10\x01\x12\x1a\n\x16OrderStatus_Submitting\x10\x02\x12\x1c\n\x18OrderStatus_SubmitFailed\x10\x03\x12\x17\n\x13OrderStatus_TimeOut\x10\x04\x12\x19\n\x15OrderStatus_Submitted\x10\x05\x12\x1b\n\x17OrderStatus_Filled_Part\x10\n\x12\x1a\n\x16OrderStatus_Filled_All\x10\x0b\x12\x1f\n\x1bOrderStatus_Cancelling_Part\x10\x0c\x12\x1e\n\x1aOrderStatus_Cancelling_All\x10\r\x12\x1e\n\x1aOrderStatus_Cancelled_Part\x10\x0e\x12\x1d\n\x19OrderStatus_Cancelled_All\x10\x0f\x12\x16\n\x12OrderStatus_Failed\x10\x15\x12\x18\n\x14OrderStatus_Disabled\x10\x16\x12\x17\n\x13OrderStatus_Deleted\x10\x17\x12\x1d\n\x19OrderStatus_FillCancelled\x10\x18*e\n\x0fOrderFillStatus\x12\x16\n\x12OrderFillStatus_OK\x10\x00\x12\x1d\n\x19OrderFillStatus_Cancelled\x10\x01\x12\x1b\n\x17OrderFillStatus_Changed\x10\x02*`\n\x0cPositionSide\x12\x15\n\x11PositionSide_Long\x10\x00\x12!\n\x14PositionSide_Unknown\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x16\n\x12PositionSide_Short\x10\x01*\xad\x01\n\rModifyOrderOp\x12\x19\n\x15ModifyOrderOp_Unknown\x10\x00\x12\x18\n\x14ModifyOrderOp_Normal\x10\x01\x12\x18\n\x14ModifyOrderOp_Cancel\x10\x02\x12\x19\n\x15ModifyOrderOp_Disable\x10\x03\x12\x18\n\x14ModifyOrderOp_Enable\x10\x04\x12\x18\n\x14ModifyOrderOp_Delete\x10\x05*P\n\nTrdAccType\x12\x16\n\x12TrdAccType_Unknown\x10\x00\x12\x13\n\x0fTrdAccType_Cash\x10\x01\x12\x15\n\x11TrdAccType_Margin\x10\x02\x42\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,])
 
@@ -42,8 +42,8 @@ _TRDENV = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1583,
-  serialized_end=1629,
+  serialized_start=1565,
+  serialized_end=1611,
 )
 _sym_db.RegisterEnumDescriptor(_TRDENV)
 
@@ -77,8 +77,8 @@ _TRDMARKET = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1631,
-  serialized_end=1739,
+  serialized_start=1613,
+  serialized_end=1721,
 )
 _sym_db.RegisterEnumDescriptor(_TRDMARKET)
 
@@ -112,8 +112,8 @@ _TRDSECMARKET = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1742,
-  serialized_end=1872,
+  serialized_start=1724,
+  serialized_end=1854,
 )
 _sym_db.RegisterEnumDescriptor(_TRDSECMARKET)
 
@@ -147,8 +147,8 @@ _TRDSIDE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1874,
-  serialized_end=1983,
+  serialized_start=1856,
+  serialized_end=1965,
 )
 _sym_db.RegisterEnumDescriptor(_TRDSIDE)
 
@@ -194,8 +194,8 @@ _ORDERTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1986,
-  serialized_end=2204,
+  serialized_start=1968,
+  serialized_end=2186,
 )
 _sym_db.RegisterEnumDescriptor(_ORDERTYPE)
 
@@ -277,8 +277,8 @@ _ORDERSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2207,
-  serialized_end=2715,
+  serialized_start=2189,
+  serialized_end=2697,
 )
 _sym_db.RegisterEnumDescriptor(_ORDERSTATUS)
 
@@ -304,8 +304,8 @@ _ORDERFILLSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2717,
-  serialized_end=2818,
+  serialized_start=2699,
+  serialized_end=2800,
 )
 _sym_db.RegisterEnumDescriptor(_ORDERFILLSTATUS)
 
@@ -331,8 +331,8 @@ _POSITIONSIDE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2820,
-  serialized_end=2916,
+  serialized_start=2802,
+  serialized_end=2898,
 )
 _sym_db.RegisterEnumDescriptor(_POSITIONSIDE)
 
@@ -370,39 +370,12 @@ _MODIFYORDEROP = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2919,
-  serialized_end=3092,
+  serialized_start=2901,
+  serialized_end=3074,
 )
 _sym_db.RegisterEnumDescriptor(_MODIFYORDEROP)
 
 ModifyOrderOp = enum_type_wrapper.EnumTypeWrapper(_MODIFYORDEROP)
-_RECONFIRMORDERREASON = _descriptor.EnumDescriptor(
-  name='ReconfirmOrderReason',
-  full_name='Trd_Common.ReconfirmOrderReason',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='ReconfirmOrderReason_Unknown', index=0, number=0,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ReconfirmOrderReason_QtyTooLarge', index=1, number=1,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ReconfirmOrderReason_PriceAbnormal', index=2, number=2,
-      options=None,
-      type=None),
-  ],
-  containing_type=None,
-  options=None,
-  serialized_start=3095,
-  serialized_end=3229,
-)
-_sym_db.RegisterEnumDescriptor(_RECONFIRMORDERREASON)
-
-ReconfirmOrderReason = enum_type_wrapper.EnumTypeWrapper(_RECONFIRMORDERREASON)
 _TRDACCTYPE = _descriptor.EnumDescriptor(
   name='TrdAccType',
   full_name='Trd_Common.TrdAccType',
@@ -424,8 +397,8 @@ _TRDACCTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3231,
-  serialized_end=3311,
+  serialized_start=3076,
+  serialized_end=3156,
 )
 _sym_db.RegisterEnumDescriptor(_TRDACCTYPE)
 
@@ -484,9 +457,6 @@ ModifyOrderOp_Cancel = 2
 ModifyOrderOp_Disable = 3
 ModifyOrderOp_Enable = 4
 ModifyOrderOp_Delete = 5
-ReconfirmOrderReason_Unknown = 0
-ReconfirmOrderReason_QtyTooLarge = 1
-ReconfirmOrderReason_PriceAbnormal = 2
 TrdAccType_Unknown = 0
 TrdAccType_Cash = 1
 TrdAccType_Margin = 2
@@ -803,13 +773,6 @@ _POSITION = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='avgPrice', full_name='Trd_Common.Position.avgPrice', index=18,
-      number=27, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -823,7 +786,7 @@ _POSITION = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=356,
-  serialized_end=700,
+  serialized_end=682,
 )
 
 
@@ -972,8 +935,8 @@ _ORDER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=703,
-  serialized_end=1043,
+  serialized_start=685,
+  serialized_end=1025,
 )
 
 
@@ -1108,8 +1071,8 @@ _ORDERFILL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1046,
-  serialized_end=1357,
+  serialized_start=1028,
+  serialized_end=1339,
 )
 
 
@@ -1167,8 +1130,8 @@ _MAXTRDQTYS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1360,
-  serialized_end=1488,
+  serialized_start=1342,
+  serialized_end=1470,
 )
 
 
@@ -1219,8 +1182,8 @@ _TRDFILTERCONDITIONS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1490,
-  serialized_end=1581,
+  serialized_start=1472,
+  serialized_end=1563,
 )
 
 DESCRIPTOR.message_types_by_name['TrdHeader'] = _TRDHEADER
@@ -1240,7 +1203,6 @@ DESCRIPTOR.enum_types_by_name['OrderStatus'] = _ORDERSTATUS
 DESCRIPTOR.enum_types_by_name['OrderFillStatus'] = _ORDERFILLSTATUS
 DESCRIPTOR.enum_types_by_name['PositionSide'] = _POSITIONSIDE
 DESCRIPTOR.enum_types_by_name['ModifyOrderOp'] = _MODIFYORDEROP
-DESCRIPTOR.enum_types_by_name['ReconfirmOrderReason'] = _RECONFIRMORDERREASON
 DESCRIPTOR.enum_types_by_name['TrdAccType'] = _TRDACCTYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 

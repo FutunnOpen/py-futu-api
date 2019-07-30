@@ -106,13 +106,6 @@ enum ModifyOrderOp
 	ModifyOrderOp_Delete = 5; //删除
 };
 
-enum ReconfirmOrderReason
-{
-	ReconfirmOrderReason_Unknown = 0; //未知原因
-	ReconfirmOrderReason_QtyTooLarge = 1; //订单数量太大，确认继续下单并否拆分成多个小订单
-	ReconfirmOrderReason_PriceAbnormal = 2; //价格异常，偏离当前价太大，确认继续下单
-};
-
 //交易账户类型
 enum TrdAccType
 {
@@ -173,8 +166,6 @@ message Position
 	optional double td_buyQty = 24; //今日买入总量
 	optional double td_sellVal = 25; //今日卖出总额
 	optional double td_sellQty = 26; //今日卖出总量
-	//新增补充
-	optional double avgPrice = 27; //平均买入价，平仓后重新计算
 }
 
 //订单结构
