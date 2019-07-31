@@ -49,20 +49,15 @@ def _pip_get_package_version(package_name):
     proc = subprocess.Popen([sys.executable, '-m', 'pip', 'show', package_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     outdata, errdata = proc.communicate()
 
-    if isinstance(outdata, bytes):
-        eol = b'\n'
-        version_key = b'Version:'
-    else:
-        eol = '\n'
-        version_key = 'Version:'
+    eol = b'\n'
+    version_key = b'Version:'
 
     lines = outdata.split(eol)
     for line in lines:
         line = line.strip()
         if line.startswith(version_key):
             version = line.lstrip(version_key).strip()
-            if isinstance(version, bytes):
-                return version.decode('utf-8')
+            return version.decode('utf-8')
     return None
 
 
@@ -73,7 +68,7 @@ def _check_package(package_name, version=None):
         return
 
     mod_version = _pip_get_package_version(package_name)
-    if mod_version == '':
+    if mod_version == '' or mod_version is None:
         if version is None:
             print("Missing required package {}".format(package_name))
         else:
