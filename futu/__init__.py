@@ -19,6 +19,13 @@ import signal
 import sys
 import threading
 
+
+def _check_version_no_older(cur_ver, base_ver):
+    cur_ver_parts = [int(n) for n in cur_ver.split('.')]
+    base_ver_parts = [int(n) for n in base_ver.split('.')]
+    return cur_ver_parts >= base_ver_parts
+
+
 def _check_module(mod_name, package_name=None, version=None, version_getter=None, py_version=None):
     import importlib
 
@@ -40,8 +47,9 @@ def _check_module(mod_name, package_name=None, version=None, version_getter=None
 
     if version is not None:
         mod_version = version_getter(mod)
-        if version != mod_version:
-            print("Package {} version is {}, better be {}.".format(package_name, mod_version, version))
+        if not _check_version_no_older(mod_version, version):
+            print("The current version of package {} is {}, not compatible. You need use {} or newer.".format(package_name, mod_version, version))
+            sys.exit(1)
 
 
 def _pip_get_package_version(package_name):

@@ -47,5 +47,8 @@ def make_wrong_type_msg(var_name, right_type):
 def make_wrong_value_msg(var_name, right_value):
     return '{}. {} should be {}'.format(Err.WrongValue.text, var_name, right_value)
 
+
 def make_wrong_value_msg_utf8_len_le(var_name, max_len):
-    return '{}. {} len should be <= {} when converted to utf8'.format(Err.WrongValue.text, var_name, max_len)
+    return 'Error variable. The {} parameter cannot be longer than {} bytes after being converted to utf8'.format(
+        var_name,
+        max_len)
