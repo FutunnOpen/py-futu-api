@@ -2452,3 +2452,64 @@ class GetUserSecurityQuery:
                 "delisting": record.basic.delisting if record.basic.HasField('delisting') else NoneDataType
             } for record in static_info_list]
             return RET_OK, "", basic_info_list
+
+
+class StockFilterQuery:
+    """
+    Query StockFilterQuery.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, market, filter_list, plate_code, begin, num, conn_id):
+        """check group_name 分组名,有同名的返回首个"""
+        # 开始组包
+        from futu.common.pb.Qot_StockFilter_pb2 import Request
+        req = Request()
+        req.c2s.begin = begin
+        req.c2s.num = num
+        req.market = MKT_MAP[market]
+
+        """拆解plate_code"""
+        ret, content = split_stock_str(plate_code)
+        if ret != RET_OK:
+            msg = str(content)
+            error_str = ERROR_STR_PREFIX + msg
+            return RET_ERROR, error_str, None
+        market, code = content
+        if market not in QUOTE.REV_MKT_MAP:
+            error_str = ERROR_STR_PREFIX + "market is %s, which is not valid. (%s)" \
+                                           % (market, ",".join([x for x in MKT_MAP]))
+            return RET_ERROR, error_str, None
+
+        from futu.quote.quote_stockfilter_info import simple_filter
+        for filter_item in filter_list:
+            if not isinstance(filter_item, simple_filter):
+                error_str = ERROR_STR_PREFIX + "the item in filter_list is wrong"
+                return RET_ERROR, error_str
+            filter_req = req.c2s.baseFilterList.add()
+            filter_item.fill_request_pb(filter_req)
+        return pack_pb_req(req, ProtoId.Qot_StockFilter, conn_id)
+
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg
+        #  是否最后一页了,false:非最后一页,还有窝轮记录未返回; true:已是最后一页 type = bool
+        last_page = rsp_pb.s2c.lastPage
+        #  该条件请求所有数据的个数 type = int32
+        all_count = rsp_pb.s2c.allCount
+        #   type = Qot_StockFilter.StockData
+        data_list = rsp_pb.s2c.dataList
+        ret_list = list()
+        from futu.quote.quote_stockfilter_info import filter_stock_data
+        for item in data_list:
+            data = filter_stock_data(item)
+            ret_list.append(data)
+        return RET_OK, (last_page, all_count, ret_list)
+
+
+

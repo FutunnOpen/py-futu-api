@@ -745,7 +745,7 @@ def generate(names):
 
 
 if __name__ =="__main__":
-    generate(["ModifyUserSecurity"])
+    generate(["Qot_StockFilter"])
     # c = GenerateCode("GetOwnerPlate", "Qot")
     # c.load()
     # c.save()

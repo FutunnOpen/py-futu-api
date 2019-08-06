@@ -2244,10 +2244,42 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return RET_ERROR, "empty data"
 
+    def stock_filter(self, market, filter_list, plate_code=None, begin=0, num=200):
+        """
+        Qot_StockFilter
+        :param plate_code: 板块代码, string, 例如，”SH.BK0001”，”SH.BK0002”，先利用获取子版块列表函数获取子版块代码
+        """
+        if market not in MKT_MAP:
+            error_str = ERROR_STR_PREFIX + " market is %s, which is not valid. (%s)" \
+                                           % (market, ",".join([x for x in MKT_MAP]))
+            return RET_ERROR, error_str, None
 
+        if plate_code is not None and is_str(plate_code) is False:
+            error_str = ERROR_STR_PREFIX + "the type of plate_code is wrong"
+            return RET_ERROR, error_str
 
+        if filter_list is None or not isinstance(filter_list, list):
+            error_str = ERROR_STR_PREFIX + "the type of filter_list is wrong"
+            return RET_ERROR, error_str
 
+        query_processor = self._get_sync_query_processor(
+            StockFilterQuery.pack_req,
+            StockFilterQuery.unpack,
+        )
 
+        kargs = {
+            "market": market,
+            "filter_list": filter_list,
+            "plate_code": plate_code,
+            "begin": begin,
+            "num": num,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, str(ret)
+        else:
+            return RET_OK, ret
 
 
 

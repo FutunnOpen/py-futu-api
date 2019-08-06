@@ -782,6 +782,7 @@ class ProtoId(object):
 
     Qot_GetUserSecurity = 3213  # 获取自选股分组下的股票
     Qot_ModifyUserSecurity = 3214  # 修改自选股分组下的股票
+    Qot_StockFilter = 3215   # 条件选股
 
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
@@ -1839,4 +1840,70 @@ class TrdAccType(FtEnum):
             self.NONE: Trd_Common_pb2.TrdAccType_Unknown,
             self.CASH: Trd_Common_pb2.TrdAccType_Cash,
             self.MARGIN: Trd_Common_pb2.TrdAccType_Margin
+        }
+
+
+'''-------------------------StockFilter 选股----------------------------'''
+
+from futu.common.pb import Qot_StockFilter_pb2
+
+# 选股排序
+class SortDir(FtEnum):
+    NONE = "N/A"                                          # 不排序
+    ASCEND = "ASCEND"                                  # 升序
+    DESCEND = "DESCEND"                                # 降序
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_StockFilter_pb2.SortDir_No,
+            self.ASCEND: Qot_StockFilter_pb2.SortDir_Ascend,
+            self.DESCEND: Qot_StockFilter_pb2.SortDir_Descend
+        }
+
+# 简单属性
+class StockField(FtEnum):
+    NONE = "N/A"                                       # 未知
+    CUR_PRICE = "CUR_PRICE"                            # 最新价 例如填写[10,20]值区间
+    CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO = "CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO" # (现价 - 52周最高)/52周最高，对应PC端离52周高点百分比 例如填写[0.1,2.7]值区间
+    CUR_PRICE_TO_LOWEST52_WEEKS_RATIO = "CUR_PRICE_TO_LOWEST52_WEEKS_RATIO" # (现价 - 52周最低)/52周最低，对应PC端离52周低点百分比 例如填写[0.1,2.7]值区间
+    HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO = "HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO" # (今日最高 - 52周最高)/52周最高，对应PC端52周新高 例如填写[0.1,2.7]值区间
+    LOW_PRICE_TO_LOWEST52_WEEKS_RATIO = "LOW_PRICE_TO_LOWEST52_WEEKS_RATIO" # (今日最低 - 52周最低)/52周最低 对应PC端52周新低 例如填写[0.1,2.7]值区间
+    VOLUME_RATIO = "VOLUME_RATIO"                      # 量比 例如填写[0.5,30]值区间
+    BID_ASK_RATIO = "BID_ASK_RATIO"                    # 委比 例如填写[-20,85.01]值区间
+    LOT_PRICE = "LOT_PRICE"                            # 每手价格 例如填写[40,100]值区间
+    MARKET_VAL = "MARKET_VAL"                          # 市值 例如填写[1.5,20]值区间 以亿为单位
+    PE_ANNUAL = "PE_ANNUAL"                            # 市盈率 (静态) 例如填写[-8,65.3]值区间
+    PE_TTM = "PE_TTM"                                  # 市盈率TTM 例如填写[-10,20.5]值区间
+    PB_RATE = "PB_RATE"                                # 市净率 	例如填写[0.1,15.6]值区间
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_StockFilter_pb2.StockField_Unknown,
+            self.CUR_PRICE: Qot_StockFilter_pb2.StockField_CurPrice,
+            self.CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_CurPriceToHighest52WeeksRatio,
+            self.CUR_PRICE_TO_LOWEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_CurPriceToLowest52WeeksRatio,
+            self.HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_HighPriceToHighest52WeeksRatio,
+            self.LOW_PRICE_TO_LOWEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_LowPriceToLowest52WeeksRatio,
+            self.VOLUME_RATIO: Qot_StockFilter_pb2.StockField_VolumeRatio,
+            self.BID_ASK_RATIO: Qot_StockFilter_pb2.StockField_BidAskRatio,
+            self.LOT_PRICE: Qot_StockFilter_pb2.StockField_LotPrice,
+            self.MARKET_VAL: Qot_StockFilter_pb2.StockField_MarketVal,
+            self.PE_ANNUAL: Qot_StockFilter_pb2.StockField_PeAnnual,
+            self.PE_TTM: Qot_StockFilter_pb2.StockField_PeTTM,
+            self.PB_RATE: Qot_StockFilter_pb2.StockField_PbRate
+        }
+
+# 选股使用，因为选股不分沪深
+class StockMarket(FtEnum):
+    NONE = "N/A"                                       # 未知
+    HK = "HK"                                          # 港股
+    US = "US"                                          # 美股
+    CN = "CN"                                          # A股
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_StockFilter_pb2.StockMarket_Unknown,
+            self.HK: Qot_StockFilter_pb2.StockMarket_HK,
+            self.US: Qot_StockFilter_pb2.StockMarket_US,
+            self.CN: Qot_StockFilter_pb2.StockMarket_CN
         }
