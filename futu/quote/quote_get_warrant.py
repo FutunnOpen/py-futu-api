@@ -354,10 +354,10 @@ class Response(object):
                 """上限价，仅界内证支持该字段"""
                 warrant["upper_strike_price"] = item.upperStrikePrice
             if item.HasField("lowerStrikePrice"):
-                """上限价，仅界内证支持该字段"""
+                """下限价，仅界内证支持该字段"""
                 warrant["lower_strike_price"] = item.lowerStrikePrice
             if item.HasField("inLinePriceStatus"):
-                """上限价，仅界内证支持该字段"""
+                """界内界外，仅界内证支持该字段"""
                 warrant["inline_price_status"] = PriceType.to_string2(item.inLinePriceStatus)
             warrant_data_list.append(warrant)
         return RET_OK, "", (warrant_data_list, resp.s2c.lastPage, resp.s2c.allCount)
