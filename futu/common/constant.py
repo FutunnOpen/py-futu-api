@@ -1330,18 +1330,19 @@ STOCK_REFERENCE_TYPE_MAP = {
 #
 class WrtType(FtEnum):
     NONE = "N/A"                                       # 未知
-    CALL = "CALL"                                        # 认购
-    PUT = "PUT"                                      # 认沽
+    CALL = "CALL"                                      # 认购
+    PUT = "PUT"                                        # 认沽
     BULL = "BULL"                                      # 牛
     BEAR = "BEAR"                                      # 熊
-
+    INLINE = "INLINE"                                  # 界内证
     def load_dic(self):
         return {
             self.NONE: Qot_Common_pb2.WarrantType_Unknown,
             self.CALL: Qot_Common_pb2.WarrantType_Buy,
             self.PUT: Qot_Common_pb2.WarrantType_Sell,
             self.BULL: Qot_Common_pb2.WarrantType_Bull,
-            self.BEAR: Qot_Common_pb2.WarrantType_Bear
+            self.BEAR: Qot_Common_pb2.WarrantType_Bear,
+            self.INLINE: Qot_Common_pb2.WarrantType_InLine
         }
 
 
@@ -1394,7 +1395,10 @@ class SortField(FtEnum):
     PRE_AMPLITUDE = "PRE_AMPLITUDE"                    #盘前振幅%
     AFTER_AMPLITUDE = "AFTER_AMPLITUDE"                #盘后振幅%
     PRE_TURNOVER = "PRE_TURNOVER"                      #盘前成交额
-    AFTER_TURNOVER = "AFTER_TURNOVER"                  #盘后成交额
+    AFTER_TURNOVER = "AFTER_TURNOVER"                  #盘后成交额	
+    UPPER_STRIKE_PRICE = "UPPER_STRIKE_PRICE"          #上限价，仅界内证支持该字段
+    LOWER_STRIKE_PRICE = "LOWER_STRIKE_PRICE"          #下限价，仅界内证支持该字段
+    INLINE_PRICE_STATUS = "INLINE_PRICE_STATUS"        #界内界外，仅界内证支持该字段
 
     def load_dic(self):
         return {
@@ -1433,16 +1437,19 @@ class SortField(FtEnum):
             self.ISSUER: Qot_Common_pb2.SortField_Issuer,
             self.LOT_SIZE: Qot_Common_pb2.SortField_LotSize,
             self.ISSUE_SIZE: Qot_Common_pb2.SortField_IssueSize,		
-			self.PRE_CUR_PRICE: Qot_Common_pb2.SortField_PreCurPrice,
+            self.PRE_CUR_PRICE: Qot_Common_pb2.SortField_PreCurPrice,
             self.AFTER_CUR_PRICE: Qot_Common_pb2.SortField_AfterCurPrice,
             self.PRE_PRICE_CHANGE_VAL: Qot_Common_pb2.SortField_PrePriceChangeVal,
             self.AFTER_PRICE_CHANGE_VAL: Qot_Common_pb2.SortField_AfterPriceChangeVal,
             self.PRE_CHANGE_RATE: Qot_Common_pb2.SortField_PreChangeRate,
             self.AFTER_CHANGE_RATE: Qot_Common_pb2.SortField_AfterChangeRate,	
             self.PRE_AMPLITUDE: Qot_Common_pb2.SortField_PreAmplitude,
-			self.AFTER_AMPLITUDE: Qot_Common_pb2.SortField_AfterAmplitude,
-			self.PRE_TURNOVER: Qot_Common_pb2.SortField_PreTurnover,
-			self.AFTER_TURNOVER: Qot_Common_pb2.SortField_AfterTurnover
+            self.AFTER_AMPLITUDE: Qot_Common_pb2.SortField_AfterAmplitude,
+            self.PRE_TURNOVER: Qot_Common_pb2.SortField_PreTurnover,
+            self.AFTER_TURNOVER: Qot_Common_pb2.SortField_AfterTurnover,
+            self.UPPER_STRIKE_PRICE: Qot_Common_pb2.SortField_UpperStrikePrice,
+            self.LOWER_STRIKE_PRICE: Qot_Common_pb2.SortField_LowerStrikePrice,
+            self.INLINE_PRICE_STATUS: Qot_Common_pb2.SortField_InLinePriceStatus
         }
 
 '''-------------------------IpoPeriod----------------------------'''
@@ -1471,11 +1478,11 @@ class IpoPeriod(FtEnum):
 '''-------------------------PriceType----------------------------'''
 
 
-# 涡轮价外/内
+#涡轮价外/内,界内证表示界内界外
 class PriceType(FtEnum):
     NONE = "N/A"                                       # 未知
-    OUTSIDE = "OUTSIDE"                                # 价外
-    WITH_IN = "WITH_IN"                                # 价内
+    OUTSIDE = "OUTSIDE"                                # 价外,界内证表示界外
+    WITH_IN = "WITH_IN"                                # 价内,界内证表示界内
 
     def load_dic(self):
         return {

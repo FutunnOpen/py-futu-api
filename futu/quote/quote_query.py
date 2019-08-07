@@ -290,7 +290,11 @@ class MarketSnapshotQuery:
             #  历史最高价 type=double
             snapshot_tmp["highest_history_price"] = record.basic.highestHistoryPrice
             #  历史最低价 type=double
-            snapshot_tmp["lowest_history_price"] = record.basic.lowestHistoryPrice
+            snapshot_tmp["lowest_history_price"] = record.basic.lowestHistoryPrice     
+            #  盘后成交量 type=int64
+            snapshot_tmp["after_volume"] = record.basic.afterMarket.volume
+            #  盘后成交额 type=double
+            snapshot_tmp["after_turnover"] = record.basic.afterMarket.turnover      
             # ================================
 
             snapshot_tmp['equity_valid'] = False
@@ -347,6 +351,12 @@ class MarketSnapshotQuery:
                 snapshot_tmp["wrt_price_recovery_ratio"] = record.warrantExData.priceRecoveryRatio
                 #  综合评分 type=double
                 snapshot_tmp["wrt_score"] = record.warrantExData.score
+                #  上限价，仅界内证支持该字段 type=double
+                snapshot_tmp["wrt_upper_strike_price"] = record.warrantExData.upperStrikePrice
+                #  下限价，仅界内证支持该字段 type=double
+                snapshot_tmp["wrt_lowe_strike_price"] = record.warrantExData.lowerStrikePrice
+                #  界内界外，仅界内证支持该字段 type=double
+                snapshot_tmp["wrt_inline_price_status"] = PriceType.to_string2(record.warrantExData.inLinePriceStatus)
 
             snapshot_tmp['option_valid'] = False
             if record.basic.type == SEC_TYPE_MAP[SecurityType.DRVT]:
