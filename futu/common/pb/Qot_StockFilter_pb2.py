@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_StockFilter.proto',
   package='Qot_StockFilter',
   syntax='proto2',
-  serialized_pb=_b('\n\x15Qot_StockFilter.proto\x12\x0fQot_StockFilter\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"f\n\nBaseFilter\x12\r\n\x05\x66ield\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x0f\n\x07sortDir\x18\x04 \x01(\x05\x12\x12\n\nisNoFilter\x18\x05 \x01(\x08\"(\n\x08\x42\x61seData\x12\r\n\x05\x66ield\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\"r\n\tStockData\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x02 \x02(\t\x12/\n\x0c\x62\x61seDataList\x18\x03 \x03(\x0b\x32\x19.Qot_StockFilter.BaseData\"\x8b\x01\n\x03\x43\x32S\x12\r\n\x05\x62\x65gin\x18\x01 \x02(\x05\x12\x0b\n\x03num\x18\x02 \x02(\x05\x12\x0e\n\x06market\x18\x05 \x02(\x05\x12#\n\x05plate\x18\x06 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x33\n\x0e\x62\x61seFilterList\x18\x07 \x03(\x0b\x32\x1b.Qot_StockFilter.BaseFilter\"W\n\x03S2C\x12\x10\n\x08lastPage\x18\x01 \x02(\x08\x12\x10\n\x08\x61llCount\x18\x02 \x02(\x05\x12,\n\x08\x64\x61taList\x18\x03 \x03(\x0b\x32\x1a.Qot_StockFilter.StockData\",\n\x07Request\x12!\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x14.Qot_StockFilter.C2S\"e\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12!\n\x03s2c\x18\x04 \x01(\x0b\x32\x14.Qot_StockFilter.S2C*b\n\x0bStockMarket\x12\x17\n\x13StockMarket_Unknown\x10\x00\x12\x12\n\x0eStockMarket_HK\x10\x01\x12\x12\n\x0eStockMarket_US\x10\x02\x12\x12\n\x0eStockMarket_CN\x10\x03*\xa5\x03\n\nStockField\x12\x16\n\x12StockField_Unknown\x10\x00\x12\x17\n\x13StockField_CurPrice\x10\x01\x12,\n(StockField_CurPriceToHighest52WeeksRatio\x10\x02\x12+\n\'StockField_CurPriceToLowest52WeeksRatio\x10\x03\x12-\n)StockField_HighPriceToHighest52WeeksRatio\x10\x04\x12+\n\'StockField_LowPriceToLowest52WeeksRatio\x10\x05\x12\x1a\n\x16StockField_VolumeRatio\x10\x06\x12\x1a\n\x16StockField_BidAskRatio\x10\x07\x12\x17\n\x13StockField_LotPrice\x10\x08\x12\x18\n\x14StockField_MarketVal\x10\t\x12\x17\n\x13StockField_PeAnnual\x10\n\x12\x14\n\x10StockField_PeTTM\x10\x0b\x12\x15\n\x11StockField_PbRate\x10\x0c*B\n\x07SortDir\x12\x0e\n\nSortDir_No\x10\x00\x12\x12\n\x0eSortDir_Ascend\x10\x01\x12\x13\n\x0fSortDir_Descend\x10\x02\x42\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x15Qot_StockFilter.proto\x12\x0fQot_StockFilter\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"f\n\nBaseFilter\x12\r\n\x05\x66ield\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\"(\n\x08\x42\x61seData\x12\r\n\x05\x66ield\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\"r\n\tStockData\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x02 \x02(\t\x12/\n\x0c\x62\x61seDataList\x18\x03 \x03(\x0b\x32\x19.Qot_StockFilter.BaseData\"\x8b\x01\n\x03\x43\x32S\x12\r\n\x05\x62\x65gin\x18\x01 \x02(\x05\x12\x0b\n\x03num\x18\x02 \x02(\x05\x12\x0e\n\x06market\x18\x05 \x02(\x05\x12#\n\x05plate\x18\x06 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x33\n\x0e\x62\x61seFilterList\x18\x07 \x03(\x0b\x32\x1b.Qot_StockFilter.BaseFilter\"W\n\x03S2C\x12\x10\n\x08lastPage\x18\x01 \x02(\x08\x12\x10\n\x08\x61llCount\x18\x02 \x02(\x05\x12,\n\x08\x64\x61taList\x18\x03 \x03(\x0b\x32\x1a.Qot_StockFilter.StockData\",\n\x07Request\x12!\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x14.Qot_StockFilter.C2S\"e\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12!\n\x03s2c\x18\x04 \x01(\x0b\x32\x14.Qot_StockFilter.S2C*b\n\x0bStockMarket\x12\x17\n\x13StockMarket_Unknown\x10\x00\x12\x12\n\x0eStockMarket_HK\x10\x01\x12\x12\n\x0eStockMarket_US\x10\x02\x12\x12\n\x0eStockMarket_CN\x10\x03*\xd9\x03\n\nStockField\x12\x16\n\x12StockField_Unknown\x10\x00\x12\x18\n\x14StockField_StockCode\x10\x01\x12\x18\n\x14StockField_StockName\x10\x02\x12\x17\n\x13StockField_CurPrice\x10\x03\x12,\n(StockField_CurPriceToHighest52WeeksRatio\x10\x04\x12+\n\'StockField_CurPriceToLowest52WeeksRatio\x10\x05\x12-\n)StockField_HighPriceToHighest52WeeksRatio\x10\x06\x12+\n\'StockField_LowPriceToLowest52WeeksRatio\x10\x07\x12\x1a\n\x16StockField_VolumeRatio\x10\x08\x12\x1a\n\x16StockField_BidAskRatio\x10\t\x12\x17\n\x13StockField_LotPrice\x10\n\x12\x18\n\x14StockField_MarketVal\x10\x0b\x12\x17\n\x13StockField_PeAnnual\x10\x0c\x12\x14\n\x10StockField_PeTTM\x10\r\x12\x15\n\x11StockField_PbRate\x10\x0e*W\n\x07SortDir\x12\x13\n\x0fSortDir_Unknown\x10\x00\x12\x0e\n\nSortDir_No\x10\x01\x12\x12\n\x0eSortDir_Ascend\x10\x02\x12\x13\n\x0fSortDir_Descend\x10\x03\x42\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -68,58 +68,66 @@ _STOCKFIELD = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='StockField_CurPrice', index=1, number=1,
+      name='StockField_StockCode', index=1, number=1,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='StockField_CurPriceToHighest52WeeksRatio', index=2, number=2,
+      name='StockField_StockName', index=2, number=2,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='StockField_CurPriceToLowest52WeeksRatio', index=3, number=3,
+      name='StockField_CurPrice', index=3, number=3,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='StockField_HighPriceToHighest52WeeksRatio', index=4, number=4,
+      name='StockField_CurPriceToHighest52WeeksRatio', index=4, number=4,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='StockField_LowPriceToLowest52WeeksRatio', index=5, number=5,
+      name='StockField_CurPriceToLowest52WeeksRatio', index=5, number=5,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='StockField_VolumeRatio', index=6, number=6,
+      name='StockField_HighPriceToHighest52WeeksRatio', index=6, number=6,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='StockField_BidAskRatio', index=7, number=7,
+      name='StockField_LowPriceToLowest52WeeksRatio', index=7, number=7,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='StockField_LotPrice', index=8, number=8,
+      name='StockField_VolumeRatio', index=8, number=8,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='StockField_MarketVal', index=9, number=9,
+      name='StockField_BidAskRatio', index=9, number=9,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='StockField_PeAnnual', index=10, number=10,
+      name='StockField_LotPrice', index=10, number=10,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='StockField_PeTTM', index=11, number=11,
+      name='StockField_MarketVal', index=11, number=11,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='StockField_PbRate', index=12, number=12,
+      name='StockField_PeAnnual', index=12, number=12,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='StockField_PeTTM', index=13, number=13,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='StockField_PbRate', index=14, number=14,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=817,
-  serialized_end=1238,
+  serialized_end=1290,
 )
 _sym_db.RegisterEnumDescriptor(_STOCKFIELD)
 
@@ -131,22 +139,26 @@ _SORTDIR = _descriptor.EnumDescriptor(
   file=DESCRIPTOR,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='SortDir_No', index=0, number=0,
+      name='SortDir_Unknown', index=0, number=0,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='SortDir_Ascend', index=1, number=1,
+      name='SortDir_No', index=1, number=1,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='SortDir_Descend', index=2, number=2,
+      name='SortDir_Ascend', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='SortDir_Descend', index=3, number=3,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=1240,
-  serialized_end=1306,
+  serialized_start=1292,
+  serialized_end=1379,
 )
 _sym_db.RegisterEnumDescriptor(_SORTDIR)
 
@@ -156,21 +168,24 @@ StockMarket_HK = 1
 StockMarket_US = 2
 StockMarket_CN = 3
 StockField_Unknown = 0
-StockField_CurPrice = 1
-StockField_CurPriceToHighest52WeeksRatio = 2
-StockField_CurPriceToLowest52WeeksRatio = 3
-StockField_HighPriceToHighest52WeeksRatio = 4
-StockField_LowPriceToLowest52WeeksRatio = 5
-StockField_VolumeRatio = 6
-StockField_BidAskRatio = 7
-StockField_LotPrice = 8
-StockField_MarketVal = 9
-StockField_PeAnnual = 10
-StockField_PeTTM = 11
-StockField_PbRate = 12
-SortDir_No = 0
-SortDir_Ascend = 1
-SortDir_Descend = 2
+StockField_StockCode = 1
+StockField_StockName = 2
+StockField_CurPrice = 3
+StockField_CurPriceToHighest52WeeksRatio = 4
+StockField_CurPriceToLowest52WeeksRatio = 5
+StockField_HighPriceToHighest52WeeksRatio = 6
+StockField_LowPriceToLowest52WeeksRatio = 7
+StockField_VolumeRatio = 8
+StockField_BidAskRatio = 9
+StockField_LotPrice = 10
+StockField_MarketVal = 11
+StockField_PeAnnual = 12
+StockField_PeTTM = 13
+StockField_PbRate = 14
+SortDir_Unknown = 0
+SortDir_No = 1
+SortDir_Ascend = 2
+SortDir_Descend = 3
 
 
 
@@ -203,16 +218,16 @@ _BASEFILTER = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='sortDir', full_name='Qot_StockFilter.BaseFilter.sortDir', index=3,
-      number=4, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
+      name='isNoFilter', full_name='Qot_StockFilter.BaseFilter.isNoFilter', index=3,
+      number=4, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='isNoFilter', full_name='Qot_StockFilter.BaseFilter.isNoFilter', index=4,
-      number=5, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
+      name='sortDir', full_name='Qot_StockFilter.BaseFilter.sortDir', index=4,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
