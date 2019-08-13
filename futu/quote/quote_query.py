@@ -2470,27 +2470,36 @@ class StockFilterQuery:
         req = Request()
         req.c2s.begin = begin
         req.c2s.num = num
-        req.market = MKT_MAP[market]
+
+        """拆解market"""
+        ret, market_val = StockMarket.to_number(market)
+        if ret:
+            req.market = market_val
+        else:
+            return RET_ERROR, market_val, None
 
         """拆解plate_code"""
-        ret, content = split_stock_str(plate_code)
-        if ret != RET_OK:
-            msg = str(content)
-            error_str = ERROR_STR_PREFIX + msg
-            return RET_ERROR, error_str, None
-        market, code = content
-        if market not in QUOTE.REV_MKT_MAP:
-            error_str = ERROR_STR_PREFIX + "market is %s, which is not valid. (%s)" \
-                                           % (market, ",".join([x for x in MKT_MAP]))
-            return RET_ERROR, error_str, None
+        if plate_code is not None:
+            ret, content = split_stock_str(plate_code)
+            if ret != RET_OK:
+                msg = str(content)
+                error_str = ERROR_STR_PREFIX + msg
+                return RET_ERROR, error_str, None
+            market, code = content
+            if market not in QUOTE.REV_MKT_MAP:
+                error_str = ERROR_STR_PREFIX + "market is %s, which is not valid. (%s)" \
+                                               % (market, ",".join([x for x in MKT_MAP]))
+                return RET_ERROR, error_str, None
 
-        from futu.quote.quote_stockfilter_info import simple_filter
-        for filter_item in filter_list:
-            if not isinstance(filter_item, simple_filter):
-                error_str = ERROR_STR_PREFIX + "the item in filter_list is wrong"
-                return RET_ERROR, error_str
-            filter_req = req.c2s.baseFilterList.add()
-            filter_item.fill_request_pb(filter_req)
+        from futu.quote.quote_stockfilter_info import SimpleFilter
+        if filter_list is not None:
+            for filter_item in filter_list:
+                if not isinstance(filter_item, SimpleFilter):
+                    error_str = ERROR_STR_PREFIX + "the item in filter_list is wrong"
+                    return RET_ERROR, error_str
+                filter_req = req.c2s.baseFilterList.add()
+                filter_item.fill_request_pb(filter_req)
+
         return pack_pb_req(req, ProtoId.Qot_StockFilter, conn_id)
 
 
@@ -2505,9 +2514,9 @@ class StockFilterQuery:
         #   type = Qot_StockFilter.StockData
         data_list = rsp_pb.s2c.dataList
         ret_list = list()
-        from futu.quote.quote_stockfilter_info import filter_stock_data
+        from futu.quote.quote_stockfilter_info import FilterStockData
         for item in data_list:
-            data = filter_stock_data(item)
+            data = FilterStockData(item)
             ret_list.append(data)
         return RET_OK, (last_page, all_count, ret_list)
 

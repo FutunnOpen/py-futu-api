@@ -5,8 +5,9 @@
 from futu import *
 from futu.common.constant import *
 
-"""这里用simple替换掉协议里面的Base，以后有各种filter扩展"""
-class simple_filter(object):
+
+class SimpleFilter(object):
+    """这里用simple替换掉协议里面的Base，以后有各种filter扩展"""
     stock_field = StockField.NONE  # StockField 简单属性
     filter_min = None  # 区间下限，闭区间
     filter_max = None  # 区间上限，闭区间
@@ -37,11 +38,11 @@ class simple_filter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                return RET_ERROR, 'sort is wrong. must be SortDir'
+                raise Exception("sort is wrong. must be SortDir")
             filter_req.sortDir = v
 
 
-class filter_stock_data(object):
+class FilterStockData(object):
     stock_code = None
     stock_name = None
     cur_price = None  # 最新价
@@ -60,7 +61,7 @@ class filter_stock_data(object):
     def __init__(self, rsp_item):
         from futu.common.pb.Qot_StockFilter_pb2 import Response
         if not isinstance(rsp_item, Response):
-            return RET_ERROR, "Response item need Qot_StockFilter_pb2"
+            raise Exception("Response item need Qot_StockFilter_pb2")
 
         self.stock_code = merge_qot_mkt_stock_str(rsp_item.security.market, rsp_item.security.code)
         #  名称 type = string
