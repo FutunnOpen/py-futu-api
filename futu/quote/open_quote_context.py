@@ -654,6 +654,9 @@ class OpenQuoteContext(OpenContextBase):
                 wrt_conversion_price       float          换股价
                 wrt_price_recovery_ratio   float          距收回价（该字段为百分比字段，默认不展示%）
                 wrt_score                  float          综合评分
+                wrt_upper_strike_price     float          上限价，仅界内证支持该字段
+                wrt_lower_strike_price     float          下限价，仅界内证支持该字段
+                wrt_inline_price_status    str            界内界外，仅界内证支持该字段，参见PriceType
                 lot_size                   int            每手股数
                 price_spread               float          当前摆盘价差亦即摆盘数据的买档或卖档的相邻档位的报价差
                 ask_price	               float	      卖价
@@ -694,6 +697,8 @@ class OpenQuoteContext(OpenContextBase):
                 plate_raise_count          int            板块类型上涨支数
                 plate_fall_count           int            板块类型下跌支数
                 plate_equal_count          int            板块类型平盘支数
+                after_volume               int            盘后成交量
+                after_turnover             double         盘后成交额
                 =======================   =============   ==============================================================================
         """
         code_list = unique_and_normalize_list(code_list)
@@ -746,7 +751,10 @@ class OpenQuoteContext(OpenContextBase):
                         'wrt_break_even_point',
                         'wrt_conversion_price',
                         'wrt_price_recovery_ratio',
-                        'wrt_score'
+                        'wrt_score',
+                        'wrt_upper_strike_price',
+                        'wrt_lowe_strike_price',
+                        'wrt_inline_price_status',
                         ]
         option_col_list = ['option_type',
                            'strike_time',
@@ -807,6 +815,8 @@ class OpenQuoteContext(OpenContextBase):
             'lowest52weeks_price',
             'highest_history_price',
             'lowest_history_price',
+            'after_volume',
+            'after_turnover',
         ]
 
         col_list.append('equity_valid')
@@ -1968,7 +1978,7 @@ class OpenQuoteContext(OpenContextBase):
                         'premium', 'break_even_point', 'leverage', 'ipop', 'price_recovery_ratio', 'conversion_price',
                         'street_rate', 'street_vol', 'amplitude', 'issue_size', 'high_price', 'low_price',
                         'implied_volatility', 'delta', 'effective_leverage', 'list_timestamp',  'last_trade_timestamp',
-                        'maturity_timestamp']
+                        'maturity_timestamp', 'upper_strike_price', 'lower_strike_price', 'inline_price_status']
             warrant_data_frame = pd.DataFrame(warrant_data_list, columns=col_list)
             #1120400921001028854
             return ret_code, (warrant_data_frame, last_page, all_count)
@@ -2244,10 +2254,42 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return RET_ERROR, "empty data"
 
+    def stock_filter(self, market, filter_list, plate_code=None, begin=0, num=200):
+        """
+        Qot_StockFilter
+        :param plate_code: 板块代码, string, 例如，”SH.BK0001”，”SH.BK0002”，先利用获取子版块列表函数获取子版块代码
+        """
+        if market not in MKT_MAP:
+            error_str = ERROR_STR_PREFIX + " market is %s, which is not valid. (%s)" \
+                                           % (market, ",".join([x for x in MKT_MAP]))
+            return RET_ERROR, error_str, None
 
+        if plate_code is not None and is_str(plate_code) is False:
+            error_str = ERROR_STR_PREFIX + "the type of plate_code is wrong"
+            return RET_ERROR, error_str
 
+        if filter_list is None or not isinstance(filter_list, list):
+            error_str = ERROR_STR_PREFIX + "the type of filter_list is wrong"
+            return RET_ERROR, error_str
 
+        query_processor = self._get_sync_query_processor(
+            StockFilterQuery.pack_req,
+            StockFilterQuery.unpack,
+        )
 
+        kargs = {
+            "market": market,
+            "filter_list": filter_list,
+            "plate_code": plate_code,
+            "begin": begin,
+            "num": num,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, str(ret)
+        else:
+            return RET_OK, ret
 
 
 

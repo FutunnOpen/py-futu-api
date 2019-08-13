@@ -782,6 +782,7 @@ class ProtoId(object):
 
     Qot_GetUserSecurity = 3213  # 获取自选股分组下的股票
     Qot_ModifyUserSecurity = 3214  # 修改自选股分组下的股票
+    Qot_StockFilter = 3215   # 条件选股
 
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
@@ -1329,18 +1330,19 @@ STOCK_REFERENCE_TYPE_MAP = {
 #
 class WrtType(FtEnum):
     NONE = "N/A"                                       # 未知
-    CALL = "CALL"                                        # 认购
-    PUT = "PUT"                                      # 认沽
+    CALL = "CALL"                                      # 认购
+    PUT = "PUT"                                        # 认沽
     BULL = "BULL"                                      # 牛
     BEAR = "BEAR"                                      # 熊
-
+    INLINE = "INLINE"                                  # 界内证
     def load_dic(self):
         return {
             self.NONE: Qot_Common_pb2.WarrantType_Unknown,
             self.CALL: Qot_Common_pb2.WarrantType_Buy,
             self.PUT: Qot_Common_pb2.WarrantType_Sell,
             self.BULL: Qot_Common_pb2.WarrantType_Bull,
-            self.BEAR: Qot_Common_pb2.WarrantType_Bear
+            self.BEAR: Qot_Common_pb2.WarrantType_Bear,
+            self.INLINE: Qot_Common_pb2.WarrantType_InLine
         }
 
 
@@ -1393,7 +1395,10 @@ class SortField(FtEnum):
     PRE_AMPLITUDE = "PRE_AMPLITUDE"                    #盘前振幅%
     AFTER_AMPLITUDE = "AFTER_AMPLITUDE"                #盘后振幅%
     PRE_TURNOVER = "PRE_TURNOVER"                      #盘前成交额
-    AFTER_TURNOVER = "AFTER_TURNOVER"                  #盘后成交额
+    AFTER_TURNOVER = "AFTER_TURNOVER"                  #盘后成交额	
+    UPPER_STRIKE_PRICE = "UPPER_STRIKE_PRICE"          #上限价，仅界内证支持该字段
+    LOWER_STRIKE_PRICE = "LOWER_STRIKE_PRICE"          #下限价，仅界内证支持该字段
+    INLINE_PRICE_STATUS = "INLINE_PRICE_STATUS"        #界内界外，仅界内证支持该字段
 
     def load_dic(self):
         return {
@@ -1432,16 +1437,19 @@ class SortField(FtEnum):
             self.ISSUER: Qot_Common_pb2.SortField_Issuer,
             self.LOT_SIZE: Qot_Common_pb2.SortField_LotSize,
             self.ISSUE_SIZE: Qot_Common_pb2.SortField_IssueSize,		
-			self.PRE_CUR_PRICE: Qot_Common_pb2.SortField_PreCurPrice,
+            self.PRE_CUR_PRICE: Qot_Common_pb2.SortField_PreCurPrice,
             self.AFTER_CUR_PRICE: Qot_Common_pb2.SortField_AfterCurPrice,
             self.PRE_PRICE_CHANGE_VAL: Qot_Common_pb2.SortField_PrePriceChangeVal,
             self.AFTER_PRICE_CHANGE_VAL: Qot_Common_pb2.SortField_AfterPriceChangeVal,
             self.PRE_CHANGE_RATE: Qot_Common_pb2.SortField_PreChangeRate,
             self.AFTER_CHANGE_RATE: Qot_Common_pb2.SortField_AfterChangeRate,	
             self.PRE_AMPLITUDE: Qot_Common_pb2.SortField_PreAmplitude,
-			self.AFTER_AMPLITUDE: Qot_Common_pb2.SortField_AfterAmplitude,
-			self.PRE_TURNOVER: Qot_Common_pb2.SortField_PreTurnover,
-			self.AFTER_TURNOVER: Qot_Common_pb2.SortField_AfterTurnover
+            self.AFTER_AMPLITUDE: Qot_Common_pb2.SortField_AfterAmplitude,
+            self.PRE_TURNOVER: Qot_Common_pb2.SortField_PreTurnover,
+            self.AFTER_TURNOVER: Qot_Common_pb2.SortField_AfterTurnover,
+            self.UPPER_STRIKE_PRICE: Qot_Common_pb2.SortField_UpperStrikePrice,
+            self.LOWER_STRIKE_PRICE: Qot_Common_pb2.SortField_LowerStrikePrice,
+            self.INLINE_PRICE_STATUS: Qot_Common_pb2.SortField_InLinePriceStatus
         }
 
 '''-------------------------IpoPeriod----------------------------'''
@@ -1470,11 +1478,11 @@ class IpoPeriod(FtEnum):
 '''-------------------------PriceType----------------------------'''
 
 
-# 涡轮价外/内
+#涡轮价外/内,界内证表示界内界外
 class PriceType(FtEnum):
     NONE = "N/A"                                       # 未知
-    OUTSIDE = "OUTSIDE"                                # 价外
-    WITH_IN = "WITH_IN"                                # 价内
+    OUTSIDE = "OUTSIDE"                                # 价外,界内证表示界外
+    WITH_IN = "WITH_IN"                                # 价内,界内证表示界内
 
     def load_dic(self):
         return {
@@ -1839,4 +1847,70 @@ class TrdAccType(FtEnum):
             self.NONE: Trd_Common_pb2.TrdAccType_Unknown,
             self.CASH: Trd_Common_pb2.TrdAccType_Cash,
             self.MARGIN: Trd_Common_pb2.TrdAccType_Margin
+        }
+
+
+'''-------------------------StockFilter 选股----------------------------'''
+
+from futu.common.pb import Qot_StockFilter_pb2
+
+# 选股排序
+class SortDir(FtEnum):
+    NONE = "N/A"                                          # 不排序
+    ASCEND = "ASCEND"                                  # 升序
+    DESCEND = "DESCEND"                                # 降序
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_StockFilter_pb2.SortDir_No,
+            self.ASCEND: Qot_StockFilter_pb2.SortDir_Ascend,
+            self.DESCEND: Qot_StockFilter_pb2.SortDir_Descend
+        }
+
+# 简单属性
+class StockField(FtEnum):
+    NONE = "N/A"                                       # 未知
+    CUR_PRICE = "CUR_PRICE"                            # 最新价 例如填写[10,20]值区间
+    CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO = "CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO" # (现价 - 52周最高)/52周最高，对应PC端离52周高点百分比 例如填写[0.1,2.7]值区间
+    CUR_PRICE_TO_LOWEST52_WEEKS_RATIO = "CUR_PRICE_TO_LOWEST52_WEEKS_RATIO" # (现价 - 52周最低)/52周最低，对应PC端离52周低点百分比 例如填写[0.1,2.7]值区间
+    HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO = "HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO" # (今日最高 - 52周最高)/52周最高，对应PC端52周新高 例如填写[0.1,2.7]值区间
+    LOW_PRICE_TO_LOWEST52_WEEKS_RATIO = "LOW_PRICE_TO_LOWEST52_WEEKS_RATIO" # (今日最低 - 52周最低)/52周最低 对应PC端52周新低 例如填写[0.1,2.7]值区间
+    VOLUME_RATIO = "VOLUME_RATIO"                      # 量比 例如填写[0.5,30]值区间
+    BID_ASK_RATIO = "BID_ASK_RATIO"                    # 委比 例如填写[-20,85.01]值区间
+    LOT_PRICE = "LOT_PRICE"                            # 每手价格 例如填写[40,100]值区间
+    MARKET_VAL = "MARKET_VAL"                          # 市值 例如填写[1.5,20]值区间 以亿为单位
+    PE_ANNUAL = "PE_ANNUAL"                            # 市盈率 (静态) 例如填写[-8,65.3]值区间
+    PE_TTM = "PE_TTM"                                  # 市盈率TTM 例如填写[-10,20.5]值区间
+    PB_RATE = "PB_RATE"                                # 市净率 	例如填写[0.1,15.6]值区间
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_StockFilter_pb2.StockField_Unknown,
+            self.CUR_PRICE: Qot_StockFilter_pb2.StockField_CurPrice,
+            self.CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_CurPriceToHighest52WeeksRatio,
+            self.CUR_PRICE_TO_LOWEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_CurPriceToLowest52WeeksRatio,
+            self.HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_HighPriceToHighest52WeeksRatio,
+            self.LOW_PRICE_TO_LOWEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_LowPriceToLowest52WeeksRatio,
+            self.VOLUME_RATIO: Qot_StockFilter_pb2.StockField_VolumeRatio,
+            self.BID_ASK_RATIO: Qot_StockFilter_pb2.StockField_BidAskRatio,
+            self.LOT_PRICE: Qot_StockFilter_pb2.StockField_LotPrice,
+            self.MARKET_VAL: Qot_StockFilter_pb2.StockField_MarketVal,
+            self.PE_ANNUAL: Qot_StockFilter_pb2.StockField_PeAnnual,
+            self.PE_TTM: Qot_StockFilter_pb2.StockField_PeTTM,
+            self.PB_RATE: Qot_StockFilter_pb2.StockField_PbRate
+        }
+
+# 选股使用，因为选股不分沪深
+class StockMarket(FtEnum):
+    NONE = "N/A"                                       # 未知
+    HK = "HK"                                          # 港股
+    US = "US"                                          # 美股
+    CN = "CN"                                          # A股
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_StockFilter_pb2.StockMarket_Unknown,
+            self.HK: Qot_StockFilter_pb2.StockMarket_HK,
+            self.US: Qot_StockFilter_pb2.StockMarket_US,
+            self.CN: Qot_StockFilter_pb2.StockMarket_CN
         }
