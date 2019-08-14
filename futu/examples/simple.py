@@ -13,16 +13,23 @@ field = SimpleFilter()
 field.filter_min = 100
 field.filter_max = 1000
 field.stock_field = StockField.CUR_PRICE
+field.is_no_filter = False
+field.sort = SortDir.ASCEND
 
-field2 = SimpleFilter()
-field2.filter_min = 100
-field2.filter_max = 1000
-field2.stock_field = StockField.VOLUME_RATIO
+# field2 = SimpleFilter()
+# field2.filter_min = 100
+# field2.filter_max = 1000
+# field2.stock_field = StockField.VOLUME_RATIO
+# field2.sort = SortDir.ASCEND
+# field2.is_no_filter = False
+#
+# field3 = SimpleFilter()
+# field3.stock_field = StockField.CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO
+# field3.is_no_filter = True
 
-field3 = SimpleFilter()
-field3.stock_field = StockField.CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO
-field3.is_no_filter = True
-print(quote_ctx.get_stock_filter(StockMarket.HK, [field, field2, field3]))
+ret, ls = quote_ctx.get_stock_filter(StockMarket.HK, [field])
+last_page, all_count, ret_list = ls
+print(ret_list)
 
 """-------------------------------------------------"""
 # req = Request()

@@ -32,6 +32,14 @@ class FtEnum(object):
         obj = cls()
         return ",".join([x for x in obj.str_dic.keys()])
 
+    @classmethod
+    def get_all_key_list(cls):
+        obj = cls()
+        key_list = list()
+        for x in obj.str_dic.keys():
+            key_list.append(x)
+        return key_list
+
 
     @classmethod
     def to_number(cls, str_value):
@@ -1883,8 +1891,10 @@ class SortDir(FtEnum):
 # 简单属性
 class StockField(FtEnum):
     NONE = "N/A"                                       # 未知
+    STOCK_CODE = "STOCK_CODE"                          # 股票代码，不能填区间上下限值。
+    STOCK_NAME = "STOCK_NAME"                          # 股票名称，不能填区间上下限值。
     CUR_PRICE = "CUR_PRICE"                            # 最新价 例如填写[10,20]值区间
-    CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO = "CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO" # (现价 - 52周最高)/52周最高，对应PC端离52周高点百分比 例如填写[0.1,2.7]值区间
+    CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO = "CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO"  # (现价 - 52周最高)/52周最高，对应PC端离52周高点百分比 例如填写[0.1,2.7]值区间
     CUR_PRICE_TO_LOWEST52_WEEKS_RATIO = "CUR_PRICE_TO_LOWEST52_WEEKS_RATIO" # (现价 - 52周最低)/52周最低，对应PC端离52周低点百分比 例如填写[0.1,2.7]值区间
     HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO = "HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO" # (今日最高 - 52周最高)/52周最高，对应PC端52周新高 例如填写[0.1,2.7]值区间
     LOW_PRICE_TO_LOWEST52_WEEKS_RATIO = "LOW_PRICE_TO_LOWEST52_WEEKS_RATIO" # (今日最低 - 52周最低)/52周最低 对应PC端52周新低 例如填写[0.1,2.7]值区间
@@ -1899,6 +1909,8 @@ class StockField(FtEnum):
     def load_dic(self):
         return {
             self.NONE: Qot_StockFilter_pb2.StockField_Unknown,
+            self.STOCK_CODE: Qot_StockFilter_pb2.StockField_StockCode,
+            self.STOCK_NAME: Qot_StockFilter_pb2.StockField_StockName,
             self.CUR_PRICE: Qot_StockFilter_pb2.StockField_CurPrice,
             self.CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_CurPriceToHighest52WeeksRatio,
             self.CUR_PRICE_TO_LOWEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_CurPriceToLowest52WeeksRatio,

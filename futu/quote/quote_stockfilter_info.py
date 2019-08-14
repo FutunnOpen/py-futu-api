@@ -27,14 +27,14 @@ class SimpleFilter(object):
             return RET_ERROR, 'stock_field is wrong. must be StockField'
         filter_req.field = v
         """有了这个字段，别的字段都可以不要了"""
-        if self.is_no_filter:
+        if self.is_no_filter is True:
             filter_req.isNoFilter = True
-            return
+        else:
+            if self.filter_min is not None:
+                filter_req.filterMin = self.filter_min
+            if self.filter_max is not None:
+                filter_req.filterMax = self.filter_max
 
-        if self.filter_min is not None:
-            filter_req.filterMin = self.filter_min
-        if self.filter_max is not None:
-            filter_req.filterMax = self.filter_max
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
@@ -45,22 +45,22 @@ class SimpleFilter(object):
 class FilterStockData(object):
     stock_code = None
     stock_name = None
-    cur_price = None  # 最新价
-    cur_price_to_highest_52weeks_ratio = None  # (现价 - 52周最高) / 52周最高，对应pc端离52周高点百分比
-    cur_price_to_lowest_52weeks_ratio = None  # (现价 - 52周最低) / 52周最低，对应pc端离52周低点百分比
-    high_price_to_highest_52weeks_ratio = None  # (今日最高 - 52周最高) / 52周最高，对应pc端52周新高
-    low_price_to_lowest_52weeks_ratio = None  # (今日最低 - 52周最低) / 52周最低 对应pc端52周新低
-    volume_ratio = None  # 量比
-    bid_ask_ratio = None  # 委比
-    lot_price = None  # 每手价格
-    market_val = None  # 市值
-    pe_annual = None  # 年化(静态) 市盈率
-    pe_ttm = None  # 市盈率ttm
-    pb_rate = None  # 市净率
+    # cur_price = None  # 最新价
+    # cur_price_to_highest_52weeks_ratio = None  # (现价 - 52周最高) / 52周最高，对应pc端离52周高点百分比
+    # cur_price_to_lowest_52weeks_ratio = None  # (现价 - 52周最低) / 52周最低，对应pc端离52周低点百分比
+    # high_price_to_highest_52weeks_ratio = None  # (今日最高 - 52周最高) / 52周最高，对应pc端52周新高
+    # low_price_to_lowest_52weeks_ratio = None  # (今日最低 - 52周最低) / 52周最低 对应pc端52周新低
+    # volume_ratio = None  # 量比
+    # bid_ask_ratio = None  # 委比
+    # lot_price = None  # 每手价格
+    # market_val = None  # 市值
+    # pe_annual = None  # 年化(静态) 市盈率
+    # pe_ttm = None  # 市盈率ttm
+    # pb_rate = None  # 市净率
 
     def __init__(self, rsp_item):
-        from futu.common.pb.Qot_StockFilter_pb2 import Response
-        if not isinstance(rsp_item, Response):
+        from futu.common.pb.Qot_StockFilter_pb2 import StockData
+        if not isinstance(rsp_item, StockData):
             raise Exception("Response item need Qot_StockFilter_pb2")
 
         self.stock_code = merge_qot_mkt_stock_str(rsp_item.security.market, rsp_item.security.code)
@@ -69,24 +69,31 @@ class FilterStockData(object):
         #  筛选后的简单属性数据 type = Qot_StockFilter.BaseData
         base_data_list = rsp_item.baseDataList
 
-        swicher = {StockField.CUR_PRICE: "cur_price",
-                   StockField.CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO: "cur_price_to_highest_52weeks_ratio",
-                   StockField.CUR_PRICE_TO_LOWEST52_WEEKS_RATIO: "cur_price_to_lowest_52weeks_ratio",
-                   StockField.HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO: "high_price_to_highest_52weeks_ratio",
-                   StockField.LOW_PRICE_TO_LOWEST52_WEEKS_RATIO: "low_price_to_lowest_52weeks_ratio",
-                   StockField.VOLUME_RATIO: "volume_ratio",
-                   StockField.BID_ASK_RATIO: "bid_ask_ratio",
-                   StockField.LOT_PRICE: "lot_price",
-                   StockField.MARKET_VAL: "market_val",
-                   StockField.PE_ANNUAL: "pe_annual",
-                   StockField.PE_TTM: "pe_ttm",
-                   StockField.PB_RATE: "pb_rate"}
+        ls = StockField.get_all_key_list()
+        for key in ls:
+            attr = key.lower()
+            if attr not in self.__dict__:
+                """增加一个属性"""
+                self.__dict__[attr] = None
 
         for sub_item in base_data_list:
             ret, field = StockField.to_string(sub_item.field)
-            if ret and (field in swicher):
-                key = swicher[field]
+            if ret:
+                key = field.lower()
                 self.__dict__[key] = sub_item.value
+
+    def __repr__(self):
+        ls = StockField.get_all_key_list()
+        s = ""
+        for key in ls:
+            attr = key.lower()
+            if attr in self.__dict__:
+                value = self.__dict__[attr]
+                if value is not None:
+                    s += (" {}:{} ".format(attr, value))
+        return s
+
+
 
 
 
