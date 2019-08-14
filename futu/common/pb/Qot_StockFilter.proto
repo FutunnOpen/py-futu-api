@@ -5,6 +5,7 @@ option java_package = "com.futu.openapi.pb";
 import "Common.proto";
 import "Qot_Common.proto";
 
+// 股票市场
 enum StockMarket 
 {
     StockMarket_Unknown = 0; // 未知
@@ -17,22 +18,23 @@ enum StockMarket
 enum StockField 
 {
 	StockField_Unknown = 0; // 未知
-	StockField_StockCode = 1; // 股票代码
-	StockField_StockName = 2; // 股票名称
+	StockField_StockCode = 1; // 股票代码，不能填区间上下限值。
+	StockField_StockName = 2; // 股票名称，不能填区间上下限值。
 	StockField_CurPrice = 3; // 最新价 例如填写[10,20]值区间
-    StockField_CurPriceToHighest52WeeksRatio = 4; // (现价 - 52周最高)/52周最高，对应PC端离52周高点百分比 例如填写[0.1,2.7]值区间
-    StockField_CurPriceToLowest52WeeksRatio = 5; // (现价 - 52周最低)/52周最低，对应PC端离52周低点百分比 例如填写[0.1,2.7]值区间
-    StockField_HighPriceToHighest52WeeksRatio = 6; // (今日最高 - 52周最高)/52周最高，对应PC端52周新高 例如填写[0.1,2.7]值区间
-    StockField_LowPriceToLowest52WeeksRatio = 7; // (今日最低 - 52周最低)/52周最低 对应PC端52周新低 例如填写[0.1,2.7]值区间
+    StockField_CurPriceToHighest52WeeksRatio = 4; // (现价 - 52周最高)/52周最高，对应PC端离52周高点百分比 例如填写[-0.8,0]值区间，区间合法范围[-1,0]
+    StockField_CurPriceToLowest52WeeksRatio = 5; // (现价 - 52周最低)/52周最低，对应PC端离52周低点百分比 例如填写[0,100]值区间，区间合法范围[0,99999.999]
+    StockField_HighPriceToHighest52WeeksRatio = 6; // (今日最高 - 52周最高)/52周最高
+    StockField_LowPriceToLowest52WeeksRatio = 7; // (今日最低 - 52周最低)/52周最低
 	StockField_VolumeRatio = 8; // 量比 例如填写[0.5,30]值区间
 	StockField_BidAskRatio = 9; // 委比 例如填写[-20,85.01]值区间
 	StockField_LotPrice = 10; // 每手价格 例如填写[40,100]值区间
-	StockField_MarketVal = 11; // 市值 例如填写[1.5,20]值区间 以亿为单位
+	StockField_MarketVal = 11; // 市值 例如填写[1.5,20]值区间，以亿为单位
 	StockField_PeAnnual = 12; // 市盈率 (静态) 例如填写[-8,65.3]值区间
     StockField_PeTTM = 13; // 市盈率TTM 例如填写[-10,20.5]值区间
-    StockField_PbRate = 14; // 市净率 	例如填写[0.1,15.6]值区间
+    StockField_PbRate = 14; // 市净率 	例如填写[0,0.8]值区间
 };
 
+// 排序方向
 enum SortDir
 {
 	SortDir_Unknown = 0; // 未知
@@ -58,6 +60,7 @@ message BaseData
     required double value = 2;
 };
 
+// 返回的股票数据
 message StockData 
 {
     required Qot_Common.Security security = 1; // 股票
@@ -70,8 +73,8 @@ message C2S
     required int32 begin = 1; // 数据起始点
     required int32 num =  2;  // 请求数据个数，最大200		
 	required int32 market= 5; // StockMarket, 股票市场
-    required Qot_Common.Security plate = 6; // 板块
 	// 以下为筛选条件，可选字段，不填表示不过滤
+	optional Qot_Common.Security plate = 6; // 板块
 	repeated BaseFilter baseFilterList = 7; // 简单行情过滤器
 }
 
@@ -79,7 +82,7 @@ message S2C
 {
     required bool lastPage = 1; // 是否最后一页了,false:非最后一页,还有窝轮记录未返回; true:已是最后一页
 	required int32 allCount = 2; // 该条件请求所有数据的个数
-    repeated StockData dataList = 3; 
+    repeated StockData dataList = 3; // 返回的股票数据列表
 }
 
 message Request

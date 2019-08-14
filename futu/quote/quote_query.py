@@ -2484,7 +2484,7 @@ class StockFilterQuery:
         """拆解market"""
         ret, market_val = StockMarket.to_number(market)
         if ret:
-            req.market = market_val
+            req.c2s.market = market_val
         else:
             return RET_ERROR, market_val, None
 
@@ -2516,7 +2516,7 @@ class StockFilterQuery:
     @classmethod
     def unpack(cls, rsp_pb):
         if rsp_pb.retType != RET_OK:
-            return RET_ERROR, rsp_pb.retMsg
+            return RET_ERROR, rsp_pb.retMsg, None
         #  是否最后一页了,false:非最后一页,还有窝轮记录未返回; true:已是最后一页 type = bool
         last_page = rsp_pb.s2c.lastPage
         #  该条件请求所有数据的个数 type = int32
@@ -2528,7 +2528,7 @@ class StockFilterQuery:
         for item in data_list:
             data = FilterStockData(item)
             ret_list.append(data)
-        return RET_OK, (last_page, all_count, ret_list)
+        return RET_OK, "", (last_page, all_count, ret_list)
 
 
 

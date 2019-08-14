@@ -21,6 +21,19 @@ class FtEnum(object):
         }
 
     @classmethod
+    def if_has_key(cls, str_value):
+        obj = cls()
+        if not isinstance(str_value, str):
+            return False
+        return str_value in obj.str_dic
+
+    @classmethod
+    def get_all_keys(cls):
+        obj = cls()
+        return ",".join([x for x in obj.str_dic.keys()])
+
+
+    @classmethod
     def to_number(cls, str_value):
         obj = cls()
         if not isinstance(str_value, str):
