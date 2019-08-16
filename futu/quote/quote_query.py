@@ -2496,10 +2496,9 @@ class StockFilterQuery:
                 error_str = ERROR_STR_PREFIX + msg
                 return RET_ERROR, error_str, None
             market, code = content
-            if market not in QUOTE.REV_MKT_MAP:
-                error_str = ERROR_STR_PREFIX + "market is %s, which is not valid. (%s)" \
-                                               % (market, ",".join([x for x in MKT_MAP]))
-                return RET_ERROR, error_str, None
+            req.c2s.plate.code = code
+            req.c2s.plate.market = market
+
 
         from futu.quote.quote_stockfilter_info import SimpleFilter
         if filter_list is not None:
