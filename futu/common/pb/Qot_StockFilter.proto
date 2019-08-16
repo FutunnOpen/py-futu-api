@@ -22,13 +22,13 @@ enum StockField
 	StockField_StockName = 2; // 股票名称，不能填区间上下限值。
 	StockField_CurPrice = 3; // 最新价 例如填写[10,20]值区间
     StockField_CurPriceToHighest52WeeksRatio = 4; // (现价 - 52周最高)/52周最高，对应PC端离52周高点百分比 例如填写[-0.8,0]值区间，区间合法范围[-1,0]
-    StockField_CurPriceToLowest52WeeksRatio = 5; // (现价 - 52周最低)/52周最低，对应PC端离52周低点百分比 例如填写[0,100]值区间，区间合法范围[0,99999.999]
-    StockField_HighPriceToHighest52WeeksRatio = 6; // (今日最高 - 52周最高)/52周最高
-    StockField_LowPriceToLowest52WeeksRatio = 7; // (今日最低 - 52周最低)/52周最低
+    StockField_CurPriceToLowest52WeeksRatio = 5; // (现价 - 52周最低)/52周最低，对应PC端离52周低点百分比 例如填写[0,100]值区间，区间合法范围[0,正无穷]
+    StockField_HighPriceToHighest52WeeksRatio = 6; // (今日最高 - 52周最高)/52周最高 例如填写[-0.8,0]值区间，区间合法范围[-1,0]
+    StockField_LowPriceToLowest52WeeksRatio = 7; // (今日最低 - 52周最低)/52周最低 例如填写[0,100]值区间，区间合法范围[0,正无穷]
 	StockField_VolumeRatio = 8; // 量比 例如填写[0.5,30]值区间
 	StockField_BidAskRatio = 9; // 委比 例如填写[-20,85.01]值区间
 	StockField_LotPrice = 10; // 每手价格 例如填写[40,100]值区间
-	StockField_MarketVal = 11; // 市值 例如填写[1.5,20]值区间，以亿为单位
+	StockField_MarketVal = 11; // 市值 例如填写[50000000,3000000000]值区间
 	StockField_PeAnnual = 12; // 市盈率 (静态) 例如填写[-8,65.3]值区间
     StockField_PeTTM = 13; // 市盈率TTM 例如填写[-10,20.5]值区间
     StockField_PbRate = 14; // 市净率 	例如填写[0,0.8]值区间
@@ -37,10 +37,9 @@ enum StockField
 // 排序方向
 enum SortDir
 {
-	SortDir_Unknown = 0; // 未知
-	SortDir_No = 1; // 不排序
-	SortDir_Ascend = 2; // 升序
-	SortDir_Descend = 3; // 降序
+	SortDir_No = 0; // 不排序
+	SortDir_Ascend = 1; // 升序
+	SortDir_Descend = 2; // 降序
 };
 
 // 简单属性筛选
@@ -49,8 +48,8 @@ message BaseFilter
     required int32 field = 1; // StockField 简单属性
 	optional double filterMin = 2; // 区间下限，闭区间
     optional double filterMax = 3; // 区间上限，闭区间
-	optional bool isNoFilter = 4; // 该字段是否需要筛选。当该字段为true时，表示不需要筛选，以上filterMin，filterMax区间两个字段无效。
-	optional int32 sortDir = 5; // SortDir 排序方向
+	optional bool isNoFilter = 4; // 该字段是否需要筛选。当该字段为true时，表示不需要筛选，以上filterMin，filterMax区间两个字段无效。默认True，不需要筛选。
+	optional int32 sortDir = 5; // SortDir 排序方向，默认不排序。
 };
 
 // 简单属性数据
