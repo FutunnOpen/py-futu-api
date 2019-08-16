@@ -27,9 +27,8 @@ class SimpleFilter(object):
             return RET_ERROR, 'stock_field is wrong. must be StockField'
         filter_req.field = v
         """有了这个字段，别的字段都可以不要了"""
-        if self.is_no_filter is True:
-            filter_req.isNoFilter = True
-        else:
+        if self.is_no_filter is False:
+            filter_req.isNoFilter = False
             if self.filter_min is not None:
                 filter_req.filterMin = self.filter_min
             if self.filter_max is not None:
