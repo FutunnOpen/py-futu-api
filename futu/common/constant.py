@@ -1877,7 +1877,7 @@ from futu.common.pb import Qot_StockFilter_pb2
 
 # 选股排序
 class SortDir(FtEnum):
-    NONE = "N/A"                                          # 不排序
+    NONE = "N/A"                                       # 不排序
     ASCEND = "ASCEND"                                  # 升序
     DESCEND = "DESCEND"                                # 降序
 
@@ -1894,17 +1894,17 @@ class StockField(FtEnum):
     STOCK_CODE = "STOCK_CODE"                          # 股票代码，不能填区间上下限值。
     STOCK_NAME = "STOCK_NAME"                          # 股票名称，不能填区间上下限值。
     CUR_PRICE = "CUR_PRICE"                            # 最新价 例如填写[10,20]值区间
-    CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO = "CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO"  # (现价 - 52周最高)/52周最高，对应PC端离52周高点百分比 例如填写[0.1,2.7]值区间
-    CUR_PRICE_TO_LOWEST52_WEEKS_RATIO = "CUR_PRICE_TO_LOWEST52_WEEKS_RATIO" # (现价 - 52周最低)/52周最低，对应PC端离52周低点百分比 例如填写[0.1,2.7]值区间
-    HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO = "HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO" # (今日最高 - 52周最高)/52周最高，对应PC端52周新高 例如填写[0.1,2.7]值区间
-    LOW_PRICE_TO_LOWEST52_WEEKS_RATIO = "LOW_PRICE_TO_LOWEST52_WEEKS_RATIO" # (今日最低 - 52周最低)/52周最低 对应PC端52周新低 例如填写[0.1,2.7]值区间
+    CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO = "CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO"  # (现价 - 52周最高)/52周最高，对应PC端离52周高点百分比 例如填写[-0.8,0]值区间
+    CUR_PRICE_TO_LOWEST52_WEEKS_RATIO = "CUR_PRICE_TO_LOWEST52_WEEKS_RATIO" # (现价 - 52周最低)/52周最低，对应PC端离52周低点百分比 例如填写[0,100]值区间
+    HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO = "HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO" # (今日最高 - 52周最高)/52周最高 例如填写[-0.8,0]值区间
+    LOW_PRICE_TO_LOWEST52_WEEKS_RATIO = "LOW_PRICE_TO_LOWEST52_WEEKS_RATIO" # (今日最低 - 52周最低)/52周最低 例如填写[0,100]值区间
     VOLUME_RATIO = "VOLUME_RATIO"                      # 量比 例如填写[0.5,30]值区间
     BID_ASK_RATIO = "BID_ASK_RATIO"                    # 委比 例如填写[-20,85.01]值区间
     LOT_PRICE = "LOT_PRICE"                            # 每手价格 例如填写[40,100]值区间
-    MARKET_VAL = "MARKET_VAL"                          # 市值 例如填写[1.5,20]值区间 以亿为单位
+    MARKET_VAL = "MARKET_VAL"                          # 市值，单位是元 例如填写[50000000,3000000000]值区间
     PE_ANNUAL = "PE_ANNUAL"                            # 市盈率 (静态) 例如填写[-8,65.3]值区间
     PE_TTM = "PE_TTM"                                  # 市盈率TTM 例如填写[-10,20.5]值区间
-    PB_RATE = "PB_RATE"                                # 市净率 	例如填写[0.1,15.6]值区间
+    PB_RATE = "PB_RATE"                                # 市净率 例如填写[0,0.8]值区间
 
     def load_dic(self):
         return {
