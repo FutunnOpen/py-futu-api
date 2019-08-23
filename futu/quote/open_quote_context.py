@@ -2262,7 +2262,7 @@ class OpenQuoteContext(OpenContextBase):
         if not StockMarket.if_has_key(market):
             error_str = ERROR_STR_PREFIX + " market is %s, which is not valid. (%s)" \
                                            % (market, StockMarket.get_all_keys())
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str
 
         if plate_code is not None and is_str(plate_code) is False:
             error_str = ERROR_STR_PREFIX + "the type of plate_code is wrong"
