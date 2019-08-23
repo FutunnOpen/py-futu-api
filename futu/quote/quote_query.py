@@ -374,6 +374,7 @@ class MarketSnapshotQuery:
                 snapshot_tmp['option_gamma'] = record.optionExData.gamma
                 snapshot_tmp['option_vega'] = record.optionExData.vega
                 snapshot_tmp['option_theta'] = record.optionExData.theta
+                snapshot_tmp['option_rho'] = record.optionExData.rho
 
             snapshot_tmp['index_valid'] = False
             if record.HasField('indexExData'):
