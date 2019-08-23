@@ -2295,7 +2295,69 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return RET_OK, ret
 
+    def get_code_change(self, code_list = [], time_filter_list = [], type_list = []):
+        """
+        GetCodeChange
+        """
+        time_filter_list = unique_and_normalize_list(time_filter_list)
+        for time_filter in time_filter_list:
+            r, n = TimeFilterType.to_number(time_filter.type)
+            if time_filter.type is None or r is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in time_filter is wrong"
+                return RET_ERROR, error_str
 
+        if is_str(code_list):
+            code_list = code_list.split(',')
+        elif isinstance(code_list, list):
+            pass
+        else:
+            return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
+        code_list = unique_and_normalize_list(code_list)
+        for code in code_list:
+            if code is None or is_str(code) is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in code_list is wrong"
+                return RET_ERROR, error_str
+
+        if is_str(type_list):
+            type_list = type_list.split(',')
+        elif isinstance(type_list, list):
+            pass
+        else:
+            return RET_ERROR, "code list must be like [CodeChangeType.CHANGE_LOT, CodeChangeType.GEMTOMAIN] or 'CodeChangeType.CHANGE_LOT,CodeChangeType.GEMTOMAIN'"
+        type_list = unique_and_normalize_list(type_list)
+        for type in type_list:
+            r, n = CodeChangeType.to_number(type)
+            if type is None or r is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in type_list is wrong"
+                return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            GetCodeChangeQuery.pack_req,
+            GetCodeChangeQuery.unpack,
+        )
+
+        kargs = {
+                    "code_list": code_list,
+                    "time_filter_list": time_filter_list,
+                    "type_list": type_list,
+                    "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+                'code_change_info_type',
+                'stock_code',
+                'related_security',
+                'public_time',
+                'effective_time',
+                'end_time',
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
 
 
 

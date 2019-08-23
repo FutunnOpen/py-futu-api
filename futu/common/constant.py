@@ -804,7 +804,7 @@ class ProtoId(object):
     Qot_GetUserSecurity = 3213  # 获取自选股分组下的股票
     Qot_ModifyUserSecurity = 3214  # 修改自选股分组下的股票
     Qot_StockFilter = 3215   # 条件选股
-
+    Qot_GetCodeChange = 3216   # 代码变换
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
 
@@ -1940,3 +1940,54 @@ class StockMarket(FtEnum):
             self.US: Qot_StockFilter_pb2.StockMarket_US,
             self.CN: Qot_StockFilter_pb2.StockMarket_CN
         }
+
+from futu.common.pb import Qot_GetCodeChange_pb2
+class CodeChangeType(FtEnum):
+    UNKOWN = "UNKOWN"                                  # 未知
+    GEM_TO_MAIN = "GEM_TO_MAIN"                        # 创业板转主板
+    UNPAID = "UNPAID"                                  # 买卖未缴款供股权
+    CHANGE_LOT = "CHANGE_LOT"                          # 更改买卖单位
+    SPLIT = "SPLIT"                                    # 拆股
+    JOINT = "JOINT"                                    # 合股
+    JOINT_SPLIT = "JOINT_SPLIT"                        # 股份先并后拆
+    SPLIT_JOINT = "SPLIT_JOINT"                        # 股份先拆后并
+    OTHER = "OTHER"                                    # 其他
+
+    def load_dic(self):
+        return {
+            self.UNKOWN: Qot_GetCodeChange_pb2.CodeChangeType_Unkown,
+            self.GEM_TO_MAIN: Qot_GetCodeChange_pb2.CodeChangeType_GemToMain,
+            self.UNPAID: Qot_GetCodeChange_pb2.CodeChangeType_Unpaid,
+            self.CHANGE_LOT: Qot_GetCodeChange_pb2.CodeChangeType_ChangeLot,
+            self.SPLIT: Qot_GetCodeChange_pb2.CodeChangeType_Split,
+            self.JOINT: Qot_GetCodeChange_pb2.CodeChangeType_Joint,
+            self.JOINT_SPLIT: Qot_GetCodeChange_pb2.CodeChangeType_JointSplit,
+            self.SPLIT_JOINT: Qot_GetCodeChange_pb2.CodeChangeType_SplitJoint,
+            self.OTHER: Qot_GetCodeChange_pb2.CodeChangeType_Other
+        }
+
+
+#
+class TimeFilterType(FtEnum):
+    NONE = "N/A"                                       # 未知
+    PUBLIC = "PUBLIC"                                  # 根据公布时间过滤
+    EFFECTIVE = "EFFECTIVE"                            # 根据生效时间过滤
+    END = "END"                                        # 根据结束时间过滤
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_GetCodeChange_pb2.TimeFilterType_Unknow,
+            self.PUBLIC: Qot_GetCodeChange_pb2.TimeFilterType_Public,
+            self.EFFECTIVE: Qot_GetCodeChange_pb2.TimeFilterType_Effective,
+            self.END: Qot_GetCodeChange_pb2.TimeFilterType_End
+        }
+
+class TimeFilter(object):
+    type = 0  # 时间筛选类型
+    begin_time = ''  # 时间筛选开始点
+    end_time = ''  # 时间筛选结束点
+
+    def __init__(self):
+        self.type = None
+        self.begin_time = None
+        self.end_time = None
