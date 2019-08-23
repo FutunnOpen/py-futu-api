@@ -2254,7 +2254,7 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return RET_ERROR, "empty data"
 
-    def get_stock_filter(self, market, filter_list, plate_code=None, begin=0, num=200):
+    def get_stock_filter(self, market, filter_list=None, plate_code=None, begin=0, num=200):
         """
         Qot_StockFilter
         :param plate_code: 板块代码, string, 例如，”SH.BK0001”，”SH.BK0002”，先利用获取子版块列表函数获取子版块代码
