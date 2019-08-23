@@ -298,6 +298,7 @@ enum Issuer
     Issuer_HT = 20; //海通
     Issuer_VT = 21; //瑞通
     Issuer_KC = 22; //比联
+	Issuer_MS = 23; //摩利
 }
 
 //涡轮上市日

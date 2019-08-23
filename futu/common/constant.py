@@ -1562,7 +1562,7 @@ class Issuer(FtEnum):
     HT = "HT"                                          # 海通
     VT = "VT"                                          # 瑞通
     KC = "KC"                                          # 比联
-
+    MS = "MS"                                          # 摩利
     def load_dic(self):
         return {
             self.NONE: Qot_Common_pb2.Issuer_Unknow,
@@ -1587,7 +1587,8 @@ class Issuer(FtEnum):
             self.BC: Qot_Common_pb2.Issuer_BC,
             self.HT: Qot_Common_pb2.Issuer_HT,
             self.VT: Qot_Common_pb2.Issuer_VT,
-            self.KC: Qot_Common_pb2.Issuer_KC
+            self.KC: Qot_Common_pb2.Issuer_KC,
+            self.MS: Qot_Common_pb2.Issuer_MS
         }
 
 
