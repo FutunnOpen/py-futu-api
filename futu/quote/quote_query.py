@@ -2588,9 +2588,9 @@ class GetCodeChangeQuery:
           #  CodeChangeType,代码变化或者新增临时代码的事件类型 type = int32
           data["code_change_info_type"] = CodeChangeType.to_string2(item.type)
           #  主代码，在创业板转主板中表示主板 type = code
-          data["stock_code"] = merge_qot_mkt_stock_str(item.security.market,item.security.code)
+          data["code"] = merge_qot_mkt_stock_str(item.security.market,item.security.code)
           #  关联代码，在创业板转主板中表示创业板，在剩余事件中表示临时代码 type = code
-          data["related_security"] = merge_qot_mkt_stock_str(item.relatedSecurity.market,item.relatedSecurity.code)
+          data["related_code"] = merge_qot_mkt_stock_str(item.relatedSecurity.market,item.relatedSecurity.code)
           #  公布时间 type = string
           data["public_time"] = item.publicTime
           #  生效时间 type = string

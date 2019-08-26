@@ -2297,7 +2297,27 @@ class OpenQuoteContext(OpenContextBase):
 
     def get_code_change(self, code_list = [], time_filter_list = [], type_list = []):
         """
-        GetCodeChange
+        股票更换代码或者中途并行交易临时代码信息
+
+        :param code_list: 股票列表，例如['HK.00700']
+        :param time_filter_list: 时间过滤列表, 例如[t1, t2], t1 = TimeFilter(type = TimeFilterType.PUBLIC, begin_time = "2019-12-31",end_time = "2019-12-30")
+        :param type_list: 类型过滤列表，例如[CodeChangeType.GEM_TO_MAIN]
+        :return: (ret, data)
+
+                ret == RET_OK 返回pd dataframe数据，data.DataFrame数据, 数据列格式如下
+
+                ret != RET_OK 返回错误字符串
+
+                =====================   ===========   =================================================================================
+                参数                      类型                        说明
+                =====================   ===========   =================================================================================
+                code_change_info_type   str            类型
+                security                str            主代码，在创业板转主板中表示主板
+                related_security        str            关联代码，在创业板转主板中表示创业板，在剩余事件中表示临时代码
+                public_time             str            公布时间
+                effective_time          str            生效时间
+                end_time                str            结束时间，在创业板转主板事件不存在该字段，在剩余事件表示临时代码交易结束时间
+                =====================   ===========   =================================================================================
         """
         time_filter_list = unique_and_normalize_list(time_filter_list)
         for time_filter in time_filter_list:
@@ -2348,8 +2368,8 @@ class OpenQuoteContext(OpenContextBase):
         if isinstance(ret, list):
             col_list = [
                 'code_change_info_type',
-                'stock_code',
-                'related_security',
+                'code',
+                'related_code',
                 'public_time',
                 'effective_time',
                 'end_time',

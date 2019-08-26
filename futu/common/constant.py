@@ -1987,7 +1987,7 @@ class TimeFilter(object):
     begin_time = ''  # 时间筛选开始点
     end_time = ''  # 时间筛选结束点
 
-    def __init__(self):
-        self.type = None
-        self.begin_time = None
-        self.end_time = None
+    def __init__(self, type, begin_time, end_time):
+        self.type = type
+        self.begin_time = begin_time
+        self.end_time = end_time
