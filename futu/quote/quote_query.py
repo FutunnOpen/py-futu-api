@@ -2530,5 +2530,72 @@ class StockFilterQuery:
             ret_list.append(data)
         return RET_OK, "", (last_page, all_count, ret_list)
 
+class GetCodeChangeQuery:
+    """
+    Query GetCodeChange.
+    """
 
+    def __init__(self):
+        pass
 
+    @classmethod
+    def pack_req(cls, code_list,time_filter_list,type_list, conn_id):
+        stock_tuple_list = []
+        failure_tuple_list = []
+        for stock_str in code_list:
+            ret_code, content = split_stock_str(stock_str)
+            if ret_code != RET_OK:
+                error_str = content
+                failure_tuple_list.append((ret_code, error_str))
+                continue
+            market_code, stock_code = content
+            stock_tuple_list.append((market_code, stock_code))
+        if len(failure_tuple_list) > 0:
+            error_str = '\n'.join([x[1] for x in failure_tuple_list])
+            return RET_ERROR, error_str, None
+
+        # 开始组包
+        from futu.common.pb.Qot_GetCodeChange_pb2 import Request
+        req = Request()
+        req.c2s.placeHolder = 0
+        for market_code, stock_code in stock_tuple_list:
+            stock_inst = req.c2s.securityList.add()
+            stock_inst.market = market_code
+            stock_inst.code = stock_code
+
+        for type in type_list:
+            r, n = CodeChangeType.to_number(type)
+            req.c2s.typeList.append(n)
+
+        for time_filter in time_filter_list:
+            r, n = TimeFilterType.to_number(time_filter.type)
+            time_filter_inst = req.c2s.timeFilterList.add()
+            time_filter_inst.type = n
+            time_filter_inst.beginTime = time_filter.begin_time
+            time_filter_inst.endTime = time_filter.end_time
+
+        return pack_pb_req(req, ProtoId.Qot_GetCodeChange, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        ret_list = list()
+        #  股票代码更换信息，目前仅有港股数据 type = Qot_GetCodeChange.CodeChangeInfo
+        code_change_list = rsp_pb.s2c.codeChangeList
+        for item in code_change_list:
+          data = {}
+          #  CodeChangeType,代码变化或者新增临时代码的事件类型 type = int32
+          data["code_change_info_type"] = CodeChangeType.to_string2(item.type)
+          #  主代码，在创业板转主板中表示主板 type = code
+          data["stock_code"] = merge_qot_mkt_stock_str(item.security.market,item.security.code)
+          #  关联代码，在创业板转主板中表示创业板，在剩余事件中表示临时代码 type = code
+          data["related_security"] = merge_qot_mkt_stock_str(item.relatedSecurity.market,item.relatedSecurity.code)
+          #  公布时间 type = string
+          data["public_time"] = item.publicTime
+          #  生效时间 type = string
+          data["effective_time"] = item.effectiveTime
+          #  结束时间，在创业板转主板事件不存在该字段，在剩余事件表示临时代码交易结束时间 type = string
+          data["end_time"] = item.endTime
+          ret_list.append(data)
+        return RET_OK, "", ret_list

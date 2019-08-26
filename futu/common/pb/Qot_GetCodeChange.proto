@@ -1,0 +1,74 @@
+syntax = "proto2";
+package Qot_GetCodeChange;
+option java_package = "com.futu.openapi.pb";
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+enum CodeChangeType
+{
+	CodeChangeType_Unkown = 0; //未知
+	CodeChangeType_GemToMain = 1; //创业板转主板
+	CodeChangeType_Unpaid = 2; //买卖未缴款供股权
+	CodeChangeType_ChangeLot = 3; //更改买卖单位
+	CodeChangeType_Split = 4; //拆股
+	CodeChangeType_Joint = 5; //合股
+	CodeChangeType_JointSplit = 6; //股份先并后拆
+	CodeChangeType_SplitJoint = 7; //股份先拆后并
+	CodeChangeType_Other = 8; //其他
+}
+
+message CodeChangeInfo
+{
+	required int32 type = 1; //CodeChangeType,代码变化或者新增临时代码的事件类型
+	required Qot_Common.Security security = 2; //主代码，在创业板转主板中表示主板
+	required Qot_Common.Security relatedSecurity = 3; //关联代码，在创业板转主板中表示创业板，在剩余事件中表示临时代码
+	optional string publicTime = 4; //公布时间
+	optional double publicTimestamp = 5; //公布时间戳
+	optional string effectiveTime = 6; //生效时间
+	optional double effectiveTimestamp = 7; //生效时间戳
+	optional string endTime = 8; //结束时间，在创业板转主板事件不存在该字段，在剩余事件表示临时代码交易结束时间
+	optional double endTimestamp = 9; //结束时间戳，在创业板转主板事件不存在该字段，在剩余事件表示临时代码交易结束时间
+}
+
+enum TimeFilterType
+{
+	TimeFilterType_Unknow = 0;
+	TimeFilterType_Public = 1; //根据公布时间过滤
+	TimeFilterType_Effective = 2; //根据生效时间过滤
+	TimeFilterType_End = 3; //根据结束时间过滤
+}
+
+message TimeFilter
+{
+	required int32 type = 1; //TimeFilterType, 过滤类型
+	optional string beginTime = 2; //开始时间点
+	optional string endTime = 3; //结束时间点
+}
+
+message C2S
+{
+	optional int32 placeHolder = 1; //占位
+	repeated Qot_Common.Security securityList = 2; //根据股票筛选
+	repeated TimeFilter timeFilterList = 3; //根据时间筛选
+	repeated int32 typeList = 4; //CodeChangeType，根据类型筛选
+}
+
+message S2C
+{
+	repeated CodeChangeInfo codeChangeList = 1; //股票代码更换信息，目前仅有港股数据
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}
