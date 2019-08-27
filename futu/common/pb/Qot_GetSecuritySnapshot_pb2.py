@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetSecuritySnapshot.proto',
   package='Qot_GetSecuritySnapshot',
   syntax='proto2',
-  serialized_pb=_b('\n\x1dQot_GetSecuritySnapshot.proto\x12\x17Qot_GetSecuritySnapshot\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"1\n\x03\x43\x32S\x12*\n\x0csecurityList\x18\x01 \x03(\x0b\x32\x14.Qot_Common.Security\"\x9a\x02\n\x14\x45quitySnapshotExData\x12\x14\n\x0cissuedShares\x18\x01 \x02(\x03\x12\x17\n\x0fissuedMarketVal\x18\x02 \x02(\x01\x12\x10\n\x08netAsset\x18\x03 \x02(\x01\x12\x11\n\tnetProfit\x18\x04 \x02(\x01\x12\x18\n\x10\x65\x61rningsPershare\x18\x05 \x02(\x01\x12\x19\n\x11outstandingShares\x18\x06 \x02(\x03\x12\x1c\n\x14outstandingMarketVal\x18\x07 \x02(\x01\x12\x18\n\x10netAssetPershare\x18\x08 \x02(\x01\x12\x0e\n\x06\x65yRate\x18\t \x02(\x01\x12\x0e\n\x06peRate\x18\n \x02(\x01\x12\x0e\n\x06pbRate\x18\x0b \x02(\x01\x12\x11\n\tpeTTMRate\x18\x0c \x02(\x01\"\xf1\x02\n\x15WarrantSnapshotExData\x12\x16\n\x0e\x63onversionRate\x18\x01 \x02(\x01\x12\x13\n\x0bwarrantType\x18\x02 \x02(\x05\x12\x13\n\x0bstrikePrice\x18\x03 \x02(\x01\x12\x14\n\x0cmaturityTime\x18\x04 \x02(\t\x12\x14\n\x0c\x65ndTradeTime\x18\x05 \x02(\t\x12#\n\x05owner\x18\x06 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x15\n\rrecoveryPrice\x18\x07 \x02(\x01\x12\x14\n\x0cstreetVolumn\x18\x08 \x02(\x03\x12\x13\n\x0bissueVolumn\x18\t \x02(\x03\x12\x12\n\nstreetRate\x18\n \x02(\x01\x12\r\n\x05\x64\x65lta\x18\x0b \x02(\x01\x12\x19\n\x11impliedVolatility\x18\x0c \x02(\x01\x12\x0f\n\x07premium\x18\r \x02(\x01\x12\x19\n\x11maturityTimestamp\x18\x0e \x01(\x01\x12\x19\n\x11\x65ndTradeTimestamp\x18\x0f \x01(\x01\"\xab\x02\n\x14OptionSnapshotExData\x12\x0c\n\x04type\x18\x01 \x02(\x05\x12#\n\x05owner\x18\x02 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x12\n\nstrikeTime\x18\x03 \x02(\t\x12\x13\n\x0bstrikePrice\x18\x04 \x02(\x01\x12\x14\n\x0c\x63ontractSize\x18\x05 \x02(\x05\x12\x14\n\x0copenInterest\x18\x06 \x02(\x05\x12\x19\n\x11impliedVolatility\x18\x07 \x02(\x01\x12\x0f\n\x07premium\x18\x08 \x02(\x01\x12\r\n\x05\x64\x65lta\x18\t \x02(\x01\x12\r\n\x05gamma\x18\n \x02(\x01\x12\x0c\n\x04vega\x18\x0b \x02(\x01\x12\r\n\x05theta\x18\x0c \x02(\x01\x12\x0b\n\x03rho\x18\r \x02(\x01\x12\x17\n\x0fstrikeTimestamp\x18\x0e \x01(\x01\"\xf2\x04\n\x11SnapshotBasicData\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04type\x18\x02 \x02(\x05\x12\x11\n\tisSuspend\x18\x03 \x02(\x08\x12\x10\n\x08listTime\x18\x04 \x02(\t\x12\x0f\n\x07lotSize\x18\x05 \x02(\x05\x12\x13\n\x0bpriceSpread\x18\x06 \x02(\x01\x12\x12\n\nupdateTime\x18\x07 \x02(\t\x12\x11\n\thighPrice\x18\x08 \x02(\x01\x12\x11\n\topenPrice\x18\t \x02(\x01\x12\x10\n\x08lowPrice\x18\n \x02(\x01\x12\x16\n\x0elastClosePrice\x18\x0b \x02(\x01\x12\x10\n\x08\x63urPrice\x18\x0c \x02(\x01\x12\x0e\n\x06volume\x18\r \x02(\x03\x12\x10\n\x08turnover\x18\x0e \x02(\x01\x12\x14\n\x0cturnoverRate\x18\x0f \x02(\x01\x12\x15\n\rlistTimestamp\x18\x10 \x01(\x01\x12\x17\n\x0fupdateTimestamp\x18\x11 \x01(\x01\x12\x10\n\x08\x61skPrice\x18\x12 \x01(\x01\x12\x10\n\x08\x62idPrice\x18\x13 \x01(\x01\x12\x0e\n\x06\x61skVol\x18\x14 \x01(\x03\x12\x0e\n\x06\x62idVol\x18\x15 \x01(\x03\x12\x14\n\x0c\x65nableMargin\x18\x16 \x01(\x08\x12\x15\n\rmortgageRatio\x18\x17 \x01(\x01\x12\x1e\n\x16longMarginInitialRatio\x18\x18 \x01(\x01\x12\x17\n\x0f\x65nableShortSell\x18\x19 \x01(\x08\x12\x15\n\rshortSellRate\x18\x1a \x01(\x01\x12\x1c\n\x14shortAvailableVolume\x18\x1b \x01(\x03\x12\x1f\n\x17shortMarginInitialRatio\x18\x1c \x01(\x01\"\x96\x02\n\x08Snapshot\x12\x39\n\x05\x62\x61sic\x18\x01 \x02(\x0b\x32*.Qot_GetSecuritySnapshot.SnapshotBasicData\x12\x43\n\x0c\x65quityExData\x18\x02 \x01(\x0b\x32-.Qot_GetSecuritySnapshot.EquitySnapshotExData\x12\x45\n\rwarrantExData\x18\x03 \x01(\x0b\x32..Qot_GetSecuritySnapshot.WarrantSnapshotExData\x12\x43\n\x0coptionExData\x18\x04 \x01(\x0b\x32-.Qot_GetSecuritySnapshot.OptionSnapshotExData\">\n\x03S2C\x12\x37\n\x0csnapshotList\x18\x01 \x03(\x0b\x32!.Qot_GetSecuritySnapshot.Snapshot\"4\n\x07Request\x12)\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x1c.Qot_GetSecuritySnapshot.C2S\"m\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12)\n\x03s2c\x18\x04 \x01(\x0b\x32\x1c.Qot_GetSecuritySnapshot.S2C')
+  serialized_pb=_b('\n\x1dQot_GetSecuritySnapshot.proto\x12\x17Qot_GetSecuritySnapshot\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"1\n\x03\x43\x32S\x12*\n\x0csecurityList\x18\x01 \x03(\x0b\x32\x14.Qot_Common.Security\"\xf8\x02\n\x14\x45quitySnapshotExData\x12\x14\n\x0cissuedShares\x18\x01 \x02(\x03\x12\x17\n\x0fissuedMarketVal\x18\x02 \x02(\x01\x12\x10\n\x08netAsset\x18\x03 \x02(\x01\x12\x11\n\tnetProfit\x18\x04 \x02(\x01\x12\x18\n\x10\x65\x61rningsPershare\x18\x05 \x02(\x01\x12\x19\n\x11outstandingShares\x18\x06 \x02(\x03\x12\x1c\n\x14outstandingMarketVal\x18\x07 \x02(\x01\x12\x18\n\x10netAssetPershare\x18\x08 \x02(\x01\x12\x0e\n\x06\x65yRate\x18\t \x02(\x01\x12\x0e\n\x06peRate\x18\n \x02(\x01\x12\x0e\n\x06pbRate\x18\x0b \x02(\x01\x12\x11\n\tpeTTMRate\x18\x0c \x02(\x01\x12\x13\n\x0b\x64ividendTTM\x18\r \x01(\x01\x12\x18\n\x10\x64ividendRatioTTM\x18\x0e \x01(\x01\x12\x13\n\x0b\x64ividendLFY\x18\x0f \x01(\x01\x12\x18\n\x10\x64ividendLFYRatio\x18\x10 \x01(\x01\"\xed\x03\n\x15WarrantSnapshotExData\x12\x16\n\x0e\x63onversionRate\x18\x01 \x02(\x01\x12\x13\n\x0bwarrantType\x18\x02 \x02(\x05\x12\x13\n\x0bstrikePrice\x18\x03 \x02(\x01\x12\x14\n\x0cmaturityTime\x18\x04 \x02(\t\x12\x14\n\x0c\x65ndTradeTime\x18\x05 \x02(\t\x12#\n\x05owner\x18\x06 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x15\n\rrecoveryPrice\x18\x07 \x02(\x01\x12\x14\n\x0cstreetVolumn\x18\x08 \x02(\x03\x12\x13\n\x0bissueVolumn\x18\t \x02(\x03\x12\x12\n\nstreetRate\x18\n \x02(\x01\x12\r\n\x05\x64\x65lta\x18\x0b \x02(\x01\x12\x19\n\x11impliedVolatility\x18\x0c \x02(\x01\x12\x0f\n\x07premium\x18\r \x02(\x01\x12\x19\n\x11maturityTimestamp\x18\x0e \x01(\x01\x12\x19\n\x11\x65ndTradeTimestamp\x18\x0f \x01(\x01\x12\x10\n\x08leverage\x18\x10 \x01(\x01\x12\x0c\n\x04ipop\x18\x11 \x01(\x01\x12\x16\n\x0e\x62reakEvenPoint\x18\x12 \x01(\x01\x12\x17\n\x0f\x63onversionPrice\x18\x13 \x01(\x01\x12\x1a\n\x12priceRecoveryRatio\x18\x14 \x01(\x01\x12\r\n\x05score\x18\x15 \x01(\x01\"\xab\x02\n\x14OptionSnapshotExData\x12\x0c\n\x04type\x18\x01 \x02(\x05\x12#\n\x05owner\x18\x02 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x12\n\nstrikeTime\x18\x03 \x02(\t\x12\x13\n\x0bstrikePrice\x18\x04 \x02(\x01\x12\x14\n\x0c\x63ontractSize\x18\x05 \x02(\x05\x12\x14\n\x0copenInterest\x18\x06 \x02(\x05\x12\x19\n\x11impliedVolatility\x18\x07 \x02(\x01\x12\x0f\n\x07premium\x18\x08 \x02(\x01\x12\r\n\x05\x64\x65lta\x18\t \x02(\x01\x12\r\n\x05gamma\x18\n \x02(\x01\x12\x0c\n\x04vega\x18\x0b \x02(\x01\x12\r\n\x05theta\x18\x0c \x02(\x01\x12\x0b\n\x03rho\x18\r \x02(\x01\x12\x17\n\x0fstrikeTimestamp\x18\x0e \x01(\x01\"P\n\x13IndexSnapshotExData\x12\x12\n\nraiseCount\x18\x01 \x02(\x05\x12\x11\n\tfallCount\x18\x02 \x02(\x05\x12\x12\n\nequalCount\x18\x03 \x02(\x05\"P\n\x13PlateSnapshotExData\x12\x12\n\nraiseCount\x18\x01 \x02(\x05\x12\x11\n\tfallCount\x18\x02 \x02(\x05\x12\x12\n\nequalCount\x18\x03 \x02(\x05\"\xb3\x06\n\x11SnapshotBasicData\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04type\x18\x02 \x02(\x05\x12\x11\n\tisSuspend\x18\x03 \x02(\x08\x12\x10\n\x08listTime\x18\x04 \x02(\t\x12\x0f\n\x07lotSize\x18\x05 \x02(\x05\x12\x13\n\x0bpriceSpread\x18\x06 \x02(\x01\x12\x12\n\nupdateTime\x18\x07 \x02(\t\x12\x11\n\thighPrice\x18\x08 \x02(\x01\x12\x11\n\topenPrice\x18\t \x02(\x01\x12\x10\n\x08lowPrice\x18\n \x02(\x01\x12\x16\n\x0elastClosePrice\x18\x0b \x02(\x01\x12\x10\n\x08\x63urPrice\x18\x0c \x02(\x01\x12\x0e\n\x06volume\x18\r \x02(\x03\x12\x10\n\x08turnover\x18\x0e \x02(\x01\x12\x14\n\x0cturnoverRate\x18\x0f \x02(\x01\x12\x15\n\rlistTimestamp\x18\x10 \x01(\x01\x12\x17\n\x0fupdateTimestamp\x18\x11 \x01(\x01\x12\x10\n\x08\x61skPrice\x18\x12 \x01(\x01\x12\x10\n\x08\x62idPrice\x18\x13 \x01(\x01\x12\x0e\n\x06\x61skVol\x18\x14 \x01(\x03\x12\x0e\n\x06\x62idVol\x18\x15 \x01(\x03\x12\x14\n\x0c\x65nableMargin\x18\x16 \x01(\x08\x12\x15\n\rmortgageRatio\x18\x17 \x01(\x01\x12\x1e\n\x16longMarginInitialRatio\x18\x18 \x01(\x01\x12\x17\n\x0f\x65nableShortSell\x18\x19 \x01(\x08\x12\x15\n\rshortSellRate\x18\x1a \x01(\x01\x12\x1c\n\x14shortAvailableVolume\x18\x1b \x01(\x03\x12\x1f\n\x17shortMarginInitialRatio\x18\x1c \x01(\x01\x12\x11\n\tamplitude\x18\x1d \x01(\x01\x12\x10\n\x08\x61vgPrice\x18\x1e \x01(\x01\x12\x13\n\x0b\x62idAskRatio\x18\x1f \x01(\x01\x12\x13\n\x0bvolumeRatio\x18  \x01(\x01\x12\x1b\n\x13highest52WeeksPrice\x18! \x01(\x01\x12\x1a\n\x12lowest52WeeksPrice\x18\" \x01(\x01\x12\x1b\n\x13highestHistoryPrice\x18# \x01(\x01\x12\x1a\n\x12lowestHistoryPrice\x18$ \x01(\x01\"\x9c\x03\n\x08Snapshot\x12\x39\n\x05\x62\x61sic\x18\x01 \x02(\x0b\x32*.Qot_GetSecuritySnapshot.SnapshotBasicData\x12\x43\n\x0c\x65quityExData\x18\x02 \x01(\x0b\x32-.Qot_GetSecuritySnapshot.EquitySnapshotExData\x12\x45\n\rwarrantExData\x18\x03 \x01(\x0b\x32..Qot_GetSecuritySnapshot.WarrantSnapshotExData\x12\x43\n\x0coptionExData\x18\x04 \x01(\x0b\x32-.Qot_GetSecuritySnapshot.OptionSnapshotExData\x12\x41\n\x0bindexExData\x18\x05 \x01(\x0b\x32,.Qot_GetSecuritySnapshot.IndexSnapshotExData\x12\x41\n\x0bplateExData\x18\x06 \x01(\x0b\x32,.Qot_GetSecuritySnapshot.PlateSnapshotExData\">\n\x03S2C\x12\x37\n\x0csnapshotList\x18\x01 \x03(\x0b\x32!.Qot_GetSecuritySnapshot.Snapshot\"4\n\x07Request\x12)\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x1c.Qot_GetSecuritySnapshot.C2S\"m\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12)\n\x03s2c\x18\x04 \x01(\x0b\x32\x1c.Qot_GetSecuritySnapshot.S2CB\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -150,6 +150,34 @@ _EQUITYSNAPSHOTEXDATA = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='dividendTTM', full_name='Qot_GetSecuritySnapshot.EquitySnapshotExData.dividendTTM', index=12,
+      number=13, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='dividendRatioTTM', full_name='Qot_GetSecuritySnapshot.EquitySnapshotExData.dividendRatioTTM', index=13,
+      number=14, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='dividendLFY', full_name='Qot_GetSecuritySnapshot.EquitySnapshotExData.dividendLFY', index=14,
+      number=15, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='dividendLFYRatio', full_name='Qot_GetSecuritySnapshot.EquitySnapshotExData.dividendLFYRatio', index=15,
+      number=16, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -163,7 +191,7 @@ _EQUITYSNAPSHOTEXDATA = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=142,
-  serialized_end=424,
+  serialized_end=518,
 )
 
 
@@ -279,6 +307,48 @@ _WARRANTSNAPSHOTEXDATA = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='leverage', full_name='Qot_GetSecuritySnapshot.WarrantSnapshotExData.leverage', index=15,
+      number=16, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='ipop', full_name='Qot_GetSecuritySnapshot.WarrantSnapshotExData.ipop', index=16,
+      number=17, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='breakEvenPoint', full_name='Qot_GetSecuritySnapshot.WarrantSnapshotExData.breakEvenPoint', index=17,
+      number=18, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='conversionPrice', full_name='Qot_GetSecuritySnapshot.WarrantSnapshotExData.conversionPrice', index=18,
+      number=19, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='priceRecoveryRatio', full_name='Qot_GetSecuritySnapshot.WarrantSnapshotExData.priceRecoveryRatio', index=19,
+      number=20, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='score', full_name='Qot_GetSecuritySnapshot.WarrantSnapshotExData.score', index=20,
+      number=21, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -291,8 +361,8 @@ _WARRANTSNAPSHOTEXDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=427,
-  serialized_end=796,
+  serialized_start=521,
+  serialized_end=1014,
 )
 
 
@@ -413,8 +483,98 @@ _OPTIONSNAPSHOTEXDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=799,
-  serialized_end=1098,
+  serialized_start=1017,
+  serialized_end=1316,
+)
+
+
+_INDEXSNAPSHOTEXDATA = _descriptor.Descriptor(
+  name='IndexSnapshotExData',
+  full_name='Qot_GetSecuritySnapshot.IndexSnapshotExData',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='raiseCount', full_name='Qot_GetSecuritySnapshot.IndexSnapshotExData.raiseCount', index=0,
+      number=1, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='fallCount', full_name='Qot_GetSecuritySnapshot.IndexSnapshotExData.fallCount', index=1,
+      number=2, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='equalCount', full_name='Qot_GetSecuritySnapshot.IndexSnapshotExData.equalCount', index=2,
+      number=3, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1318,
+  serialized_end=1398,
+)
+
+
+_PLATESNAPSHOTEXDATA = _descriptor.Descriptor(
+  name='PlateSnapshotExData',
+  full_name='Qot_GetSecuritySnapshot.PlateSnapshotExData',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='raiseCount', full_name='Qot_GetSecuritySnapshot.PlateSnapshotExData.raiseCount', index=0,
+      number=1, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='fallCount', full_name='Qot_GetSecuritySnapshot.PlateSnapshotExData.fallCount', index=1,
+      number=2, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='equalCount', full_name='Qot_GetSecuritySnapshot.PlateSnapshotExData.equalCount', index=2,
+      number=3, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1400,
+  serialized_end=1480,
 )
 
 
@@ -621,6 +781,62 @@ _SNAPSHOTBASICDATA = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='amplitude', full_name='Qot_GetSecuritySnapshot.SnapshotBasicData.amplitude', index=28,
+      number=29, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='avgPrice', full_name='Qot_GetSecuritySnapshot.SnapshotBasicData.avgPrice', index=29,
+      number=30, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='bidAskRatio', full_name='Qot_GetSecuritySnapshot.SnapshotBasicData.bidAskRatio', index=30,
+      number=31, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='volumeRatio', full_name='Qot_GetSecuritySnapshot.SnapshotBasicData.volumeRatio', index=31,
+      number=32, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='highest52WeeksPrice', full_name='Qot_GetSecuritySnapshot.SnapshotBasicData.highest52WeeksPrice', index=32,
+      number=33, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='lowest52WeeksPrice', full_name='Qot_GetSecuritySnapshot.SnapshotBasicData.lowest52WeeksPrice', index=33,
+      number=34, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='highestHistoryPrice', full_name='Qot_GetSecuritySnapshot.SnapshotBasicData.highestHistoryPrice', index=34,
+      number=35, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='lowestHistoryPrice', full_name='Qot_GetSecuritySnapshot.SnapshotBasicData.lowestHistoryPrice', index=35,
+      number=36, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -633,8 +849,8 @@ _SNAPSHOTBASICDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1101,
-  serialized_end=1727,
+  serialized_start=1483,
+  serialized_end=2302,
 )
 
 
@@ -673,6 +889,20 @@ _SNAPSHOT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='indexExData', full_name='Qot_GetSecuritySnapshot.Snapshot.indexExData', index=4,
+      number=5, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='plateExData', full_name='Qot_GetSecuritySnapshot.Snapshot.plateExData', index=5,
+      number=6, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -685,8 +915,8 @@ _SNAPSHOT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1730,
-  serialized_end=2008,
+  serialized_start=2305,
+  serialized_end=2717,
 )
 
 
@@ -716,8 +946,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2010,
-  serialized_end=2072,
+  serialized_start=2719,
+  serialized_end=2781,
 )
 
 
@@ -747,8 +977,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2074,
-  serialized_end=2126,
+  serialized_start=2783,
+  serialized_end=2835,
 )
 
 
@@ -799,8 +1029,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2128,
-  serialized_end=2237,
+  serialized_start=2837,
+  serialized_end=2946,
 )
 
 _C2S.fields_by_name['securityList'].message_type = Qot__Common__pb2._SECURITY
@@ -811,6 +1041,8 @@ _SNAPSHOT.fields_by_name['basic'].message_type = _SNAPSHOTBASICDATA
 _SNAPSHOT.fields_by_name['equityExData'].message_type = _EQUITYSNAPSHOTEXDATA
 _SNAPSHOT.fields_by_name['warrantExData'].message_type = _WARRANTSNAPSHOTEXDATA
 _SNAPSHOT.fields_by_name['optionExData'].message_type = _OPTIONSNAPSHOTEXDATA
+_SNAPSHOT.fields_by_name['indexExData'].message_type = _INDEXSNAPSHOTEXDATA
+_SNAPSHOT.fields_by_name['plateExData'].message_type = _PLATESNAPSHOTEXDATA
 _S2C.fields_by_name['snapshotList'].message_type = _SNAPSHOT
 _REQUEST.fields_by_name['c2s'].message_type = _C2S
 _RESPONSE.fields_by_name['s2c'].message_type = _S2C
@@ -818,6 +1050,8 @@ DESCRIPTOR.message_types_by_name['C2S'] = _C2S
 DESCRIPTOR.message_types_by_name['EquitySnapshotExData'] = _EQUITYSNAPSHOTEXDATA
 DESCRIPTOR.message_types_by_name['WarrantSnapshotExData'] = _WARRANTSNAPSHOTEXDATA
 DESCRIPTOR.message_types_by_name['OptionSnapshotExData'] = _OPTIONSNAPSHOTEXDATA
+DESCRIPTOR.message_types_by_name['IndexSnapshotExData'] = _INDEXSNAPSHOTEXDATA
+DESCRIPTOR.message_types_by_name['PlateSnapshotExData'] = _PLATESNAPSHOTEXDATA
 DESCRIPTOR.message_types_by_name['SnapshotBasicData'] = _SNAPSHOTBASICDATA
 DESCRIPTOR.message_types_by_name['Snapshot'] = _SNAPSHOT
 DESCRIPTOR.message_types_by_name['S2C'] = _S2C
@@ -852,6 +1086,20 @@ OptionSnapshotExData = _reflection.GeneratedProtocolMessageType('OptionSnapshotE
   # @@protoc_insertion_point(class_scope:Qot_GetSecuritySnapshot.OptionSnapshotExData)
   ))
 _sym_db.RegisterMessage(OptionSnapshotExData)
+
+IndexSnapshotExData = _reflection.GeneratedProtocolMessageType('IndexSnapshotExData', (_message.Message,), dict(
+  DESCRIPTOR = _INDEXSNAPSHOTEXDATA,
+  __module__ = 'Qot_GetSecuritySnapshot_pb2'
+  # @@protoc_insertion_point(class_scope:Qot_GetSecuritySnapshot.IndexSnapshotExData)
+  ))
+_sym_db.RegisterMessage(IndexSnapshotExData)
+
+PlateSnapshotExData = _reflection.GeneratedProtocolMessageType('PlateSnapshotExData', (_message.Message,), dict(
+  DESCRIPTOR = _PLATESNAPSHOTEXDATA,
+  __module__ = 'Qot_GetSecuritySnapshot_pb2'
+  # @@protoc_insertion_point(class_scope:Qot_GetSecuritySnapshot.PlateSnapshotExData)
+  ))
+_sym_db.RegisterMessage(PlateSnapshotExData)
 
 SnapshotBasicData = _reflection.GeneratedProtocolMessageType('SnapshotBasicData', (_message.Message,), dict(
   DESCRIPTOR = _SNAPSHOTBASICDATA,
@@ -889,4 +1137,6 @@ Response = _reflection.GeneratedProtocolMessageType('Response', (_message.Messag
 _sym_db.RegisterMessage(Response)
 
 
+DESCRIPTOR.has_options = True
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
 # @@protoc_insertion_point(module_scope)

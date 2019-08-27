@@ -1,5 +1,6 @@
-﻿syntax = "proto2";
+syntax = "proto2";
 package Qot_Common;
+option java_package = "com.futu.openapi.pb";
 
 import "Common.proto";
 
@@ -180,7 +181,7 @@ enum TickerType
 	TickerType_T = 21; //T类交易(盘前和盘后交易)
 	TickerType_ExtendedTradingHours = 22; //延长交易时段
 	TickerType_Contingent = 23; //合单交易
-	TickerType_AveragePrice = 24; //平均价成交
+	TickerType_AvgPrice = 24; //平均价成交
 	TickerType_OTCSold = 25; //场外售出
 	TickerType_OddLotCrossMarket = 26; //碎股跨市场交易
 	TickerType_DerivativelyPriced = 27; //衍生工具定价
@@ -228,6 +229,9 @@ enum SortField
     SortField_AskVol = 9; //卖量
     SortField_Volume = 10; //成交量
     SortField_Turnover = 11; //成交额
+	SortField_Amplitude = 30; //振幅%
+
+	//以下排序字段只支持用于Qot_GetWarrant协议
 	SortField_Score = 12; //综合评分
     SortField_Premium = 13; //溢价%
 	SortField_EffectiveLeverage = 14; //有效杠杆
@@ -246,11 +250,22 @@ enum SortField
     SortField_Change = 27; //换股比率
     SortField_StreetRate = 28; //街货比%
 	SortField_StreetVol = 29; //街货量
-    SortField_Amplitude = 30; //振幅%
-	SortField_WarrantName = 31; // 名称
+	SortField_WarrantName = 31; // 窝轮名称
     SortField_Issuer = 32; //发行人
 	SortField_LotSize = 33; // 每手
     SortField_IssueSize = 34; //发行量
+
+	//以下排序字段只支持用于Qot_GetPlateSecurity协议，并仅支持美股
+	SortField_PreCurPrice = 35; //盘前最新价
+	SortField_AfterCurPrice = 36; //盘后最新价
+	SortField_PrePriceChangeVal = 37; //盘前涨跌额
+	SortField_AfterPriceChangeVal = 38; //盘后涨跌额
+    SortField_PreChangeRate = 39; //盘前涨跌幅%
+	SortField_AfterChangeRate = 40; //盘后涨跌幅%
+	SortField_PreAmplitude = 41; //盘前振幅%
+	SortField_AfterAmplitude = 42; //盘后振幅%
+	SortField_PreTurnover = 43; //盘前成交额
+	SortField_AfterTurnover = 44; //盘后成交额
 }
 
 //涡轮发行人
@@ -323,6 +338,15 @@ enum CompanyAct
 	CompanyAct_SPDividend = 128; //特别股息	
 }
 
+//行情权限
+enum QotRight
+{
+	QotRight_Unknow = 0; //未知
+	QotRight_Bmp = 1; //Bmp，无法订阅
+	QotRight_Level1 = 2; //Level1
+	QotRight_Level2 = 3; //Level2
+}
+
  //两个字段确定一支股票
 message Security
 {
@@ -341,9 +365,9 @@ message KLine
 	optional double lastClosePrice = 7; //昨收价
 	optional int64 volume = 8; //成交量
 	optional double turnover = 9; //成交额
-	optional double turnoverRate = 10; //换手率
+	optional double turnoverRate = 10; //换手率（该字段为百分比字段，展示为小数表示）
 	optional double pe = 11; //市盈率
-	optional double changeRate = 12; //涨跌幅
+	optional double changeRate = 12; //涨跌幅（该字段为百分比字段，默认不展示%）
 	optional double timestamp = 13; //时间戳
 }
 
@@ -352,8 +376,8 @@ message OptionBasicQotExData
 	required double strikePrice = 1; //行权价
 	required int32 contractSize = 2; //每份合约数
 	required int32 openInterest = 3; //未平仓合约数
-	required double impliedVolatility = 4; //隐含波动率
-	required double premium = 5; //溢价
+	required double impliedVolatility = 4; //隐含波动率（该字段为百分比字段，默认不展示%）
+	required double premium = 5; //溢价（该字段为百分比字段，默认不展示%）
 	required double delta = 6; //希腊值 Delta
     required double gamma = 7; //希腊值 Gamma
 	required double vega = 8; //希腊值 Vega
@@ -375,8 +399,8 @@ message BasicQot
 	required double lastClosePrice = 10; //昨收价
 	required int64 volume = 11; //成交量
 	required double turnover = 12; //成交额
-	required double turnoverRate = 13; //换手率
-	required double amplitude = 14; //振幅
+	required double turnoverRate = 13; //换手率（该字段为百分比字段，默认不展示%）
+	required double amplitude = 14; //振幅（该字段为百分比字段，默认不展示%）
 	optional int32 darkStatus = 15; //DarkStatus, 暗盘交易状态
 	optional double listTimestamp = 17; //上市日期时间戳
 	optional double updateTimestamp = 18; //更新时间戳
@@ -473,9 +497,9 @@ message ShareHoldingChange
 {
     required string holderName = 1; //持有者名称（机构名称 或 基金名称 或 高管姓名）
     required double holdingQty = 2; //当前持股数量
-    required double holdingRatio = 3; //当前持股百分比
+    required double holdingRatio = 3; //当前持股百分比（该字段为百分比字段，默认不展示%）
     required double changeQty = 4; //较上一次变动数量
-	required double changeRatio = 5; //较上一次变动百分比（是相对于自身的比例，而不是总的。如总股本1万股，持有100股，持股百分比是1%，卖掉50股，变动比例是50%，而不是0.5%）
+	required double changeRatio = 5; //较上一次变动百分比（该字段为百分比字段，默认不展示%。是相对于自身的比例，而不是总的。如总股本1万股，持有100股，持股百分比是1%，卖掉50股，变动比例是50%，而不是0.5%）
     required string time = 6; //发布时间(YYYY-MM-DD HH:MM:SS字符串)
 	optional double timestamp = 7; //时间戳
 }
@@ -508,21 +532,21 @@ message Rehab
 	required double fwdFactorB = 4; //前复权因子B
 	required double bwdFactorA = 5; //后复权因子A
 	required double bwdFactorB = 6; //后复权因子B
-	optional int32 splitBase = 7; //拆股(eg.1拆5，Base为1，Ert为5)
+	optional int32 splitBase = 7; //拆股(例如，1拆5，Base为1，Ert为5)
 	optional int32 splitErt = 8;	
-	optional int32 joinBase = 9; //合股(eg.50合1，Base为50，Ert为1)
+	optional int32 joinBase = 9; //合股(例如，50合1，Base为50，Ert为1)
 	optional int32 joinErt = 10;	
-	optional int32 bonusBase = 11; //送股(eg.10送3, Base为10,Ert为3)
+	optional int32 bonusBase = 11; //送股(例如，10送3, Base为10,Ert为3)
 	optional int32 bonusErt = 12;	
-	optional int32 transferBase = 13; //转赠股(eg.10转3, Base为10,Ert为3)
+	optional int32 transferBase = 13; //转赠股(例如，10转3, Base为10,Ert为3)
 	optional int32 transferErt = 14;	
-	optional int32 allotBase = 15; //配股(eg.10送2, 配股价为6.3元, Base为10, Ert为2, Price为6.3)
+	optional int32 allotBase = 15; //配股(例如，10送2, 配股价为6.3元, Base为10, Ert为2, Price为6.3)
 	optional int32 allotErt = 16;	
 	optional double allotPrice = 17;	
-	optional int32 addBase = 18; //增发股(eg.10送2, 增发股价为6.3元, Base为10, Ert为2, Price为6.3)
+	optional int32 addBase = 18; //增发股(例如，10送2, 增发股价为6.3元, Base为10, Ert为2, Price为6.3)
 	optional int32 addErt = 19;	
 	optional double addPrice = 20;	
-	optional double dividend = 21; //现金分红(eg.每10股派现0.5元,则该字段值为0.05)
-	optional double spDividend = 22; //特别股息(eg.每10股派特别股息0.5元,则该字段值为0.05)
+	optional double dividend = 21; //现金分红(例如，每10股派现0.5元,则该字段值为0.05)
+	optional double spDividend = 22; //特别股息(例如，每10股派特别股息0.5元,则该字段值为0.05)
 	optional double timestamp = 23; //时间戳
 }

@@ -107,6 +107,13 @@ def normalize_start_end_date(start, end, delta_days=0, default_time_start="00:00
     return RET_OK, '', start, end
 
 
+def is_str(s):
+    if IS_PY2:
+        return isinstance(s, str) or isinstance(s, unicode)
+    else:
+        return isinstance(s, str)
+
+
 def extract_pls_rsp(rsp_str):
     """Extract the response of PLS"""
     try:
@@ -273,6 +280,10 @@ class ProtobufMap(dict):
         """ GetUserInfo = 1006  # 获取用户信息 """
         from futu.common.pb.Verification_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Verification] = Response()
+
+        """ GetUserInfo = 1007  # 获取延迟统计 """
+        from futu.common.pb.GetDelayStatistics_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.GetDelayStatistics] = Response()
 
         """ Trd_GetAccList = 2001  # 获取业务账户列表 """
         from futu.common.pb.Trd_GetAccList_pb2 import Response
@@ -464,7 +475,17 @@ class ProtobufMap(dict):
         from futu.common.pb.Qot_RequestRehab_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_RequestRehab] = Response()
 
+        from futu.common.pb.Qot_GetCapitalDistribution_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetCapitalDistribution] = Response()
 
+        from futu.common.pb.Qot_GetCapitalFlow_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetCapitalFlow] = Response()
+
+        from futu.common.pb.Qot_GetUserSecurity_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetUserSecurity] = Response()
+
+        from futu.common.pb.Qot_ModifyUserSecurity_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_ModifyUserSecurity] = Response()
 
     def __getitem__(self, key):
         return ProtobufMap.created_protobuf_map[key] if key in ProtobufMap.created_protobuf_map else None

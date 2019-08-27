@@ -1,5 +1,6 @@
 syntax = "proto2";
 package Verification;
+option java_package = "com.futu.openapi.pb";
 
 import "Common.proto";
 

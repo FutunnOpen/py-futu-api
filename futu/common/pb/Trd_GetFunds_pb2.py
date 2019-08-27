@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_GetFunds.proto',
   package='Trd_GetFunds',
   syntax='proto2',
-  serialized_pb=_b('\n\x12Trd_GetFunds.proto\x12\x0cTrd_GetFunds\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\",\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\"N\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12 \n\x05\x66unds\x18\x02 \x01(\x0b\x32\x11.Trd_Common.Funds\")\n\x07Request\x12\x1e\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x11.Trd_GetFunds.C2S\"b\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1e\n\x03s2c\x18\x04 \x01(\x0b\x32\x11.Trd_GetFunds.S2C')
+  serialized_pb=_b('\n\x12Trd_GetFunds.proto\x12\x0cTrd_GetFunds\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"B\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x14\n\x0crefreshCache\x18\x02 \x01(\x08\"N\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12 \n\x05\x66unds\x18\x02 \x01(\x0b\x32\x11.Trd_Common.Funds\")\n\x07Request\x12\x1e\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x11.Trd_GetFunds.C2S\"b\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1e\n\x03s2c\x18\x04 \x01(\x0b\x32\x11.Trd_GetFunds.S2CB\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Trd__Common__pb2.DESCRIPTOR,])
 
@@ -42,6 +42,13 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='refreshCache', full_name='Trd_GetFunds.C2S.refreshCache', index=1,
+      number=2, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -55,7 +62,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=68,
-  serialized_end=112,
+  serialized_end=134,
 )
 
 
@@ -92,8 +99,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=114,
-  serialized_end=192,
+  serialized_start=136,
+  serialized_end=214,
 )
 
 
@@ -123,8 +130,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=194,
-  serialized_end=235,
+  serialized_start=216,
+  serialized_end=257,
 )
 
 
@@ -175,8 +182,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=237,
-  serialized_end=335,
+  serialized_start=259,
+  serialized_end=357,
 )
 
 _C2S.fields_by_name['header'].message_type = Trd__Common__pb2._TRDHEADER
@@ -219,4 +226,6 @@ Response = _reflection.GeneratedProtocolMessageType('Response', (_message.Messag
 _sym_db.RegisterMessage(Response)
 
 
+DESCRIPTOR.has_options = True
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
 # @@protoc_insertion_point(module_scope)

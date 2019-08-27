@@ -1,0 +1,39 @@
+syntax = "proto2";
+package Qot_ModifyUserSecurity;
+option java_package = "com.futu.openapi.pb";
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+enum ModifyUserSecurityOp
+{
+	ModifyUserSecurityOp_Unknown = 0;
+	ModifyUserSecurityOp_Add = 1; //新增
+	ModifyUserSecurityOp_Del = 2; //删除
+}
+
+message C2S
+{
+	required string groupName = 1; //分组名,有同名的返回排序的首个
+	required int32 op = 2; //ModifyUserSecurityOp,操作类型
+	repeated Qot_Common.Security securityList = 3; //新增或删除该分组下的股票
+}
+
+message S2C
+{
+	
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

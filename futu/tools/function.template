@@ -1,0 +1,189 @@
+##########class_function##########
+    def {function_name}(self, {parameter}):
+        """
+{notes}
+        """
+{warning_filter}
+        query_processor = self._get_sync_query_processor(
+            {class_name}Query.pack_req,
+            {class_name}Query.unpack,
+        )
+
+        kargs = {{
+{kargs}
+            "conn_id": self.get_sync_conn_id()
+        }}
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+{get_function_return}
+        
+    """
+    ===============================================================================
+    ===============================================================================
+    """    
+        
+    class {class_name}Query:
+    """
+    Query {class_name}.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, {parameter}, conn_id):
+{pack_req_filter}
+        # 开始组包
+        from futu.common.pb.{pb_file_name}_pb2 import Request
+        req = Request()
+{pack_req_add}
+        return pack_pb_req(req, ProtoId.{pb_file_name}, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+{get_unpack_code}        
+        {get_unpack_return}
+    
+##########class_function##########
+
+##########list_return##########
+        if isinstance(ret,list):
+            col_list = [
+{var_name}
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
+##########list_return##########
+
+
+##########dict_return##########
+        if isinstance(ret,dict):
+            col_list = [
+{var_name}
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list, index=[0])
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
+##########dict_return##########
+
+
+##########list_list_return##########
+        if isinstance(ret,dict):
+            ret_dic = dict()
+{code}
+            return RET_OK, ret_dic
+        else:
+            return RET_ERROR, "empty data"
+##########list_list_return##########
+
+##########list_list_item_return##########
+            #{description}
+            col_{name}_list = [
+{var_name}
+            ]
+            ret_dic["{trim_name}"] = pd.DataFrame(ret["{name}"], columns=col_{name}_list)
+##########list_list_item_return##########
+
+
+
+##########class_unpack_var_add##########
+@@@@@@@@@@专用于返回结果转换为平面结构@@@@@@@@@@
+        ret = dict()
+{unpack_code}
+##########class_unpack_var_add##########
+
+##########class_more_list_add##########
+@@@@@@@@@@专用于多个列表的情况@@@@@@@@@@
+# {description}  列表类型
+{list_name} = list()
+ret_dic["{var_name}"] = {list_name}
+##########class_more_list_add##########
+
+##########code_warning_filter##########
+@@@@@@@@@@股票名称检查函数@@@@@@@@@@
+if {trim_name} is None or is_str({trim_name}) is False:
+    error_str = ERROR_STR_PREFIX + 'the type of {trim_name} param is wrong'
+    return RET_ERROR, error_str    
+##########code_warning_filter##########    
+
+##########code_list_warning_filter##########
+if is_str(code_list):
+    code_list = code_list.split(',')
+elif isinstance(code_list, list):
+    pass
+else:
+    return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
+code_list = unique_and_normalize_list(code_list)
+for code in code_list:
+    if code is None or is_str(code) is False:
+        error_str = ERROR_STR_PREFIX + "the type of param in code_list is wrong"
+        return RET_ERROR, error_str
+##########code_list_warning_filter##########
+
+
+##########pack_code_list_filter##########
+stock_tuple_list = []
+failure_tuple_list = []
+for stock_str in code_list:
+    ret_code, content = split_stock_str(stock_str)
+    if ret_code != RET_OK:
+        error_str = content
+        failure_tuple_list.append((ret_code, error_str))
+        continue
+    market_code, stock_code = content
+    stock_tuple_list.append((market_code, stock_code))
+if len(failure_tuple_list) > 0:
+    error_str = '\n'.join([x[1] for x in failure_tuple_list])
+    return RET_ERROR, error_str, None
+##########pack_code_list_filter##########
+
+##########pack_code_list_add##########
+for market_code, stock_code in stock_tuple_list:
+    stock_inst = req.c2s.{name}.add()
+    stock_inst.market = market_code
+    stock_inst.code = stock_code
+##########pack_code_list_add##########
+
+
+##########pack_code_filter##########
+ret, content = split_stock_str(code)
+if ret == RET_ERROR:
+    error_str = content
+    return RET_ERROR, error_str, None
+market_code, stock_code = content
+##########pack_code_filter##########
+
+
+##########class_unpack_code##########
+@@@@@@@@@@股票id合并专用@@@@@@@@@@
+{trim_name} = merge_qot_mkt_stock_str({parents_name}.{name}.market,{parents_name}.{name}.code)
+##########class_unpack_code##########
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

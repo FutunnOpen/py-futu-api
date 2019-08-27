@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Notify.proto',
   package='Notify',
   syntax='proto2',
-  serialized_pb=_b('\n\x0cNotify.proto\x12\x06Notify\x1a\x0c\x43ommon.proto\"+\n\x08GtwEvent\x12\x11\n\teventType\x18\x01 \x02(\x05\x12\x0c\n\x04\x64\x65sc\x18\x02 \x02(\t\"4\n\x03S2C\x12\x0c\n\x04type\x18\x01 \x02(\x05\x12\x1f\n\x05\x65vent\x18\x02 \x01(\x0b\x32\x10.Notify.GtwEvent\"\\\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x18\n\x03s2c\x18\x04 \x01(\x0b\x32\x0b.Notify.S2C*:\n\nNotifyType\x12\x13\n\x0fNotifyType_None\x10\x00\x12\x17\n\x13NotifyType_GtwEvent\x10\x01*\x9b\x04\n\x0cGtwEventType\x12\x15\n\x11GtwEventType_None\x10\x00\x12#\n\x1fGtwEventType_LocalCfgLoadFailed\x10\x01\x12 \n\x1cGtwEventType_APISvrRunFailed\x10\x02\x12\x1c\n\x18GtwEventType_ForceUpdate\x10\x03\x12\x1c\n\x18GtwEventType_LoginFailed\x10\x04\x12\"\n\x1eGtwEventType_UnAgreeDisclaimer\x10\x05\x12\x1e\n\x1aGtwEventType_NetCfgMissing\x10\x06\x12\x1a\n\x16GtwEventType_KickedOut\x10\x07\x12 \n\x1cGtwEventType_LoginPwdChanged\x10\x08\x12\x19\n\x15GtwEventType_BanLogin\x10\t\x12\"\n\x1eGtwEventType_NeedPicVerifyCode\x10\n\x12$\n GtwEventType_NeedPhoneVerifyCode\x10\x0b\x12 \n\x1cGtwEventType_AppDataNotExist\x10\x0c\x12#\n\x1fGtwEventType_NessaryDataMissing\x10\r\x12 \n\x1cGtwEventType_TradePwdChanged\x10\x0e\x12!\n\x1dGtwEventType_EnableDeviceLock\x10\x0f')
+  serialized_pb=_b('\n\x0cNotify.proto\x12\x06Notify\x1a\x0c\x43ommon.proto\"+\n\x08GtwEvent\x12\x11\n\teventType\x18\x01 \x02(\x05\x12\x0c\n\x04\x64\x65sc\x18\x02 \x02(\t\"=\n\rProgramStatus\x12,\n\rprogramStatus\x18\x01 \x02(\x0b\x32\x15.Common.ProgramStatus\"7\n\rConnectStatus\x12\x12\n\nqotLogined\x18\x01 \x02(\x08\x12\x12\n\ntrdLogined\x18\x02 \x02(\x08\"F\n\x08QotRight\x12\x12\n\nhkQotRight\x18\x04 \x02(\x05\x12\x12\n\nusQotRight\x18\x05 \x02(\x05\x12\x12\n\ncnQotRight\x18\x06 \x02(\x05\"\x1c\n\x08\x41PILevel\x12\x10\n\x08\x61piLevel\x18\x03 \x02(\t\"\xd8\x01\n\x03S2C\x12\x0c\n\x04type\x18\x01 \x02(\x05\x12\x1f\n\x05\x65vent\x18\x02 \x01(\x0b\x32\x10.Notify.GtwEvent\x12,\n\rprogramStatus\x18\x03 \x01(\x0b\x32\x15.Notify.ProgramStatus\x12,\n\rconnectStatus\x18\x04 \x01(\x0b\x32\x15.Notify.ConnectStatus\x12\"\n\x08qotRight\x18\x05 \x01(\x0b\x32\x10.Notify.QotRight\x12\"\n\x08\x61piLevel\x18\x06 \x01(\x0b\x32\x10.Notify.APILevel\"\\\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x18\n\x03s2c\x18\x04 \x01(\x0b\x32\x0b.Notify.S2C*\xa5\x01\n\nNotifyType\x12\x13\n\x0fNotifyType_None\x10\x00\x12\x17\n\x13NotifyType_GtwEvent\x10\x01\x12\x1c\n\x18NotifyType_ProgramStatus\x10\x02\x12\x19\n\x15NotifyType_ConnStatus\x10\x03\x12\x17\n\x13NotifyType_QotRight\x10\x04\x12\x17\n\x13NotifyType_APILevel\x10\x05*\x9b\x04\n\x0cGtwEventType\x12\x15\n\x11GtwEventType_None\x10\x00\x12#\n\x1fGtwEventType_LocalCfgLoadFailed\x10\x01\x12 \n\x1cGtwEventType_APISvrRunFailed\x10\x02\x12\x1c\n\x18GtwEventType_ForceUpdate\x10\x03\x12\x1c\n\x18GtwEventType_LoginFailed\x10\x04\x12\"\n\x1eGtwEventType_UnAgreeDisclaimer\x10\x05\x12\x1e\n\x1aGtwEventType_NetCfgMissing\x10\x06\x12\x1a\n\x16GtwEventType_KickedOut\x10\x07\x12 \n\x1cGtwEventType_LoginPwdChanged\x10\x08\x12\x19\n\x15GtwEventType_BanLogin\x10\t\x12\"\n\x1eGtwEventType_NeedPicVerifyCode\x10\n\x12$\n GtwEventType_NeedPhoneVerifyCode\x10\x0b\x12 \n\x1cGtwEventType_AppDataNotExist\x10\x0c\x12#\n\x1fGtwEventType_NessaryDataMissing\x10\r\x12 \n\x1cGtwEventType_TradePwdChanged\x10\x0e\x12!\n\x1dGtwEventType_EnableDeviceLock\x10\x0f\x42\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,])
 
@@ -39,11 +39,27 @@ _NOTIFYTYPE = _descriptor.EnumDescriptor(
       name='NotifyType_GtwEvent', index=1, number=1,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='NotifyType_ProgramStatus', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='NotifyType_ConnStatus', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='NotifyType_QotRight', index=4, number=4,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='NotifyType_APILevel', index=5, number=5,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=231,
-  serialized_end=289,
+  serialized_start=619,
+  serialized_end=784,
 )
 _sym_db.RegisterEnumDescriptor(_NOTIFYTYPE)
 
@@ -121,14 +137,18 @@ _GTWEVENTTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=292,
-  serialized_end=831,
+  serialized_start=787,
+  serialized_end=1326,
 )
 _sym_db.RegisterEnumDescriptor(_GTWEVENTTYPE)
 
 GtwEventType = enum_type_wrapper.EnumTypeWrapper(_GTWEVENTTYPE)
 NotifyType_None = 0
 NotifyType_GtwEvent = 1
+NotifyType_ProgramStatus = 2
+NotifyType_ConnStatus = 3
+NotifyType_QotRight = 4
+NotifyType_APILevel = 5
 GtwEventType_None = 0
 GtwEventType_LocalCfgLoadFailed = 1
 GtwEventType_APISvrRunFailed = 2
@@ -186,6 +206,151 @@ _GTWEVENT = _descriptor.Descriptor(
 )
 
 
+_PROGRAMSTATUS = _descriptor.Descriptor(
+  name='ProgramStatus',
+  full_name='Notify.ProgramStatus',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='programStatus', full_name='Notify.ProgramStatus.programStatus', index=0,
+      number=1, type=11, cpp_type=10, label=2,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=83,
+  serialized_end=144,
+)
+
+
+_CONNECTSTATUS = _descriptor.Descriptor(
+  name='ConnectStatus',
+  full_name='Notify.ConnectStatus',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='qotLogined', full_name='Notify.ConnectStatus.qotLogined', index=0,
+      number=1, type=8, cpp_type=7, label=2,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='trdLogined', full_name='Notify.ConnectStatus.trdLogined', index=1,
+      number=2, type=8, cpp_type=7, label=2,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=146,
+  serialized_end=201,
+)
+
+
+_QOTRIGHT = _descriptor.Descriptor(
+  name='QotRight',
+  full_name='Notify.QotRight',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='hkQotRight', full_name='Notify.QotRight.hkQotRight', index=0,
+      number=4, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='usQotRight', full_name='Notify.QotRight.usQotRight', index=1,
+      number=5, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='cnQotRight', full_name='Notify.QotRight.cnQotRight', index=2,
+      number=6, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=203,
+  serialized_end=273,
+)
+
+
+_APILEVEL = _descriptor.Descriptor(
+  name='APILevel',
+  full_name='Notify.APILevel',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='apiLevel', full_name='Notify.APILevel.apiLevel', index=0,
+      number=3, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=275,
+  serialized_end=303,
+)
+
+
 _S2C = _descriptor.Descriptor(
   name='S2C',
   full_name='Notify.S2C',
@@ -207,6 +372,34 @@ _S2C = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='programStatus', full_name='Notify.S2C.programStatus', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='connectStatus', full_name='Notify.S2C.connectStatus', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='qotRight', full_name='Notify.S2C.qotRight', index=4,
+      number=5, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='apiLevel', full_name='Notify.S2C.apiLevel', index=5,
+      number=6, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -219,8 +412,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=83,
-  serialized_end=135,
+  serialized_start=306,
+  serialized_end=522,
 )
 
 
@@ -271,13 +464,22 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=137,
-  serialized_end=229,
+  serialized_start=524,
+  serialized_end=616,
 )
 
+_PROGRAMSTATUS.fields_by_name['programStatus'].message_type = Common__pb2._PROGRAMSTATUS
 _S2C.fields_by_name['event'].message_type = _GTWEVENT
+_S2C.fields_by_name['programStatus'].message_type = _PROGRAMSTATUS
+_S2C.fields_by_name['connectStatus'].message_type = _CONNECTSTATUS
+_S2C.fields_by_name['qotRight'].message_type = _QOTRIGHT
+_S2C.fields_by_name['apiLevel'].message_type = _APILEVEL
 _RESPONSE.fields_by_name['s2c'].message_type = _S2C
 DESCRIPTOR.message_types_by_name['GtwEvent'] = _GTWEVENT
+DESCRIPTOR.message_types_by_name['ProgramStatus'] = _PROGRAMSTATUS
+DESCRIPTOR.message_types_by_name['ConnectStatus'] = _CONNECTSTATUS
+DESCRIPTOR.message_types_by_name['QotRight'] = _QOTRIGHT
+DESCRIPTOR.message_types_by_name['APILevel'] = _APILEVEL
 DESCRIPTOR.message_types_by_name['S2C'] = _S2C
 DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
 DESCRIPTOR.enum_types_by_name['NotifyType'] = _NOTIFYTYPE
@@ -290,6 +492,34 @@ GtwEvent = _reflection.GeneratedProtocolMessageType('GtwEvent', (_message.Messag
   # @@protoc_insertion_point(class_scope:Notify.GtwEvent)
   ))
 _sym_db.RegisterMessage(GtwEvent)
+
+ProgramStatus = _reflection.GeneratedProtocolMessageType('ProgramStatus', (_message.Message,), dict(
+  DESCRIPTOR = _PROGRAMSTATUS,
+  __module__ = 'Notify_pb2'
+  # @@protoc_insertion_point(class_scope:Notify.ProgramStatus)
+  ))
+_sym_db.RegisterMessage(ProgramStatus)
+
+ConnectStatus = _reflection.GeneratedProtocolMessageType('ConnectStatus', (_message.Message,), dict(
+  DESCRIPTOR = _CONNECTSTATUS,
+  __module__ = 'Notify_pb2'
+  # @@protoc_insertion_point(class_scope:Notify.ConnectStatus)
+  ))
+_sym_db.RegisterMessage(ConnectStatus)
+
+QotRight = _reflection.GeneratedProtocolMessageType('QotRight', (_message.Message,), dict(
+  DESCRIPTOR = _QOTRIGHT,
+  __module__ = 'Notify_pb2'
+  # @@protoc_insertion_point(class_scope:Notify.QotRight)
+  ))
+_sym_db.RegisterMessage(QotRight)
+
+APILevel = _reflection.GeneratedProtocolMessageType('APILevel', (_message.Message,), dict(
+  DESCRIPTOR = _APILEVEL,
+  __module__ = 'Notify_pb2'
+  # @@protoc_insertion_point(class_scope:Notify.APILevel)
+  ))
+_sym_db.RegisterMessage(APILevel)
 
 S2C = _reflection.GeneratedProtocolMessageType('S2C', (_message.Message,), dict(
   DESCRIPTOR = _S2C,
@@ -306,4 +536,6 @@ Response = _reflection.GeneratedProtocolMessageType('Response', (_message.Messag
 _sym_db.RegisterMessage(Response)
 
 
+DESCRIPTOR.has_options = True
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
 # @@protoc_insertion_point(module_scope)

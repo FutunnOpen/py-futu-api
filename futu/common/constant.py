@@ -3,7 +3,6 @@
     Constant collection
 """
 from copy import copy
-from enum import Enum, unique
 from abc import abstractmethod
 
 
@@ -777,7 +776,12 @@ class ProtoId(object):
     Qot_GetOrderDetail = 3016           # 获取委托明细
     Qot_UpdateOrderDetail = 3017        # 推送委托明细
 
-    Qot_GetWarrantData = 3210        # 拉取涡轮信息
+    Qot_GetWarrantData = 3210          # 拉取涡轮信息
+    Qot_GetCapitalFlow = 3211          # 获取资金流向
+    Qot_GetCapitalDistribution = 3212  # 获取资金分布
+
+    Qot_GetUserSecurity = 3213  # 获取自选股分组下的股票
+    Qot_ModifyUserSecurity = 3214  # 修改自选股分组下的股票
 
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
@@ -870,7 +874,7 @@ TICKER_TYPE_MAP = {
     TickerType.T: Qot_Common_pb2.TickerType_T,
     TickerType.EXTENDED_TRADING_HOURS: Qot_Common_pb2.TickerType_ExtendedTradingHours,
     TickerType.CONTINGENT: Qot_Common_pb2.TickerType_Contingent,
-    TickerType.AVERAGE_PRICE: Qot_Common_pb2.TickerType_AveragePrice,
+    TickerType.AVERAGE_PRICE: Qot_Common_pb2.TickerType_AvgPrice,
     TickerType.OTC_SOLD: Qot_Common_pb2.TickerType_OTCSold,
     TickerType.ODD_LOT_CROSS_MARKET: Qot_Common_pb2.TickerType_OddLotCrossMarket,
     TickerType.DERIVATIVELY_PRICED: Qot_Common_pb2.TickerType_DerivativelyPriced,
@@ -909,10 +913,19 @@ class SysNotifyType(object):
     """
     NONE = "N/A"
     GTW_EVENT = "GTW_EVENT"
+    PROGRAM_STATUS = "PROGRAM_STATUS"
+    CONN_STATUS = "CONN_STATUS"
+    QOT_RIGHT = "QOT_RIGHT"
+    API_LEVEL = "API_LEVEL"
 
 
 SYS_EVENT_TYPE_MAP = {
-    SysNotifyType.NONE: 0, SysNotifyType.GTW_EVENT: 1
+    SysNotifyType.NONE: 0,
+    SysNotifyType.GTW_EVENT: 1,
+    SysNotifyType.PROGRAM_STATUS: 2,
+    SysNotifyType.CONN_STATUS: 3,
+    SysNotifyType.QOT_RIGHT: 4,
+    SysNotifyType.API_LEVEL: 5
 }
 
 
@@ -1091,6 +1104,7 @@ class OrderType(object):
     AUCTION = "AUCTION"                       # 港股_竞价
     AUCTION_LIMIT = "AUCTION_LIMIT"           # 港股_竞价限价
     SPECIAL_LIMIT = "SPECIAL_LIMIT"           # 港股_特别限价(即市价IOC, 订单到达交易所后，或全部成交， 或部分成交再撤单， 或下单失败)
+    SPECIAL_LIMIT_ALL = "SPECIAL_LIMIT_ALL"   # 港股_特别限价(要么全部成交，要么自动撤单)
 
 ORDER_TYPE_MAP = {
     OrderType.NONE: 0,
@@ -1100,6 +1114,7 @@ ORDER_TYPE_MAP = {
     OrderType.AUCTION: 6,
     OrderType.AUCTION_LIMIT: 7,
     OrderType.SPECIAL_LIMIT: 8,
+    OrderType.SPECIAL_LIMIT_ALL: 9,
 }
 
 
@@ -1175,6 +1190,20 @@ ORDER_STATUS_MAP = {
     OrderStatus.DISABLED: 22,
     OrderStatus.DELETED: 23,
 }
+
+
+class DealStatus(FtEnum):
+    OK = 'OK'                 # 正常
+    CANCELLED = 'CANCELLED'   # 成交被取消
+    CHANGED = 'CHANGED'       # 成交被更改
+
+    def load_dic(self):
+        return {
+            self.OK: Trd_Common_pb2.OrderFillStatus_OK,
+            self.CANCELLED: Trd_Common_pb2.OrderFillStatus_Cancelled,
+            self.CHANGED: Trd_Common_pb2.OrderFillStatus_Changed
+        }
+
 
 # 修改订单操作
 class ModifyOrderOp(object):
@@ -1354,7 +1383,17 @@ class SortField(FtEnum):
     WARRANT_NAME = "WARRANT_NAME"                      # 名称
     ISSUER = "ISSUER"                                  # 发行人
     LOT_SIZE = "LOT_SIZE"                              # 每手
-    ISSUE_SIZE = "ISSUE_SIZE"                          # 发行量
+    ISSUE_SIZE = "ISSUE_SIZE"                          # 发行量   
+    PRE_CUR_PRICE = "PRE_CUR_PRICE"                    #盘前最新价
+    AFTER_CUR_PRICE = "AFTER_CUR_PRICE"                #盘后最新价
+    PRE_PRICE_CHANGE_VAL = "PRE_PRICE_CHANGE_VAL"      #盘前涨跌额
+    AFTER_PRICE_CHANGE_VAL = "AFTER_PRICE_CHANGE_VAL"  #盘后涨跌额
+    PRE_CHANGE_RATE = "PRE_CHANGE_RATE"                #盘前涨跌幅%
+    AFTER_CHANGE_RATE = "AFTER_CHANGE_RATE"            #盘后涨跌幅%
+    PRE_AMPLITUDE = "PRE_AMPLITUDE"                    #盘前振幅%
+    AFTER_AMPLITUDE = "AFTER_AMPLITUDE"                #盘后振幅%
+    PRE_TURNOVER = "PRE_TURNOVER"                      #盘前成交额
+    AFTER_TURNOVER = "AFTER_TURNOVER"                  #盘后成交额
 
     def load_dic(self):
         return {
@@ -1392,9 +1431,18 @@ class SortField(FtEnum):
             self.WARRANT_NAME: Qot_Common_pb2.SortField_WarrantName,
             self.ISSUER: Qot_Common_pb2.SortField_Issuer,
             self.LOT_SIZE: Qot_Common_pb2.SortField_LotSize,
-            self.ISSUE_SIZE: Qot_Common_pb2.SortField_IssueSize
+            self.ISSUE_SIZE: Qot_Common_pb2.SortField_IssueSize,		
+			self.PRE_CUR_PRICE: Qot_Common_pb2.SortField_PreCurPrice,
+            self.AFTER_CUR_PRICE: Qot_Common_pb2.SortField_AfterCurPrice,
+            self.PRE_PRICE_CHANGE_VAL: Qot_Common_pb2.SortField_PrePriceChangeVal,
+            self.AFTER_PRICE_CHANGE_VAL: Qot_Common_pb2.SortField_AfterPriceChangeVal,
+            self.PRE_CHANGE_RATE: Qot_Common_pb2.SortField_PreChangeRate,
+            self.AFTER_CHANGE_RATE: Qot_Common_pb2.SortField_AfterChangeRate,	
+            self.PRE_AMPLITUDE: Qot_Common_pb2.SortField_PreAmplitude,
+			self.AFTER_AMPLITUDE: Qot_Common_pb2.SortField_AfterAmplitude,
+			self.PRE_TURNOVER: Qot_Common_pb2.SortField_PreTurnover,
+			self.AFTER_TURNOVER: Qot_Common_pb2.SortField_AfterTurnover
         }
-
 
 '''-------------------------IpoPeriod----------------------------'''
 
@@ -1532,7 +1580,7 @@ class TradeDateType(FtEnum):
 
 
 '''-------------------------行情权限----------------------------'''
-from futu.common.pb import GetUserInfo_pb2
+from futu.common.pb import Qot_Common_pb2
 
 
 # 行情权限
@@ -1544,10 +1592,10 @@ class QotRight(FtEnum):
 
     def load_dic(self):
         return {
-            self.NONE: GetUserInfo_pb2.QotRight_Unknow,
-            self.BMP: GetUserInfo_pb2.QotRight_Bmp,
-            self.LEVEL1: GetUserInfo_pb2.QotRight_Level1,
-            self.LEVEL2: GetUserInfo_pb2.QotRight_Level2
+            self.NONE: Qot_Common_pb2.QotRight_Unknow,
+            self.BMP: Qot_Common_pb2.QotRight_Bmp,
+            self.LEVEL1: Qot_Common_pb2.QotRight_Level1,
+            self.LEVEL2: Qot_Common_pb2.QotRight_Level2
         }
 
 
@@ -1587,7 +1635,7 @@ class VerificationType(FtEnum):
 
 '''-------------------------被强制退出登录,例如修改了登录密码,中途打开设备锁等,详细原因在描述返回----------------------------'''
 
-from futu.common.pb import GetGlobalState_pb2
+from futu.common.pb import Common_pb2
 
 
 class ProgramStatusType(FtEnum):
@@ -1606,18 +1654,18 @@ class ProgramStatusType(FtEnum):
 
     def load_dic(self):
         return {
-            self.NONE: GetGlobalState_pb2.ProgramStatusType_None,
-            self.LOADED: GetGlobalState_pb2.ProgramStatusType_Loaded,
-            self.LOGING: GetGlobalState_pb2.ProgramStatusType_Loging,
-            self.NEED_PIC_VERIFY_CODE: GetGlobalState_pb2.ProgramStatusType_NeedPicVerifyCode,
-            self.NEED_PHONE_VERIFY_CODE: GetGlobalState_pb2.ProgramStatusType_NeedPhoneVerifyCode,
-            self.LOGIN_FAILED: GetGlobalState_pb2.ProgramStatusType_LoginFailed,
-            self.FORCE_UPDATE: GetGlobalState_pb2.ProgramStatusType_ForceUpdate,
-            self.NESSARY_DATA_PREPARING: GetGlobalState_pb2.ProgramStatusType_NessaryDataPreparing,
-            self.NESSARY_DATA_MISSING: GetGlobalState_pb2.ProgramStatusType_NessaryDataMissing,
-            self.UN_AGREE_DISCLAIMER: GetGlobalState_pb2.ProgramStatusType_UnAgreeDisclaimer,
-            self.READY: GetGlobalState_pb2.ProgramStatusType_Ready,
-            self.FORCE_LOGOUT: GetGlobalState_pb2.ProgramStatusType_ForceLogout
+            self.NONE: Common_pb2.ProgramStatusType_None,
+            self.LOADED: Common_pb2.ProgramStatusType_Loaded,
+            self.LOGING: Common_pb2.ProgramStatusType_Loging,
+            self.NEED_PIC_VERIFY_CODE: Common_pb2.ProgramStatusType_NeedPicVerifyCode,
+            self.NEED_PHONE_VERIFY_CODE: Common_pb2.ProgramStatusType_NeedPhoneVerifyCode,
+            self.LOGIN_FAILED: Common_pb2.ProgramStatusType_LoginFailed,
+            self.FORCE_UPDATE: Common_pb2.ProgramStatusType_ForceUpdate,
+            self.NESSARY_DATA_PREPARING: Common_pb2.ProgramStatusType_NessaryDataPreparing,
+            self.NESSARY_DATA_MISSING: Common_pb2.ProgramStatusType_NessaryDataMissing,
+            self.UN_AGREE_DISCLAIMER: Common_pb2.ProgramStatusType_UnAgreeDisclaimer,
+            self.READY: Common_pb2.ProgramStatusType_Ready,
+            self.FORCE_LOGOUT: Common_pb2.ProgramStatusType_ForceLogout
         }
 
 class ContextStatus:
@@ -1625,3 +1673,170 @@ class ContextStatus:
     CONNECTING = 'CONNECTING'
     READY = 'READY'
     CLOSED = 'CLOSED'
+    
+class UserInfoField:
+    BASIC = 1
+    API = 2
+    QOTRIGHT = 4
+    DISCLAIMER = 8
+    UPDATE = 16
+    WEBKEY = 2048
+
+    @classmethod
+    def fields_to_flag_val(cls, fields):
+        list_ret = []
+        for x in fields:
+            if x not in list_ret:
+                list_ret.append(x)
+
+        ret_flags = 0
+        for x in list_ret:
+            ret_flags += x
+        return ret_flags
+
+
+from futu.common.pb import GetUserInfo_pb2
+
+class UpdateType(FtEnum):
+    NO = "NO"
+    ADVICE = "ADVICE"
+    FORCE = "FORCE"
+    
+    def load_dic(self):
+        return {
+            self.NO: GetUserInfo_pb2.UpdateType_None,
+            self.ADVICE: GetUserInfo_pb2.UpdateType_Advice,
+            self.FORCE: GetUserInfo_pb2.UpdateType_Force
+        }
+
+'''-------------------------DelayStatisticsType----------------------------'''
+from futu.common.pb import GetDelayStatistics_pb2
+
+#
+class DelayStatisticsType(FtEnum):
+    NONE = "N/A"                                       # 未知类型
+    QOT_PUSH = "QOT_PUSH"                              # 行情推送统计
+    REQ_REPLY = "REQ_REPLY"                            # 请求回应统计
+    PLACE_ORDER = "PLACE_ORDER"                        # 下单统计
+    ALL = [QOT_PUSH, REQ_REPLY, PLACE_ORDER]
+
+    describe_dict = {
+        QOT_PUSH: "行情推送统计",
+        REQ_REPLY: "请求回应统计",
+        PLACE_ORDER: "下单统计",
+    }
+
+    def load_dic(self):
+        return {
+            self.NONE: GetDelayStatistics_pb2.DelayStatisticsType_Unkonw,
+            self.QOT_PUSH: GetDelayStatistics_pb2.DelayStatisticsType_QotPush,
+            self.REQ_REPLY: GetDelayStatistics_pb2.DelayStatisticsType_ReqReply,
+            self.PLACE_ORDER: GetDelayStatistics_pb2.DelayStatisticsType_PlaceOrder
+        }
+
+    @classmethod
+    def get_describe(cls, t):
+        obj = cls()
+        return obj.describe_dict[t]
+
+
+'''-------------------------QotPushStage----------------------------'''
+
+
+# 某段时间的统计数据，SR表示服务器收到数据，目前只有港股支持SR字段，SS表示服务器发出数据，CR表示OpenD收到数据，CS表示OpenD发出数据
+class QotPushStage(FtEnum):
+    NONE = "N/A"                                       # 未知
+    SR2_SS = "SR2_SS"                                  # 统计服务端处理耗时
+    SS2_CR = "SS2_CR"                                  # 统计网络耗时
+    CR2_CS = "CR2_CS"                                  # 统计OpenD处理耗时
+    SS2_CS = "SS2_CS"                                  # 统计服务器发出到OpenD发出的处理耗时
+    SR2_CS = "SR2_CS"                                  # 统计服务器收到数据到OpenD发出的处理耗时
+    ALL = [SR2_SS, SS2_CR, CR2_CS, SS2_CS, SR2_CS]
+
+    describe_dict = {
+        SR2_SS: "统计服务端处理耗时",
+        SS2_CR: "统计网络耗时",
+        CR2_CS: "统计OpenD处理耗时",
+        SS2_CS: "统计服务器发出到OpenD发出的处理耗时",
+        SR2_CS: "统计服务器收到数据到OpenD发出的处理耗时(也就是从交易所到用户的总时间，港股市场数据最全，A股和美股部分缺乏交易所下发时间）",
+    }
+
+    def load_dic(self):
+        return {
+            self.NONE: GetDelayStatistics_pb2.QotPushStage_Unkonw,
+            self.SR2_SS: GetDelayStatistics_pb2.QotPushStage_SR2SS,
+            self.SS2_CR: GetDelayStatistics_pb2.QotPushStage_SS2CR,
+            self.CR2_CS: GetDelayStatistics_pb2.QotPushStage_CR2CS,
+            self.SS2_CS: GetDelayStatistics_pb2.QotPushStage_SS2CS,
+            self.SR2_CS: GetDelayStatistics_pb2.QotPushStage_SR2CS
+        }
+
+    @classmethod
+    def get_describe(cls, t):
+        obj = cls()
+        return obj.describe_dict[t]
+
+
+'''-------------------------QotPushType----------------------------'''
+
+
+# 行情推送类型
+class QotPushType(FtEnum):
+    NONE = "N/A"                                       # 未知
+    PRICE = "PRICE"                                    # 最新价
+    TICKER = "TICKER"                                  # 逐笔
+    ORDER_BOOK = "ORDER_BOOK"                          # 摆盘
+    BROKER = "BROKER"                                  # 经纪队列
+
+    describe_dict = {
+        PRICE: "最新价",
+        TICKER: "逐笔",
+        ORDER_BOOK: "摆盘",
+        BROKER: "经纪队列",
+    }
+
+    def load_dic(self):
+        return {
+            self.NONE: GetDelayStatistics_pb2.QotPushType_Unkonw,
+            self.PRICE: GetDelayStatistics_pb2.QotPushType_Price,
+            self.TICKER: GetDelayStatistics_pb2.QotPushType_Ticker,
+            self.ORDER_BOOK: GetDelayStatistics_pb2.QotPushType_OrderBook,
+            self.BROKER: GetDelayStatistics_pb2.QotPushType_Broker
+        }
+
+    @classmethod
+    def get_describe(cls, t):
+        obj = cls()
+        return obj.describe_dict[t]
+
+
+'''-------------------------ModifyUserSecurityOp----------------------------'''
+from futu.common.pb import Qot_ModifyUserSecurity_pb2
+
+
+# 自选股操作
+class ModifyUserSecurityOp(FtEnum):
+    NONE = "N/A"                                       # 未知
+    ADD = "ADD"                                        # 新增
+    DEL = "DEL"                                        # 删除
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Unknown,
+            self.ADD: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Add,
+            self.DEL: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Del
+        }
+
+
+# 账户类型
+class TrdAccType(FtEnum):
+    NONE = 'N/A'     # 未知类型
+    CASH = 'CASH'           # 现金账户
+    MARGIN = 'MARGIN'       # 保证金账户
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.TrdAccType_Unknown,
+            self.CASH: Trd_Common_pb2.TrdAccType_Cash,
+            self.MARGIN: Trd_Common_pb2.TrdAccType_Margin
+        }

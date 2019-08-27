@@ -147,9 +147,9 @@ class OpenQuoteContext(OpenContextBase):
         :param code_list: 如果不为None，应该是股票code的iterable类型，将只返回指定的股票信息
         :return: (ret_code, content)
                 ret_code 等于RET_OK时， content为Pandas.DataFrame数据, 否则为错误原因字符串, 数据列格式如下
-            =================   ===========   ==============================================================================
+            =================   ===========   ==========================================================================
             参数                  类型                        说明
-            =================   ===========   ==============================================================================
+            =================   ===========   ==========================================================================
             code                str            股票代码
             name                str            名字
             lot_size            int            每手数量
@@ -163,7 +163,7 @@ class OpenQuoteContext(OpenContextBase):
             listing_date        str            上市时间
             stock_id            int            股票id
             delisting           bool           是否退市
-            =================   ===========   ==============================================================================
+            =================   ===========   ==========================================================================
 
         :example:
 
@@ -189,6 +189,8 @@ class OpenQuoteContext(OpenContextBase):
                 pass
             else:
                 return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
+
+        code_list = unique_and_normalize_list(code_list)   # 去重
 
         query_processor = self._get_sync_query_processor(
             StockBasicInfoQuery.pack_req, StockBasicInfoQuery.unpack_rsp)
@@ -627,6 +629,10 @@ class OpenQuoteContext(OpenContextBase):
                 pe_ratio                   float          市盈率（该字段为比例字段，默认不展示%）
                 pb_ratio                   float          市净率（该字段为比例字段，默认不展示%）
                 pe_ttm_ratio               float          市盈率TTM（该字段为比例字段，默认不展示%）
+                dividend_ttm               float          股息TTM
+                dividend_ratio_ttm         float          股息率TTM（该字段为百分比字段，默认不展示%）
+                dividend_lfy               float          股息LFY，上一年度派息
+                dividend_lfy_ratio         float          股息率LFY（该字段为百分比字段，默认不展示
                 stock_owner                str            涡轮所属正股的代码或期权的标的股代码
                 wrt_valid                  bool           是否是窝轮（为true时以下涡轮相关的字段才有合法数据）
                 wrt_conversion_ratio       float          换股比率（该字段为比例字段，默认不展示%）
@@ -642,8 +648,33 @@ class OpenQuoteContext(OpenContextBase):
                 wrt_delta                  float          窝轮对冲值
                 wrt_implied_volatility     float          窝轮引伸波幅
                 wrt_premium                float          窝轮溢价
+                wrt_leverage               float          杠杆比率（倍）
+                wrt_ipop                   float          价内/价外（该字段为百分比字段，默认不展示%）
+                wrt_break_even_point       float          打和点
+                wrt_conversion_price       float          换股价
+                wrt_price_recovery_ratio   float          距收回价（该字段为百分比字段，默认不展示%）
+                wrt_score                  float          综合评分
                 lot_size                   int            每手股数
                 price_spread               float          当前摆盘价差亦即摆盘数据的买档或卖档的相邻档位的报价差
+                ask_price	               float	      卖价
+                bid_price	               float	      买价
+                ask_vol	                   float	      卖量
+                bid_vol	                   float	      买量
+                enable_margin	           bool	          是否可融资，如果为true，后两个字段才有意义
+                mortgage_ratio	           float	      股票抵押率（该字段为百分比字段，默认不展示%）
+                long_margin_initial_ratio  float	      融资初始保证金率（该字段为百分比字段，默认不展示%）
+                enable_short_sell	       bool	          是否可卖空，如果为true，后三个字段才有意义
+                short_sell_rate	           float	      卖空参考利率（该字段为百分比字段，默认不展示%）
+                short_available_volume	   int	          剩余可卖空数量
+                short_margin_initial_ratio float	      卖空（融券）初始保证金率（该字段为百分比字段，默认不展示%
+                amplitude                  float          振幅（该字段为百分比字段，默认不展示%）
+                avg_price                  float          平均价
+                bid_ask_ratio              float          委比（该字段为百分比字段，默认不展示%）
+                volume_ratio               float          量比
+                highest52weeks_price       float          52周最高价
+                lowest52weeks_price        float          52周最低价
+                highest_history_price      float          历史最高价
+                lowest_history_price       float          历史最低价
                 option_valid               bool           是否是期权（为true时以下期权相关的字段才有合法数值）
                 option_type                str            期权类型，参见OptionType
                 strike_time                str            行权日（美股默认是美东时间，港股A股默认是北京时间）
@@ -657,6 +688,12 @@ class OpenQuoteContext(OpenContextBase):
                 option_vega                float          希腊值 Vega
                 option_theta               float          希腊值 Theta
                 option_rho                 float          希腊值 Rho
+                index_raise_count          int            指数类型上涨支数
+                index_fall_count           int            指数类型下跌支数
+                index_requal_count         int            指数类型平盘支数
+                plate_raise_count          int            板块类型上涨支数
+                plate_fall_count           int            板块类型下跌支数
+                plate_equal_count          int            板块类型平盘支数
                 =======================   =============   ==============================================================================
         """
         code_list = unique_and_normalize_list(code_list)
@@ -686,7 +723,11 @@ class OpenQuoteContext(OpenContextBase):
                            'ey_ratio',
                            'pe_ratio',
                            'pb_ratio',
-                           'pe_ttm_ratio'
+                           'pe_ttm_ratio',
+                           'dividend_ttm',
+                           'dividend_ratio_ttm',
+                           'dividend_lfy',
+                           'dividend_lfy_ratio'
                            ]
         wrt_col_list = ['wrt_conversion_ratio',
                         'wrt_type',
@@ -699,7 +740,13 @@ class OpenQuoteContext(OpenContextBase):
                         'wrt_street_ratio',
                         'wrt_delta',
                         'wrt_implied_volatility',
-                        'wrt_premium'
+                        'wrt_premium',
+                        'wrt_leverage',
+                        'wrt_ipop',
+                        'wrt_break_even_point',
+                        'wrt_conversion_price',
+                        'wrt_price_recovery_ratio',
+                        'wrt_score'
                         ]
         option_col_list = ['option_type',
                            'strike_time',
@@ -714,6 +761,17 @@ class OpenQuoteContext(OpenContextBase):
                            'option_theta',
                            'option_rho'
                            ]
+
+        index_col_list = [ 'index_raise_count',
+                            'index_fall_count',
+                            'index_equal_count'
+                            ]
+
+        plate_col_list = ['plate_raise_count',
+                          'plate_fall_count',
+                          'plate_equal_count'
+                          ]
+
         col_list = [
             'code',
             'update_time',
@@ -740,7 +798,15 @@ class OpenQuoteContext(OpenContextBase):
             'enable_short_sell',
             'short_sell_rate',
             'short_available_volume',
-            'short_margin_initial_ratio'
+            'short_margin_initial_ratio',
+            'amplitude',
+            'avg_price',
+            'bid_ask_ratio',
+            'volume_ratio',
+            'highest52weeks_price',
+            'lowest52weeks_price',
+            'highest_history_price',
+            'lowest_history_price',
         ]
 
         col_list.append('equity_valid')
@@ -749,6 +815,10 @@ class OpenQuoteContext(OpenContextBase):
         col_list.extend(wrt_col_list)
         col_list.append('option_valid')
         col_list.extend(option_col_list)
+        col_list.append('index_valid')
+        col_list.extend(index_col_list)
+        col_list.append('plate_valid')
+        col_list.extend(plate_col_list)
 
         snapshot_frame_table = pd.DataFrame(snapshot_list, columns=col_list)
 
@@ -857,11 +927,13 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, subplate_frame_table
 
-    def get_plate_stock(self, plate_code):
+    def get_plate_stock(self, plate_code, sort_field=SortField.CODE, ascend=True):
         """
         获取特定板块下的股票列表
 
         :param plate_code: 板块代码, string, 例如，”SH.BK0001”，”SH.BK0002”，先利用获取子版块列表函数获取子版块代码
+        :param sort_field: 排序字段，string
+        :param ascend: 排序方向，string，True升序，False降序
         :return: (ret, data)
 
                 ret == RET_OK 返回pd dataframe数据，data.DataFrame数据, 数据列格式如下
@@ -885,10 +957,17 @@ class OpenQuoteContext(OpenContextBase):
             error_str = ERROR_STR_PREFIX + "the type of code is wrong"
             return RET_ERROR, error_str
 
+        r, v = SortField.to_number(sort_field)
+        if (not r):
+            error_str = ERROR_STR_PREFIX + "the type of sort field is wrong"
+            return RET_ERROR, error_str
+
         query_processor = self._get_sync_query_processor(
             PlateStockQuery.pack_req, PlateStockQuery.unpack_rsp)
         kargs = {
             "plate_code": plate_code,
+            "sort_field": sort_field,
+            "ascend": ascend,
             "conn_id": self.get_sync_conn_id()
         }
 
@@ -1107,7 +1186,7 @@ class OpenQuoteContext(OpenContextBase):
 
         return ret_code, ret_data
 
-    def unsubscribe(self, code_list, subtype_list):
+    def unsubscribe(self, code_list, subtype_list, unsubscribe_all=False):
         """
         取消订阅
         :param code_list: 取消订阅的股票代码列表
@@ -1118,33 +1197,37 @@ class OpenQuoteContext(OpenContextBase):
 
                 ret != RET_OK err_message为错误描述字符串
         """
-
-        ret, msg, code_list, subtype_list = self._check_subscribe_param(code_list, subtype_list)
-        if ret != RET_OK:
-            return ret, msg
-
+        if not unsubscribe_all:
+            ret, msg, code_list, subtype_list = self._check_subscribe_param(code_list, subtype_list)
+            if ret != RET_OK:
+                return ret, msg
         query_processor = self._get_sync_query_processor(SubscriptionQuery.pack_unsubscribe_req,
                                                          SubscriptionQuery.unpack_unsubscribe_rsp)
 
         kargs = {
             'code_list': code_list,
             'subtype_list': subtype_list,
+            'unsubscribe_all': unsubscribe_all,
             "conn_id": self.get_sync_conn_id()
         }
 
-        for subtype in subtype_list:
-            if subtype not in self._ctx_subscribe:
-                continue
-            code_set = self._ctx_subscribe[subtype]
-            for code in code_list:
-                if code not in code_set:
+        if not unsubscribe_all:
+            for subtype in subtype_list:
+                if subtype not in self._ctx_subscribe:
                     continue
-                code_set.remove(code)
+                code_set = self._ctx_subscribe[subtype]
+                for code in code_list:
+                    if code not in code_set:
+                        continue
+                    code_set.remove(code)
 
         ret_code, msg, _ = query_processor(**kargs)
 
         if ret_code != RET_OK:
             return RET_ERROR, msg
+
+        if unsubscribe_all:  # 反订阅全部别的参数不重要
+            return RET_OK, None
 
         ret_code, msg, unpush_req_str = SubscriptionQuery.pack_unpush_req(code_list, subtype_list, self.get_async_conn_id())
         if ret_code != RET_OK:
@@ -1155,6 +1238,10 @@ class OpenQuoteContext(OpenContextBase):
             return RET_ERROR, msg
 
         return RET_OK, None
+
+    def unsubscribe_all(self):
+        return self.unsubscribe(None, None, True)
+
 
     def query_subscription(self, is_all_conn=True):
         """
@@ -1954,13 +2041,11 @@ class OpenQuoteContext(OpenContextBase):
             exr_frame_table = pd.DataFrame(data, columns=col_list)
             return ret_code, exr_frame_table
 
-
-    def get_user_info(self, info_type=0, user_id=0):
+    def get_user_info(self, info_field=[]):
         """获取用户信息（内部保留函数）"""
         query_processor = self._get_sync_query_processor(GetUserInfo.pack_req, GetUserInfo.unpack_rsp)
         kargs = {
-            "user_id": user_id,
-            "info_type": info_type,
+            "info_field": info_field,
             "conn_id": self.get_sync_conn_id()
         }
         ret_code, msg, data = query_processor(**kargs)
@@ -1968,6 +2053,74 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         else:
             return ret_code, data
+
+    def get_capital_distribution(self, stock_code):
+        """
+        个股资金分布
+        GetCapitalDistribution
+        """
+        if stock_code is None or is_str(stock_code) is False:
+            error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
+            return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            GetCapitalDistributionQuery.pack_req,
+            GetCapitalDistributionQuery.unpack,
+        )
+
+        kargs = {
+            "code": stock_code,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, dict):
+            col_list = [
+                'capital_in_big',
+                'capital_in_mid',
+                'capital_in_small',
+                'capital_out_big',
+                'capital_out_mid',
+                'capital_out_small',
+                'update_time',
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list, index=[0])
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
+
+    def get_capital_flow(self, stock_code):
+        """
+        个股资金流入流出
+        GetCapitalFlow
+        """
+        if stock_code is None or is_str(stock_code) is False:
+            error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
+            return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            GetCapitalFlowQuery.pack_req,
+            GetCapitalFlowQuery.unpack,
+        )
+
+        kargs = {
+            "code": stock_code,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+                'last_valid_time',
+                'in_flow',
+                'capital_flow_item_time',
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
 
     def verification(self, verification_type=VerificationType.NONE, verification_op=VerificationOp.NONE, code=""):
         """图形验证码下载之后会将其存至固定路径，请到该路径下查看验证码
@@ -1991,6 +2144,108 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         else:
             return ret_code, data
+
+    def get_delay_statistics(self, type_list, qot_push_stage, segment_list):
+        """
+        GetDelayStatistics
+        qot_push_stage 行情推送统计的区间，行情推送统计时有效，QotPushStage
+        type_list 统计数据类型，DelayStatisticsType [DelayStatisticsType.QOT_PUSH, DelayStatisticsType.REQ_REPLY]
+        check segment_list 统计分段，默认100ms以下以2ms分段，100ms以上以500，1000，2000，-1分段，-1表示无穷大。
+        """
+
+        query_processor = self._get_sync_query_processor(
+            GetDelayStatisticsQuery.pack_req,
+            GetDelayStatisticsQuery.unpack,
+        )
+
+        kargs = {
+            "type_list": type_list,
+            "qot_push_stage": qot_push_stage,
+            "segment_list": segment_list,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, dict):
+            ret_dic = dict()
+            ret_dic["qot_push"] = ret["qot_push_all_statistics_list"]
+            ret_dic["req_reply"] = ret["req_reply_statistics_list"]
+            ret_dic["place_order"] = ret["place_order_statistics_list"]
+            return RET_OK, ret_dic
+        else:
+            return RET_ERROR, "empty data"
+
+    def modify_user_security(self, group_name, op, code_list):
+        """
+        ModifyUserSecurity
+        修改用户自选股列表信息
+        """
+        if is_str(code_list):
+            code_list = code_list.split(',')
+        elif isinstance(code_list, list):
+            pass
+        else:
+            return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
+        code_list = unique_and_normalize_list(code_list)
+        for code in code_list:
+            if code is None or is_str(code) is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in code_list is wrong"
+                return RET_ERROR, error_str
+
+        ret, op_value = ModifyUserSecurityOp.to_number(op)
+        if ret is not True:
+            return RET_ERROR, op_value
+
+        query_processor = self._get_sync_query_processor(
+            ModifyUserSecurityQuery.pack_req,
+            ModifyUserSecurityQuery.unpack,
+        )
+
+        kargs = {
+            "group_name": group_name,
+            "op": op_value,
+            "code_list": code_list,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        else:
+            return RET_OK, "success"
+
+    def get_user_security(self, group_name):
+        """
+        GetUserSecurity
+        """
+        if not isinstance(group_name, str):
+            return RET_ERROR, "group_name need str"
+
+        query_processor = self._get_sync_query_processor(
+            GetUserSecurityQuery.pack_req,
+            GetUserSecurityQuery.unpack,
+        )
+
+        kargs = {
+            "group_name": group_name,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+                'code', 'name', 'lot_size', 'stock_type', 'stock_child_type', 'stock_owner',
+                'option_type', 'strike_time', 'strike_price', 'suspension',
+                'listing_date', 'stock_id', 'delisting'
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
+
+
+
 
 
 

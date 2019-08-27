@@ -83,9 +83,11 @@ class FTLog(object):
 
         self.file_logger = logging.getLogger('FTFileLog')
         self.file_logger.setLevel(self._file_level)
+        self.file_logger.propagate = False
         self.console_logger = logging.getLogger('FTConsoleLog')
         self.console_logger.setLevel(self._console_level)
-
+        self.console_logger.propagate = False
+        
         self.formatter = logging.Formatter('%(asctime)s %(message)s')
 
         if not hasattr(self, 'fileHandler'):

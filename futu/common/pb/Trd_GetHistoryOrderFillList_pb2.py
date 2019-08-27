@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_GetHistoryOrderFillList.proto',
   package='Trd_GetHistoryOrderFillList',
   syntax='proto2',
-  serialized_pb=_b('\n!Trd_GetHistoryOrderFillList.proto\x12\x1bTrd_GetHistoryOrderFillList\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"g\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x39\n\x10\x66ilterConditions\x18\x02 \x02(\x0b\x32\x1f.Trd_Common.TrdFilterConditions\"Z\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12,\n\rorderFillList\x18\x02 \x03(\x0b\x32\x15.Trd_Common.OrderFill\"8\n\x07Request\x12-\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32 .Trd_GetHistoryOrderFillList.C2S\"q\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12-\n\x03s2c\x18\x04 \x01(\x0b\x32 .Trd_GetHistoryOrderFillList.S2C')
+  serialized_pb=_b('\n!Trd_GetHistoryOrderFillList.proto\x12\x1bTrd_GetHistoryOrderFillList\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"g\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x39\n\x10\x66ilterConditions\x18\x02 \x02(\x0b\x32\x1f.Trd_Common.TrdFilterConditions\"Z\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12,\n\rorderFillList\x18\x02 \x03(\x0b\x32\x15.Trd_Common.OrderFill\"8\n\x07Request\x12-\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32 .Trd_GetHistoryOrderFillList.C2S\"q\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12-\n\x03s2c\x18\x04 \x01(\x0b\x32 .Trd_GetHistoryOrderFillList.S2CB\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Trd__Common__pb2.DESCRIPTOR,])
 
@@ -227,4 +227,6 @@ Response = _reflection.GeneratedProtocolMessageType('Response', (_message.Messag
 _sym_db.RegisterMessage(Response)
 
 
+DESCRIPTOR.has_options = True
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
 # @@protoc_insertion_point(module_scope)
