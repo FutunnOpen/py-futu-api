@@ -99,10 +99,10 @@ class Request(object):
             pb.c2s.owner.code = stock_code
 
         if self.type_list is not None and not isinstance(self.type_list, list):
-            #1120400921001028867
+            # 1120400921001028867
             self.type_list = [self.type_list]
         if self.issuer_list is not None and not isinstance(self.issuer_list, list):
-            #1120400921001028867
+            # 1120400921001028867
             self.issuer_list = [self.issuer_list]
 
         if self.type_list is not None and len(self.type_list) != 0:
@@ -234,11 +234,13 @@ class Response(object):
 
         for item in resp.s2c.warrantDataList:
             warrant = dict()
-            warrant["stock"] = merge_qot_mkt_stock_str(int(item.stock.market), item.stock.code) #股票
-            warrant["stock_owner"] = merge_qot_mkt_stock_str(int(item.owner.market), item.owner.code) #所属正股
-            warrant["type"] = WrtType.to_string2(item.type)  #窝轮类型
-            warrant["issuer"] = Issuer.to_string2(item.issuer)  #发行人
-            warrant["maturity_time"] = item.maturityTime  #到期日
+            warrant["stock"] = merge_qot_mkt_stock_str(
+                int(item.stock.market), item.stock.code)  # 股票
+            warrant["stock_owner"] = merge_qot_mkt_stock_str(
+                int(item.owner.market), item.owner.code)  # 所属正股
+            warrant["type"] = WrtType.to_string2(item.type)  # 窝轮类型
+            warrant["issuer"] = Issuer.to_string2(item.issuer)  # 发行人
+            warrant["maturity_time"] = item.maturityTime  # 到期日
             if item.HasField("maturityTimestamp"):
                 """到期日时间戳"""
                 warrant["maturity_timestamp"] = item.maturityTimestamp
@@ -358,12 +360,13 @@ class Response(object):
                 warrant["lower_strike_price"] = item.lowerStrikePrice
             if item.HasField("inLinePriceStatus"):
                 """界内界外，仅界内证支持该字段"""
-                warrant["inline_price_status"] = PriceType.to_string2(item.inLinePriceStatus)
+                warrant["inline_price_status"] = PriceType.to_string2(
+                    item.inLinePriceStatus)
             warrant_data_list.append(warrant)
         return RET_OK, "", (warrant_data_list, resp.s2c.lastPage, resp.s2c.allCount)
 
 
-if __name__ =="__main__":
+if __name__ == "__main__":
     req = Request()
     req.type_list.append(WrtType.BUY)
     req.fill_request_pb()
