@@ -45,7 +45,7 @@ class StockQuoteHandlerBase(RspHandlerBase):
                 'code', 'data_date', 'data_time', 'last_price', 'open_price',
                 'high_price', 'low_price', 'prev_close_price', 'volume',
                 'turnover', 'turnover_rate', 'amplitude', 'suspension',
-                'listing_date', 'price_spread', 'dark_status', 'strike_price',
+                'listing_date', 'price_spread', 'dark_status', 'status', 'strike_price',
                 'contract_size', 'open_interest', 'implied_volatility',
                 'premium', 'delta', 'gamma', 'vega', 'theta', 'rho'
             ]

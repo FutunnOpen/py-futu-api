@@ -633,7 +633,7 @@ class OpenQuoteContext(OpenContextBase):
                 dividend_ratio_ttm         float          股息率TTM（该字段为百分比字段，默认不展示%）
                 dividend_lfy               float          股息LFY，上一年度派息
                 dividend_lfy_ratio         float          股息率LFY（该字段为百分比字段，默认不展示
-                stock_owner                str            涡轮所属正股的代码或期权的标的股代码
+                stock_owner                str            涡轮所属正股的代码或期权的标的股代码           
                 wrt_valid                  bool           是否是窝轮（为true时以下涡轮相关的字段才有合法数据）
                 wrt_conversion_ratio       float          换股比率（该字段为比例字段，默认不展示%）
                 wrt_type                   str            窝轮类型，参见WrtType
@@ -699,6 +699,7 @@ class OpenQuoteContext(OpenContextBase):
                 plate_equal_count          int            板块类型平盘支数
                 after_volume               int            盘后成交量
                 after_turnover             double         盘后成交额
+				status                     str            股票状态， 参见SecurityStatus
                 =======================   =============   ==============================================================================
         """
         code_list = unique_and_normalize_list(code_list)
@@ -817,6 +818,7 @@ class OpenQuoteContext(OpenContextBase):
             'lowest_history_price',
             'after_volume',
             'after_turnover',
+			'status',
         ]
 
         col_list.append('equity_valid')
@@ -1351,6 +1353,7 @@ class OpenQuoteContext(OpenContextBase):
                 listing_date            str            上市日期 (yyyy-MM-dd)
                 price_spread            float          当前价差，亦即摆盘数据的买档或卖档的相邻档位的报价差
                 dark_status             str            暗盘交易状态，见DarkStatus
+				status                  str            股票状态，见SecurityStatus
                 strike_price            float          行权价
                 contract_size           int            每份合约数
                 open_interest           int            未平仓合约数
@@ -1386,7 +1389,7 @@ class OpenQuoteContext(OpenContextBase):
             'code', 'data_date', 'data_time', 'last_price', 'open_price',
             'high_price', 'low_price', 'prev_close_price', 'volume',
             'turnover', 'turnover_rate', 'amplitude', 'suspension',
-            'listing_date', 'price_spread', 'dark_status', 'strike_price',
+            'listing_date', 'price_spread', 'dark_status', 'status', 'strike_price',
             'contract_size', 'open_interest', 'implied_volatility',
             'premium', 'delta', 'gamma', 'vega', 'theta', 'rho'
         ]

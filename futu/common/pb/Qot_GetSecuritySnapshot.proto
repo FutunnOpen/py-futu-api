@@ -95,20 +95,6 @@ message PlateSnapshotExData
     required int32 equalCount = 3;  // 平盘支数
 }
 
-//盘前盘后数据，仅支持美股以及科创板
-//科创板只有盘后成交量，成交额
-message PreAfterMarketData
-{
-	optional double price = 1;  // 盘前或盘后 - 价格
-    optional double highPrice = 2;  // 盘前或盘后 - 最高价
-    optional double lowPrice = 3;  // 盘前或盘后 - 最低价
-    optional int64 volume = 4;  // 盘前或盘后 - 成交量
-    optional double turnover = 5;  // 盘前或盘后 - 成交额
-    optional double changeVal = 6;  // 盘前或盘后 - 涨跌额
-    optional double changeRate = 7;  // 盘前或盘后 - 涨跌幅（该字段为百分比字段，默认不展示%）
-    optional double amplitude = 8;  // 盘前或盘后 - 振幅（该字段为百分比字段，默认不展示%）
-}
-
  //基本快照数据
 message SnapshotBasicData
 {
@@ -148,8 +134,9 @@ message SnapshotBasicData
     optional double lowest52WeeksPrice = 34;  // 52周最低价
 	optional double highestHistoryPrice = 35;  // 历史最高价
     optional double lowestHistoryPrice = 36;  // 历史最低价
-	optional PreAfterMarketData preMarket = 37; //盘前数据
-	optional PreAfterMarketData afterMarket = 38; //盘后数据
+	optional Qot_Common.PreAfterMarketData preMarket = 37; //盘前数据
+	optional Qot_Common.PreAfterMarketData afterMarket = 38; //盘后数据
+	optional int32 status = 39; //Qot_Common.SecurityStats, 股票状态
 }
 
 message Snapshot

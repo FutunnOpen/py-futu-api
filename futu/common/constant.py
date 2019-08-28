@@ -1991,3 +1991,55 @@ class TimeFilter(object):
         self.type = type
         self.begin_time = begin_time
         self.end_time = end_time
+
+
+#
+class SecurityStatus(FtEnum):
+    NONE = "N/A"                                                                 #未知
+    NORMAL = "NORMAL"                                                            #正常状态
+    LISTING = "LISTING"                                                          #待上市
+    PURCHASING = "PURCHASING"                                                    #申购中
+    SUBSCRIBING = "SUBSCRIBING"                                                  #认购中
+    BEFORE_DARK_TRADE_OPEING = "BEFORE_DARK_TRADE_OPEING"                        #暗盘开盘前
+    DARK_TRADING = "DARK_TRADING"                                                #暗盘交易中
+    DARK_TRAD_END = "DARK_TRAD_END"                                              #暗盘已收盘
+    TO_BE_OPEN = "TO_BE_OPEN"                                                    #待开盘
+    SUSPENDED = "SUSPENDED"                                                      #停牌
+    CALLED = "CALLED"                                                            #已收回
+    EXPIRED_LAST_TRADING_DATE = "EXPIRED_LAST_TRADING_DATE"                      #已过最后交易日
+    EXPIRED = "EXPIRED"                                                          #已过期
+    DELISTED = "DELISTED"                                                        #已退市
+    CHANGE_TO_TEMPORARY_CODE = "CHANGE_TO_TEMPORARY_CODE"                        #公司行动中，交易关闭，转至临时代码交易
+    TEMPORARY_CODE_TRADE_END = "TEMPORARY_CODE_TRADE_END"                        #临时买卖结束，交易关闭
+    CHANGED_PLATE_TRADE_END = "CHANGED_PLATE_TRADE_END"                          #已转板，旧代码交易关闭
+    CHANGED_CODE_TRAD_END = "CHANGED_CODE_TRAD_END"                              #已换代码，旧代码交易关闭
+    RECOVERABLE_CIRCUIT_BREAKER = "RECOVERABLE_CIRCUIT_BREAKER"                  #可恢复性熔断
+    UNRECOVERABLE_CIRCUIT_BREAKER = "UNRECOVERABLE_CIRCUIT_BREAKER"              #不可恢复性熔断
+    AFTER_COMBINATION = "AFTER_COMBINATION"                                      #盘后撮合
+    AFTER_TRANSACTION = "AFTER_TRANSACTION"                                      #盘后交易
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.SecurityStatus_Unkonw,
+            self.NORMAL: Qot_Common_pb2.SecurityStatus_Normal,
+            self.LISTING: Qot_Common_pb2.SecurityStatus_Listing,
+            self.PURCHASING: Qot_Common_pb2.SecurityStatus_Purchasing,
+            self.SUBSCRIBING: Qot_Common_pb2.SecurityStatus_Subscribing,
+            self.BEFORE_DARK_TRADE_OPEING: Qot_Common_pb2.SecurityStatus_BeforeDrakTradeOpening,
+            self.DARK_TRADING: Qot_Common_pb2.SecurityStatus_DrakTrading,
+            self.DARK_TRAD_END: Qot_Common_pb2.SecurityStatus_DrakTradeEnd,
+            self.TO_BE_OPEN: Qot_Common_pb2.SecurityStatus_ToBeOpen,
+            self.SUSPENDED: Qot_Common_pb2.SecurityStatus_Suspended,
+            self.CALLED: Qot_Common_pb2.SecurityStatus_Called,
+            self.EXPIRED_LAST_TRADING_DATE: Qot_Common_pb2.SecurityStatus_ExpiredLastTradingDate,
+            self.EXPIRED: Qot_Common_pb2.SecurityStatus_Expired,
+            self.DELISTED: Qot_Common_pb2.SecurityStatus_Delisted,
+            self.CHANGE_TO_TEMPORARY_CODE: Qot_Common_pb2.SecurityStatus_ChangeToTemporaryCode,
+            self.TEMPORARY_CODE_TRADE_END: Qot_Common_pb2.SecurityStatus_TemporaryCodeTradeEnd,
+            self.CHANGED_PLATE_TRADE_END: Qot_Common_pb2.SecurityStatus_ChangedPlateTradeEnd,
+            self.CHANGED_CODE_TRAD_END: Qot_Common_pb2.SecurityStatus_ChangedCodeTradeEnd,
+            self.RECOVERABLE_CIRCUIT_BREAKER: Qot_Common_pb2.SecurityStatus_RecoverableCircuitBreaker,
+            self.UNRECOVERABLE_CIRCUIT_BREAKER: Qot_Common_pb2.SecurityStatus_UnRecoverableCircuitBreaker,
+            self.AFTER_COMBINATION: Qot_Common_pb2.SecurityStatus_AfterCombination,
+            self.AFTER_TRANSACTION: Qot_Common_pb2.SecurityStatus_AfterTransation
+        }

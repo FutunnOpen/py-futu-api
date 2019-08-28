@@ -294,7 +294,9 @@ class MarketSnapshotQuery:
             #  盘后成交量 type=int64
             snapshot_tmp["after_volume"] = record.basic.afterMarket.volume
             #  盘后成交额 type=double
-            snapshot_tmp["after_turnover"] = record.basic.afterMarket.turnover      
+            snapshot_tmp["after_turnover"] = record.basic.afterMarket.turnover   
+            #  股票状态 type=str
+            snapshot_tmp["status"] = SecurityStatus.to_string2(record.basic.status)
             # ================================
 
             snapshot_tmp['equity_valid'] = False
@@ -1100,6 +1102,7 @@ class StockQuoteQuery:
                 'listing_date': record.listTime,
                 'price_spread': record.priceSpread if record.HasField('priceSpread') else 0,
                 'dark_status': QUOTE.REV_DARK_STATUS_MAP[record.darkStatus] if record.HasField('darkStatus') else DarkStatus.NONE,
+				'status': SecurityStatus.to_string2(record.status) if record.HasField('status') else SecurityStatus.NONE,
                 "strike_price": record.optionExData.strikePrice,
                 "contract_size": record.optionExData.contractSize,
                 "open_interest": record.optionExData.openInterest,
