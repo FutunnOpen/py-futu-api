@@ -1,6 +1,7 @@
 import pandas as pd
 from futu.quote.quote_query import *
 
+
 class OpenQuoteTool(object):
 
     def __init__(self, context):
@@ -8,16 +9,15 @@ class OpenQuoteTool(object):
         if context is None:
             raise Exception("context is empty!")
 
-
     def save_delay_statistics(self, file_path):
         if file_path is None:
             return
-        html_file = open(file_path, 'w',encoding='utf-8')
+        html_file = open(file_path, 'w', encoding='utf-8')
         local_path = os.path.dirname(os.path.realpath(__file__))
         with open(os.path.join(local_path, "head.html"), 'r', encoding='utf-8') as html_head_file:
             html_file.write(html_head_file.read())
 
-        segment_list = [0, 2, 4, 6, 8, 10, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 
+        segment_list = [0, 2, 4, 6, 8, 10, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56,
                         60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 110, 120, 130, 140,
                         150, 160, 170, 180, 200, 250, 300, 500, 1000, -1]
         req_head_describe = [("proto_id", "命令字"),
@@ -49,7 +49,8 @@ class OpenQuoteTool(object):
             place_orders = dic["place_order"]
             print(qot_pushes, req_replies, place_orders)
 
-            html_file.write("<div class='title'>{}</div><HR>\n".format(QotPushStage.get_describe(stage_type)))
+            html_file.write(
+                "<div class='title'>{}</div><HR>\n".format(QotPushStage.get_describe(stage_type)))
 
             if len(qot_pushes) > 0:
                 html_file.write("<div class='sub-title'>推送耗时统计</div>\n")
@@ -65,22 +66,28 @@ class OpenQuoteTool(object):
                     df.drop(df[df.proportion == 0.0].index, inplace=True)
                     if len(df) == 0:
                         continue
-                    df['proportion'] = df['proportion'].map(lambda x: format(x/100, '.2%'))
-                    df['cumulative_ratio'] = df['cumulative_ratio'].map(lambda x: format(x / 100, '.2%'))
+                    df['proportion'] = df['proportion'].map(
+                        lambda x: format(x/100, '.2%'))
+                    df['cumulative_ratio'] = df['cumulative_ratio'].map(
+                        lambda x: format(x / 100, '.2%'))
 
                     # df["cumulative_ratio"] = df["begin"].map(str) + ' - ' + df["end"].map(str)
                     df.insert(0, 'interval', '')
                     try:
-                        df["interval"] = df.apply(lambda x: str(x.begin) + 'ms - ' + str(x.end) + "ms", axis=1)
+                        df["interval"] = df.apply(lambda x: str(
+                            x.begin) + 'ms - ' + str(x.end) + "ms", axis=1)
                     except Exception as e:
                         print("df.apply error", e)
                         pass
 
-                    df.drop(['begin', 'end'], axis=1, inplace=True)  # 删除begin、end
+                    df.drop(['begin', 'end'], axis=1,
+                            inplace=True)  # 删除begin、end
                     col_new_head = ['统计区间（ms）', '百分比', '包数', '总体延迟百分比']
                     df.columns = col_new_head
-                    qot_push_type = QotPushType.to_string2(push["qot_push_type"])
-                    html_file.write("<div class='item'>{}推送耗时</div>".format(QotPushType.get_describe(qot_push_type)))
+                    qot_push_type = QotPushType.to_string2(
+                        push["qot_push_type"])
+                    html_file.write(
+                        "<div class='item'>{}推送耗时</div>".format(QotPushType.get_describe(qot_push_type)))
                     html_file.write(df.to_html(header=True, index=False))
                     html_file.write("<br>\n")
 
@@ -104,13 +111,3 @@ class OpenQuoteTool(object):
 
         html_file.write("</body></html>")
         html_file.close()
-
-
-
-
-
-
-
-
-
-

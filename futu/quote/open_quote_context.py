@@ -22,7 +22,8 @@ class OpenQuoteContext(OpenContextBase):
         :param port: 端口
         """
         self._ctx_subscribe = {}
-        super(OpenQuoteContext, self).__init__(host, port, is_async_connect, is_encrypt)
+        super(OpenQuoteContext, self).__init__(
+            host, port, is_async_connect, is_encrypt)
 
     def close(self):
         """
@@ -66,7 +67,8 @@ class OpenQuoteContext(OpenContextBase):
                 if subtype not in subtype_list:
                     subtype_list.append(subtype)   # 合并subtype请求
             else:
-                ret_code, ret_msg = self._reconnect_subscribe(code_list, subtype_list)
+                ret_code, ret_msg = self._reconnect_subscribe(
+                    code_list, subtype_list)
                 logger.debug("reconnect subscribe code_count={} ret_code={} ret_msg={} subtype_list={} code_list={}".format(
                     len(code_list), ret_code, ret_msg, subtype_list, code_list))
                 if ret_code != RET_OK:
@@ -78,24 +80,26 @@ class OpenQuoteContext(OpenContextBase):
 
             # 循环即将结束
             if subtype_cur_cnt == subtype_all_cnt and len(code_list):
-                ret_code, ret_msg = self._reconnect_subscribe(code_list, subtype_list)
-                logger.debug("reconnect subscribe code_count={} ret_code={} ret_msg={} subtype_list={} code_list={}".format(len(code_list), ret_code, ret_msg, subtype_list, code_list))
+                ret_code, ret_msg = self._reconnect_subscribe(
+                    code_list, subtype_list)
+                logger.debug("reconnect subscribe code_count={} ret_code={} ret_msg={} subtype_list={} code_list={}".format(
+                    len(code_list), ret_code, ret_msg, subtype_list, code_list))
                 if ret_code != RET_OK:
                     break
                 resub_count += len(code_list)
                 code_list = []
                 subtype_list = []
 
-        logger.debug("reconnect subscribe all code_count={} ret_code={} ret_msg={}".format(resub_count, ret_code, ret_msg))
+        logger.debug("reconnect subscribe all code_count={} ret_code={} ret_msg={}".format(
+            resub_count, ret_code, ret_msg))
 
         # 重定阅失败，重连
         if ret_code != RET_OK:
-            logger.error("reconnect subscribe error, close connect and retry!!")
+            logger.error(
+                "reconnect subscribe error, close connect and retry!!")
             self._status = ContextStatus.START
             self._wait_reconnect()
         return ret_code, ret_msg
-
-
 
     def get_trading_days(self, market, start=None, end=None):
         """获取交易日
@@ -135,7 +139,6 @@ class OpenQuoteContext(OpenContextBase):
 
         if ret_code != RET_OK:
             return RET_ERROR, msg
-
 
         return RET_OK, trade_day_list
 
@@ -297,7 +300,6 @@ class OpenQuoteContext(OpenContextBase):
                 error_str = ERROR_STR_PREFIX + "the type of %s param is wrong" % x
                 return RET_ERROR, error_str
 
-
         max_kl_num = 1000
         data_finish = False
         list_ret = []
@@ -313,7 +315,8 @@ class OpenQuoteContext(OpenContextBase):
                 "max_num": max_kl_num,
                 "conn_id": self.get_sync_conn_id()
             }
-            query_processor = self._get_sync_query_processor(query_cls.pack_req, query_cls.unpack_rsp)
+            query_processor = self._get_sync_query_processor(
+                query_cls.pack_req, query_cls.unpack_rsp)
             ret_code, msg, content = query_processor(**kargs)
             if ret_code != RET_OK:
                 return ret_code, msg
@@ -336,12 +339,12 @@ class OpenQuoteContext(OpenContextBase):
         return RET_OK, kline_frame_table
 
     def get_history_kline(self,
-                      code,
-                      start=None,
-                      end=None,
-                      ktype=KLType.K_DAY,
-                      autype=AuType.QFQ,
-                      fields=[KL_FIELD.ALL]):
+                          code,
+                          start=None,
+                          end=None,
+                          ktype=KLType.K_DAY,
+                          autype=AuType.QFQ,
+                          fields=[KL_FIELD.ALL]):
         """
             得到本地历史k线，需先参照帮助文档下载k线
 
@@ -770,10 +773,10 @@ class OpenQuoteContext(OpenContextBase):
                            'option_rho'
                            ]
 
-        index_col_list = [ 'index_raise_count',
-                            'index_fall_count',
-                            'index_equal_count'
-                            ]
+        index_col_list = ['index_raise_count',
+                          'index_fall_count',
+                          'index_equal_count'
+                          ]
 
         plate_col_list = ['plate_raise_count',
                           'plate_fall_count',
@@ -1108,7 +1111,8 @@ class OpenQuoteContext(OpenContextBase):
 
     def _subscribe_impl(self, code_list, subtype_list, is_first_push, subscribe_push=True):
 
-        ret, msg, code_list, subtype_list = self._check_subscribe_param(code_list, subtype_list)
+        ret, msg, code_list, subtype_list = self._check_subscribe_param(
+            code_list, subtype_list)
         if ret != RET_OK:
             return ret, msg
 
@@ -1184,11 +1188,13 @@ class OpenQuoteContext(OpenContextBase):
             start_idx = 0
 
             while start_idx < all_count and len(sub_list):
-                sub_count = one_size if start_idx + one_size <= all_count else (all_count - start_idx)
+                sub_count = one_size if start_idx + \
+                    one_size <= all_count else (all_count - start_idx)
                 sub_codes = code_list[start_idx: start_idx + sub_count]
                 start_idx += sub_count
 
-                ret_code, ret_data = self._subscribe_impl(sub_codes, sub_list, False)
+                ret_code, ret_data = self._subscribe_impl(
+                    sub_codes, sub_list, False)
                 if ret_code != RET_OK:
                     break
             if ret_code != RET_OK:
@@ -1208,7 +1214,8 @@ class OpenQuoteContext(OpenContextBase):
                 ret != RET_OK err_message为错误描述字符串
         """
         if not unsubscribe_all:
-            ret, msg, code_list, subtype_list = self._check_subscribe_param(code_list, subtype_list)
+            ret, msg, code_list, subtype_list = self._check_subscribe_param(
+                code_list, subtype_list)
             if ret != RET_OK:
                 return ret, msg
         query_processor = self._get_sync_query_processor(SubscriptionQuery.pack_unsubscribe_req,
@@ -1239,7 +1246,8 @@ class OpenQuoteContext(OpenContextBase):
         if unsubscribe_all:  # 反订阅全部别的参数不重要
             return RET_OK, None
 
-        ret_code, msg, unpush_req_str = SubscriptionQuery.pack_unpush_req(code_list, subtype_list, self.get_async_conn_id())
+        ret_code, msg, unpush_req_str = SubscriptionQuery.pack_unpush_req(
+            code_list, subtype_list, self.get_async_conn_id())
         if ret_code != RET_OK:
             return RET_ERROR, msg
 
@@ -1251,7 +1259,6 @@ class OpenQuoteContext(OpenContextBase):
 
     def unsubscribe_all(self):
         return self.unsubscribe(None, None, True)
-
 
     def query_subscription(self, is_all_conn=True):
         """
@@ -1624,7 +1631,8 @@ class OpenQuoteContext(OpenContextBase):
         list_ret = []
         # 循环请求数据，避免一次性取太多超时
         while not data_finish:
-            logger.debug('get_multi_points_history_kline - wait ... %s' % datetime.now())
+            logger.debug(
+                'get_multi_points_history_kline - wait ... %s' % datetime.now())
             kargs = {
                 "code_list": req_codes,
                 "dates": req_dates,
@@ -1804,12 +1812,14 @@ class OpenQuoteContext(OpenContextBase):
             return RET_ERROR, msg
 
         if holder_type < 1 or holder_type > len(STOCK_HOLDER_CLASS_MAP):
-            msg = ERROR_STR_PREFIX + "the type {0} is wrong, total number of types is {1}".format(holder_type, len(STOCK_HOLDER_CLASS_MAP))
+            msg = ERROR_STR_PREFIX + "the type {0} is wrong, total number of types is {1}".format(
+                holder_type, len(STOCK_HOLDER_CLASS_MAP))
             return RET_ERROR, msg
 
-        ret_code, msg, start, end = normalize_start_end_date(start, end, delta_days=365)
+        ret_code, msg, start, end = normalize_start_end_date(
+            start, end, delta_days=365)
         if ret_code != RET_OK:
-            return  ret_code, msg
+            return ret_code, msg
 
         query_processor = self._get_sync_query_processor(
             HoldingChangeList.pack_req, HoldingChangeList.unpack_rsp)
@@ -1878,7 +1888,8 @@ class OpenQuoteContext(OpenContextBase):
             error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
             return RET_ERROR, error_str
 
-        ret_code, msg, start, end = normalize_start_end_date(start, end, delta_days=29, default_time_end='00:00:00', prefer_end_now=False)
+        ret_code, msg, start, end = normalize_start_end_date(
+            start, end, delta_days=29, default_time_end='00:00:00', prefer_end_now=False)
         if ret_code != RET_OK:
             return ret_code, msg
 
@@ -1905,7 +1916,8 @@ class OpenQuoteContext(OpenContextBase):
 
         option_chain = pd.DataFrame(option_chain_list, columns=col_list)
 
-        option_chain.sort_values(by=["strike_time", "strike_price"], axis=0, ascending=True, inplace=True)
+        option_chain.sort_values(
+            by=["strike_time", "strike_price"], axis=0, ascending=True, inplace=True)
         option_chain.index = range(len(option_chain))
 
         return RET_OK, option_chain
@@ -1961,7 +1973,8 @@ class OpenQuoteContext(OpenContextBase):
         if stock_owner is not None:
             req.stock_owner = stock_owner
 
-        query_processor = self._get_sync_query_processor(QuoteWarrant.pack_req, QuoteWarrant.unpack_rsp)
+        query_processor = self._get_sync_query_processor(
+            QuoteWarrant.pack_req, QuoteWarrant.unpack_rsp)
         kargs = {
             "req": req,
             "conn_id": self.get_sync_conn_id()
@@ -1979,14 +1992,16 @@ class OpenQuoteContext(OpenContextBase):
                         'street_rate', 'street_vol', 'amplitude', 'issue_size', 'high_price', 'low_price',
                         'implied_volatility', 'delta', 'effective_leverage', 'list_timestamp',  'last_trade_timestamp',
                         'maturity_timestamp', 'upper_strike_price', 'lower_strike_price', 'inline_price_status']
-            warrant_data_frame = pd.DataFrame(warrant_data_list, columns=col_list)
-            #1120400921001028854
+            warrant_data_frame = pd.DataFrame(
+                warrant_data_list, columns=col_list)
+            # 1120400921001028854
             return ret_code, (warrant_data_frame, last_page, all_count)
 
     def get_history_kl_quota(self, get_detail=False):
         """拉取历史K线已经用掉的额度"""
         # self.get_login_user_id()
-        query_processor = self._get_sync_query_processor(HistoryKLQuota.pack_req, HistoryKLQuota.unpack_rsp)
+        query_processor = self._get_sync_query_processor(
+            HistoryKLQuota.pack_req, HistoryKLQuota.unpack_rsp)
         kargs = {
             "get_detail": get_detail,
             "conn_id": self.get_sync_conn_id()
@@ -1999,7 +2014,6 @@ class OpenQuoteContext(OpenContextBase):
             remain_quota = data["remain_quota"]
             detail_list = data["detail_list"]
             return ret_code, (used_quota, remain_quota, detail_list)
-
 
     def get_rehab(self, code):
         """获取除权信息"""
@@ -2032,7 +2046,8 @@ class OpenQuoteContext(OpenContextBase):
                 backward_adj_factorB    float          后复权因子B
                 =====================   ===========   =================================================================================
         """
-        query_processor = self._get_sync_query_processor(RequestRehab.pack_req, RequestRehab.unpack_rsp)
+        query_processor = self._get_sync_query_processor(
+            RequestRehab.pack_req, RequestRehab.unpack_rsp)
         kargs = {
             "stock": code,
             "conn_id": self.get_sync_conn_id()
@@ -2053,7 +2068,8 @@ class OpenQuoteContext(OpenContextBase):
 
     def get_user_info(self, info_field=[]):
         """获取用户信息（内部保留函数）"""
-        query_processor = self._get_sync_query_processor(GetUserInfo.pack_req, GetUserInfo.unpack_rsp)
+        query_processor = self._get_sync_query_processor(
+            GetUserInfo.pack_req, GetUserInfo.unpack_rsp)
         kargs = {
             "info_field": info_field,
             "conn_id": self.get_sync_conn_id()
@@ -2142,7 +2158,8 @@ class OpenQuoteContext(OpenContextBase):
         required int32 op = 2; //操作, VerificationOp
         optional string code = 3; //验证码，请求验证码时忽略该字段，输入时必填"""
 
-        query_processor = self._get_sync_query_processor(Verification.pack_req, Verification.unpack_rsp)
+        query_processor = self._get_sync_query_processor(
+            Verification.pack_req, Verification.unpack_rsp)
         kargs = {
             "verification_type": verification_type,
             "verification_op": verification_op,
@@ -2295,7 +2312,7 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return RET_OK, ret
 
-    def get_code_change(self, code_list = [], time_filter_list = [], type_list = []):
+    def get_code_change(self, code_list=[], time_filter_list=[], type_list=[]):
         """
         股票更换代码或者中途并行交易临时代码信息
 
@@ -2357,10 +2374,10 @@ class OpenQuoteContext(OpenContextBase):
         )
 
         kargs = {
-                    "code_list": code_list,
-                    "time_filter_list": time_filter_list,
-                    "type_list": type_list,
-                    "conn_id": self.get_sync_conn_id()
+            "code_list": code_list,
+            "time_filter_list": time_filter_list,
+            "type_list": type_list,
+            "conn_id": self.get_sync_conn_id()
         }
         ret_code, msg, ret = query_processor(**kargs)
         if ret_code == RET_ERROR:
@@ -2378,6 +2395,3 @@ class OpenQuoteContext(OpenContextBase):
             return RET_OK, ret_frame
         else:
             return RET_ERROR, "empty data"
-
-
-
