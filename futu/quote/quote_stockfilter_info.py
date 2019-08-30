@@ -12,7 +12,7 @@ class SimpleFilter(object):
     filter_min = None  # 区间下限，闭区间
     filter_max = None  # 区间上限，闭区间
     sort = None  # SortDir 排序方向 SortDir
-    is_no_filter = None # 如果这个字段不需要筛选，但是需要返回这个字段的数据，指定该字段为ture。当该字段为true时，以上三个字段无效。
+    is_no_filter = None  # 如果这个字段不需要筛选，但是需要返回这个字段的数据，指定该字段为ture。当该字段为true时，以上三个字段无效。
 
     def __init__(self):
         self.stock_field = StockField.NONE
@@ -62,7 +62,8 @@ class FilterStockData(object):
         if not isinstance(rsp_item, StockData):
             raise Exception("Response item need Qot_StockFilter_pb2")
 
-        self.stock_code = merge_qot_mkt_stock_str(rsp_item.security.market, rsp_item.security.code)
+        self.stock_code = merge_qot_mkt_stock_str(
+            rsp_item.security.market, rsp_item.security.code)
         #  名称 type = string
         self.stock_name = rsp_item.name
         #  筛选后的简单属性数据 type = Qot_StockFilter.BaseData
@@ -91,15 +92,3 @@ class FilterStockData(object):
                 if value is not None:
                     s += (" {}:{} ".format(attr, value))
         return s
-
-
-
-
-
-    
-
-
-
-
-
-

@@ -27,7 +27,7 @@ field.sort = SortDir.ASCEND
 # field3.stock_field = StockField.CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO
 # field3.is_no_filter = True
 
-ret, ls = quote_ctx.get_stock_filter(StockMarket.HK, [field])
+ret, ls = quote_ctx.get_stock_filter(Market.HK, [field])
 last_page, all_count, ret_list = ls
 print(ret_list)
 

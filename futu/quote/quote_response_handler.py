@@ -3,6 +3,7 @@ import pandas as pd
 from futu.common import RspHandlerBase
 from futu.quote.quote_query import *
 
+
 class StockQuoteHandlerBase(RspHandlerBase):
     """
     异步处理推送的订阅股票的报价。
@@ -94,6 +95,7 @@ class OrderBookHandlerBase(RspHandlerBase):
             self.on_recv_log(content)
 
         return ret_code, content
+
 
 class CurKlineHandlerBase(RspHandlerBase):
     """
@@ -257,7 +259,8 @@ class BrokerHandlerBase(RspHandlerBase):
     """
     @classmethod
     def parse_rsp_pb(cls, rsp_pb):
-        ret_code, msg, (stock_code, bid_content, ask_content) = BrokerQueueQuery.unpack_rsp(rsp_pb)
+        ret_code, msg, (stock_code, bid_content,
+                        ask_content) = BrokerQueueQuery.unpack_rsp(rsp_pb)
         if ret_code != RET_OK:
             return ret_code, msg
         else:
@@ -289,9 +292,6 @@ class BrokerHandlerBase(RspHandlerBase):
             bid_frame_table = pd.DataFrame(bid_content, columns=bid_list)
             ask_frame_table = pd.DataFrame(ask_content, columns=ask_list)
             return ret_code, stock_code, [bid_frame_table, ask_frame_table]
-
-
-
 
 
 class KeepAliveHandlerBase(RspHandlerBase):
@@ -331,6 +331,7 @@ class SysNotifyHandlerBase(RspHandlerBase):
 
 class AsyncHandler_InitConnect(RspHandlerBase):
     """ AsyncHandler_TrdSubAccPush"""
+
     def __init__(self, notify_obj=None):
         self._notify_obj = notify_obj
         super(AsyncHandler_InitConnect, self).__init__()
@@ -340,7 +341,8 @@ class AsyncHandler_InitConnect(RspHandlerBase):
         ret_code, msg, conn_info_map = InitConnect.unpack_rsp(rsp_pb)
 
         if self._notify_obj is not None:
-            self._notify_obj.on_async_init_connect(ret_code, msg, conn_info_map)
+            self._notify_obj.on_async_init_connect(
+                ret_code, msg, conn_info_map)
 
         return ret_code, msg
 
