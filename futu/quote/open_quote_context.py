@@ -2276,9 +2276,8 @@ class OpenQuoteContext(OpenContextBase):
         Qot_StockFilter
         :param plate_code: 板块代码, string, 例如，”SH.BK0001”，”SH.BK0002”，先利用获取子版块列表函数获取子版块代码
         """
-        if not StockMarket.if_has_key(market):
-            error_str = ERROR_STR_PREFIX + " market is %s, which is not valid. (%s)" \
-                                           % (market, StockMarket.get_all_keys())
+        if market not in MKT_MAP:
+            error_str = ERROR_STR_PREFIX + "the value of market param is wrong "
             return RET_ERROR, error_str
 
         if plate_code is not None and is_str(plate_code) is False:
