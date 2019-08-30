@@ -194,6 +194,8 @@ class StockBasicInfoQuery:
             "strike_price": record.optionExData.strikePrice if record.HasField('optionExData') else NoneDataType,
             "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
             "delisting": record.basic.delisting if record.basic.HasField('delisting') else NoneDataType
+            "index_option_type": IndexOptionType.to_string2(record.optionExData.indexOptionType) if record.HasField('optionExData') else NoneDataType,
+
         } for record in raw_basic_info_list]
         return RET_OK, "", basic_info_list
 
@@ -387,6 +389,12 @@ class MarketSnapshotQuery:
                 snapshot_tmp['option_vega'] = record.optionExData.vega
                 snapshot_tmp['option_theta'] = record.optionExData.theta
                 snapshot_tmp['option_rho'] = record.optionExData.rho
+				snapshot_tmp['net_open_interest'] = record.optionExData.netOpenInterest if record.optionExData.HasField('netOpenInterest') else 'N/A',
+				snapshot_tmp['expiry_date_distance'] = record.optionExData.expiryDateDistance if record.optionExData.HasField('expiryDateDistance') else 'N/A',
+				snapshot_tmp['contract_nominal_value'] = record.optionExData.contractNominalValue if record.optionExData.HasField('contractNominalValue') else 'N/A',
+				snapshot_tmp['owner_lot_multiplier'] = record.optionExData.ownerLotMultiplier if record.optionExData.HasField('ownerLotMultiplier') else 'N/A',
+				snapshot_tmp['option_area_type'] = OptionAreaType.to_string2(record.optionExData.optionAreaType) if record.optionExData.HasField('optionAreaType') else 'N/A',
+				snapshot_tmp['contract_multiplier'] = record.optionExData.contractMultiplier if record.optionExData.HasField('contractMultiplier') else 'N/A',
 
             snapshot_tmp['index_valid'] = False
             if record.HasField('indexExData'):
@@ -1127,6 +1135,12 @@ class StockQuoteQuery:
                 'vega': record.optionExData.vega,
                 'theta': record.optionExData.theta,
                 'rho': record.optionExData.rho,
+				'net_open_interest': record.optionExData.netOpenInterest if record.optionExData.HasField('netOpenInterest') else 'N/A',
+				'expiry_date_distance': record.optionExData.expiryDateDistance if record.optionExData.HasField('expiryDateDistance') else 'N/A',
+				'contract_nominal_value': record.optionExData.contractNominalValue if record.optionExData.HasField('contractNominalValue') else 'N/A',
+				'owner_lot_multiplier': record.optionExData.ownerLotMultiplier if record.optionExData.HasField('ownerLotMultiplier') else 'N/A',
+				'option_area_type': OptionAreaType.to_string2(record.optionExData.optionAreaType) if record.optionExData.HasField('optionAreaType') else 'N/A',
+				'contract_multiplier': record.optionExData.contractMultiplier if record.optionExData.HasField('contractMultiplier') else 'N/A',
             })
         return RET_OK, "", quote_list
 
@@ -1817,7 +1831,7 @@ class OptionChain:
         pass
 
     @classmethod
-    def pack_req(cls, code, conn_id, start_date, end_date=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL):
+    def pack_req(cls, code, index_option_type, conn_id, start_date, end_date=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL):
 
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
@@ -1852,10 +1866,16 @@ class OptionChain:
         if option_type == 0:
             option_type = None
 
+        r, index_option_type = IndexOptionType.to_number(index_option_type)
+        if r is False:
+            index_option_type = None
+
         from futu.common.pb.Qot_GetOptionChain_pb2 import Request
         req = Request()
         req.c2s.owner.market = market_code
         req.c2s.owner.code = stock_code
+        if index_option_type:
+            req.c2s.indexOptionType = index_option_type
         req.c2s.beginTime = start_date
         req.c2s.endTime = end_date
         if option_type:
@@ -1895,6 +1915,7 @@ class OptionChain:
                         "strike_time": record.optionExData.strikeTime,
                         "strike_price": record.optionExData.strikePrice if record.HasField('optionExData') else NoneDataType,
                         "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
+						"index_option_type": IndexOptionType.to_string2(record.optionExData.indexOptionType) if record.HasField('optionExData') else NoneDataType,
                     }
                     data_list.append(quote_list)
 

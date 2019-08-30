@@ -2073,7 +2073,7 @@ class SecurityStatus(FtEnum):
 
     def load_dic(self):
         return {
-            self.NONE: Qot_Common_pb2.SecurityStatus_Unkonw,
+            self.NONE: Qot_Common_pb2.SecurityStatus_Unknow,
             self.NORMAL: Qot_Common_pb2.SecurityStatus_Normal,
             self.LISTING: Qot_Common_pb2.SecurityStatus_Listing,
             self.PURCHASING: Qot_Common_pb2.SecurityStatus_Purchasing,
@@ -2096,3 +2096,32 @@ class SecurityStatus(FtEnum):
             self.AFTER_COMBINATION: Qot_Common_pb2.SecurityStatus_AfterCombination,
             self.AFTER_TRANSACTION: Qot_Common_pb2.SecurityStatus_AfterTransation
         }
+
+#
+class IndexOptionType(FtEnum):
+    NONE = "N/A"                                                                 #未知
+    NORMAL = "NORMAL"                                                            #正常
+    SMALL = "SMALL"                                                              #小型
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.IndexOptionType_Unknown,
+            self.NORMAL: Qot_Common_pb2.IndexOptionType_Normal,
+            self.SMALL: Qot_Common_pb2.IndexOptionType_Small
+        }
+
+
+class OptionAreaType(FtEnum):
+    NONE = "N/A"                                                                 #未知
+    AMERICAN = "AMERICAN"                                                        #美式
+    EUROPEAN = "EUROPEAN"                                                        #欧式
+    BERMUDA = "BERMUDA"                                                          #百慕大
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.OptionAreaType_Unknown,
+            self.AMERICAN: Qot_Common_pb2.OptionAreaType_American,
+            self.EUROPEAN: Qot_Common_pb2.OptionAreaType_European,
+            self.BERMUDA: Qot_Common_pb2.OptionAreaType_Bermuda
+        }
+

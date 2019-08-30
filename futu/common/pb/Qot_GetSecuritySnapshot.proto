@@ -77,6 +77,15 @@ message OptionSnapshotExData
     required double theta = 12; //希腊值 Theta
     required double rho = 13; //希腊值 Rho
 	optional double strikeTimestamp = 14; //行权日时间戳  
+
+	//以下字段仅支持港股期权
+	optional int32 indexOptionType = 15; //Qot_Common.IndexOptionType, 指数期权的类型，仅在指数期权有效
+	optional int32 netOpenInterest = 16; //净未平仓合约数
+	optional int32 expiryDateDistance = 17; //距离到期日天数
+	optional double contractNominalValue = 18; //合约名义金额
+	optional double ownerLotMultiplier = 19; //相等正股手数，指数期权无该字段
+	optional int32 optionAreaType = 20; //OptionAreaType, 期权地区类型
+	optional double contractMultiplier = 21; //合约乘数，指数期权特有字段
 }
 
 // 指数类型额外数据

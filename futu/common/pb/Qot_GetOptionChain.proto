@@ -14,7 +14,8 @@ enum OptionCondType
 
 message C2S
 {
-	required Qot_Common.Security owner = 1; //期权标的股
+	required Qot_Common.Security owner = 1; //期权标的股,目前仅支持传入港美正股以及恒指国指
+	optional int32 indexOptionType = 6; //Qot_Common.IndexOptionType, 指数期权的类型，仅用于恒指国指
 	optional int32 type = 2; //Qot_Common.OptionType,期权类型,可选字段,不指定则表示都返回
 	optional int32 condition = 3; //OptionCondType,价内价外,可选字段,不指定则表示都返回
 	required string beginTime = 4; //期权到期日开始时间

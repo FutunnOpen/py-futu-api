@@ -48,7 +48,9 @@ class StockQuoteHandlerBase(RspHandlerBase):
                 'turnover', 'turnover_rate', 'amplitude', 'suspension',
                 'listing_date', 'price_spread', 'dark_status', 'status', 'strike_price',
                 'contract_size', 'open_interest', 'implied_volatility',
-                'premium', 'delta', 'gamma', 'vega', 'theta', 'rho'
+                'premium', 'delta', 'gamma', 'vega', 'theta', 'rho',
+                'net_open_interest', 'expiry_date_distance', 'contract_nominal_value', 
+                'owner_lot_multiplier', 'option_area_type', 'contract_multiplier', 
             ]
 
             quote_frame_table = pd.DataFrame(content, columns=col_list)
