@@ -1980,19 +1980,19 @@ class StockField(FtEnum):
 # 选股使用，因为选股不分沪深
 
 
-class StockMarket(FtEnum):
-    NONE = "N/A"                                       # 未知
-    HK = "HK"                                          # 港股
-    US = "US"                                          # 美股
-    CN = "CN"                                          # A股
-
-    def load_dic(self):
-        return {
-            self.NONE: Qot_StockFilter_pb2.StockMarket_Unknown,
-            self.HK: Qot_StockFilter_pb2.StockMarket_HK,
-            self.US: Qot_StockFilter_pb2.StockMarket_US,
-            self.CN: Qot_StockFilter_pb2.StockMarket_CN
-        }
+# class StockMarket(FtEnum):
+#     NONE = "N/A"                                       # 未知
+#     HK = "HK"                                          # 港股
+#     US = "US"                                          # 美股
+#     CN = "CN"                                          # A股
+#
+#     def load_dic(self):
+#         return {
+#             self.NONE: Qot_StockFilter_pb2.StockMarket_Unknown,
+#             self.HK: Qot_StockFilter_pb2.StockMarket_HK,
+#             self.US: Qot_StockFilter_pb2.StockMarket_US,
+#             self.CN: Qot_StockFilter_pb2.StockMarket_CN
+#         }
 
 
 class CodeChangeType(FtEnum):

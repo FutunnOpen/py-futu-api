@@ -2523,11 +2523,8 @@ class StockFilterQuery:
         req.c2s.num = num
 
         """拆解market"""
-        ret, market_val = StockMarket.to_number(market)
-        if ret:
-            req.c2s.market = market_val
-        else:
-            return RET_ERROR, market_val, None
+        req.c2s.market = MKT_MAP[market]
+
 
         """拆解plate_code"""
         if plate_code is not None:
