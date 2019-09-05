@@ -28,7 +28,7 @@ class InitConnect:
         req.c2s.recvNotify = recv_notify
 
         if is_encrypt:
-            req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_FTAES_ECB
+            req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_AES_CBC
         else:
             req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_None
 
@@ -49,6 +49,7 @@ class InitConnect:
             res['login_user_id'] = rsp_pb.s2c.loginUserID
             res['conn_id'] = rsp_pb.s2c.connID
             res['conn_key'] = rsp_pb.s2c.connAESKey
+            res['conn_iv'] = rsp_pb.s2c.aesCBCiv if rsp_pb.s2c.HasField('aesCBCiv') else None
             res['keep_alive_interval'] = rsp_pb.s2c.keepAliveInterval
         else:
             return RET_ERROR, "rsp_pb error", None
