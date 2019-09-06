@@ -2073,7 +2073,7 @@ class SecurityStatus(FtEnum):
 
     def load_dic(self):
         return {
-            self.NONE: Qot_Common_pb2.SecurityStatus_Unknow,
+            self.NONE: Qot_Common_pb2.SecurityStatus_Unknown,
             self.NORMAL: Qot_Common_pb2.SecurityStatus_Normal,
             self.LISTING: Qot_Common_pb2.SecurityStatus_Listing,
             self.PURCHASING: Qot_Common_pb2.SecurityStatus_Purchasing,

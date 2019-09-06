@@ -53,6 +53,9 @@ class StockQuoteHandlerBase(RspHandlerBase):
                 'owner_lot_multiplier', 'option_area_type', 'contract_multiplier', 
             ]
 
+            col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)
+            col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_after)
+
             quote_frame_table = pd.DataFrame(content, columns=col_list)
 
             return RET_OK, quote_frame_table
