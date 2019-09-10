@@ -2430,3 +2430,29 @@ class OpenQuoteContext(OpenContextBase):
             return RET_OK, ret_frame
         else:
             return RET_ERROR, "empty data"
+
+    def get_ipo_list(self, market):
+        """
+        获取某个市场的ipo列表
+        :param market: str, see Market
+        :return:
+        """
+        query_processor = self._get_sync_query_processor(
+            GetIpoListQuery.pack_req,
+            GetIpoListQuery.unpack,
+        )
+
+        kargs = {
+            'conn_id': self.get_sync_conn_id(),
+            'market': market
+        }
+        ret, msg, data = query_processor(**kargs)
+        if ret != RET_OK:
+            return ret, msg
+
+        col_list = []
+        col_list.extend(row[0] for row in pb_field_map_BasicIpoData)
+        col_list.extend(row[0] for row in pb_field_map_CNIpoExData)
+        col_list.extend(row[0] for row in pb_field_map_HKIpoExData)
+        col_list.extend(row[0] for row in pb_field_map_USIpoExData)
+        return RET_OK, pd.DataFrame(data, columns=col_list)

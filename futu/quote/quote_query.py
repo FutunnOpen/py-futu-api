@@ -35,6 +35,21 @@ def set_item_none(item, field_map):
         item[row[0]] = NoneDataType
 
 
+def conv_pb_security_to_code(security):
+    return merge_qot_mkt_stock_str(security.market, security.code)
+
+def merge_pb_cnipoexdata_winningnumdata(winningnumdata):
+    data = ''
+    for item in winningnumdata:
+        if data == '':
+            data = item.winningName + item.winningInfo
+        else:
+            data = data + '\n' + item.winningName + ":" + item.winningInfo
+
+    data = data.rstrip()
+    return data
+
+
 # python_name, pb_name, is_required, conv_func
 pb_field_map_OptionBasicQotExData = [
     ('strike_price', 'strikePrice', True, None),
@@ -75,6 +90,49 @@ pb_field_map_PreAfterMarketData_after = [
     ("after_change_val", "changeVal", False, None),
     ("after_change_rate", "changeRate", False, None),
     ("after_amplitude", "amplitude", False, None),
+]
+
+pb_field_map_BasicIpoData = [
+    ("code", "security", True, conv_pb_security_to_code),
+    ("name", "name", True, None),
+    ("list_time", "listTime", False, None),
+    ("list_timestamp", "listTimestamp", False, None),
+]
+
+pb_field_map_CNIpoExData = [
+    ("apply_code", "applyCode", True, None),
+    ("issue_size", "issueSize", True, None),
+    ("online_issue_size", "onlineIssueSize", True, None),
+    ("apply_upper_limit", "applyUpperLimit", True, None),
+    ("apply_limit_market_value", "applyLimitMarketValue", True, None),
+    ("is_estimate_ipo_price", "isEstimateIpoPrice", True, None),
+    ("ipo_price", "ipoPrice", True, None),
+    ("industry_pe_rate", "industryPeRate", True, None),
+    ("is_estimate_winning_ratio", "isEstimateWinningRatio", True, None),
+    ("winning_ratio", "winningRatio", True, None),
+    ("issue_pe_rate", "issuePeRate", True, None),
+    ("apply_time", "applyTime", False, None),
+    ("apply_timestamp", "applyTimestamp", False, None),
+    ("winning_time", "winningTime", False, None),
+    ("winning_timestamp", "winningTimestamp", False, None),
+    ("is_has_won", "isHasWon", True, None),
+    ("winning_num_data", "winningNumData", True, merge_pb_cnipoexdata_winningnumdata),
+]
+
+pb_field_map_HKIpoExData = [
+    ("ipo_price_min", "ipoPriceMin", True, None),
+    ("ipo_price_max", "ipoPriceMax", True, None),
+    ("list_price", "listPrice", True, None),
+    ("lot_size", "lotSize", True, None),
+    ("entrance_price", "entrancePrice", True, None),
+    ("is_support_ipo", "isSupportIpo", True, None),
+    ("apply_end_time", "applyEndTime", False, None),
+    ("apply_end_timestamp", "applyEndTimestamp", False, None),
+]
+
+pb_field_map_USIpoExData = [
+    ("ipo_price_min", "ipoPriceMin", True, None),
+    ("ipo_price_max", "ipoPriceMax", True, None),
 ]
 
 class InitConnect:
@@ -2747,5 +2805,54 @@ class GetCodeChangeQuery:
             data["effective_time"] = item.effectiveTime
             #  结束时间，在创业板转主板事件不存在该字段，在剩余事件表示临时代码交易结束时间 type = string
             data["end_time"] = item.endTime
+            ret_list.append(data)
+        return RET_OK, "", ret_list
+
+
+class GetIpoListQuery:
+    """
+    Query GetIpoListQuery.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, conn_id, market):
+        # 开始组包
+        from futu.common.pb.Qot_GetIpoList_pb2 import Request
+        req = Request()
+        try:
+            req.c2s.market = MKT_MAP[market]
+        except KeyError:
+            return RET_ERROR, 'Invalid value: market', None
+
+        return pack_pb_req(req, ProtoId.Qot_GetIpoList, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        ret_list = []
+        for pb_item in rsp_pb.s2c.ipoList:
+            data = {}
+
+            set_item_from_pb(data, pb_item.basic, pb_field_map_BasicIpoData)
+            if pb_item.HasField('cnExData'):
+                set_item_from_pb(data, pb_item.cnExData, pb_field_map_CNIpoExData)
+            else:
+                set_item_none(data, pb_field_map_CNIpoExData)
+
+            if pb_item.HasField('hkExData'):
+                set_item_from_pb(data, pb_item.hkExData, pb_field_map_HKIpoExData)
+            else:
+                set_item_none(data, pb_field_map_HKIpoExData)
+
+            if pb_item.HasField('usExData'):
+                set_item_from_pb(data, pb_item.usExData, pb_field_map_USIpoExData)
+            else:
+                set_item_none(data, pb_field_map_USIpoExData)
+
             ret_list.append(data)
         return RET_OK, "", ret_list

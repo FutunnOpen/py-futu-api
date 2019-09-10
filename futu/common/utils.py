@@ -493,6 +493,9 @@ class ProtobufMap(dict):
         from futu.common.pb.Qot_GetCodeChange_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetCodeChange] = Response()
 
+        from futu.common.pb.Qot_GetIpoList_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetIpoList] = Response()
+
     def __getitem__(self, key):
         return ProtobufMap.created_protobuf_map[key] if key in ProtobufMap.created_protobuf_map else None
 
