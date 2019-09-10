@@ -1,0 +1,91 @@
+syntax = "proto2";
+package Qot_GetIpoList;
+option java_package = "com.futu.openapi.pb";
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+// Ipo基本数据
+message BasicIpoData
+{
+	required Qot_Common.Security security = 1; // Qot_Common::QotMarket股票市场，支持沪股和深股，且沪股和深股不做区分都代表A股市场。
+	required string name = 2; // 股票名称
+	optional string listTime = 3; // 上市日期字符串
+	optional double listTimestamp = 4; // 上市日期时间戳
+};
+
+// A股Ipo列表额外数据
+message CNIpoExData 
+{
+	required string applyCode = 1; // 申购代码
+	required int64 issueSize = 2; // 发行总数
+	required int64 onlineIssueSize = 3; // 网上发行量
+	required int64 applyUpperLimit = 4; // 申购上限
+	required int64 applyLimitMarketValue = 5; // 顶格申购需配市值
+	required bool isEstimateIpoPrice = 6; // 是否预估发行价
+	required double ipoPrice = 7; // 发行价 预估值会因为募集资金、发行数量、发行费用等数据变动而变动，仅供参考。实际数据公布后会第一时间更新。
+	required double industryPeRate = 8; // 行业市盈率
+	required bool isEstimateWinningRatio = 9; // 是否预估中签率
+	required double winningRatio = 10; // 中签率 预估值会因为募集资金、发行数量、发行费用等数据变动而变动，仅供参考。实际数据公布后会第一时间更新。
+	required double issuePeRate = 11; // 发行市盈率
+	optional string applyTime = 12; // 申购日期字符串
+	optional double applyTimestamp = 13; // 申购日期时间戳
+	optional string winningTime = 14; // 公布中签日期字符串
+	optional double winningTimestamp = 15; // 公布中签日期时间戳
+	required bool isHasWon = 16; // 是否已经公布中签号
+	required string winningName = 17; // 分组名
+    required string winningInfo = 18; // 中签号信息
+};
+
+// 港股Ipo列表额外数据
+message HKIpoExData
+{
+	required double ipoPriceMin = 1; // 最低发售价
+	required double ipoPriceMax = 2; // 最高发售价
+	required double listPrice = 3; // 上市价
+	required int32 lotSize = 4; // 每手股数
+	required double entrancePrice = 5; // 入场费
+	required bool isSupportIpo = 6; // 是否支持认购
+	optional string applyEndTime = 7; // 截止认购日期字符串
+	optional double applyEndTimestamp = 8; // 截止认购日期时间戳 因需处理认购手续，富途认购截止时间会早于交易所公布的日期。
+};
+
+// 美股Ipo列表额外数据
+message USIpoExData  
+{
+	required double ipoPriceMin = 1; // 最低发行价
+	required double ipoPriceMax = 2; // 最高发行价
+};
+
+// 新股Ipo数据
+message IpoData
+{	
+	required BasicIpoData basic = 1; // IPO基本数据	
+	optional CNIpoExData cnExData = 2; // A股IPO额外数据
+	optional HKIpoExData hkExData = 3; // 港股IPO额外数据
+	optional USIpoExData usExData = 4; // 美股IPO额外数据
+};
+
+message C2S
+{
+	required int32 market = 1; // Qot_Common::QotMarket股票市场，支持沪股和深股，且沪股和深股不做区分都代表A股市场。
+}
+
+message S2C
+{
+	repeated IpoData ipoList = 1; // 新股IPO数据
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

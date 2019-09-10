@@ -10,6 +10,73 @@ from futu.common.pb import Common_pb2
 NoneDataType = 'N/A'
 
 
+def get_optional_from_pb(pb, field_name, conv=None):
+    if pb.HasField(field_name):
+        val = getattr(pb, field_name)
+        if conv:
+            val = conv(val)
+        return val
+    return NoneDataType
+
+
+def set_item_from_pb(item, pb, field_map):
+    for python_name, pb_name, is_required, conv in field_map:
+        if is_required:
+            val = getattr(pb, pb_name)
+            if conv:
+                val = conv(val)
+            item[python_name] = val
+        else:
+            item[python_name] = get_optional_from_pb(pb, pb_name, conv)
+
+
+def set_item_none(item, field_map):
+    for row in field_map:
+        item[row[0]] = NoneDataType
+
+
+# python_name, pb_name, is_required, conv_func
+pb_field_map_OptionBasicQotExData = [
+    ('strike_price', 'strikePrice', True, None),
+    ('contract_size', 'contractSize', True, None),
+    ('open_interest', 'openInterest', True, None),
+    ('implied_volatility', 'impliedVolatility', True, None),
+    ('premium', 'premium', True, None),
+    ('delta', 'delta', True, None),
+    ('gamma', 'gamma', True, None),
+    ('vega', 'vega', True, None),
+    ('theta', 'theta', True, None),
+    ('rho', 'rho', True, None),
+    ('net_open_interest', 'netOpenInterest', False, None),
+    ('expiry_date_distance', 'expiryDateDistance', False, None),
+    ('contract_nominal_value', 'contractNominalValue', False, None),
+    ('owner_lot_multiplier', 'ownerLotMultiplier', False, None),
+    ('option_area_type', 'optionAreaType', False, None),
+    ('contract_multiplier', 'contractMultiplier', False, None),
+]
+
+pb_field_map_PreAfterMarketData_pre = [
+    ("pre_price", "price", False, None),
+    ("pre_high_price", "highPrice", False, None),
+    ("pre_low_price", "lowPrice", False, None),
+    ("pre_volume", "volume", False, None),
+    ("pre_turnover", "turnover", False, None),
+    ("pre_change_val", "changeVal", False, None),
+    ("pre_change_rate", "changeRate", False, None),
+    ("pre_amplitude", "amplitude", False, None),
+]
+
+pb_field_map_PreAfterMarketData_after = [
+    ("after_price", "price", False, None),
+    ("after_high_price", "highPrice", False, None),
+    ("after_low_price", "lowPrice", False, None),
+    ("after_volume", "volume", False, None),
+    ("after_turnover", "turnover", False, None),
+    ("after_change_val", "changeVal", False, None),
+    ("after_change_rate", "changeRate", False, None),
+    ("after_amplitude", "amplitude", False, None),
+]
+
 class InitConnect:
     """
     A InitConnect request must be sent first
@@ -28,7 +95,7 @@ class InitConnect:
         req.c2s.recvNotify = recv_notify
 
         if is_encrypt:
-            req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_FTAES_ECB
+            req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_AES_CBC
         else:
             req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_None
 
@@ -49,6 +116,7 @@ class InitConnect:
             res['login_user_id'] = rsp_pb.s2c.loginUserID
             res['conn_id'] = rsp_pb.s2c.connID
             res['conn_key'] = rsp_pb.s2c.connAESKey
+            res['conn_iv'] = rsp_pb.s2c.aesCBCiv if rsp_pb.s2c.HasField('aesCBCiv') else None
             res['keep_alive_interval'] = rsp_pb.s2c.keepAliveInterval
         else:
             return RET_ERROR, "rsp_pb error", None
@@ -193,7 +261,9 @@ class StockBasicInfoQuery:
             "strike_time": record.optionExData.strikeTime,
             "strike_price": record.optionExData.strikePrice if record.HasField('optionExData') else NoneDataType,
             "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
-            "delisting": record.basic.delisting if record.basic.HasField('delisting') else NoneDataType
+            "delisting": record.basic.delisting if record.basic.HasField('delisting') else NoneDataType,
+            "index_option_type": IndexOptionType.to_string2(record.optionExData.indexOptionType) if record.HasField('optionExData') else NoneDataType,
+
         } for record in raw_basic_info_list]
         return RET_OK, "", basic_info_list
 
@@ -302,7 +372,19 @@ class MarketSnapshotQuery:
             #  盘后成交量 type=int64
             snapshot_tmp["after_volume"] = record.basic.afterMarket.volume
             #  盘后成交额 type=double
-            snapshot_tmp["after_turnover"] = record.basic.afterMarket.turnover
+            snapshot_tmp["after_turnover"] = record.basic.afterMarket.turnover   
+            #  股票状态 type=str
+            snapshot_tmp["status"] = SecurityStatus.to_string2(record.basic.status)
+
+            if record.basic.HasField('preMarket'):
+                set_item_from_pb(snapshot_tmp, record.basic.preMarket, pb_field_map_PreAfterMarketData_pre)
+            else:
+                set_item_none(snapshot_tmp, pb_field_map_PreAfterMarketData_pre)
+
+            if record.basic.HasField('afterMarket'):
+                set_item_from_pb(snapshot_tmp, record.basic.afterMarket, pb_field_map_PreAfterMarketData_after)
+            else:
+                set_item_none(snapshot_tmp, pb_field_map_PreAfterMarketData_after)
             # ================================
 
             snapshot_tmp['equity_valid'] = False
@@ -385,6 +467,12 @@ class MarketSnapshotQuery:
                 snapshot_tmp['option_vega'] = record.optionExData.vega
                 snapshot_tmp['option_theta'] = record.optionExData.theta
                 snapshot_tmp['option_rho'] = record.optionExData.rho
+                snapshot_tmp['net_open_interest'] = record.optionExData.netOpenInterest if record.optionExData.HasField('netOpenInterest') else 'N/A'
+                snapshot_tmp['expiry_date_distance'] = record.optionExData.expiryDateDistance if record.optionExData.HasField('expiryDateDistance') else 'N/A'
+                snapshot_tmp['contract_nominal_value'] = record.optionExData.contractNominalValue if record.optionExData.HasField('contractNominalValue') else 'N/A'
+                snapshot_tmp['owner_lot_multiplier'] = record.optionExData.ownerLotMultiplier if record.optionExData.HasField('ownerLotMultiplier') else 'N/A'
+                snapshot_tmp['option_area_type'] = OptionAreaType.to_string2(record.optionExData.optionAreaType) if record.optionExData.HasField('optionAreaType') else 'N/A'
+                snapshot_tmp['contract_multiplier'] = record.optionExData.contractMultiplier if record.optionExData.HasField('contractMultiplier') else 'N/A'
 
             snapshot_tmp['index_valid'] = False
             if record.HasField('indexExData'):
@@ -1051,6 +1139,48 @@ class SubscriptionQuery:
         return SubscriptionQuery.pack_push_or_unpush_req(code_list, subtype_list, False, conn_id, is_first_push)
 
 
+def parse_pb_BasicQot(pb):
+    item = None
+    if pb.updateTime is not None and len(pb.updateTime) != 0:
+        item = {
+            'code': merge_qot_mkt_stock_str(int(pb.security.market), pb.security.code),
+            'data_date': pb.updateTime.split()[0],
+            'data_time': pb.updateTime.split()[1],
+            'last_price': pb.curPrice,
+            'open_price': pb.openPrice,
+            'high_price': pb.highPrice,
+            'low_price': pb.lowPrice,
+            'prev_close_price': pb.lastClosePrice,
+            'volume': int(pb.volume),
+            'turnover': pb.turnover,
+            'turnover_rate': pb.turnoverRate,
+            'amplitude': pb.amplitude,
+            'suspension': pb.isSuspended,
+            'listing_date': pb.listTime,
+            'price_spread': pb.priceSpread,
+            'dark_status': QUOTE.REV_DARK_STATUS_MAP[pb.darkStatus] if pb.HasField(
+                'darkStatus') else DarkStatus.NONE,
+            'status': SecurityStatus.to_string2(pb.status) if pb.HasField(
+                'status') else SecurityStatus.NONE,
+        }
+        
+        if pb.HasField('optionExData'):
+            set_item_from_pb(item, pb.optionExData, pb_field_map_OptionBasicQotExData)
+        else:
+            set_item_none(item, pb_field_map_OptionBasicQotExData)
+
+        if pb.HasField('preMarket'):
+            set_item_from_pb(item, pb.preMarket, pb_field_map_PreAfterMarketData_pre)
+        else:
+            set_item_none(item, pb_field_map_PreAfterMarketData_pre)
+
+        if pb.HasField('afterMarket'):
+            set_item_from_pb(item, pb.afterMarket, pb_field_map_PreAfterMarketData_after)
+        else:
+            set_item_none(item, pb_field_map_PreAfterMarketData_after)
+
+    return item
+
 class StockQuoteQuery:
     """
     Query Conversion for getting stock quote data.
@@ -1096,35 +1226,9 @@ class StockQuoteQuery:
 
         quote_list = list()
         for record in raw_quote_list:
-            if record.updateTime is not None and len(record.updateTime) != 0:
-                quote_list.append({
-                    'code': merge_qot_mkt_stock_str(int(record.security.market), record.security.code),
-                    'data_date': record.updateTime.split()[0],
-                    'data_time': record.updateTime.split()[1],
-                    'last_price': record.curPrice,
-                    'open_price': record.openPrice,
-                    'high_price': record.highPrice,
-                    'low_price': record.lowPrice,
-                    'prev_close_price': record.lastClosePrice,
-                    'volume': int(record.volume),
-                    'turnover': record.turnover,
-                    'turnover_rate': record.turnoverRate,
-                    'amplitude': record.amplitude,
-                    'suspension': record.isSuspended,
-                    'listing_date': record.listTime,
-                    'price_spread': record.priceSpread if record.HasField('priceSpread') else 0,
-                    'dark_status': QUOTE.REV_DARK_STATUS_MAP[record.darkStatus] if record.HasField('darkStatus') else DarkStatus.NONE,
-                    "strike_price": record.optionExData.strikePrice,
-                    "contract_size": record.optionExData.contractSize,
-                    "open_interest": record.optionExData.openInterest,
-                    "implied_volatility": record.optionExData.impliedVolatility,
-                    "premium": record.optionExData.premium,
-                    "delta": record.optionExData.delta,
-                    "gamma": record.optionExData.gamma,
-                    'vega': record.optionExData.vega,
-                    'theta': record.optionExData.theta,
-                    'rho': record.optionExData.rho,
-                })
+            item = parse_pb_BasicQot(record)
+            if item:
+                quote_list.append(item)
         return RET_OK, "", quote_list
 
 
@@ -1814,7 +1918,7 @@ class OptionChain:
         pass
 
     @classmethod
-    def pack_req(cls, code, conn_id, start_date, end_date=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL):
+    def pack_req(cls, code, index_option_type, conn_id, start_date, end_date=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL):
 
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
@@ -1849,10 +1953,16 @@ class OptionChain:
         if option_type == 0:
             option_type = None
 
+        r, index_option_type = IndexOptionType.to_number(index_option_type)
+        if r is False:
+            index_option_type = None
+
         from futu.common.pb.Qot_GetOptionChain_pb2 import Request
         req = Request()
         req.c2s.owner.market = market_code
         req.c2s.owner.code = stock_code
+        if index_option_type:
+            req.c2s.indexOptionType = index_option_type
         req.c2s.beginTime = start_date
         req.c2s.endTime = end_date
         if option_type:
@@ -1892,6 +2002,7 @@ class OptionChain:
                         "strike_time": record.optionExData.strikeTime,
                         "strike_price": record.optionExData.strikePrice if record.HasField('optionExData') else NoneDataType,
                         "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
+						"index_option_type": IndexOptionType.to_string2(record.optionExData.indexOptionType) if record.HasField('optionExData') else NoneDataType,
                     }
                     data_list.append(quote_list)
 

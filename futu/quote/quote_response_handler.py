@@ -46,10 +46,15 @@ class StockQuoteHandlerBase(RspHandlerBase):
                 'code', 'data_date', 'data_time', 'last_price', 'open_price',
                 'high_price', 'low_price', 'prev_close_price', 'volume',
                 'turnover', 'turnover_rate', 'amplitude', 'suspension',
-                'listing_date', 'price_spread', 'dark_status', 'strike_price',
+                'listing_date', 'price_spread', 'dark_status', 'status', 'strike_price',
                 'contract_size', 'open_interest', 'implied_volatility',
-                'premium', 'delta', 'gamma', 'vega', 'theta', 'rho'
+                'premium', 'delta', 'gamma', 'vega', 'theta', 'rho',
+                'net_open_interest', 'expiry_date_distance', 'contract_nominal_value', 
+                'owner_lot_multiplier', 'option_area_type', 'contract_multiplier', 
             ]
+
+            col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)
+            col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_after)
 
             quote_frame_table = pd.DataFrame(content, columns=col_list)
 

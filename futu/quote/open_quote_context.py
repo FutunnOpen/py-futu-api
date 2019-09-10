@@ -166,6 +166,7 @@ class OpenQuoteContext(OpenContextBase):
             listing_date        str            上市时间
             stock_id            int            股票id
             delisting           bool           是否退市
+			index_option_type   str           指数期权类型
             =================   ===========   ==========================================================================
 
         :example:
@@ -211,7 +212,7 @@ class OpenQuoteContext(OpenContextBase):
         col_list = [
             'code', 'name', 'lot_size', 'stock_type', 'stock_child_type', 'stock_owner',
             'option_type', 'strike_time', 'strike_price', 'suspension',
-            'listing_date', 'stock_id', 'delisting'
+            'listing_date', 'stock_id', 'delisting', 'index_option_type'
         ]
 
         basic_info_table = pd.DataFrame(basic_info_list, columns=col_list)
@@ -636,7 +637,7 @@ class OpenQuoteContext(OpenContextBase):
                 dividend_ratio_ttm         float          股息率TTM（该字段为百分比字段，默认不展示%）
                 dividend_lfy               float          股息LFY，上一年度派息
                 dividend_lfy_ratio         float          股息率LFY（该字段为百分比字段，默认不展示
-                stock_owner                str            涡轮所属正股的代码或期权的标的股代码
+                stock_owner                str            涡轮所属正股的代码或期权的标的股代码           
                 wrt_valid                  bool           是否是窝轮（为true时以下涡轮相关的字段才有合法数据）
                 wrt_conversion_ratio       float          换股比率（该字段为比例字段，默认不展示%）
                 wrt_type                   str            窝轮类型，参见WrtType
@@ -702,6 +703,13 @@ class OpenQuoteContext(OpenContextBase):
                 plate_equal_count          int            板块类型平盘支数
                 after_volume               int            盘后成交量
                 after_turnover             double         盘后成交额
+                status                     str            股票状态， 参见SecurityStatus
+                net_open_interest          int            净未平仓合约数
+                expiry_date_distance       int            距离到期日天数
+                contract_nominal_value     float          合约名义金额
+                owner_lot_multiplier       float          相等正股手数，指数期权无该字段
+                option_area_type           str            期权地区类型，见 OptionAreaType_
+                contract_multiplier        float          合约乘数，指数期权特有字段
                 =======================   =============   ==============================================================================
         """
         code_list = unique_and_normalize_list(code_list)
@@ -770,7 +778,13 @@ class OpenQuoteContext(OpenContextBase):
                            'option_gamma',
                            'option_vega',
                            'option_theta',
-                           'option_rho'
+                           'option_rho',
+                           'option_net_open_interest',
+                           'option_expiry_date_distance',
+                           'option_contract_nominal_value', 
+                           'option_owner_lot_multiplier', 
+                           'option_area_type', 
+                           'option_contract_multiplier'
                            ]
 
         index_col_list = ['index_raise_count',
@@ -820,6 +834,7 @@ class OpenQuoteContext(OpenContextBase):
             'lowest_history_price',
             'after_volume',
             'after_turnover',
+			'status',
         ]
 
         col_list.append('equity_valid')
@@ -832,6 +847,8 @@ class OpenQuoteContext(OpenContextBase):
         col_list.extend(index_col_list)
         col_list.append('plate_valid')
         col_list.extend(plate_col_list)
+        col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)
+        col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_after)
 
         snapshot_frame_table = pd.DataFrame(snapshot_list, columns=col_list)
 
@@ -1358,6 +1375,7 @@ class OpenQuoteContext(OpenContextBase):
                 listing_date            str            上市日期 (yyyy-MM-dd)
                 price_spread            float          当前价差，亦即摆盘数据的买档或卖档的相邻档位的报价差
                 dark_status             str            暗盘交易状态，见DarkStatus
+				status                  str            股票状态，见SecurityStatus
                 strike_price            float          行权价
                 contract_size           int            每份合约数
                 open_interest           int            未平仓合约数
@@ -1368,8 +1386,13 @@ class OpenQuoteContext(OpenContextBase):
                 vega                    float          希腊值 Vega
                 theta                   float          希腊值 Theta
                 rho                     float          希腊值 Rho
+                net_open_interest       int            净未平仓合约数
+                expiry_date_distance    int            距离到期日天数
+                contract_nominal_value  float          合约名义金额
+                owner_lot_multiplier    float          相等正股手数，指数期权无该字段
+                option_area_type        str            期权地区类型，见 OptionAreaType_
+                contract_multiplier     float          合约乘数，指数期权特有字段
                 =====================   ===========   ==============================================================
-
         """
         code_list = unique_and_normalize_list(code_list)
         if not code_list:
@@ -1393,10 +1416,15 @@ class OpenQuoteContext(OpenContextBase):
             'code', 'data_date', 'data_time', 'last_price', 'open_price',
             'high_price', 'low_price', 'prev_close_price', 'volume',
             'turnover', 'turnover_rate', 'amplitude', 'suspension',
-            'listing_date', 'price_spread', 'dark_status', 'strike_price',
+            'listing_date', 'price_spread', 'dark_status', 'status', 'strike_price',
             'contract_size', 'open_interest', 'implied_volatility',
-            'premium', 'delta', 'gamma', 'vega', 'theta', 'rho'
+            'premium', 'delta', 'gamma', 'vega', 'theta', 'rho',
+            'net_open_interest', 'expiry_date_distance', 'contract_nominal_value',
+            'owner_lot_multiplier', 'option_area_type', 'contract_multiplier',
         ]
+
+        col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)
+        col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_after)
 
         quote_frame_table = pd.DataFrame(quote_list, columns=col_list)
 
@@ -1843,11 +1871,12 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, holding_change_list
 
-    def get_option_chain(self, code, start=None, end=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL):
+    def get_option_chain(self, code, index_option_type=IndexOptionType.NORMAL, start=None, end=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL):
         """
         通过标的股查询期权
 
         :param code: 股票代码,例如：'HK.02318'
+        :param index_option_type: 指数期权类型，IndexOptionType
         :param start: 开始日期，该日期指到期日，例如'2017-08-01'
         :param end: 结束日期（包括这一天），该日期指到期日，例如'2017-08-30'。 注意，时间范围最多30天
                 start和end的组合如下：
@@ -1880,6 +1909,7 @@ class OpenQuoteContext(OpenContextBase):
                 strike_price         float         行权价
                 suspension           bool          是否停牌(True表示停牌)
                 stock_id             int           股票id
+                index_option_type    str           指数期权类型
                 ==================   ===========   ==============================================================
 
         """
@@ -1887,6 +1917,11 @@ class OpenQuoteContext(OpenContextBase):
         if code is None or is_str(code) is False:
             error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
             return RET_ERROR, error_str
+
+        r, n = IndexOptionType.to_number(index_option_type)
+        if r is False:
+            msg = ERROR_STR_PREFIX + "the type of index_option_type param is wrong"
+            return RET_ERROR, msg
 
         ret_code, msg, start, end = normalize_start_end_date(
             start, end, delta_days=29, default_time_end='00:00:00', prefer_end_now=False)
@@ -1897,6 +1932,7 @@ class OpenQuoteContext(OpenContextBase):
             OptionChain.pack_req, OptionChain.unpack_rsp)
         kargs = {
             "code": code,
+            "index_option_type": index_option_type,
             "conn_id": self.get_sync_conn_id(),
             "start_date": start,
             "end_date": end,
@@ -1911,7 +1947,7 @@ class OpenQuoteContext(OpenContextBase):
         col_list = [
             'code', 'name', 'lot_size', 'stock_type',
             'option_type', 'stock_owner', 'strike_time', 'strike_price', 'suspension',
-            'stock_id'
+            'stock_id', 'index_option_type'
         ]
 
         option_chain = pd.DataFrame(option_chain_list, columns=col_list)
