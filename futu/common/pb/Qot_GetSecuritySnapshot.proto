@@ -143,9 +143,9 @@ message SnapshotBasicData
     optional double lowest52WeeksPrice = 34;  // 52周最低价
 	optional double highestHistoryPrice = 35;  // 历史最高价
     optional double lowestHistoryPrice = 36;  // 历史最低价
-	optional Qot_Common.PreAfterMarketData preMarket = 37; //盘前数据
-	optional Qot_Common.PreAfterMarketData afterMarket = 38; //盘后数据
-	optional int32 status = 39; //Qot_Common.SecurityStats, 股票状态
+	optional Qot_Common.PreAfterMarketData preMarket = 37; //Qot_Common::PreAfterMarketData 盘前数据
+	optional Qot_Common.PreAfterMarketData afterMarket = 38; //Qot_Common::PreAfterMarketData 盘后数据
+	optional int32 status = 39; //Qot_Common::SecurityStats 股票状态
 }
 
 message Snapshot
