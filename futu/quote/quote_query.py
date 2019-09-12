@@ -2851,8 +2851,6 @@ class GetIpoListQuery:
 
             if pb_item.HasField('usExData'):
                 set_item_from_pb(data, pb_item.usExData, pb_field_map_USIpoExData)
-            else:
-                set_item_none(data, pb_field_map_USIpoExData)
 
             ret_list.append(data)
         return RET_OK, "", ret_list
