@@ -834,7 +834,7 @@ class OpenQuoteContext(OpenContextBase):
             'lowest_history_price',
             'after_volume',
             'after_turnover',
-			'status',
+            'status',
         ]
 
         col_list.append('equity_valid')
@@ -848,7 +848,8 @@ class OpenQuoteContext(OpenContextBase):
         col_list.append('plate_valid')
         col_list.extend(plate_col_list)
         col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)
-        col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_after)
+        col_list.extend(
+            row[0] for row in pb_field_map_PreAfterMarketData_after if row[0] not in ('after_turnover', 'after_volume'))
 
         snapshot_frame_table = pd.DataFrame(snapshot_list, columns=col_list)
 
