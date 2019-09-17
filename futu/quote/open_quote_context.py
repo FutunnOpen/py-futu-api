@@ -5,8 +5,7 @@
 
 import datetime
 import math
-from time import sleep
-
+from collections import OrderedDict
 import pandas as pd
 from futu.common.open_context_base import OpenContextBase, ContextStatus
 from futu.quote.quote_query import *
@@ -2451,9 +2450,10 @@ class OpenQuoteContext(OpenContextBase):
         if ret != RET_OK:
             return ret, msg
 
-        col_list = []
-        col_list.extend(row[0] for row in pb_field_map_BasicIpoData)
-        col_list.extend(row[0] for row in pb_field_map_CNIpoExData)
-        col_list.extend(row[0] for row in pb_field_map_HKIpoExData)
-        col_list.extend(row[0] for row in pb_field_map_USIpoExData)
-        return RET_OK, pd.DataFrame(data, columns=col_list)
+        col_dict = OrderedDict()
+        col_dict.update((row[0], True) for row in pb_field_map_BasicIpoData)
+        col_dict.update((row[0], True) for row in pb_field_map_CNIpoExData)
+        col_dict.update((row[0], True) for row in pb_field_map_HKIpoExData)
+        col_dict.update((row[0], True) for row in pb_field_map_USIpoExData)
+
+        return RET_OK, pd.DataFrame(data, columns=col_dict.keys())
