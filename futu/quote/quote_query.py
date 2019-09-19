@@ -2004,12 +2004,7 @@ class OptionChain:
             end_date = msg
 
         option_cond_type = OPTION_COND_TYPE_CLASS_MAP[option_cond_type]
-        if option_cond_type == 0:
-            option_cond_type = None
-
         option_type = OPTION_TYPE_CLASS_MAP[option_type]
-        if option_type == 0:
-            option_type = None
 
         r, index_option_type = IndexOptionType.to_number(index_option_type)
         if r is False:
@@ -2019,13 +2014,13 @@ class OptionChain:
         req = Request()
         req.c2s.owner.market = market_code
         req.c2s.owner.code = stock_code
-        if index_option_type:
+        if index_option_type is not None:
             req.c2s.indexOptionType = index_option_type
         req.c2s.beginTime = start_date
         req.c2s.endTime = end_date
-        if option_type:
+        if option_type is not None:
             req.c2s.type = option_type
-        if option_cond_type:
+        if option_cond_type is not None:
             req.c2s.condition = option_cond_type
 
         return pack_pb_req(req, ProtoId.Qot_GetOptionChain, conn_id)
