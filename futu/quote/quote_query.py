@@ -21,6 +21,9 @@ def get_optional_from_pb(pb, field_name, conv=None):
 
 def set_item_from_pb(item, pb, field_map):
     for python_name, pb_name, is_required, conv in field_map:
+        exist_val = item.get(python_name, None)
+        if exist_val is not None and exist_val != NoneDataType:
+            continue
         if is_required:
             val = getattr(pb, pb_name)
             if conv:
@@ -32,7 +35,9 @@ def set_item_from_pb(item, pb, field_map):
 
 def set_item_none(item, field_map):
     for row in field_map:
-        item[row[0]] = NoneDataType
+        exist_val = item.get(row[0], None)
+        if exist_val is None or exist_val == NoneDataType:
+            item[row[0]] = NoneDataType
 
 
 def conv_pb_security_to_code(security):
@@ -42,7 +47,7 @@ def merge_pb_cnipoexdata_winningnumdata(winningnumdata):
     data = ''
     for item in winningnumdata:
         if data == '':
-            data = item.winningName + item.winningInfo
+            data = item.winningName + ":" + item.winningInfo
         else:
             data = data + '\n' + item.winningName + ":" + item.winningInfo
 
@@ -125,7 +130,7 @@ pb_field_map_HKIpoExData = [
     ("list_price", "listPrice", True, None),
     ("lot_size", "lotSize", True, None),
     ("entrance_price", "entrancePrice", True, None),
-    ("is_support_ipo", "isSupportIpo", True, None),
+    ("is_subscribe_status", "isSubscribeStatus", True, None),
     ("apply_end_time", "applyEndTime", False, None),
     ("apply_end_timestamp", "applyEndTimestamp", False, None),
 ]
@@ -133,6 +138,7 @@ pb_field_map_HKIpoExData = [
 pb_field_map_USIpoExData = [
     ("ipo_price_min", "ipoPriceMin", True, None),
     ("ipo_price_max", "ipoPriceMax", True, None),
+    ("issue_size", "issueSize", True, None)
 ]
 
 class InitConnect:
@@ -2846,6 +2852,8 @@ class GetIpoListQuery:
 
             if pb_item.HasField('usExData'):
                 set_item_from_pb(data, pb_item.usExData, pb_field_map_USIpoExData)
+            else:
+                set_item_none(data, pb_field_map_USIpoExData)
 
             ret_list.append(data)
         return RET_OK, "", ret_list

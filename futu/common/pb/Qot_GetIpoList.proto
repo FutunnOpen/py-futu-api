@@ -26,7 +26,7 @@ message CNIpoExData
 	required double ipoPrice = 7; // 发行价 预估值会因为募集资金、发行数量、发行费用等数据变动而变动，仅供参考。实际数据公布后会第一时间更新。
 	required double industryPeRate = 8; // 行业市盈率
 	required bool isEstimateWinningRatio = 9; // 是否预估中签率
-	required double winningRatio = 10; // 中签率 预估值会因为募集资金、发行数量、发行费用等数据变动而变动，仅供参考。实际数据公布后会第一时间更新。
+	required double winningRatio = 10; // 中签率 该字段为百分比字段，默认不展示%。预估值会因为募集资金、发行数量、发行费用等数据变动而变动，仅供参考。实际数据公布后会第一时间更新。
 	required double issuePeRate = 11; // 发行市盈率
 	optional string applyTime = 12; // 申购日期字符串
 	optional double applyTimestamp = 13; // 申购日期时间戳
@@ -51,7 +51,7 @@ message HKIpoExData
 	required double listPrice = 3; // 上市价
 	required int32 lotSize = 4; // 每手股数
 	required double entrancePrice = 5; // 入场费
-	required bool isSupportIpo = 6; // 是否支持认购
+	required bool isSubscribeStatus = 6; // 是否为认购状态，True-认购中，False-待上市
 	optional string applyEndTime = 7; // 截止认购日期字符串
 	optional double applyEndTimestamp = 8; // 截止认购日期时间戳 因需处理认购手续，富途认购截止时间会早于交易所公布的日期。
 };
@@ -61,6 +61,7 @@ message USIpoExData
 {
 	required double ipoPriceMin = 1; // 最低发行价
 	required double ipoPriceMax = 2; // 最高发行价
+	required int64 issueSize = 3; // 发行量
 };
 
 // 新股Ipo数据

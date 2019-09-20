@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetIpoList.proto',
   package='Qot_GetIpoList',
   syntax='proto2',
-  serialized_pb=_b('\n\x14Qot_GetIpoList.proto\x12\x0eQot_GetIpoList\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"m\n\x0c\x42\x61sicIpoData\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x10\n\x08listTime\x18\x03 \x01(\t\x12\x15\n\rlistTimestamp\x18\x04 \x01(\x01\"\xb9\x03\n\x0b\x43NIpoExData\x12\x11\n\tapplyCode\x18\x01 \x02(\t\x12\x11\n\tissueSize\x18\x02 \x02(\x03\x12\x17\n\x0fonlineIssueSize\x18\x03 \x02(\x03\x12\x17\n\x0f\x61pplyUpperLimit\x18\x04 \x02(\x03\x12\x1d\n\x15\x61pplyLimitMarketValue\x18\x05 \x02(\x03\x12\x1a\n\x12isEstimateIpoPrice\x18\x06 \x02(\x08\x12\x10\n\x08ipoPrice\x18\x07 \x02(\x01\x12\x16\n\x0eindustryPeRate\x18\x08 \x02(\x01\x12\x1e\n\x16isEstimateWinningRatio\x18\t \x02(\x08\x12\x14\n\x0cwinningRatio\x18\n \x02(\x01\x12\x13\n\x0bissuePeRate\x18\x0b \x02(\x01\x12\x11\n\tapplyTime\x18\x0c \x01(\t\x12\x16\n\x0e\x61pplyTimestamp\x18\r \x01(\x01\x12\x13\n\x0bwinningTime\x18\x0e \x01(\t\x12\x18\n\x10winningTimestamp\x18\x0f \x01(\x01\x12\x10\n\x08isHasWon\x18\x10 \x02(\x08\x12\x36\n\x0ewinningNumData\x18\x11 \x03(\x0b\x32\x1e.Qot_GetIpoList.WinningNumData\":\n\x0eWinningNumData\x12\x13\n\x0bwinningName\x18\x01 \x02(\t\x12\x13\n\x0bwinningInfo\x18\x02 \x02(\t\"\xb9\x01\n\x0bHKIpoExData\x12\x13\n\x0bipoPriceMin\x18\x01 \x02(\x01\x12\x13\n\x0bipoPriceMax\x18\x02 \x02(\x01\x12\x11\n\tlistPrice\x18\x03 \x02(\x01\x12\x0f\n\x07lotSize\x18\x04 \x02(\x05\x12\x15\n\rentrancePrice\x18\x05 \x02(\x01\x12\x14\n\x0cisSupportIpo\x18\x06 \x02(\x08\x12\x14\n\x0c\x61pplyEndTime\x18\x07 \x01(\t\x12\x19\n\x11\x61pplyEndTimestamp\x18\x08 \x01(\x01\"7\n\x0bUSIpoExData\x12\x13\n\x0bipoPriceMin\x18\x01 \x02(\x01\x12\x13\n\x0bipoPriceMax\x18\x02 \x02(\x01\"\xc3\x01\n\x07IpoData\x12+\n\x05\x62\x61sic\x18\x01 \x02(\x0b\x32\x1c.Qot_GetIpoList.BasicIpoData\x12-\n\x08\x63nExData\x18\x02 \x01(\x0b\x32\x1b.Qot_GetIpoList.CNIpoExData\x12-\n\x08hkExData\x18\x03 \x01(\x0b\x32\x1b.Qot_GetIpoList.HKIpoExData\x12-\n\x08usExData\x18\x04 \x01(\x0b\x32\x1b.Qot_GetIpoList.USIpoExData\"\x15\n\x03\x43\x32S\x12\x0e\n\x06market\x18\x01 \x02(\x05\"/\n\x03S2C\x12(\n\x07ipoList\x18\x01 \x03(\x0b\x32\x17.Qot_GetIpoList.IpoData\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.Qot_GetIpoList.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.Qot_GetIpoList.S2CB\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x14Qot_GetIpoList.proto\x12\x0eQot_GetIpoList\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"m\n\x0c\x42\x61sicIpoData\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x10\n\x08listTime\x18\x03 \x01(\t\x12\x15\n\rlistTimestamp\x18\x04 \x01(\x01\"\xb9\x03\n\x0b\x43NIpoExData\x12\x11\n\tapplyCode\x18\x01 \x02(\t\x12\x11\n\tissueSize\x18\x02 \x02(\x03\x12\x17\n\x0fonlineIssueSize\x18\x03 \x02(\x03\x12\x17\n\x0f\x61pplyUpperLimit\x18\x04 \x02(\x03\x12\x1d\n\x15\x61pplyLimitMarketValue\x18\x05 \x02(\x03\x12\x1a\n\x12isEstimateIpoPrice\x18\x06 \x02(\x08\x12\x10\n\x08ipoPrice\x18\x07 \x02(\x01\x12\x16\n\x0eindustryPeRate\x18\x08 \x02(\x01\x12\x1e\n\x16isEstimateWinningRatio\x18\t \x02(\x08\x12\x14\n\x0cwinningRatio\x18\n \x02(\x01\x12\x13\n\x0bissuePeRate\x18\x0b \x02(\x01\x12\x11\n\tapplyTime\x18\x0c \x01(\t\x12\x16\n\x0e\x61pplyTimestamp\x18\r \x01(\x01\x12\x13\n\x0bwinningTime\x18\x0e \x01(\t\x12\x18\n\x10winningTimestamp\x18\x0f \x01(\x01\x12\x10\n\x08isHasWon\x18\x10 \x02(\x08\x12\x36\n\x0ewinningNumData\x18\x11 \x03(\x0b\x32\x1e.Qot_GetIpoList.WinningNumData\":\n\x0eWinningNumData\x12\x13\n\x0bwinningName\x18\x01 \x02(\t\x12\x13\n\x0bwinningInfo\x18\x02 \x02(\t\"\xbe\x01\n\x0bHKIpoExData\x12\x13\n\x0bipoPriceMin\x18\x01 \x02(\x01\x12\x13\n\x0bipoPriceMax\x18\x02 \x02(\x01\x12\x11\n\tlistPrice\x18\x03 \x02(\x01\x12\x0f\n\x07lotSize\x18\x04 \x02(\x05\x12\x15\n\rentrancePrice\x18\x05 \x02(\x01\x12\x19\n\x11isSubscribeStatus\x18\x06 \x02(\x08\x12\x14\n\x0c\x61pplyEndTime\x18\x07 \x01(\t\x12\x19\n\x11\x61pplyEndTimestamp\x18\x08 \x01(\x01\"J\n\x0bUSIpoExData\x12\x13\n\x0bipoPriceMin\x18\x01 \x02(\x01\x12\x13\n\x0bipoPriceMax\x18\x02 \x02(\x01\x12\x11\n\tissueSize\x18\x03 \x02(\x03\"\xc3\x01\n\x07IpoData\x12+\n\x05\x62\x61sic\x18\x01 \x02(\x0b\x32\x1c.Qot_GetIpoList.BasicIpoData\x12-\n\x08\x63nExData\x18\x02 \x01(\x0b\x32\x1b.Qot_GetIpoList.CNIpoExData\x12-\n\x08hkExData\x18\x03 \x01(\x0b\x32\x1b.Qot_GetIpoList.HKIpoExData\x12-\n\x08usExData\x18\x04 \x01(\x0b\x32\x1b.Qot_GetIpoList.USIpoExData\"\x15\n\x03\x43\x32S\x12\x0e\n\x06market\x18\x01 \x02(\x05\"/\n\x03S2C\x12(\n\x07ipoList\x18\x01 \x03(\x0b\x32\x17.Qot_GetIpoList.IpoData\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.Qot_GetIpoList.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.Qot_GetIpoList.S2CB\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -304,7 +304,7 @@ _HKIPOEXDATA = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='isSupportIpo', full_name='Qot_GetIpoList.HKIpoExData.isSupportIpo', index=5,
+      name='isSubscribeStatus', full_name='Qot_GetIpoList.HKIpoExData.isSubscribeStatus', index=5,
       number=6, type=8, cpp_type=7, label=2,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
@@ -337,7 +337,7 @@ _HKIPOEXDATA = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=688,
-  serialized_end=873,
+  serialized_end=878,
 )
 
 
@@ -362,6 +362,13 @@ _USIPOEXDATA = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='issueSize', full_name='Qot_GetIpoList.USIpoExData.issueSize', index=2,
+      number=3, type=3, cpp_type=2, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -374,8 +381,8 @@ _USIPOEXDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=875,
-  serialized_end=930,
+  serialized_start=880,
+  serialized_end=954,
 )
 
 
@@ -426,8 +433,8 @@ _IPODATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=933,
-  serialized_end=1128,
+  serialized_start=957,
+  serialized_end=1152,
 )
 
 
@@ -457,8 +464,8 @@ _C2S = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1130,
-  serialized_end=1151,
+  serialized_start=1154,
+  serialized_end=1175,
 )
 
 
@@ -488,8 +495,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1153,
-  serialized_end=1200,
+  serialized_start=1177,
+  serialized_end=1224,
 )
 
 
@@ -519,8 +526,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1202,
-  serialized_end=1245,
+  serialized_start=1226,
+  serialized_end=1269,
 )
 
 
@@ -571,8 +578,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1247,
-  serialized_end=1347,
+  serialized_start=1271,
+  serialized_end=1371,
 )
 
 _BASICIPODATA.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY

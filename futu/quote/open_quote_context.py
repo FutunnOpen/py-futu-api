@@ -836,21 +836,22 @@ class OpenQuoteContext(OpenContextBase):
             'status',
         ]
 
-        col_list.append('equity_valid')
-        col_list.extend(equity_col_list)
-        col_list.append('wrt_valid')
-        col_list.extend(wrt_col_list)
-        col_list.append('option_valid')
-        col_list.extend(option_col_list)
-        col_list.append('index_valid')
-        col_list.extend(index_col_list)
-        col_list.append('plate_valid')
-        col_list.extend(plate_col_list)
-        col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)
-        col_list.extend(
-            row[0] for row in pb_field_map_PreAfterMarketData_after if row[0] not in ('after_turnover', 'after_volume'))
+        col_dict = OrderedDict()
+        col_dict.update((key, 1) for key in col_list)
+        col_dict['equity_valid'] = 1
+        col_dict.update((key, 1) for key in equity_col_list)
+        col_dict['wrt_valid'] = 1
+        col_dict.update((key, 1) for key in wrt_col_list)
+        col_dict['option_valid'] = 1
+        col_dict.update((key, 1) for key in option_col_list)
+        col_dict['index_valid'] = 1
+        col_dict.update((key, 1) for key in index_col_list)
+        col_dict['plate_valid'] = 1
+        col_dict.update((key, 1) for key in plate_col_list)
+        col_dict.update((row[0], 1) for row in pb_field_map_PreAfterMarketData_pre)
+        col_dict.update((row[0], 1) for row in pb_field_map_PreAfterMarketData_after)
 
-        snapshot_frame_table = pd.DataFrame(snapshot_list, columns=col_list)
+        snapshot_frame_table = pd.DataFrame(snapshot_list, columns=col_dict.keys())
 
         return RET_OK, snapshot_frame_table
 
