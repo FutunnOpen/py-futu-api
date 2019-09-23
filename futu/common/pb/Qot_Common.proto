@@ -469,14 +469,13 @@ message BasicQot
 	required double turnover = 12; //成交额
 	required double turnoverRate = 13; //换手率（该字段为百分比字段，默认不展示%）
 	required double amplitude = 14; //振幅（该字段为百分比字段，默认不展示%）
-	optional int32 darkStatus = 15; //DarkStatus, 暗盘交易状态
+	optional int32 darkStatus = 15; //DarkStatus, 暗盘交易状态	
+	optional OptionBasicQotExData optionExData = 16; //期权特有字段
 	optional double listTimestamp = 17; //上市日期时间戳
 	optional double updateTimestamp = 18; //更新时间戳
 	optional PreAfterMarketData preMarket = 19; //盘前数据
 	optional PreAfterMarketData afterMarket = 20; //盘后数据
 	optional int32 status = 21; //SecurityStats, 股票状态
-
-	optional OptionBasicQotExData optionExData = 16; //期权特有字段
 }
 
 message TimeShare

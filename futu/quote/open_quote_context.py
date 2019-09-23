@@ -5,8 +5,7 @@
 
 import datetime
 import math
-from time import sleep
-
+from collections import OrderedDict
 import pandas as pd
 from futu.common.open_context_base import OpenContextBase, ContextStatus
 from futu.quote.quote_query import *
@@ -834,23 +833,25 @@ class OpenQuoteContext(OpenContextBase):
             'lowest_history_price',
             'after_volume',
             'after_turnover',
-			'status',
+            'status',
         ]
 
-        col_list.append('equity_valid')
-        col_list.extend(equity_col_list)
-        col_list.append('wrt_valid')
-        col_list.extend(wrt_col_list)
-        col_list.append('option_valid')
-        col_list.extend(option_col_list)
-        col_list.append('index_valid')
-        col_list.extend(index_col_list)
-        col_list.append('plate_valid')
-        col_list.extend(plate_col_list)
-        col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)
-        col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_after)
+        col_dict = OrderedDict()
+        col_dict.update((key, 1) for key in col_list)
+        col_dict['equity_valid'] = 1
+        col_dict.update((key, 1) for key in equity_col_list)
+        col_dict['wrt_valid'] = 1
+        col_dict.update((key, 1) for key in wrt_col_list)
+        col_dict['option_valid'] = 1
+        col_dict.update((key, 1) for key in option_col_list)
+        col_dict['index_valid'] = 1
+        col_dict.update((key, 1) for key in index_col_list)
+        col_dict['plate_valid'] = 1
+        col_dict.update((key, 1) for key in plate_col_list)
+        col_dict.update((row[0], 1) for row in pb_field_map_PreAfterMarketData_pre)
+        col_dict.update((row[0], 1) for row in pb_field_map_PreAfterMarketData_after)
 
-        snapshot_frame_table = pd.DataFrame(snapshot_list, columns=col_list)
+        snapshot_frame_table = pd.DataFrame(snapshot_list, columns=col_dict.keys())
 
         return RET_OK, snapshot_frame_table
 
@@ -2430,3 +2431,30 @@ class OpenQuoteContext(OpenContextBase):
             return RET_OK, ret_frame
         else:
             return RET_ERROR, "empty data"
+
+    def get_ipo_list(self, market):
+        """
+        获取某个市场的ipo列表
+        :param market: str, see Market
+        :return:
+        """
+        query_processor = self._get_sync_query_processor(
+            GetIpoListQuery.pack_req,
+            GetIpoListQuery.unpack,
+        )
+
+        kargs = {
+            'conn_id': self.get_sync_conn_id(),
+            'market': market
+        }
+        ret, msg, data = query_processor(**kargs)
+        if ret != RET_OK:
+            return ret, msg
+
+        col_dict = OrderedDict()
+        col_dict.update((row[0], True) for row in pb_field_map_BasicIpoData)
+        col_dict.update((row[0], True) for row in pb_field_map_CNIpoExData)
+        col_dict.update((row[0], True) for row in pb_field_map_HKIpoExData)
+        col_dict.update((row[0], True) for row in pb_field_map_USIpoExData)
+
+        return RET_OK, pd.DataFrame(data, columns=col_dict.keys())
