@@ -438,7 +438,7 @@ class MarketSnapshotQuery:
             #  盘后成交额 type=double
             snapshot_tmp["after_turnover"] = record.basic.afterMarket.turnover   
             #  股票状态 type=str
-            snapshot_tmp["status"] = SecurityStatus.to_string2(record.basic.status)
+            snapshot_tmp["sec_status"] = SecurityStatus.to_string2(record.basic.secStatus)
 
             if record.basic.HasField('preMarket'):
                 set_item_from_pb(snapshot_tmp, record.basic.preMarket, pb_field_map_PreAfterMarketData_pre)
@@ -1224,8 +1224,8 @@ def parse_pb_BasicQot(pb):
             'price_spread': pb.priceSpread,
             'dark_status': QUOTE.REV_DARK_STATUS_MAP[pb.darkStatus] if pb.HasField(
                 'darkStatus') else DarkStatus.NONE,
-            'status': SecurityStatus.to_string2(pb.status) if pb.HasField(
-                'status') else SecurityStatus.NONE,
+            'sec_status': SecurityStatus.to_string2(pb.secStatus) if pb.HasField(
+                'secStatus') else SecurityStatus.NONE,
         }
         
         if pb.HasField('optionExData'):
