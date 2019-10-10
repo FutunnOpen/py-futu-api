@@ -415,7 +415,7 @@ class DealListQuery:
             "price": deal.price,
             "trd_side": TRADE.REV_TRD_SIDE_MAP[deal.trdSide] if deal.trdSide in TRADE.REV_TRD_SIDE_MAP else TrdSide.NONE,
             "create_time": deal.createTime,
-            "counter_broker_id": deal.counterBrokerID,
+            "counter_broker_id": deal.counterBrokerID if deal.HasField('counterBrokerID') else "",
             "counter_broker_name": deal.counterBrokerName,
             "status": DealStatus.to_string2(deal.status) if deal.HasField("status") else 'N/A'
         }
@@ -526,7 +526,7 @@ class HistoryDealListQuery:
                     "price": deal.price,
                     "trd_side": TRADE.REV_TRD_SIDE_MAP[deal.trdSide] if deal.trdSide in TRADE.REV_TRD_SIDE_MAP else TrdSide.NONE,
                     "create_time": deal.createTime,
-                    "counter_broker_id": deal.counterBrokerID,
+                    "counter_broker_id": deal.counterBrokerID if deal.HasField('counterBrokerID') else "",
                     "counter_broker_name": deal.counterBrokerName,
                     "status": DealStatus.to_string2(deal.status) if deal.HasField('status') else 'N/A'
                      } for deal in raw_deal_list]
