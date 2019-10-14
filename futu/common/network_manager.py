@@ -119,6 +119,7 @@ class NetManager:
 
     def __init__(self):
         self._use_count = 0
+        self._next_conn_id = 1
         self._lock = threading.RLock()
         self._mgr_lock = threading.Lock()  # Used to control start and stop
         self._create_all()
@@ -138,7 +139,6 @@ class NetManager:
 
     def _create_all(self):
         self._selector = selectors.DefaultSelector()
-        self._next_conn_id = 1
         self._req_queue = queue.Queue()
         self._sync_req_timeout = 12
         self._thread = None
@@ -363,6 +363,7 @@ class NetManager:
                 sync_req_rsp.ret = RET_ERROR
                 sync_req_rsp.msg = Err.ConnectionClosed.text
                 sync_req_rsp.event.set()
+            logger.info("Close: conn_id={}".format(conn_id))
 
         self._req_queue.put(work)
         self._w_sock.send(b'1')
@@ -489,8 +490,8 @@ class NetManager:
         elif err:
             self.close(conn.conn_id)
             conn.handler.on_error(conn.conn_id, err)
-        end_time = time.time()
-        logger.debug2(FTLog.ONLY_FILE, 'conn_id={}; elapsed={}; recv_len={}; buf_len={}; packet={};'.format(conn.conn_id, end_time-start_time, recv_len, buf_len, packet_count))
+        # end_time = time.time()
+        # logger.debug2(FTLog.ONLY_FILE, 'conn_id={}; elapsed={}; recv_len={}; buf_len={}; packet={};'.format(conn.conn_id, end_time-start_time, recv_len, buf_len, packet_count))
 
     def _on_write(self, conn):
         if conn.status == ConnStatus.Closed:

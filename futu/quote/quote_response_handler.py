@@ -3,6 +3,7 @@ import pandas as pd
 from futu.common import RspHandlerBase
 from futu.quote.quote_query import *
 
+
 class StockQuoteHandlerBase(RspHandlerBase):
     """
     异步处理推送的订阅股票的报价。
@@ -45,10 +46,15 @@ class StockQuoteHandlerBase(RspHandlerBase):
                 'code', 'data_date', 'data_time', 'last_price', 'open_price',
                 'high_price', 'low_price', 'prev_close_price', 'volume',
                 'turnover', 'turnover_rate', 'amplitude', 'suspension',
-                'listing_date', 'price_spread', 'dark_status', 'strike_price',
+                'listing_date', 'price_spread', 'dark_status', 'sec_status', 'strike_price',
                 'contract_size', 'open_interest', 'implied_volatility',
-                'premium', 'delta', 'gamma', 'vega', 'theta', 'rho'
+                'premium', 'delta', 'gamma', 'vega', 'theta', 'rho',
+                'net_open_interest', 'expiry_date_distance', 'contract_nominal_value', 
+                'owner_lot_multiplier', 'option_area_type', 'contract_multiplier', 
             ]
+
+            col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)
+            col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_after)
 
             quote_frame_table = pd.DataFrame(content, columns=col_list)
 
@@ -94,6 +100,7 @@ class OrderBookHandlerBase(RspHandlerBase):
             self.on_recv_log(content)
 
         return ret_code, content
+
 
 class CurKlineHandlerBase(RspHandlerBase):
     """
@@ -257,7 +264,8 @@ class BrokerHandlerBase(RspHandlerBase):
     """
     @classmethod
     def parse_rsp_pb(cls, rsp_pb):
-        ret_code, msg, (stock_code, bid_content, ask_content) = BrokerQueueQuery.unpack_rsp(rsp_pb)
+        ret_code, msg, (stock_code, bid_content,
+                        ask_content) = BrokerQueueQuery.unpack_rsp(rsp_pb)
         if ret_code != RET_OK:
             return ret_code, msg
         else:
@@ -289,9 +297,6 @@ class BrokerHandlerBase(RspHandlerBase):
             bid_frame_table = pd.DataFrame(bid_content, columns=bid_list)
             ask_frame_table = pd.DataFrame(ask_content, columns=ask_list)
             return ret_code, stock_code, [bid_frame_table, ask_frame_table]
-
-
-
 
 
 class KeepAliveHandlerBase(RspHandlerBase):
@@ -331,6 +336,7 @@ class SysNotifyHandlerBase(RspHandlerBase):
 
 class AsyncHandler_InitConnect(RspHandlerBase):
     """ AsyncHandler_TrdSubAccPush"""
+
     def __init__(self, notify_obj=None):
         self._notify_obj = notify_obj
         super(AsyncHandler_InitConnect, self).__init__()
@@ -340,7 +346,8 @@ class AsyncHandler_InitConnect(RspHandlerBase):
         ret_code, msg, conn_info_map = InitConnect.unpack_rsp(rsp_pb)
 
         if self._notify_obj is not None:
-            self._notify_obj.on_async_init_connect(ret_code, msg, conn_info_map)
+            self._notify_obj.on_async_init_connect(
+                ret_code, msg, conn_info_map)
 
         return ret_code, msg
 

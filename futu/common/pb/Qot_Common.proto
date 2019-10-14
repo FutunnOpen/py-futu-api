@@ -44,6 +44,7 @@ enum WarrantType
 	WarrantType_Sell = 2; //认沽
 	WarrantType_Bull = 3; //牛
 	WarrantType_Bear = 4; //熊
+	WarrantType_InLine = 5; //界内证
 };
 
 enum OptionType
@@ -52,6 +53,21 @@ enum OptionType
 	OptionType_Call = 1; //涨
 	OptionType_Put = 2; //跌
 };
+
+enum IndexOptionType
+{
+	IndexOptionType_Unknown = 0; //未知
+	IndexOptionType_Normal = 1; //正常普通的指数期权
+	IndexOptionType_Small = 2; //小型指数期权
+}
+
+enum OptionAreaType
+{
+	OptionAreaType_Unknown = 0; //未知
+	OptionAreaType_American = 1; //美式
+	OptionAreaType_European = 2; //欧式
+	OptionAreaType_Bermuda = 3; //百慕大
+}
 
 enum QotMarketState
 {
@@ -197,6 +213,32 @@ enum DarkStatus
 	DarkStatus_End = 2; //暗盘交易结束
 }
 
+enum SecurityStatus
+{
+	SecurityStatus_Unknown = 0; //未知
+	SecurityStatus_Normal = 1; //正常状态
+	SecurityStatus_Listing = 2; //待上市
+	SecurityStatus_Purchasing = 3; //申购中
+	SecurityStatus_Subscribing = 4; //认购中
+	SecurityStatus_BeforeDrakTradeOpening = 5; //暗盘开盘前
+	SecurityStatus_DrakTrading = 6; //暗盘交易中
+	SecurityStatus_DrakTradeEnd = 7; //暗盘已收盘
+	SecurityStatus_ToBeOpen = 8; //待开盘
+	SecurityStatus_Suspended = 9; //停牌
+	SecurityStatus_Called = 10; //已收回
+	SecurityStatus_ExpiredLastTradingDate = 11; //已过最后交易日
+	SecurityStatus_Expired = 12; //已过期
+	SecurityStatus_Delisted = 13; //已退市
+	SecurityStatus_ChangeToTemporaryCode = 14; //公司行动中，交易关闭，转至临时代码交易
+	SecurityStatus_TemporaryCodeTradeEnd = 15; //临时买卖结束，交易关闭
+	SecurityStatus_ChangedPlateTradeEnd = 16; //已转板，旧代码交易关闭
+	SecurityStatus_ChangedCodeTradeEnd = 17; //已换代码，旧代码交易关闭
+	SecurityStatus_RecoverableCircuitBreaker = 18; //可恢复性熔断
+	SecurityStatus_UnRecoverableCircuitBreaker = 19; //不可恢复性熔断
+	SecurityStatus_AfterCombination = 20; //盘后撮合
+	SecurityStatus_AfterTransation = 21; //盘后交易
+}
+
 enum HolderCategory
 {
 	HolderCategory_Unknow = 0; //未知
@@ -254,6 +296,9 @@ enum SortField
     SortField_Issuer = 32; //发行人
 	SortField_LotSize = 33; // 每手
     SortField_IssueSize = 34; //发行量
+	SortField_UpperStrikePrice = 45; //上限价，仅用于界内证
+	SortField_LowerStrikePrice = 46; //下限价，仅用于界内证
+	SortField_InLinePriceStatus = 47; //界内界外，仅用于界内证
 
 	//以下排序字段只支持用于Qot_GetPlateSecurity协议，并仅支持美股
 	SortField_PreCurPrice = 35; //盘前最新价
@@ -294,6 +339,7 @@ enum Issuer
     Issuer_HT = 20; //海通
     Issuer_VT = 21; //瑞通
     Issuer_KC = 22; //比联
+	Issuer_MS = 23; //摩利
 }
 
 //涡轮上市日
@@ -307,12 +353,12 @@ enum IpoPeriod
     IpoPeriod_Lastmonth = 5; //过去一月上市
 }
 
-//涡轮价外/内
+//涡轮价外/内,界内证表示界内界外
 enum PriceType
 {
 	PriceType_Unknow = 0;
-	PriceType_Outside = 1; //价外
-	PriceType_WithIn = 2; //价内
+	PriceType_Outside = 1; //价外，界内证表示界外
+	PriceType_WithIn = 2; //价内，界内证表示界内
 }
 
 //涡轮状态
@@ -383,6 +429,28 @@ message OptionBasicQotExData
 	required double vega = 8; //希腊值 Vega
     required double theta = 9; //希腊值 Theta
     required double rho = 10; //希腊值 Rho
+
+	//以下字段仅支持港股期权
+	optional int32 netOpenInterest = 11; //净未平仓合约数
+	optional int32 expiryDateDistance = 12; //距离到期日天数
+	optional double contractNominalValue = 13; //合约名义金额
+	optional double ownerLotMultiplier = 14; //相等正股手数，指数期权无该字段
+	optional int32 optionAreaType = 15; //OptionAreaType, 期权地区类型
+	optional double contractMultiplier = 16; //合约乘数，指数期权特有字段
+}
+
+//美股支持盘前盘后数据
+//科创板仅支持盘后数据：成交量，成交额
+message PreAfterMarketData
+{
+	optional double price = 1;  // 盘前或盘后 - 价格
+    optional double highPrice = 2;  // 盘前或盘后 - 最高价
+    optional double lowPrice = 3;  // 盘前或盘后 - 最低价
+    optional int64 volume = 4;  // 盘前或盘后 - 成交量
+    optional double turnover = 5;  // 盘前或盘后 - 成交额
+    optional double changeVal = 6;  // 盘前或盘后 - 涨跌额
+    optional double changeRate = 7;  // 盘前或盘后 - 涨跌幅（该字段为百分比字段，默认不展示%）
+    optional double amplitude = 8;  // 盘前或盘后 - 振幅（该字段为百分比字段，默认不展示%）
 }
 
 message BasicQot
@@ -401,11 +469,13 @@ message BasicQot
 	required double turnover = 12; //成交额
 	required double turnoverRate = 13; //换手率（该字段为百分比字段，默认不展示%）
 	required double amplitude = 14; //振幅（该字段为百分比字段，默认不展示%）
-	optional int32 darkStatus = 15; //DarkStatus, 暗盘交易状态
+	optional int32 darkStatus = 15; //DarkStatus, 暗盘交易状态	
+	optional OptionBasicQotExData optionExData = 16; //期权特有字段
 	optional double listTimestamp = 17; //上市日期时间戳
 	optional double updateTimestamp = 18; //更新时间戳
-
-	optional OptionBasicQotExData optionExData = 16; //期权特有字段
+	optional PreAfterMarketData preMarket = 19; //盘前数据
+	optional PreAfterMarketData afterMarket = 20; //盘后数据
+	optional int32 secStatus = 21; //SecurityStatus, 股票状态
 }
 
 message TimeShare
@@ -448,6 +518,7 @@ message OptionStaticExData
 	required bool suspend = 5; //是否停牌
 	required string market = 6; //发行市场名字
 	optional double strikeTimestamp = 7; //行权日时间戳
+	optional int32 indexOptionType = 8; //Qot_Common.IndexOptionType, 指数期权的类型，仅在指数期权有效
 }
 
 message SecurityStaticInfo

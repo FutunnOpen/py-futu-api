@@ -39,6 +39,8 @@ message S2C
 	optional int64 userID = 8; //用户牛牛号
 	optional int32 updateType = 9; //升级类型，UpdateType
 	optional string webKey = 10; 
+	optional int32 hkOptionQotRight = 11; //港股期权行情权限, Qot_Common.QotRight
+	optional bool hasUSOptionQotRight = 12; //是否有美股期权行情权限
 }
 
 message Request

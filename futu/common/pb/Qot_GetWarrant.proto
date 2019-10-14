@@ -92,6 +92,9 @@ message WarrantData
 	optional double impliedVolatility = 41; //引申波幅,仅认购认沽支持该字段
     optional double delta = 42; //对冲值,仅认购认沽支持该字段
 	required double effectiveLeverage = 43; //有效杠杆
+	optional double upperStrikePrice = 44; //上限价，仅界内证支持该字段
+	optional double lowerStrikePrice = 45; //下限价，仅界内证支持该字段
+	optional int32 inLinePriceStatus = 46; //Qot_Common.PriceType, 界内界外，仅界内证支持该字段
 }
 
 message S2C

@@ -53,9 +53,11 @@ message ConnectStatus
 
 message QotRight
 {
-	required int32 hkQotRight = 4; //港股行情权限, GetUserInfo.QotRight
-	required int32 usQotRight = 5; //美股行情权限, QotRight
-	required int32 cnQotRight = 6; //A股行情权限, QotRight
+	required int32 hkQotRight = 4; //港股行情权限, Qot_Common.QotRight
+	required int32 usQotRight = 5; //美股行情权限, Qot_Common.QotRight
+	required int32 cnQotRight = 6; //A股行情权限, Qot_Common.QotRight
+	optional int32 hkOptionQotRight = 7; //港股期权行情权限, Qot_Common.QotRight
+	optional bool hasUSOptionQotRight = 8; //是否有美股期权行情权限
 }
 
 message APILevel

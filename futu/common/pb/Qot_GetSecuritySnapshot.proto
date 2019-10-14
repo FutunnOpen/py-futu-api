@@ -40,12 +40,12 @@ message WarrantSnapshotExData
     required string maturityTime = 4; //到期日时间字符串
     required string endTradeTime = 5; //最后交易日时间字符串
     required Qot_Common.Security owner = 6; //所属正股 
-    required double recoveryPrice = 7; //收回价,仅牛熊证支持该字段过滤
+    required double recoveryPrice = 7; //收回价,仅牛熊证支持该字段
     required int64 streetVolumn = 8; //街货量
     required int64 issueVolumn = 9; //发行量
     required double streetRate = 10; //街货占比（该字段为百分比字段，默认不展示%）
-    required double delta = 11; //对冲值,仅认购认沽支持该字段过滤
-    required double impliedVolatility = 12; //引申波幅,仅认购认沽支持该字段过滤
+    required double delta = 11; //对冲值,仅认购认沽支持该字段
+    required double impliedVolatility = 12; //引申波幅,仅认购认沽支持该字段
     required double premium = 13; //溢价（该字段为百分比字段，默认不展示%）
 	optional double maturityTimestamp = 14; //到期日时间戳
 	optional double endTradeTimestamp = 15; //最后交易日时间戳
@@ -55,6 +55,9 @@ message WarrantSnapshotExData
 	optional double conversionPrice = 19;  // 换股价
 	optional double priceRecoveryRatio = 20; // 正股距收回价（该字段为百分比字段，默认不展示%）
 	optional double score = 21; // 综合评分
+	optional double upperStrikePrice = 22; //上限价，仅界内证支持该字段
+	optional double lowerStrikePrice = 23; //下限价，仅界内证支持该字段
+	optional int32 inLinePriceStatus = 24; //Qot_Common.PriceType, 界内界外，仅界内证支持该字段
 }
 
  // 期权类型额外数据
@@ -74,6 +77,15 @@ message OptionSnapshotExData
     required double theta = 12; //希腊值 Theta
     required double rho = 13; //希腊值 Rho
 	optional double strikeTimestamp = 14; //行权日时间戳  
+
+	//以下字段仅支持港股期权
+	optional int32 indexOptionType = 15; //Qot_Common.IndexOptionType, 指数期权的类型，仅在指数期权有效
+	optional int32 netOpenInterest = 16; //净未平仓合约数
+	optional int32 expiryDateDistance = 17; //距离到期日天数
+	optional double contractNominalValue = 18; //合约名义金额
+	optional double ownerLotMultiplier = 19; //相等正股手数，指数期权无该字段
+	optional int32 optionAreaType = 20; //OptionAreaType, 期权地区类型
+	optional double contractMultiplier = 21; //合约乘数，指数期权特有字段
 }
 
 // 指数类型额外数据
@@ -102,7 +114,7 @@ message SnapshotBasicData
 	required int32 lotSize = 5; //每手数量
 	required double priceSpread = 6; //价差
 	required string updateTime = 7; //更新时间字符串
-	required double highPrice = 8; //最新价
+	required double highPrice = 8; //最高价
 	required double openPrice = 9; //开盘价
 	required double lowPrice = 10; //最低价
 	required double lastClosePrice = 11; //昨收价
@@ -131,6 +143,9 @@ message SnapshotBasicData
     optional double lowest52WeeksPrice = 34;  // 52周最低价
 	optional double highestHistoryPrice = 35;  // 历史最高价
     optional double lowestHistoryPrice = 36;  // 历史最低价
+	optional Qot_Common.PreAfterMarketData preMarket = 37; //Qot_Common::PreAfterMarketData 盘前数据
+	optional Qot_Common.PreAfterMarketData afterMarket = 38; //Qot_Common::PreAfterMarketData 盘后数据
+	optional int32 secStatus = 39; //Qot_Common::SecurityStatus 股票状态
 }
 
 message Snapshot
