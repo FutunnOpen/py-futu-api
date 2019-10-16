@@ -23,7 +23,47 @@ enum StockField
 	StockField_PeAnnual = 12; // 市盈率 (静态) 例如填写[-8,65.3]值区间
     StockField_PeTTM = 13; // 市盈率TTM 例如填写[-10,20.5]值区间
     StockField_PbRate = 14; // 市净率 例如填写[0,0.8]值区间
+	StockField_ChangeRate5min = 15; // 五分钟价格涨跌幅 
+	StockField_ChangeRateBeginYear = 16; // 年初至今价格涨跌幅
 };
+
+// 累积属性
+enum AccumulateField
+{
+	AccumulateField_Unknown = 0; // 未知
+	AccumulateField_ChangeRate = 1; // 涨跌幅
+	AccumulateField_ChangeVal = 2; // 涨跌额
+	AccumulateField_Amplitude = 3; // 振幅
+    AccumulateField_Volume = 4; // 成交量
+    AccumulateField_Turnover = 5; // 成交额
+    AccumulateField_TurnoverRate = 6; // 换手率
+}
+
+// 财务属性
+enum FinancialField
+{
+	FinancialField_Unknown = 0; // 未知
+	FinancialField_NetProfit = 1; // 净利润
+	FinancialField_NetProfitGrowth = 2; // 净利润增长率
+	FinancialField_GrossProfit = 3; // 毛利润
+    FinancialField_GrossProfitGrowth = 4; // 毛利润增长率
+    FinancialField_Turnover = 5; // 营业额
+    FinancialField_TurnoverGrowth = 6; // 营业额增长率
+	FinancialField_NetProfitRate = 7; // 净利率
+	FinancialField_GrossProfitRate = 8; // 毛利率
+	FinancialField_DebtAssetRate = 9; // 资产负债率
+	FinancialField_ReturnOnEquityRate = 10; // 净资产收益率
+}
+
+// 财报时间
+enum FinancialQuarter
+{
+	FinancialQuarter_Unknown = 0; // 未知
+	FinancialQuarter_Annual = 1; // 年报
+	FinancialQuarter_Latest = 2; // 最新一季报
+	FinancialQuarter_SixQuarter = 3; // Q6中期报
+    FinancialQuarter_NineQuarter = 4; // Q9三季报
+}
 
 // 排序方向
 enum SortDir
@@ -43,6 +83,28 @@ message BaseFilter
 	optional int32 sortDir = 5; // SortDir 排序方向，默认不排序。
 };
 
+// 累积属性筛选
+message AccumulateFilter
+{
+	required int32 field = 1; // AccumulateField 累积属性
+	optional double filterMin = 2; // 区间下限，闭区间
+    optional double filterMax = 3; // 区间上限，闭区间
+	optional bool isNoFilter = 4; // 该字段是否需要筛选。当该字段为true时，表示不需要筛选，以上filterMin，filterMax区间两个字段无效。默认True，不需要筛选。
+	optional int32 sortDir = 5; // SortDir 排序方向，默认不排序。
+	required int32 days = 6; // 近几日，累积时间
+}
+
+// 财务属性筛选
+message FinancialFilter
+{
+	required int32 field = 1; // FinancialField 财务属性
+	optional double filterMin = 2; // 区间下限，闭区间
+    optional double filterMax = 3; // 区间上限，闭区间
+	optional bool isNoFilter = 4; // 该字段是否需要筛选。当该字段为true时，表示不需要筛选，以上filterMin，filterMax区间两个字段无效。默认True，不需要筛选。
+	optional int32 sortDir = 5; // SortDir 排序方向，默认不排序。
+	required int32 quarter = 6; // FinancialQuarter 财报累积时间
+}
+
 // 简单属性数据
 message BaseData 
 { 
@@ -50,12 +112,30 @@ message BaseData
     required double value = 2;
 };
 
+// 累积指标数据
+message AccumulateData
+{
+	required int32 field = 1; // AccumulateField 累积属性
+    required double value = 2;
+	required int32 days = 3; // 近几日，累积时间
+}
+
+// 财务属性数据
+message FinancialData
+{
+	required int32 field = 1; // FinancialField 财务属性
+    required double value = 2;
+	required int32 quarter = 3; // FinancialQuarter 财报累积时间
+}
+
 // 返回的股票数据
 message StockData  
 {
     required Qot_Common.Security security = 1; // 股票
 	required string name = 2; // 股票名称
     repeated BaseData baseDataList = 3; // 筛选后的简单属性数据
+	repeated AccumulateData accumulateDataList = 4; // 筛选后的累积属性数据
+	repeated FinancialData financialDataList = 5; // 筛选后的财务属性数据
 };
 
 message C2S
@@ -66,6 +146,8 @@ message C2S
 	// 以下为筛选条件，可选字段，不填表示不过滤
 	optional Qot_Common.Security plate = 4; // 板块
 	repeated BaseFilter baseFilterList = 5; // 简单行情过滤器
+	repeated AccumulateFilter accumulateFilterList = 6; // 累积行情过滤器
+	repeated FinancialFilter financialFilterList = 7; // 财务行情过滤器
 }
 
 message S2C

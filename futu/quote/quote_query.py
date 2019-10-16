@@ -5,6 +5,7 @@
 
 from futu.common.utils import *
 from futu.common.pb import Common_pb2
+from futu.quote.quote_stockfilter_info import *
 
 # 无数据时的值
 NoneDataType = 'N/A'
@@ -2061,7 +2062,7 @@ class OptionChain:
                         "strike_time": record.optionExData.strikeTime,
                         "strike_price": record.optionExData.strikePrice if record.HasField('optionExData') else NoneDataType,
                         "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
-						"index_option_type": IndexOptionType.to_string2(record.optionExData.indexOptionType) if record.HasField('optionExData') else NoneDataType,
+                        "index_option_type": IndexOptionType.to_string2(record.optionExData.indexOptionType) if record.HasField('optionExData') else NoneDataType,
                     }
                     data_list.append(quote_list)
 
@@ -2695,7 +2696,6 @@ class StockFilterQuery:
         """拆解market"""
         req.c2s.market = MKT_MAP[market]
 
-
         """拆解plate_code"""
         if plate_code is not None:
             ret, content = split_stock_str(plate_code)
@@ -2707,15 +2707,22 @@ class StockFilterQuery:
             req.c2s.plate.code = code
             req.c2s.plate.market = market
 
-        from futu.quote.quote_stockfilter_info import SimpleFilter
+            
         if filter_list is not None:
             for filter_item in filter_list:
-                if not isinstance(filter_item, SimpleFilter):
+                if isinstance(filter_item, SimpleFilter):
+                    filter_req = req.c2s.baseFilterList.add()
+                    filter_item.fill_request_pb(filter_req)
+                elif isinstance(filter_item, AccumulateFilter):
+                    filter_req = req.c2s.accumulateFilterList.add()
+                    filter_item.fill_request_pb(filter_req)
+                elif isinstance(filter_item, FinancialFilter):
+                    filter_req = req.c2s.financialFilterList.add()
+                    filter_item.fill_request_pb(filter_req)
+                else :
                     error_str = ERROR_STR_PREFIX + "the item in filter_list is wrong"
                     return RET_ERROR, error_str
-                filter_req = req.c2s.baseFilterList.add()
-                filter_item.fill_request_pb(filter_req)
-
+                
         return pack_pb_req(req, ProtoId.Qot_StockFilter, conn_id)
 
     @classmethod
@@ -2729,7 +2736,6 @@ class StockFilterQuery:
         #   type = Qot_StockFilter.StockData
         data_list = rsp_pb.s2c.dataList
         ret_list = list()
-        from futu.quote.quote_stockfilter_info import FilterStockData
         for item in data_list:
             data = FilterStockData(item)
             ret_list.append(data)
