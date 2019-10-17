@@ -1966,7 +1966,6 @@ class StockField(FtEnum):
     # 以下是累积数据过滤所支持的枚举
     acc_enum_begin = 100
     CHANGE_RATE = "CHANGE_RATE"                        # 涨跌幅
-    CHANGE_VAL = "CHANGE_VAL"                          # 涨跌额
     AMPLITUDE = "AMPLITUDE"                            # 振幅
     VOLUME = "VOLUME"                                  # 成交量
     TURNOVER = "TURNOVER"                              # 成交额
@@ -1977,7 +1976,6 @@ class StockField(FtEnum):
     NET_PROFIT = "NET_PROFIT"                          # 净利润
     NET_PROFIX_GROWTH = "NET_PROFIX_GROWTH"            # 净利润增长率
     GROSS_PROFIT = "GROSS_PROFIT"                      # 毛利润
-    GROSS_PROFIT_GROWTH = "GROSS_PROFIT_GROWTH"        # 毛利润增长率
     SUM_OF_BUSINESS = "SUM_OF_BUSINESS"                # 营业额
     TURNOVER_GROWTH = "TURNOVER_GROWTH"                # 营业额增长率
     NET_PROFIT_RATE = "NET_PROFIT_RATE"                # 净利率
@@ -2006,7 +2004,6 @@ class StockField(FtEnum):
             self.CHANGE_RATE_BEGIN_YEAR: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_ChangeRateBeginYear,
 
             self.CHANGE_RATE: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_ChangeRate,
-            self.CHANGE_VAL: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_ChangeVal,
             self.AMPLITUDE: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_Amplitude,
             self.VOLUME: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_Volume,
             self.TURNOVER: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_Turnover,
@@ -2015,7 +2012,6 @@ class StockField(FtEnum):
             self.NET_PROFIT: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfit,
             self.NET_PROFIX_GROWTH: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfitGrowth,
             self.GROSS_PROFIT: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_GrossProfit,
-            self.GROSS_PROFIT_GROWTH: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_GrossProfitGrowth,
             self.SUM_OF_BUSINESS: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_Turnover,
             self.TURNOVER_GROWTH: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_TurnoverGrowth,
             self.NET_PROFIT_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfitRate,
@@ -2029,7 +2025,7 @@ class StockField(FtEnum):
 class FinancialQuarter(FtEnum):
     NONE = "N/A"
     ANNUAL = "ANNUAL"                        # 年报
-    LATEST = "LATEST"                        # 最新一季报
+    FIRST_QUARTER = "FIRST_QUARTER"          # Q1一季报
     SIX_QUARTER = "SIX_QUARTER"              # Q6中期报
     NINE_QUARTER = "NINE_QUARTER"            # Q9三季报
 
@@ -2037,7 +2033,7 @@ class FinancialQuarter(FtEnum):
         return {
             self.NONE: Qot_StockFilter_pb2.FinancialQuarter_Unknown,
             self.ANNUAL: Qot_StockFilter_pb2.FinancialQuarter_Annual,
-            self.LATEST: Qot_StockFilter_pb2.FinancialQuarter_Latest,
+            self.FIRST_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_FirstQuarter,
             self.SIX_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_SixQuarter,
             self.NINE_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_NineQuarter,
         }

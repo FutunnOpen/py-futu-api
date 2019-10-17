@@ -138,7 +138,6 @@ class FilterStockData(object):
 
     # 以下是累积数据过滤所支持的字段
     # change_rate = None # 涨跌幅
-    # change_val = None # 涨跌额
     # amplitude = None # 振幅
     # volume = None # 成交量
     # turnover = None # 成交额
@@ -148,7 +147,6 @@ class FilterStockData(object):
     # net_profit = None # 净利润
     # net_profix_growth = None # 净利润增长率
     # gross_profit = None # 毛利润
-    # gross_profit_growth = None # 毛利润增长率
     # sum_of_business = None # 营业额
     # turnover_growth = None # 营业额增长率
     # net_profit_rate = None # 净利率

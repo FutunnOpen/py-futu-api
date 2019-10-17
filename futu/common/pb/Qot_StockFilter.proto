@@ -23,36 +23,34 @@ enum StockField
 	StockField_PeAnnual = 12; // 市盈率 (静态) 例如填写[-8,65.3]值区间
     StockField_PeTTM = 13; // 市盈率TTM 例如填写[-10,20.5]值区间
     StockField_PbRate = 14; // 市净率 例如填写[0,0.8]值区间
-	StockField_ChangeRate5min = 15; // 五分钟价格涨跌幅 
-	StockField_ChangeRateBeginYear = 16; // 年初至今价格涨跌幅
+	StockField_ChangeRate5min = 15; // 五分钟价格涨跌幅 例如填写[-5,6.3]值区间
+	StockField_ChangeRateBeginYear = 16; // 年初至今价格涨跌幅 例如填写[-50.1,400.7]值区间
 };
 
 // 累积属性
 enum AccumulateField
 {
 	AccumulateField_Unknown = 0; // 未知
-	AccumulateField_ChangeRate = 1; // 涨跌幅
-	AccumulateField_ChangeVal = 2; // 涨跌额
-	AccumulateField_Amplitude = 3; // 振幅
-    AccumulateField_Volume = 4; // 成交量
-    AccumulateField_Turnover = 5; // 成交额
-    AccumulateField_TurnoverRate = 6; // 换手率
+	AccumulateField_ChangeRate = 1; // 涨跌幅 例如填写[-10.2,20.4]值区间
+	AccumulateField_Amplitude = 2; // 振幅 例如填写[0.5,20.6]值区间
+    AccumulateField_Volume = 3; // 成交量 例如填写[2000,70000]值区间
+    AccumulateField_Turnover = 4; // 成交额 例如填写[1400,890000]值区间
+    AccumulateField_TurnoverRate = 5; // 换手率 例如填写[0.12,26.73]值区间
 }
 
 // 财务属性
 enum FinancialField
 {
 	FinancialField_Unknown = 0; // 未知
-	FinancialField_NetProfit = 1; // 净利润
-	FinancialField_NetProfitGrowth = 2; // 净利润增长率
-	FinancialField_GrossProfit = 3; // 毛利润
-    FinancialField_GrossProfitGrowth = 4; // 毛利润增长率
-    FinancialField_Turnover = 5; // 营业额
-    FinancialField_TurnoverGrowth = 6; // 营业额增长率
-	FinancialField_NetProfitRate = 7; // 净利率
-	FinancialField_GrossProfitRate = 8; // 毛利率
-	FinancialField_DebtAssetRate = 9; // 资产负债率
-	FinancialField_ReturnOnEquityRate = 10; // 净资产收益率
+	FinancialField_NetProfit = 1; // 净利润 例如填写[100000000,2500000000]值区间
+	FinancialField_NetProfitGrowth = 2; // 净利润增长率 例如填写[-20.13,300]值区间
+	FinancialField_GrossProfit = 3; // 毛利润 例如填写[0.12,30]值区间
+    FinancialField_Turnover = 4; // 营业额 例如填写[100000000,6400000000]值区间
+    FinancialField_TurnoverGrowth = 5; // 营业额增长率 例如填写[-5.13,200]值区间
+	FinancialField_NetProfitRate = 6; // 净利率 例如填写[0.01,113]值区间
+	FinancialField_GrossProfitRate = 7; // 毛利率 例如填写[0.12,65]值区间
+	FinancialField_DebtAssetRate = 8; // 资产负债率 例如填写[0.05,470]值区间
+	FinancialField_ReturnOnEquityRate = 9; // 净资产收益率 例如填写[0.01,230]值区间
 }
 
 // 财报时间
@@ -60,7 +58,7 @@ enum FinancialQuarter
 {
 	FinancialQuarter_Unknown = 0; // 未知
 	FinancialQuarter_Annual = 1; // 年报
-	FinancialQuarter_Latest = 2; // 最新一季报
+	FinancialQuarter_FirstQuarter = 2; // Q1一季报
 	FinancialQuarter_SixQuarter = 3; // Q6中期报
     FinancialQuarter_NineQuarter = 4; // Q9三季报
 }
