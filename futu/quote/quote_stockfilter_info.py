@@ -188,7 +188,7 @@ class FilterStockData(object):
         base_data_list = rsp_item.financialDataList
         for sub_item in base_data_list:
             ret1, field = StockField.to_string(sub_item.field)
-			ret2, quarter = FinancialQuarter.to_string(sub_item.quarter)
+            ret2, quarter = FinancialQuarter.to_string(sub_item.quarter)
             if ret1 and ret2:
                 self.__dict__[(field.lower(), quarter.lower())] = sub_item.value
 
