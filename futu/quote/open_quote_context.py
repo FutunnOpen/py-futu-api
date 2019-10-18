@@ -9,7 +9,7 @@ from collections import OrderedDict
 import pandas as pd
 from futu.common.open_context_base import OpenContextBase, ContextStatus
 from futu.quote.quote_query import *
-
+from futu.quote.quote_stockfilter_info import *
 
 class OpenQuoteContext(OpenContextBase):
     """行情上下文对象类"""
@@ -2322,12 +2322,16 @@ class OpenQuoteContext(OpenContextBase):
             return RET_ERROR, error_str
 
         """容错容错"""
-        from futu.quote.quote_stockfilter_info import SimpleFilter
-        if filter_list is not None and isinstance(filter_list, SimpleFilter):
+        if filter_list is not None and (isinstance(filter_list, SimpleFilter) or isinstance(filter_list, AccumulateFilter) or isinstance(filter_list, FinancialFilter)):
             filter_list = [filter_list]
         if filter_list is not None and not isinstance(filter_list, list):
             error_str = ERROR_STR_PREFIX + "the type of filter_list is wrong"
             return RET_ERROR, error_str
+
+        for filter in filter_list:
+            if not (isinstance(filter, SimpleFilter) or isinstance(filter, AccumulateFilter) or isinstance(filter, FinancialFilter)):
+                error_str = ERROR_STR_PREFIX + "the item of filter_list is wrong"
+                return RET_ERROR, error_str
 
         query_processor = self._get_sync_query_processor(
             StockFilterQuery.pack_req,

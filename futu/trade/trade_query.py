@@ -6,6 +6,8 @@ import datetime as dt
 from futu.common.utils import *
 from futu.quote.quote_query import pack_pb_req
 
+# 无数据时的值
+NoneDataValue = 'N/A'
 
 def is_HKTrade_order_status_finish(status):
     val = int(status)
@@ -410,14 +412,14 @@ class DealListQuery:
             "code": merge_trd_mkt_stock_str(rsp_pb.s2c.header.trdMarket, deal.code),
             "stock_name": deal.name,
             "deal_id": deal.fillID,
-            "order_id": str(deal.orderID) if deal.HasField('orderID') else "",
+            "order_id": str(deal.orderID) if deal.HasField('orderID') else NoneDataValue,
             "qty": deal.qty,
             "price": deal.price,
             "trd_side": TRADE.REV_TRD_SIDE_MAP[deal.trdSide] if deal.trdSide in TRADE.REV_TRD_SIDE_MAP else TrdSide.NONE,
             "create_time": deal.createTime,
-            "counter_broker_id": deal.counterBrokerID if deal.HasField('counterBrokerID') else "",
-            "counter_broker_name": deal.counterBrokerName,
-            "status": DealStatus.to_string2(deal.status) if deal.HasField("status") else 'N/A'
+            "counter_broker_id": deal.counterBrokerID if deal.HasField('counterBrokerID') else NoneDataValue,
+            "counter_broker_name": deal.counterBrokerName if deal.HasField('counterBrokerName') else NoneDataValue,
+            "status": DealStatus.to_string2(deal.status) if deal.HasField("status") else NoneDataValue
         }
         return deal_dict
 

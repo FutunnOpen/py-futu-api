@@ -1937,6 +1937,8 @@ class SortDir(FtEnum):
 
 class StockField(FtEnum):
     NONE = "N/A"                                       # 未知
+    # 以下是简单数据过滤所支持的枚举
+    simple_enum_begin = 0
     STOCK_CODE = "STOCK_CODE"                          # 股票代码，不能填区间上下限值。
     STOCK_NAME = "STOCK_NAME"                          # 股票名称，不能填区间上下限值。
     CUR_PRICE = "CUR_PRICE"                            # 最新价 例如填写[10,20]值区间
@@ -1958,46 +1960,87 @@ class StockField(FtEnum):
     # 市盈率TTM 例如填写[-10,20.5]值区间
     PE_TTM = "PE_TTM"
     PB_RATE = "PB_RATE"                                # 市净率 例如填写[0,0.8]值区间
+    CHANGE_RATE_5MIN = "CHANGE_RATE_5MIN"              # 五分钟价格涨跌幅
+    CHANGE_RATE_BEGIN_YEAR = "CHANGE_RATE_BEGIN_YEAR"  # 年初至今价格涨跌幅
+
+    # 以下是累积数据过滤所支持的枚举
+    acc_enum_begin = 100
+    CHANGE_RATE = "CHANGE_RATE"                        # 涨跌幅
+    AMPLITUDE = "AMPLITUDE"                            # 振幅
+    VOLUME = "VOLUME"                                  # 成交量
+    TURNOVER = "TURNOVER"                              # 成交额
+    TURNOVER_RATE = "TURNOVER_RATE"                    # 换手率
+
+    # 以下是财务数据过滤所支持的枚举
+    financial_enum_begin = 200
+    NET_PROFIT = "NET_PROFIT"                          # 净利润
+    NET_PROFIX_GROWTH = "NET_PROFIX_GROWTH"            # 净利润增长率
+    GROSS_PROFIT = "GROSS_PROFIT"                      # 毛利润
+    SUM_OF_BUSINESS = "SUM_OF_BUSINESS"                # 营业额
+    TURNOVER_GROWTH = "TURNOVER_GROWTH"                # 营业额增长率
+    NET_PROFIT_RATE = "NET_PROFIT_RATE"                # 净利率
+    GROSS_PROFIT_RATE = "GROSS_PROFIT_RATE"            # 毛利率
+    DEBT_ASSET_RATE = "DEBT_ASSET_RATE"                # 资产负债率
+    RETURN_ON_EQUITY_RATE = "RETURN_ON_EQUITY_RATE"    # 净资产收益率
 
     def load_dic(self):
         return {
-            self.NONE: Qot_StockFilter_pb2.StockField_Unknown,
-            self.STOCK_CODE: Qot_StockFilter_pb2.StockField_StockCode,
-            self.STOCK_NAME: Qot_StockFilter_pb2.StockField_StockName,
-            self.CUR_PRICE: Qot_StockFilter_pb2.StockField_CurPrice,
-            self.CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_CurPriceToHighest52WeeksRatio,
-            self.CUR_PRICE_TO_LOWEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_CurPriceToLowest52WeeksRatio,
-            self.HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_HighPriceToHighest52WeeksRatio,
-            self.LOW_PRICE_TO_LOWEST52_WEEKS_RATIO: Qot_StockFilter_pb2.StockField_LowPriceToLowest52WeeksRatio,
-            self.VOLUME_RATIO: Qot_StockFilter_pb2.StockField_VolumeRatio,
-            self.BID_ASK_RATIO: Qot_StockFilter_pb2.StockField_BidAskRatio,
-            self.LOT_PRICE: Qot_StockFilter_pb2.StockField_LotPrice,
-            self.MARKET_VAL: Qot_StockFilter_pb2.StockField_MarketVal,
-            self.PE_ANNUAL: Qot_StockFilter_pb2.StockField_PeAnnual,
-            self.PE_TTM: Qot_StockFilter_pb2.StockField_PeTTM,
-            self.PB_RATE: Qot_StockFilter_pb2.StockField_PbRate
+            self.NONE: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_Unknown,
+            self.STOCK_CODE: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_StockCode,
+            self.STOCK_NAME: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_StockName,
+            self.CUR_PRICE: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_CurPrice,
+            self.CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_CurPriceToHighest52WeeksRatio,
+            self.CUR_PRICE_TO_LOWEST52_WEEKS_RATIO: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_CurPriceToLowest52WeeksRatio,
+            self.HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_HighPriceToHighest52WeeksRatio,
+            self.LOW_PRICE_TO_LOWEST52_WEEKS_RATIO: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_LowPriceToLowest52WeeksRatio,
+            self.VOLUME_RATIO: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_VolumeRatio,
+            self.BID_ASK_RATIO: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_BidAskRatio,
+            self.LOT_PRICE: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_LotPrice,
+            self.MARKET_VAL: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_MarketVal,
+            self.PE_ANNUAL: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_PeAnnual,
+            self.PE_TTM: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_PeTTM,
+            self.PB_RATE: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_PbRate,
+            self.CHANGE_RATE_5MIN: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_ChangeRate5min,
+            self.CHANGE_RATE_BEGIN_YEAR: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_ChangeRateBeginYear,
+
+            self.CHANGE_RATE: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_ChangeRate,
+            self.AMPLITUDE: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_Amplitude,
+            self.VOLUME: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_Volume,
+            self.TURNOVER: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_Turnover,
+            self.TURNOVER_RATE: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_TurnoverRate,
+
+            self.NET_PROFIT: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfit,
+            self.NET_PROFIX_GROWTH: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfitGrowth,
+            self.GROSS_PROFIT: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_GrossProfit,
+            self.SUM_OF_BUSINESS: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_Turnover,
+            self.TURNOVER_GROWTH: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_TurnoverGrowth,
+            self.NET_PROFIT_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfitRate,
+            self.GROSS_PROFIT_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_GrossProfitRate,
+            self.DEBT_ASSET_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_DebtAssetRate,
+            self.RETURN_ON_EQUITY_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_ReturnOnEquityRate,
         }
 
-# 选股使用，因为选股不分沪深
 
+#财务指标的周期
+class FinancialQuarter(FtEnum):
+    NONE = "N/A"
+    ANNUAL = "ANNUAL"                        # 年报
+    FIRST_QUARTER = "FIRST_QUARTER"          # Q1一季报
+    SIX_QUARTER = "SIX_QUARTER"              # Q6中期报
+    NINE_QUARTER = "NINE_QUARTER"            # Q9三季报
 
-# class StockMarket(FtEnum):
-#     NONE = "N/A"                                       # 未知
-#     HK = "HK"                                          # 港股
-#     US = "US"                                          # 美股
-#     CN = "CN"                                          # A股
+    def load_dic(self):
+        return {
+            self.NONE: Qot_StockFilter_pb2.FinancialQuarter_Unknown,
+            self.ANNUAL: Qot_StockFilter_pb2.FinancialQuarter_Annual,
+            self.FIRST_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_FirstQuarter,
+            self.SIX_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_SixQuarter,
+            self.NINE_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_NineQuarter,
+        }
+
 #
-#     def load_dic(self):
-#         return {
-#             self.NONE: Qot_StockFilter_pb2.StockMarket_Unknown,
-#             self.HK: Qot_StockFilter_pb2.StockMarket_HK,
-#             self.US: Qot_StockFilter_pb2.StockMarket_US,
-#             self.CN: Qot_StockFilter_pb2.StockMarket_CN
-#         }
-
-
 class CodeChangeType(FtEnum):
-    UNKOWN = "UNKOWN"                                  # 未知
+    NONE = "N/A"
     GEM_TO_MAIN = "GEM_TO_MAIN"                        # 创业板转主板
     UNPAID = "UNPAID"                                  # 买卖未缴款供股权
     CHANGE_LOT = "CHANGE_LOT"                          # 更改买卖单位
@@ -2009,7 +2052,7 @@ class CodeChangeType(FtEnum):
 
     def load_dic(self):
         return {
-            self.UNKOWN: Qot_GetCodeChange_pb2.CodeChangeType_Unkown,
+            self.NONE: Qot_GetCodeChange_pb2.CodeChangeType_Unkown,
             self.GEM_TO_MAIN: Qot_GetCodeChange_pb2.CodeChangeType_GemToMain,
             self.UNPAID: Qot_GetCodeChange_pb2.CodeChangeType_Unpaid,
             self.CHANGE_LOT: Qot_GetCodeChange_pb2.CodeChangeType_ChangeLot,
