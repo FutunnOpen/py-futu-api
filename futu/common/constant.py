@@ -1977,7 +1977,7 @@ class StockField(FtEnum):
     NET_PROFIX_GROWTH = "NET_PROFIX_GROWTH"            # 净利润增长率
     GROSS_PROFIT = "GROSS_PROFIT"                      # 毛利润
     SUM_OF_BUSINESS = "SUM_OF_BUSINESS"                # 营业额
-    TURNOVER_GROWTH = "TURNOVER_GROWTH"                # 营业额增长率
+    SUM_OF_BUSINESS_GROWTH = "SUM_OF_BUSINESS_GROWTH"  # 营业额增长率
     NET_PROFIT_RATE = "NET_PROFIT_RATE"                # 净利率
     GROSS_PROFIT_RATE = "GROSS_PROFIT_RATE"            # 毛利率
     DEBT_ASSET_RATE = "DEBT_ASSET_RATE"                # 资产负债率
@@ -2012,8 +2012,8 @@ class StockField(FtEnum):
             self.NET_PROFIT: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfit,
             self.NET_PROFIX_GROWTH: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfitGrowth,
             self.GROSS_PROFIT: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_GrossProfit,
-            self.SUM_OF_BUSINESS: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_Turnover,
-            self.TURNOVER_GROWTH: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_TurnoverGrowth,
+            self.SUM_OF_BUSINESS: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_SumOfBusiness,
+            self.SUM_OF_BUSINESS_GROWTH: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_SumOfBusinessGrowth,
             self.NET_PROFIT_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfitRate,
             self.GROSS_PROFIT_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_GrossProfitRate,
             self.DEBT_ASSET_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_DebtAssetRate,
