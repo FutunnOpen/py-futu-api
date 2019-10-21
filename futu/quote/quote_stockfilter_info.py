@@ -180,14 +180,14 @@ class FilterStockData(object):
         #  筛选后的简单属性数据 type = Qot_StockFilter.AccumulateData
         base_data_list = rsp_item.accumulateDataList
         for sub_item in base_data_list:
-            ret, field = StockField.to_string(sub_item.field)
+            ret, field = StockField.to_string(sub_item.field + StockField.acc_enum_begin)
             if ret:
                 self.__dict__[(field.lower(), sub_item.days)] = sub_item.value
                 
         #  筛选后的简单属性数据 type = Qot_StockFilter.FinancialData
         base_data_list = rsp_item.financialDataList
         for sub_item in base_data_list:
-            ret1, field = StockField.to_string(sub_item.field)
+            ret1, field = StockField.to_string(sub_item.field + StockField.financial_enum_begin)
             ret2, quarter = FinancialQuarter.to_string(sub_item.quarter)
             if ret1 and ret2:
                 self.__dict__[(field.lower(), quarter.lower())] = sub_item.value
