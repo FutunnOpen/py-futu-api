@@ -173,7 +173,7 @@ class FilterStockData(object):
         #  筛选后的简单属性数据 type = Qot_StockFilter.BaseData
         base_data_list = rsp_item.baseDataList
         for sub_item in base_data_list:
-            ret, field = StockField.to_string(sub_item.field)
+            ret, field = StockField.to_string(sub_item.field + StockField.simple_enum_begin)
             if ret:
                 self.__dict__[field.lower()] = sub_item.value
                 
