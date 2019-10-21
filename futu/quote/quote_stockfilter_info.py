@@ -54,14 +54,14 @@ class AccumulateFilter(object):
         self.filter_max = None
         self.sort = None
         self.is_no_filter = None
-        days = None
+        self.days = None
 
     def fill_request_pb(self, filter_req):
         r, v = StockField.to_number(self.stock_field)
         if not r:
             return RET_ERROR, 'stock_field is wrong. must be StockField'
         filter_req.field = v - StockField.acc_enum_begin
-        filter_req.days = days
+        filter_req.days = self.days
         """有了这个字段，别的字段都可以不要了"""
         if self.is_no_filter is False:
             filter_req.isNoFilter = False
@@ -90,7 +90,7 @@ class FinancialFilter(object):
         self.filter_max = None
         self.sort = None
         self.is_no_filter = None
-        quarter = None
+        self.quarter = None
 
     def fill_request_pb(self, filter_req):
         r, v = StockField.to_number(self.stock_field)
