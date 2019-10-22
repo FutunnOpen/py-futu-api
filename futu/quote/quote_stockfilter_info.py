@@ -146,7 +146,6 @@ class FilterStockData(object):
     # 以下是财务数据过滤所支持的字段
     # net_profit = None # 净利润
     # net_profix_growth = None # 净利润增长率
-    # gross_profit = None # 毛利润
     # sum_of_business = None # 营业额
     # sum_of_business_growth = None # 营业额增长率
     # net_profit_rate = None # 净利率

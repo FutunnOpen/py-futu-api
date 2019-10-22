@@ -44,13 +44,12 @@ enum FinancialField
 	FinancialField_Unknown = 0; // 未知
 	FinancialField_NetProfit = 1; // 净利润 例如填写[100000000,2500000000]值区间
 	FinancialField_NetProfitGrowth = 2; // 净利润增长率 例如填写[-20.13,300]值区间
-	FinancialField_GrossProfit = 3; // 毛利润 例如填写[0.12,30]值区间
-    FinancialField_SumOfBusiness = 4; // 营业额 例如填写[100000000,6400000000]值区间
-    FinancialField_SumOfBusinessGrowth = 5; // 营业额增长率 例如填写[-5.13,200]值区间
-	FinancialField_NetProfitRate = 6; // 净利率 例如填写[0.01,113]值区间
-	FinancialField_GrossProfitRate = 7; // 毛利率 例如填写[0.12,65]值区间
-	FinancialField_DebtAssetRate = 8; // 资产负债率 例如填写[0.05,470]值区间
-	FinancialField_ReturnOnEquityRate = 9; // 净资产收益率 例如填写[0.01,230]值区间
+    FinancialField_SumOfBusiness = 3; // 营业额 例如填写[100000000,6400000000]值区间
+    FinancialField_SumOfBusinessGrowth = 4; // 营业额增长率 例如填写[-5.13,200]值区间
+	FinancialField_NetProfitRate = 5; // 净利率 例如填写[0.01,113]值区间
+	FinancialField_GrossProfitRate = 6; // 毛利率 例如填写[0.12,65]值区间
+	FinancialField_DebtAssetRate = 7; // 资产负债率 例如填写[0.05,470]值区间
+	FinancialField_ReturnOnEquityRate = 8; // 净资产收益率 例如填写[0.01,230]值区间
 }
 
 // 财报时间
