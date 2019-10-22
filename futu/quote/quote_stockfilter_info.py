@@ -46,7 +46,7 @@ class AccumulateFilter(object):
     filter_max = None  # 区间上限，闭区间
     sort = None  # SortDir 排序方向 SortDir
     is_no_filter = None  # 如果这个字段不需要筛选，但是需要返回这个字段的数据，指定该字段为ture。当该字段为true时，以上三个字段无效。
-    days = None #所筛选的数据的累计天数
+    days = 1 #所筛选的数据的累计天数
     
     def __init__(self):
         self.stock_field = StockField.NONE
@@ -54,7 +54,7 @@ class AccumulateFilter(object):
         self.filter_max = None
         self.sort = None
         self.is_no_filter = None
-        self.days = None
+        self.days = 1
 
     def fill_request_pb(self, filter_req):
         r, v = StockField.to_number(self.stock_field)
@@ -82,7 +82,7 @@ class FinancialFilter(object):
     filter_max = None  # 区间上限，闭区间
     sort = None  # SortDir 排序方向 SortDir
     is_no_filter = None  # 如果这个字段不需要筛选，但是需要返回这个字段的数据，指定该字段为ture。当该字段为true时，以上三个字段无效。
-    quarter = None #财报累积时间
+    quarter = FinancialQuarter.FIRST_QUARTER #财报累积时间
     
     def __init__(self):
         self.stock_field = StockField.NONE
@@ -90,7 +90,7 @@ class FinancialFilter(object):
         self.filter_max = None
         self.sort = None
         self.is_no_filter = None
-        self.quarter = None
+        self.quarter = FinancialQuarter.FIRST_QUARTER
 
     def fill_request_pb(self, filter_req):
         r, v = StockField.to_number(self.stock_field)
