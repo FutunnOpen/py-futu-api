@@ -1975,8 +1975,8 @@ class StockField(FtEnum):
     financial_enum_begin = 200
     NET_PROFIT = "NET_PROFIT"                          # 净利润
     NET_PROFIX_GROWTH = "NET_PROFIX_GROWTH"            # 净利润增长率
-    SUM_OF_BUSINESS = "SUM_OF_BUSINESS"                # 营业额
-    SUM_OF_BUSINESS_GROWTH = "SUM_OF_BUSINESS_GROWTH"  # 营业额增长率
+    SUM_OF_BUSINESS = "SUM_OF_BUSINESS"                # 营业收入
+    SUM_OF_BUSINESS_GROWTH = "SUM_OF_BUSINESS_GROWTH"  # 营业同比增长率
     NET_PROFIT_RATE = "NET_PROFIT_RATE"                # 净利率
     GROSS_PROFIT_RATE = "GROSS_PROFIT_RATE"            # 毛利率
     DEBT_ASSET_RATE = "DEBT_ASSET_RATE"                # 资产负债率
@@ -2022,18 +2022,20 @@ class StockField(FtEnum):
 #财务指标的周期
 class FinancialQuarter(FtEnum):
     NONE = "N/A"
-    ANNUAL = "ANNUAL"                        # 年报
-    FIRST_QUARTER = "FIRST_QUARTER"          # Q1一季报
-    SIX_QUARTER = "SIX_QUARTER"              # Q6中期报
-    NINE_QUARTER = "NINE_QUARTER"            # Q9三季报
-
+    ANNUAL = "ANNUAL"                        	# 年报
+    FIRST_QUARTER = "FIRST_QUARTER"          	# Q1一季报
+    INTERIM = "INTERIM"              		 	# Q6中期报
+    THIRD_QUARTER = "THIRD_QUARTER"          	# Q9三季报
+	MOST_RECENT_QUARTER = "MOST_RECENT_QUARTER" # 最近季报
+	
     def load_dic(self):
         return {
             self.NONE: Qot_StockFilter_pb2.FinancialQuarter_Unknown,
             self.ANNUAL: Qot_StockFilter_pb2.FinancialQuarter_Annual,
             self.FIRST_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_FirstQuarter,
-            self.SIX_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_SixQuarter,
-            self.NINE_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_NineQuarter,
+            self.INTERIM: Qot_StockFilter_pb2.FinancialQuarter_Interim,
+            self.THIRD_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_ThirdQuarter,
+			self.MOST_RECENT_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_MostRecentQuarter,
         }
 
 #
@@ -2060,7 +2062,6 @@ class CodeChangeType(FtEnum):
             self.SPLIT_JOINT: Qot_GetCodeChange_pb2.CodeChangeType_SplitJoint,
             self.OTHER: Qot_GetCodeChange_pb2.CodeChangeType_Other
         }
-
 
 #
 class TimeFilterType(FtEnum):
