@@ -2022,12 +2022,12 @@ class StockField(FtEnum):
 #财务指标的周期
 class FinancialQuarter(FtEnum):
     NONE = "N/A"
-    ANNUAL = "ANNUAL"                        	# 年报
-    FIRST_QUARTER = "FIRST_QUARTER"          	# Q1一季报
-    INTERIM = "INTERIM"              		 	# Q6中期报
-    THIRD_QUARTER = "THIRD_QUARTER"          	# Q9三季报
-	MOST_RECENT_QUARTER = "MOST_RECENT_QUARTER" # 最近季报
-	
+    ANNUAL = "ANNUAL"                            # 年报
+    FIRST_QUARTER = "FIRST_QUARTER"              # Q1一季报
+    INTERIM = "INTERIM"                           # Q6中期报
+    THIRD_QUARTER = "THIRD_QUARTER"              # Q9三季报
+    MOST_RECENT_QUARTER = "MOST_RECENT_QUARTER" # 最近季报
+    
     def load_dic(self):
         return {
             self.NONE: Qot_StockFilter_pb2.FinancialQuarter_Unknown,
@@ -2035,7 +2035,7 @@ class FinancialQuarter(FtEnum):
             self.FIRST_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_FirstQuarter,
             self.INTERIM: Qot_StockFilter_pb2.FinancialQuarter_Interim,
             self.THIRD_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_ThirdQuarter,
-			self.MOST_RECENT_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_MostRecentQuarter,
+            self.MOST_RECENT_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_MostRecentQuarter,
         }
 
 #
