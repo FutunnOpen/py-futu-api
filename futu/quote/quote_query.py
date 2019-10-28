@@ -2707,22 +2707,26 @@ class StockFilterQuery:
             req.c2s.plate.code = code
             req.c2s.plate.market = market
 
-            
+        ret = RET_OK
+        error_str = ""
         if filter_list is not None:
             for filter_item in filter_list:
                 if isinstance(filter_item, SimpleFilter):
                     filter_req = req.c2s.baseFilterList.add()
-                    filter_item.fill_request_pb(filter_req)
+                    ret, error_str = filter_item.fill_request_pb(filter_req)
                 elif isinstance(filter_item, AccumulateFilter):
                     filter_req = req.c2s.accumulateFilterList.add()
-                    filter_item.fill_request_pb(filter_req)
+                    ret, error_str =filter_item.fill_request_pb(filter_req)
                 elif isinstance(filter_item, FinancialFilter):
                     filter_req = req.c2s.financialFilterList.add()
-                    filter_item.fill_request_pb(filter_req)
+                    ret, error_str =filter_item.fill_request_pb(filter_req)
                 else :
+                    ret = RET_ERROR
                     error_str = ERROR_STR_PREFIX + "the item in filter_list is wrong"
-                    return RET_ERROR, error_str
-                
+
+        if (ret == RET_ERROR):
+            return RET_ERROR, error_str, None
+
         return pack_pb_req(req, ProtoId.Qot_StockFilter, conn_id)
 
     @classmethod
