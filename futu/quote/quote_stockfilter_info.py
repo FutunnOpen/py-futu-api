@@ -39,6 +39,7 @@ class SimpleFilter(object):
             if not r:
                 raise Exception("sort is wrong. must be SortDir")
             filter_req.sortDir = v
+        return RET_OK, ""
 
 class AccumulateFilter(object):
     stock_field = StockField.NONE  # StockField 简单属性
@@ -75,6 +76,7 @@ class AccumulateFilter(object):
             if not r:
                 raise Exception("sort is wrong. must be SortDir")
             filter_req.sortDir = v
+        return RET_OK, ""
             
 class FinancialFilter(object):
     stock_field = StockField.NONE  # StockField 简单属性
@@ -116,6 +118,8 @@ class FinancialFilter(object):
             if not r:
                 raise Exception("sort is wrong. must be SortDir")
             filter_req.sortDir = v
+
+        return RET_OK, ""
 
 class FilterStockData(object):
     stock_code = None
