@@ -459,7 +459,7 @@ message BasicQot
 	required bool isSuspended = 2; //是否停牌
 	required string listTime = 3; //上市日期字符串
 	required double priceSpread = 4; //价差
-	required string updateTime = 5; //更新时间字符串
+	required string updateTime = 5; //最新价的更新时间字符串，对其他字段不适用
 	required double highPrice = 6; //最高价
 	required double openPrice = 7; //开盘价
 	required double lowPrice = 8; //最低价
@@ -472,7 +472,7 @@ message BasicQot
 	optional int32 darkStatus = 15; //DarkStatus, 暗盘交易状态	
 	optional OptionBasicQotExData optionExData = 16; //期权特有字段
 	optional double listTimestamp = 17; //上市日期时间戳
-	optional double updateTimestamp = 18; //更新时间戳
+	optional double updateTimestamp = 18; //最新价的更新时间戳，对其他字段不适用
 	optional PreAfterMarketData preMarket = 19; //盘前数据
 	optional PreAfterMarketData afterMarket = 20; //盘后数据
 	optional int32 secStatus = 21; //SecurityStatus, 股票状态
