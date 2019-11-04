@@ -21,7 +21,7 @@ enum SecurityType
     SecurityType_Bwrt = 2; //一揽子权证
     SecurityType_Eqty = 3; //正股
     SecurityType_Trust = 4; //信托,基金
-    SecurityType_Warrant = 5; //涡轮
+    SecurityType_Warrant = 5; //窝轮
     SecurityType_Index = 6; //指数
     SecurityType_Plate = 7; //板块
     SecurityType_Drvt = 8; //期权
@@ -256,7 +256,7 @@ enum PushDataType
 	PushDataType_Cache = 3; //非实时非连接断开补充数据
 }
 
-//涡轮排序
+//窝轮排序
 enum SortField
 {
 	SortField_Unknow = 0;
@@ -313,7 +313,7 @@ enum SortField
 	SortField_AfterTurnover = 44; //盘后成交额
 }
 
-//涡轮发行人
+//窝轮发行人
 enum Issuer
 {
 	Issuer_Unknow = 0; //未知
@@ -342,7 +342,7 @@ enum Issuer
 	Issuer_MS = 23; //摩利
 }
 
-//涡轮上市日
+//窝轮上市日
 enum IpoPeriod
 {
 	IpoPeriod_Unknow = 0; //未知
@@ -353,7 +353,7 @@ enum IpoPeriod
     IpoPeriod_Lastmonth = 5; //过去一月上市
 }
 
-//涡轮价外/内,界内证表示界内界外
+//窝轮价外/内,界内证表示界内界外
 enum PriceType
 {
 	PriceType_Unknow = 0;
@@ -361,7 +361,7 @@ enum PriceType
 	PriceType_WithIn = 2; //价内，界内证表示界内
 }
 
-//涡轮状态
+//窝轮状态
 enum WarrantStatus
 {
     WarrantStatus_Unknow = 0; //未知
@@ -413,7 +413,7 @@ message KLine
 	optional double turnover = 9; //成交额
 	optional double turnoverRate = 10; //换手率（该字段为百分比字段，展示为小数表示）
 	optional double pe = 11; //市盈率
-	optional double changeRate = 12; //涨跌幅（该字段为百分比字段，默认不展示%）
+	optional double changeRate = 12; //涨跌幅（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	optional double timestamp = 13; //时间戳
 }
 
@@ -422,8 +422,8 @@ message OptionBasicQotExData
 	required double strikePrice = 1; //行权价
 	required int32 contractSize = 2; //每份合约数
 	required int32 openInterest = 3; //未平仓合约数
-	required double impliedVolatility = 4; //隐含波动率（该字段为百分比字段，默认不展示%）
-	required double premium = 5; //溢价（该字段为百分比字段，默认不展示%）
+	required double impliedVolatility = 4; //隐含波动率（该字段为百分比字段，默认不展示%，如20实际对应20%）
+	required double premium = 5; //溢价（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	required double delta = 6; //希腊值 Delta
     required double gamma = 7; //希腊值 Gamma
 	required double vega = 8; //希腊值 Vega
@@ -449,8 +449,8 @@ message PreAfterMarketData
     optional int64 volume = 4;  // 盘前或盘后 - 成交量
     optional double turnover = 5;  // 盘前或盘后 - 成交额
     optional double changeVal = 6;  // 盘前或盘后 - 涨跌额
-    optional double changeRate = 7;  // 盘前或盘后 - 涨跌幅（该字段为百分比字段，默认不展示%）
-    optional double amplitude = 8;  // 盘前或盘后 - 振幅（该字段为百分比字段，默认不展示%）
+    optional double changeRate = 7;  // 盘前或盘后 - 涨跌幅（该字段为百分比字段，默认不展示%，如20实际对应20%）
+    optional double amplitude = 8;  // 盘前或盘后 - 振幅（该字段为百分比字段，默认不展示%，如20实际对应20%）
 }
 
 message BasicQot
@@ -467,8 +467,8 @@ message BasicQot
 	required double lastClosePrice = 10; //昨收价
 	required int64 volume = 11; //成交量
 	required double turnover = 12; //成交额
-	required double turnoverRate = 13; //换手率（该字段为百分比字段，默认不展示%）
-	required double amplitude = 14; //振幅（该字段为百分比字段，默认不展示%）
+	required double turnoverRate = 13; //换手率（该字段为百分比字段，默认不展示%，如20实际对应20%）
+	required double amplitude = 14; //振幅（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	optional int32 darkStatus = 15; //DarkStatus, 暗盘交易状态	
 	optional OptionBasicQotExData optionExData = 16; //期权特有字段
 	optional double listTimestamp = 17; //上市日期时间戳
@@ -505,7 +505,7 @@ message SecurityStaticBasic
 
 message WarrantStaticExData
 {
-	required int32 type = 1; //Qot_Common.WarrantType,涡轮类型
+	required int32 type = 1; //Qot_Common.WarrantType,窝轮类型
 	required Qot_Common.Security owner = 2; //所属正股
 }
 
@@ -568,9 +568,9 @@ message ShareHoldingChange
 {
     required string holderName = 1; //持有者名称（机构名称 或 基金名称 或 高管姓名）
     required double holdingQty = 2; //当前持股数量
-    required double holdingRatio = 3; //当前持股百分比（该字段为百分比字段，默认不展示%）
+    required double holdingRatio = 3; //当前持股百分比（该字段为百分比字段，默认不展示%，如20实际对应20%）
     required double changeQty = 4; //较上一次变动数量
-	required double changeRatio = 5; //较上一次变动百分比（该字段为百分比字段，默认不展示%。是相对于自身的比例，而不是总的。如总股本1万股，持有100股，持股百分比是1%，卖掉50股，变动比例是50%，而不是0.5%）
+	required double changeRatio = 5; //较上一次变动百分比（该字段为百分比字段，默认不展示%，如20实际对应20%。是相对于自身的比例，而不是总的。如总股本1万股，持有100股，持股百分比是1%，卖掉50股，变动比例是50%，而不是0.5%）
     required string time = 6; //发布时间(YYYY-MM-DD HH:MM:SS字符串)
 	optional double timestamp = 7; //时间戳
 }
