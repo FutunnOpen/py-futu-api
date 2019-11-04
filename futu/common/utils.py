@@ -533,12 +533,15 @@ def binary2pb(b, proto_id, proto_fmt_type):
     if proto_fmt_type == ProtoFMT.Json:
         return json2pb(type(rsp), b.decode('utf-8'))
     elif proto_fmt_type == ProtoFMT.Protobuf:
-        rsp = type(rsp)()
-        # logger.debug((proto_id))
-        if IS_PY2:
-            rsp.ParseFromString(str(b))
-        else:
-            rsp.ParseFromString(b)
+        try:
+            rsp = type(rsp)()
+            # logger.debug((proto_id))
+            if IS_PY2:
+                rsp.ParseFromString(str(b))
+            else:
+                rsp.ParseFromString(b)
+        except Exception as e:
+            print(e)
         return rsp
     else:
         raise Exception("binary2str: unknown proto format.")
