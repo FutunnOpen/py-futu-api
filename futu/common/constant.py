@@ -1953,7 +1953,7 @@ class StockField(FtEnum):
     VOLUME_RATIO = "VOLUME_RATIO"                      # 量比 例如填写[0.5,30]值区间
     BID_ASK_RATIO = "BID_ASK_RATIO"                    # 委比 例如填写[-20,80.5]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
     LOT_PRICE = "LOT_PRICE"                            # 每手价格 例如填写[40,100]值区间
-    # 市值，单位是元 例如填写[50000000,3000000000]值区间
+    # 市值 例如填写[50000000,3000000000]值区间
     MARKET_VAL = "MARKET_VAL"
     # 市盈率 (静态) 例如填写[-8,65.3]值区间
     PE_ANNUAL = "PE_ANNUAL"
