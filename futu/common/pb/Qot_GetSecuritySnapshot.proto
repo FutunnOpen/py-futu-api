@@ -21,21 +21,21 @@ message EquitySnapshotExData
     required int64 outstandingShares = 6; // 流通股本
 	required double outstandingMarketVal = 7; // 流通市值 =流通股本*当前价格
     required double netAssetPershare = 8; // 每股净资产
-    required double eyRate = 9; // 收益率（该字段为百分比字段，默认不展示%）
+    required double eyRate = 9; // 收益率（该字段为百分比字段，默认不展示%，如20实际对应20%）
     required double peRate = 10; // 市盈率
     required double pbRate = 11; // 市净率
 	required double peTTMRate = 12; // 市盈率TTM
 	optional double dividendTTM = 13; // 股息TTM，派息
-    optional double dividendRatioTTM = 14; // 股息率TTM（该字段为百分比字段，默认不展示%）
+    optional double dividendRatioTTM = 14; // 股息率TTM（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	optional double dividendLFY = 15; // 股息LFY，上一年度派息
-    optional double dividendLFYRatio = 16; // 股息率LFY（该字段为百分比字段，默认不展示%）
+    optional double dividendLFYRatio = 16; // 股息率LFY（该字段为百分比字段，默认不展示%，如20实际对应20%）
 }
 
- // 涡轮类型额外数据
+ // 窝轮类型额外数据
 message WarrantSnapshotExData
 {
     required double conversionRate = 1; //换股比率
-    required int32 warrantType = 2; //Qot_Common.WarrantType,涡轮类型
+    required int32 warrantType = 2; //Qot_Common.WarrantType,窝轮类型
     required double strikePrice = 3; //行使价
     required string maturityTime = 4; //到期日时间字符串
     required string endTradeTime = 5; //最后交易日时间字符串
@@ -43,17 +43,17 @@ message WarrantSnapshotExData
     required double recoveryPrice = 7; //收回价,仅牛熊证支持该字段
     required int64 streetVolumn = 8; //街货量
     required int64 issueVolumn = 9; //发行量
-    required double streetRate = 10; //街货占比（该字段为百分比字段，默认不展示%）
+    required double streetRate = 10; //街货占比（该字段为百分比字段，默认不展示%，如20实际对应20%）
     required double delta = 11; //对冲值,仅认购认沽支持该字段
     required double impliedVolatility = 12; //引申波幅,仅认购认沽支持该字段
-    required double premium = 13; //溢价（该字段为百分比字段，默认不展示%）
+    required double premium = 13; //溢价（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	optional double maturityTimestamp = 14; //到期日时间戳
 	optional double endTradeTimestamp = 15; //最后交易日时间戳
 	optional double leverage = 16;  // 杠杆比率（倍）
-	optional double ipop = 17; // 价内/价外（该字段为百分比字段，默认不展示%）
+	optional double ipop = 17; // 价内/价外（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	optional double breakEvenPoint = 18; // 打和点
 	optional double conversionPrice = 19;  // 换股价
-	optional double priceRecoveryRatio = 20; // 正股距收回价（该字段为百分比字段，默认不展示%）
+	optional double priceRecoveryRatio = 20; // 正股距收回价（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	optional double score = 21; // 综合评分
 	optional double upperStrikePrice = 22; //上限价，仅界内证支持该字段
 	optional double lowerStrikePrice = 23; //下限价，仅界内证支持该字段
@@ -69,8 +69,8 @@ message OptionSnapshotExData
     required double strikePrice = 4; //行权价
 	required int32 contractSize = 5; //每份合约数
 	required int32 openInterest = 6; //未平仓合约数
-	required double impliedVolatility = 7; //隐含波动率（该字段为百分比字段，默认不展示%）
-	required double premium = 8; //溢价（该字段为百分比字段，默认不展示%）
+	required double impliedVolatility = 7; //隐含波动率（该字段为百分比字段，默认不展示%，如20实际对应20%）
+	required double premium = 8; //溢价（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	required double delta = 9; //希腊值 Delta
     required double gamma = 10; //希腊值 Gamma
 	required double vega = 11; //希腊值 Vega
@@ -121,7 +121,7 @@ message SnapshotBasicData
 	required double curPrice = 12; //最新价
 	required int64 volume = 13; //成交量
 	required double turnover = 14; //成交额
-	required double turnoverRate = 15; //换手率（该字段为百分比字段，默认不展示%）
+	required double turnoverRate = 15; //换手率（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	optional double listTimestamp = 16; //上市时间戳
 	optional double updateTimestamp = 17; //更新时间戳
 	optional double askPrice = 18;//卖价
@@ -129,15 +129,15 @@ message SnapshotBasicData
 	optional int64 askVol = 20;//卖量
     optional int64 bidVol = 21;//买量
 	optional bool enableMargin = 22; // 是否可融资，如果为true，后两个字段才有意义
-    optional double mortgageRatio = 23; // 股票抵押率（该字段为百分比字段，默认不展示%）
-    optional double longMarginInitialRatio = 24; // 融资初始保证金率（该字段为百分比字段，默认不展示%）
+    optional double mortgageRatio = 23; // 股票抵押率（该字段为百分比字段，默认不展示%，如20实际对应20%）
+    optional double longMarginInitialRatio = 24; // 融资初始保证金率（该字段为百分比字段，默认不展示%，如20实际对应20%）
     optional bool enableShortSell = 25; // 是否可卖空，如果为true，后三个字段才有意义
-    optional double shortSellRate = 26; // 卖空参考利率（该字段为百分比字段，默认不展示%）
+    optional double shortSellRate = 26; // 卖空参考利率（该字段为百分比字段，默认不展示%，如20实际对应20%）
     optional int64 shortAvailableVolume = 27; // 剩余可卖空数量（股）
-    optional double shortMarginInitialRatio = 28; // 卖空（融券）初始保证金率（该字段为百分比字段，默认不展示%）
-	optional double amplitude = 29; // 振幅（该字段为百分比字段，默认不展示%）
+    optional double shortMarginInitialRatio = 28; // 卖空（融券）初始保证金率（该字段为百分比字段，默认不展示%，如20实际对应20%）
+	optional double amplitude = 29; // 振幅（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	optional double avgPrice = 30; // 平均价
-	optional double bidAskRatio = 31; // 委比（该字段为百分比字段，默认不展示%）
+	optional double bidAskRatio = 31; // 委比（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	optional double volumeRatio = 32;  // 量比
 	optional double highest52WeeksPrice = 33;  // 52周最高价
     optional double lowest52WeeksPrice = 34;  // 52周最低价

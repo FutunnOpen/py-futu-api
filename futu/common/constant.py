@@ -1942,16 +1942,16 @@ class StockField(FtEnum):
     STOCK_CODE = "STOCK_CODE"                          # 股票代码，不能填区间上下限值。
     STOCK_NAME = "STOCK_NAME"                          # 股票名称，不能填区间上下限值。
     CUR_PRICE = "CUR_PRICE"                            # 最新价 例如填写[10,20]值区间
-    # (现价 - 52周最高)/52周最高，对应PC端离52周高点百分比 例如填写[-0.8,0]值区间
+    # (现价 - 52周最高)/52周最高，对应PC端离52周高点百分比 例如填写[-30,-10]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%，如20实际对应20%）
     CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO = "CUR_PRICE_TO_HIGHEST52_WEEKS_RATIO"
-    # (现价 - 52周最低)/52周最低，对应PC端离52周低点百分比 例如填写[0,100]值区间
+    # (现价 - 52周最低)/52周最低，对应PC端离52周低点百分比 例如填写[20,40]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
     CUR_PRICE_TO_LOWEST52_WEEKS_RATIO = "CUR_PRICE_TO_LOWEST52_WEEKS_RATIO"
-    # (今日最高 - 52周最高)/52周最高 例如填写[-0.8,0]值区间
+    # (今日最高 - 52周最高)/52周最高 例如填写[-3,-1]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
     HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO = "HIGH_PRICE_TO_HIGHEST52_WEEKS_RATIO"
-    # (今日最低 - 52周最低)/52周最低 例如填写[0,100]值区间
+    # (今日最低 - 52周最低)/52周最低 例如填写[10,70]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
     LOW_PRICE_TO_LOWEST52_WEEKS_RATIO = "LOW_PRICE_TO_LOWEST52_WEEKS_RATIO"
     VOLUME_RATIO = "VOLUME_RATIO"                      # 量比 例如填写[0.5,30]值区间
-    BID_ASK_RATIO = "BID_ASK_RATIO"                    # 委比 例如填写[-20,85.01]值区间
+    BID_ASK_RATIO = "BID_ASK_RATIO"                    # 委比 例如填写[-20,80.5]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
     LOT_PRICE = "LOT_PRICE"                            # 每手价格 例如填写[40,100]值区间
     # 市值，单位是元 例如填写[50000000,3000000000]值区间
     MARKET_VAL = "MARKET_VAL"
@@ -1959,28 +1959,28 @@ class StockField(FtEnum):
     PE_ANNUAL = "PE_ANNUAL"
     # 市盈率TTM 例如填写[-10,20.5]值区间
     PE_TTM = "PE_TTM"
-    PB_RATE = "PB_RATE"                                # 市净率 例如填写[0,0.8]值区间
-    CHANGE_RATE_5MIN = "CHANGE_RATE_5MIN"              # 五分钟价格涨跌幅
-    CHANGE_RATE_BEGIN_YEAR = "CHANGE_RATE_BEGIN_YEAR"  # 年初至今价格涨跌幅
+    PB_RATE = "PB_RATE"                                # 市净率 例如填写[0.5,20]值区间
+    CHANGE_RATE_5MIN = "CHANGE_RATE_5MIN"              # 五分钟价格涨跌幅 例如填写[-5,6.3]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
+    CHANGE_RATE_BEGIN_YEAR = "CHANGE_RATE_BEGIN_YEAR"  # 年初至今价格涨跌幅 例如填写[-50.1,400.7]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
 
     # 以下是累积数据过滤所支持的枚举
     acc_enum_begin = 100
-    CHANGE_RATE = "CHANGE_RATE"                        # 涨跌幅
-    AMPLITUDE = "AMPLITUDE"                            # 振幅
-    VOLUME = "VOLUME"                                  # 成交量
-    TURNOVER = "TURNOVER"                              # 成交额
-    TURNOVER_RATE = "TURNOVER_RATE"                    # 换手率
+    CHANGE_RATE = "CHANGE_RATE"                        # 涨跌幅 例如填写[-10.2,20.4]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
+    AMPLITUDE = "AMPLITUDE"                            # 振幅 例如填写[0.5,20.6]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
+    VOLUME = "VOLUME"                                  # 日均成交量 例如填写[2000,70000]值区间
+    TURNOVER = "TURNOVER"                              # 日均成交额 例如填写[1400,890000]值区间
+    TURNOVER_RATE = "TURNOVER_RATE"                    # 换手率 例如填写[2,30]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
 
     # 以下是财务数据过滤所支持的枚举
     financial_enum_begin = 200
-    NET_PROFIT = "NET_PROFIT"                          # 净利润
-    NET_PROFIX_GROWTH = "NET_PROFIX_GROWTH"            # 净利润增长率
-    SUM_OF_BUSINESS = "SUM_OF_BUSINESS"                # 营业收入
-    SUM_OF_BUSINESS_GROWTH = "SUM_OF_BUSINESS_GROWTH"  # 营业同比增长率
-    NET_PROFIT_RATE = "NET_PROFIT_RATE"                # 净利率
-    GROSS_PROFIT_RATE = "GROSS_PROFIT_RATE"            # 毛利率
-    DEBT_ASSET_RATE = "DEBT_ASSET_RATE"                # 资产负债率
-    RETURN_ON_EQUITY_RATE = "RETURN_ON_EQUITY_RATE"    # 净资产收益率
+    NET_PROFIT = "NET_PROFIT"                          # 净利润 例如填写[100000000,2500000000]值区间
+    NET_PROFIX_GROWTH = "NET_PROFIX_GROWTH"            # 净利润增长率 例如填写[-10,300]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
+    SUM_OF_BUSINESS = "SUM_OF_BUSINESS"                # 营业收入 例如填写[100000000,6400000000]值区间
+    SUM_OF_BUSINESS_GROWTH = "SUM_OF_BUSINESS_GROWTH"  # 营收同比增长率 例如填写[-5,200]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
+    NET_PROFIT_RATE = "NET_PROFIT_RATE"                # 净利率 例如填写[10,113]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
+    GROSS_PROFIT_RATE = "GROSS_PROFIT_RATE"            # 毛利率 例如填写[4,65]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
+    DEBT_ASSET_RATE = "DEBT_ASSET_RATE"                # 资产负债率 例如填写[5,470]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
+    RETURN_ON_EQUITY_RATE = "RETURN_ON_EQUITY_RATE"    # 净资产收益率 例如填写[20,230]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
 
     def load_dic(self):
         return {
