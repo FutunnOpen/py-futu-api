@@ -2322,6 +2322,9 @@ class OpenQuoteContext(OpenContextBase):
             return RET_ERROR, error_str
 
         """容错容错"""
+        if filter_list is None:
+            filter_list = []
+
         if filter_list is not None and (isinstance(filter_list, SimpleFilter) or isinstance(filter_list, AccumulateFilter) or isinstance(filter_list, FinancialFilter)):
             filter_list = [filter_list]
         if filter_list is not None and not isinstance(filter_list, list):
