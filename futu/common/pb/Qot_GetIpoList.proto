@@ -26,7 +26,7 @@ message CNIpoExData
 	required double ipoPrice = 7; // 发行价 预估值会因为募集资金、发行数量、发行费用等数据变动而变动，仅供参考。实际数据公布后会第一时间更新。
 	required double industryPeRate = 8; // 行业市盈率
 	required bool isEstimateWinningRatio = 9; // 是否预估中签率
-	required double winningRatio = 10; // 中签率 该字段为百分比字段，默认不展示%。预估值会因为募集资金、发行数量、发行费用等数据变动而变动，仅供参考。实际数据公布后会第一时间更新。
+	required double winningRatio = 10; // 中签率 该字段为百分比字段，默认不展示%，如20实际对应20%。预估值会因为募集资金、发行数量、发行费用等数据变动而变动，仅供参考。实际数据公布后会第一时间更新。
 	required double issuePeRate = 11; // 发行市盈率
 	optional string applyTime = 12; // 申购日期字符串
 	optional double applyTimestamp = 13; // 申购日期时间戳
