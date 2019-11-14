@@ -1892,12 +1892,14 @@ class ModifyUserSecurityOp(FtEnum):
     NONE = "N/A"                                       # 未知
     ADD = "ADD"                                        # 新增
     DEL = "DEL"                                        # 删除
+    MOVEOUT = "MOVEOUT"                                # 移出
 
     def load_dic(self):
         return {
             self.NONE: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Unknown,
             self.ADD: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Add,
-            self.DEL: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Del
+            self.DEL: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_Del,
+            self.MOVEOUT: Qot_ModifyUserSecurity_pb2.ModifyUserSecurityOp_MoveOut
         }
 
 
