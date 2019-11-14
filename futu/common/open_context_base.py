@@ -346,7 +346,8 @@ class OpenContextBase(object):
             'client_ver': int(SysConfig.get_client_ver()),
             'client_id': str(SysConfig.get_client_id()),
             'recv_notify': True,
-            'is_encrypt': self.is_encrypt()
+            'is_encrypt': self.is_encrypt(),
+            'push_proto_fmt': SysConfig.get_proto_fmt()
         }
 
         ret, msg, req_str = InitConnect.pack_req(**kargs)
