@@ -72,7 +72,7 @@ pb_field_map_OptionBasicQotExData = [
     ('expiry_date_distance', 'expiryDateDistance', False, None),
     ('contract_nominal_value', 'contractNominalValue', False, None),
     ('owner_lot_multiplier', 'ownerLotMultiplier', False, None),
-    ('option_area_type', 'optionAreaType', False, None),
+    ('option_area_type', 'optionAreaType', False, OptionAreaType.to_string2),
     ('contract_multiplier', 'contractMultiplier', False, None),
 ]
 
@@ -533,12 +533,12 @@ class MarketSnapshotQuery:
                 snapshot_tmp['option_vega'] = record.optionExData.vega
                 snapshot_tmp['option_theta'] = record.optionExData.theta
                 snapshot_tmp['option_rho'] = record.optionExData.rho
-                snapshot_tmp['net_open_interest'] = record.optionExData.netOpenInterest if record.optionExData.HasField('netOpenInterest') else 'N/A'
-                snapshot_tmp['expiry_date_distance'] = record.optionExData.expiryDateDistance if record.optionExData.HasField('expiryDateDistance') else 'N/A'
-                snapshot_tmp['contract_nominal_value'] = record.optionExData.contractNominalValue if record.optionExData.HasField('contractNominalValue') else 'N/A'
-                snapshot_tmp['owner_lot_multiplier'] = record.optionExData.ownerLotMultiplier if record.optionExData.HasField('ownerLotMultiplier') else 'N/A'
+                snapshot_tmp['option_net_open_interest'] = record.optionExData.netOpenInterest if record.optionExData.HasField('netOpenInterest') else 'N/A'
+                snapshot_tmp['option_expiry_date_distance'] = record.optionExData.expiryDateDistance if record.optionExData.HasField('expiryDateDistance') else 'N/A'
+                snapshot_tmp['option_contract_nominal_value'] = record.optionExData.contractNominalValue if record.optionExData.HasField('contractNominalValue') else 'N/A'
+                snapshot_tmp['option_owner_lot_multiplier'] = record.optionExData.ownerLotMultiplier if record.optionExData.HasField('ownerLotMultiplier') else 'N/A'
                 snapshot_tmp['option_area_type'] = OptionAreaType.to_string2(record.optionExData.optionAreaType) if record.optionExData.HasField('optionAreaType') else 'N/A'
-                snapshot_tmp['contract_multiplier'] = record.optionExData.contractMultiplier if record.optionExData.HasField('contractMultiplier') else 'N/A'
+                snapshot_tmp['option_contract_multiplier'] = record.optionExData.contractMultiplier if record.optionExData.HasField('contractMultiplier') else 'N/A'
 
             snapshot_tmp['index_valid'] = False
             if record.HasField('indexExData'):
