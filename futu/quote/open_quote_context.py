@@ -694,6 +694,12 @@ class OpenQuoteContext(OpenContextBase):
                 option_vega                float          希腊值 Vega
                 option_theta               float          希腊值 Theta
                 option_rho                 float          希腊值 Rho
+                option_net_open_interest    int           净未平仓合约数
+                option_expiry_date_distance  int          距离到期日天数
+                option_contract_nominal_value  float      合约名义金额
+                option_owner_lot_multiplier    float      相等正股手数，指数期权无该字段
+                option_area_type           str            期权地区类型，见 OptionAreaType_
+                option_contract_multiplier float          合约乘数，指数期权特有字段
                 index_raise_count          int            指数类型上涨支数
                 index_fall_count           int            指数类型下跌支数
                 index_requal_count         int            指数类型平盘支数
@@ -703,12 +709,6 @@ class OpenQuoteContext(OpenContextBase):
                 after_volume               int            盘后成交量
                 after_turnover             double         盘后成交额
                 sec_status                 str            股票状态， 参见SecurityStatus
-                option_net_open_interest    int           净未平仓合约数
-                option_expiry_date_distance  int          距离到期日天数
-                option_contract_nominal_value  float      合约名义金额
-                option_owner_lot_multiplier    float      相等正股手数，指数期权无该字段
-                option_area_type           str            期权地区类型，见 OptionAreaType_
-                option_contract_multiplier float          合约乘数，指数期权特有字段
                 =======================   =============   ==============================================================================
         """
         code_list = unique_and_normalize_list(code_list)

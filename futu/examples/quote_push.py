@@ -5,6 +5,13 @@ Examples for use the python functions: get push data
 from time import sleep
 from futu import *
 
+#打印数据不全请把以下注释打开
+#import pandas as pd
+#pd.set_option('display.height', 10000)
+#pd.set_option('display.max_rows', 500)
+#pd.set_option('display.max_columns', 500)
+#pd.set_option('display.width', 1000)
+
 class StockQuoteTest(StockQuoteHandlerBase):
     """
     获得报价推送数据
@@ -15,6 +22,9 @@ class StockQuoteTest(StockQuoteHandlerBase):
         if ret_code != RET_OK:
             logger.debug("StockQuoteTest: error, msg: %s" % content)
             return RET_ERROR, content
+        #需要打印数据把以下注释打开，其他回调数据同样处理即可
+        #else:
+        #    print(content)
         return RET_OK, content
 
 

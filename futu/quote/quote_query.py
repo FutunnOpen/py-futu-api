@@ -1222,7 +1222,7 @@ def parse_pb_BasicQot(pb):
             'turnover_rate': pb.turnoverRate,
             'amplitude': pb.amplitude,
             'suspension': pb.isSuspended,
-            'listing_date': pb.listTime,
+            'listing_date': "N/A" if pb.HasField('optionExData') else  pb.listTime,
             'price_spread': pb.priceSpread,
             'dark_status': QUOTE.REV_DARK_STATUS_MAP[pb.darkStatus] if pb.HasField(
                 'darkStatus') else DarkStatus.NONE,
