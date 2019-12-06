@@ -1548,7 +1548,7 @@ class OpenQuoteContext(OpenContextBase):
 
         col_list = [
             'code', 'time_key', 'open', 'close', 'high', 'low', 'volume',
-            'turnover', 'pe_ratio', 'turnover_rate'
+            'turnover', 'pe_ratio', 'turnover_rate', 'last_close'
         ]
         kline_frame_table = pd.DataFrame(kline_list, columns=col_list)
 
