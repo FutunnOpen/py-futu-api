@@ -2867,3 +2867,25 @@ class GetIpoListQuery:
 
             ret_list.append(data)
         return RET_OK, "", ret_list
+
+
+class TestCmdQuery:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, conn_id, cmd, param):
+        # 开始组包
+        from futu.common.pb.TestCmd_pb2 import Request
+        req = Request()
+        req.c2s.cmd = cmd
+        req.c2s.params = param
+
+        return pack_pb_req(req, ProtoId.TestCmd, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        return RET_OK, "", rsp_pb.s2c.result

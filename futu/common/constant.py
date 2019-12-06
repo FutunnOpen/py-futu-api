@@ -756,6 +756,7 @@ class ProtoId(object):
     GetUserInfo = 1005  # 获取用户信息
     Verification = 1006  # 请求或输入验证码
     GetDelayStatistics = 1007  # 获取延迟统计
+    TestCmd = 1008
 
     Trd_GetAccList = 2001  # 获取业务账户列表
     Trd_UnlockTrade = 2005  # 解锁或锁定交易

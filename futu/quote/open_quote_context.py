@@ -2465,3 +2465,14 @@ class OpenQuoteContext(OpenContextBase):
         col_dict.update((row[0], True) for row in pb_field_map_USIpoExData)
 
         return RET_OK, pd.DataFrame(data, columns=col_dict.keys())
+
+    def test_cmd(self, cmd, param):
+        query_processor = self._get_sync_query_processor(TestCmdQuery.pack_req, TestCmdQuery.unpack)
+        kwargs = {
+            'conn_id': self.get_sync_conn_id(),
+            'cmd': cmd,
+            'param': param
+        }
+
+        ret, msg, data = query_processor(**kwargs)
+        return ret, msg, data
