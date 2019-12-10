@@ -1376,11 +1376,13 @@ class SecurityReferenceType:
     """
     NONE = 'N/A'
     WARRANT = 'WARRANT'
+    FUTURE = 'FUTURE'
 
 
 STOCK_REFERENCE_TYPE_MAP = {
     SecurityReferenceType.NONE: Qot_GetReference_pb2.ReferenceType_Unknow,
-    SecurityReferenceType.WARRANT: Qot_GetReference_pb2.ReferenceType_Warrant
+    SecurityReferenceType.WARRANT: Qot_GetReference_pb2.ReferenceType_Warrant,
+    SecurityReferenceType.FUTURE: Qot_GetReference_pb2.ReferenceType_Future,
 }
 
 
