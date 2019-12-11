@@ -72,7 +72,7 @@ pb_field_map_OptionBasicQotExData = [
     ('expiry_date_distance', 'expiryDateDistance', False, None),
     ('contract_nominal_value', 'contractNominalValue', False, None),
     ('owner_lot_multiplier', 'ownerLotMultiplier', False, None),
-    ('option_area_type', 'optionAreaType', False, None),
+    ('option_area_type', 'optionAreaType', False, OptionAreaType.to_string2),
     ('contract_multiplier', 'contractMultiplier', False, None),
 ]
 
@@ -151,13 +151,14 @@ class InitConnect:
         pass
 
     @classmethod
-    def pack_req(cls, client_ver, client_id, recv_notify, is_encrypt):
+    def pack_req(cls, client_ver, client_id, recv_notify, is_encrypt, push_proto_fmt):
 
         from futu.common.pb.InitConnect_pb2 import Request
         req = Request()
         req.c2s.clientVer = client_ver
         req.c2s.clientID = client_id
         req.c2s.recvNotify = recv_notify
+        req.c2s.pushProtoFmt = push_proto_fmt
 
         if is_encrypt:
             req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_AES_CBC
@@ -532,12 +533,12 @@ class MarketSnapshotQuery:
                 snapshot_tmp['option_vega'] = record.optionExData.vega
                 snapshot_tmp['option_theta'] = record.optionExData.theta
                 snapshot_tmp['option_rho'] = record.optionExData.rho
-                snapshot_tmp['net_open_interest'] = record.optionExData.netOpenInterest if record.optionExData.HasField('netOpenInterest') else 'N/A'
-                snapshot_tmp['expiry_date_distance'] = record.optionExData.expiryDateDistance if record.optionExData.HasField('expiryDateDistance') else 'N/A'
-                snapshot_tmp['contract_nominal_value'] = record.optionExData.contractNominalValue if record.optionExData.HasField('contractNominalValue') else 'N/A'
-                snapshot_tmp['owner_lot_multiplier'] = record.optionExData.ownerLotMultiplier if record.optionExData.HasField('ownerLotMultiplier') else 'N/A'
+                snapshot_tmp['option_net_open_interest'] = record.optionExData.netOpenInterest if record.optionExData.HasField('netOpenInterest') else 'N/A'
+                snapshot_tmp['option_expiry_date_distance'] = record.optionExData.expiryDateDistance if record.optionExData.HasField('expiryDateDistance') else 'N/A'
+                snapshot_tmp['option_contract_nominal_value'] = record.optionExData.contractNominalValue if record.optionExData.HasField('contractNominalValue') else 'N/A'
+                snapshot_tmp['option_owner_lot_multiplier'] = record.optionExData.ownerLotMultiplier if record.optionExData.HasField('ownerLotMultiplier') else 'N/A'
                 snapshot_tmp['option_area_type'] = OptionAreaType.to_string2(record.optionExData.optionAreaType) if record.optionExData.HasField('optionAreaType') else 'N/A'
-                snapshot_tmp['contract_multiplier'] = record.optionExData.contractMultiplier if record.optionExData.HasField('contractMultiplier') else 'N/A'
+                snapshot_tmp['option_contract_multiplier'] = record.optionExData.contractMultiplier if record.optionExData.HasField('contractMultiplier') else 'N/A'
 
             snapshot_tmp['index_valid'] = False
             if record.HasField('indexExData'):
@@ -1221,7 +1222,7 @@ def parse_pb_BasicQot(pb):
             'turnover_rate': pb.turnoverRate,
             'amplitude': pb.amplitude,
             'suspension': pb.isSuspended,
-            'listing_date': pb.listTime,
+            'listing_date': "N/A" if pb.HasField('optionExData') else  pb.listTime,
             'price_spread': pb.priceSpread,
             'dark_status': QUOTE.REV_DARK_STATUS_MAP[pb.darkStatus] if pb.HasField(
                 'darkStatus') else DarkStatus.NONE,

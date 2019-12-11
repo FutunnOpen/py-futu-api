@@ -30,6 +30,13 @@ message PacketID
 	required uint32 serialNo = 2; //自增序列号
 }
 
+//协议格式，请求协议在请求头中指定，推送协议在Init时指定
+enum ProtoFmt
+{
+	ProtoFmt_Protobuf = 0; //Google Protobuf格式
+	ProtoFmt_Json = 1; //Json格式
+}
+
 enum ProgramStatusType
 {
 	ProgramStatusType_None = 0;
