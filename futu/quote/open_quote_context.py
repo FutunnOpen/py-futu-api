@@ -712,6 +712,12 @@ class OpenQuoteContext(OpenContextBase):
                 after_volume               int            盘后成交量
                 after_turnover             double         盘后成交额
                 sec_status                 str            股票状态， 参见SecurityStatus
+                future_valid               bool           是否期货
+                future_last_settle_price   float          昨结
+                future_position            float          持仓量
+                future_position_change     float          日增仓
+                future_main_contract       bool           是否主连合约
+                future_last_trade_time     string         只有非主连期货合约才有该字段
                 =======================   =============   ==============================================================================
         """
         code_list = unique_and_normalize_list(code_list)
@@ -799,6 +805,13 @@ class OpenQuoteContext(OpenContextBase):
                           'plate_equal_count'
                           ]
 
+        future_col_list = ['future_last_settle_price',
+                           'future_position',
+                           'future_position_change',
+                           'future_main_contract',
+                           'future_last_trade_time',
+                         ]
+
         col_list = [
             'code',
             'update_time',
@@ -851,6 +864,9 @@ class OpenQuoteContext(OpenContextBase):
         col_dict.update((key, 1) for key in index_col_list)
         col_dict['plate_valid'] = 1
         col_dict.update((key, 1) for key in plate_col_list)
+        col_dict['future_valid'] = 1
+        col_dict.update((key, 1) for key in future_col_list)
+
         col_dict.update((row[0], 1) for row in pb_field_map_PreAfterMarketData_pre)
         col_dict.update((row[0], 1) for row in pb_field_map_PreAfterMarketData_after)
 
@@ -1399,6 +1415,9 @@ class OpenQuoteContext(OpenContextBase):
                 owner_lot_multiplier    float          相等正股手数，指数期权无该字段
                 option_area_type        str            期权地区类型，见 OptionAreaType_
                 contract_multiplier     float          合约乘数，指数期权特有字段
+                last_settle_price       float          昨结，期货特有字段
+                position                float          持仓量，期货特有字段
+                position_change         float          日增仓，期货特有字段
                 =====================   ===========   ==============================================================
         """
         code_list = unique_and_normalize_list(code_list)
@@ -1428,6 +1447,7 @@ class OpenQuoteContext(OpenContextBase):
             'premium', 'delta', 'gamma', 'vega', 'theta', 'rho',
             'net_open_interest', 'expiry_date_distance', 'contract_nominal_value',
             'owner_lot_multiplier', 'option_area_type', 'contract_multiplier',
+            'last_settle_price','position','position_change'
         ]
 
         col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)

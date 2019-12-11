@@ -76,6 +76,12 @@ pb_field_map_OptionBasicQotExData = [
     ('contract_multiplier', 'contractMultiplier', False, None),
 ]
 
+pb_field_map_FutureBasicQotExData = [
+    ('last_settle_price', 'lastSettlePrice', True, None),
+    ('position', 'position', True, None),
+    ('position_change', 'positionChange', True, None),
+]
+
 pb_field_map_PreAfterMarketData_pre = [
     ("pre_price", "price", False, None),
     ("pre_high_price", "highPrice", False, None),
@@ -560,6 +566,15 @@ class MarketSnapshotQuery:
                 snapshot_tmp["plate_fall_count"] = record.plateExData.fallCount
                 #  板块类型平盘支数 type=int32
                 snapshot_tmp["plate_equal_count"] = record.plateExData.equalCount
+
+            snapshot_tmp['future_valid'] = False
+            if record.basic.type == SEC_TYPE_MAP[SecurityType.FUTURE]:
+                snapshot_tmp['future_valid'] = True
+                snapshot_tmp['future_last_settle_price'] = record.futureExData.lastSettlePrice
+                snapshot_tmp['future_position'] = record.futureExData.position
+                snapshot_tmp['future_position_change'] = record.futureExData.positionChange
+                snapshot_tmp['future_main_contract'] = record.futureExData.isMainContract
+                snapshot_tmp['future_last_trade_time'] = record.futureExData.lastTradeTime
 
             snapshot_list.append(snapshot_tmp)
 
@@ -1237,6 +1252,11 @@ def parse_pb_BasicQot(pb):
             set_item_from_pb(item, pb.optionExData, pb_field_map_OptionBasicQotExData)
         else:
             set_item_none(item, pb_field_map_OptionBasicQotExData)
+
+        if pb.HasField('futureExData'):
+            set_item_from_pb(item, pb.futureExData, pb_field_map_FutureBasicQotExData)
+        else:
+            set_item_none(item, pb_field_map_FutureBasicQotExData)
 
         if pb.HasField('preMarket'):
             set_item_from_pb(item, pb.preMarket, pb_field_map_PreAfterMarketData_pre)
