@@ -287,6 +287,8 @@ class SecurityType(object):
       债券
     ..  py:attribute:: DRVT
       期权
+    ..  py:attribute:: FUTURE
+      期货
      ..  py:attribute:: NONE
       未知
     """
@@ -296,6 +298,7 @@ class SecurityType(object):
     WARRANT = "WARRANT"
     BOND = "BOND"
     DRVT = "DRVT"
+    FUTURE = "FUTURE"
     NONE = "N/A"
 
 
@@ -306,6 +309,7 @@ SEC_TYPE_MAP = {
     SecurityType.WARRANT: 5,
     SecurityType.BOND: 1,
     SecurityType.DRVT: 8,
+    SecurityType.FUTURE: 10,
     SecurityType.NONE: 0
 }
 
