@@ -165,7 +165,9 @@ class OpenQuoteContext(OpenContextBase):
             listing_date        str            上市时间
             stock_id            int            股票id
             delisting           bool           是否退市
-			index_option_type   str           指数期权类型
+			index_option_type   str            指数期权类型（期权特有字段）
+			main_contract       bool           是否主连合约（期货特有字段）
+			last_trade_time     string         最后交易时间（期货特有字段，非主连期货合约才有值）
             =================   ===========   ==========================================================================
 
         :example:
@@ -211,7 +213,8 @@ class OpenQuoteContext(OpenContextBase):
         col_list = [
             'code', 'name', 'lot_size', 'stock_type', 'stock_child_type', 'stock_owner',
             'option_type', 'strike_time', 'strike_price', 'suspension',
-            'listing_date', 'stock_id', 'delisting', 'index_option_type'
+            'listing_date', 'stock_id', 'delisting', 'index_option_type',
+            'main_contract', 'last_trade_time'
         ]
 
         basic_info_table = pd.DataFrame(basic_info_list, columns=col_list)
@@ -982,6 +985,8 @@ class OpenQuoteContext(OpenContextBase):
                 stock_type              str            股票类型，参见SecurityType
                 list_time               str            上市时间（美股默认是美东时间，港股A股默认是北京时间）
                 stock_id                int            股票id
+                main_contract           bool           是否主连合约（期货特有字段）
+			    last_trade_time         string         最后交易时间（期货特有字段，非主连期货合约才有值）
                 =====================   ===========   ==============================================================
         """
         if plate_code is None or is_str(plate_code) is False:
@@ -1009,6 +1014,7 @@ class OpenQuoteContext(OpenContextBase):
         col_list = [
             'code', 'lot_size', 'stock_name', 'stock_owner',
             'stock_child_type', 'stock_type', 'list_time', 'stock_id',
+            'main_contract', 'last_trade_time'
         ]
         plate_stock_table = pd.DataFrame(plate_stock_list, columns=col_list)
 
@@ -1709,18 +1715,21 @@ class OpenQuoteContext(OpenContextBase):
                 ret == RET_OK 返回pd dataframe数据，数据列格式如下
 
                 ret != RET_OK 返回错误字符串
-                =================   ===========   ==============================================================================
-                参数                  类型                        说明
-                =================   ===========   ==============================================================================
-                code                str            证券代码
-                lot_size            int            每手数量
-                stock_type          str            证券类型，参见SecurityType
-                stock_name          str            证券名字
-                list_time           str            上市时间（美股默认是美东时间，港股A股默认是北京时间）
-                wrt_valid           bool           是否是涡轮，如果为True，下面wrt开头的字段有效
-                wrt_type            str            涡轮类型，参见WrtType
-                wrt_code            str            所属正股
-                =================   ===========   ==============================================================================
+                =======================   ===========   ==============================================================================
+                参数                        类型                        说明
+                =======================   ===========   ==============================================================================
+                code                        str           证券代码
+                lot_size                    int           每手数量
+                stock_type                  str           证券类型，参见SecurityType
+                stock_name                  str           证券名字
+                list_time                   str           上市时间（美股默认是美东时间，港股A股默认是北京时间）
+                wrt_valid                   bool          是否是涡轮，如果为True，下面wrt开头的字段有效
+                wrt_type                    str           涡轮类型，参见WrtType
+                wrt_code                    str           所属正股
+                future_valid                bool          是否是期货，如果为True，下面future开头的字段有效
+                future_main_contract        bool          是否主连合约（期货特有字段）
+			    future_last_trade_time      string        最后交易时间（期货特有字段，非主连期货合约才有值）
+                =======================   ===========   ==============================================================================
 
         """
         if code is None or is_str(code) is False:
@@ -1742,7 +1751,8 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
 
         col_list = [
-            'code', 'lot_size', 'stock_type', 'stock_name', 'list_time', 'wrt_valid', 'wrt_type', 'wrt_code'
+            'code', 'lot_size', 'stock_type', 'stock_name', 'list_time', 'wrt_valid', 'wrt_type', 'wrt_code',
+            'future_valid','future_main_contract','future_last_trade_time'
         ]
 
         pd_frame = pd.DataFrame(data_list, columns=col_list)

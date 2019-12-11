@@ -329,7 +329,8 @@ class StockBasicInfoQuery:
             "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
             "delisting": record.basic.delisting if record.basic.HasField('delisting') else NoneDataType,
             "index_option_type": IndexOptionType.to_string2(record.optionExData.indexOptionType) if record.HasField('optionExData') else NoneDataType,
-
+            "main_contract": record.futureExData.isMainContract,
+            "last_trade_time": record.futureExData.lastTradeTime,
         } for record in raw_basic_info_list]
         return RET_OK, "", basic_info_list
 
@@ -702,6 +703,8 @@ class PlateStockQuery:
             stock_tmp['stock_name'] = record.basic.name
             stock_tmp['list_time'] = record.basic.listTime
             stock_tmp['stock_type'] = QUOTE.REV_SEC_TYPE_MAP[record.basic.secType] if record.basic.secType in QUOTE.REV_SEC_TYPE_MAP else SecurityType.NONE
+            stock_tmp['main_contract'] = record.futureExData.isMainContract
+            stock_tmp['last_trade_time'] = record.futureExData.lastTradeTime
             stock_list.append(stock_tmp)
 
         return RET_OK, "", stock_list
@@ -1845,6 +1848,13 @@ class StockReferenceList:
                                                            info.warrantExData.owner.code)
             else:
                 data['wrt_valid'] = False
+
+            if info.HasField('futureExData'):
+                data['future_valid'] = True
+                data['future_main_contract'] = info.futureExData.isMainContract
+                data['future_last_trade_time'] = info.futureExData.lastTradeTime
+            else:
+                data['future_valid'] = False
 
             data_list.append(data)
 
