@@ -829,6 +829,7 @@ class ProtoId(object):
     Qot_StockFilter = 3215   # 条件选股
     Qot_GetCodeChange = 3216   # 代码变换
     Qot_GetIpoList = 3217  # 获取新股Ipo
+    Qot_GetFutureInfo = 3218 #获取期货资料
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
 
