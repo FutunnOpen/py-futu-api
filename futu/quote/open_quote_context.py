@@ -2495,3 +2495,75 @@ class OpenQuoteContext(OpenContextBase):
         col_dict.update((row[0], True) for row in pb_field_map_USIpoExData)
 
         return RET_OK, pd.DataFrame(data, columns=col_dict.keys())
+
+    def get_future_info(self, code_list):
+        """
+         获取期货合约资料
+        :param code_list: 期货
+        :return: (ret, data)
+        ret != RET_OK 返回错误字符串
+        ret == RET_OK data为DataFrame类型，字段如下:
+        =========================   ===========   =========================
+        参数                         类型           说明
+        =========================   ===========   =========================
+        code                        str            股票代码
+        name                        str            股票名称
+        owner                       string         标的
+        exchange                    string         交易所
+        type                        string         合约类型
+        size                        float          合约规模
+        size_unit                   string         合约规模单位
+        price_currency              string         报价货币
+        price_unit                  string         报价单位
+        min_change                  float          最小变动
+        min_change_unit             string         最小变动的单位
+        trade_time                  string         交易时间
+        time_zone                   string         时区
+        last_trade_time             string         最后交易时间
+        exchange_format_url         string         交易所规格url
+        =========================   ===========   =========================
+        """
+        if is_str(code_list):
+            code_list = code_list.split(',')
+        elif isinstance(code_list, list):
+            pass
+        else:
+            return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
+        code_list = unique_and_normalize_list(code_list)
+        for code in code_list:
+            if code is None or is_str(code) is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in code_list is wrong"
+                return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            GetFutureInfoQuery.pack_req,
+            GetFutureInfoQuery.unpack,
+        )
+
+        kargs = {
+            "code_list": code_list,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        else:
+            col_list = [
+                'code',
+                'name',
+                'owner',
+                'exchange',
+                'type',
+                'size',
+                'size_unit',
+                'price_currency',
+                'price_unit',
+                'min_change',
+                'min_change_unit',
+                'trade_time',
+                'time_zone',
+                'last_trade_time',
+                'exchange_format_url'
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame

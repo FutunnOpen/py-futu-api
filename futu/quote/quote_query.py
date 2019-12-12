@@ -2898,3 +2898,94 @@ class GetIpoListQuery:
 
             ret_list.append(data)
         return RET_OK, "", ret_list
+
+class GetFutureInfoQuery:
+    """
+    Query GetFutureInfo.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code_list, conn_id):
+        """check code_list 股票列表"""
+        stock_tuple_list = []
+        failure_tuple_list = []
+        for stock_str in code_list:
+            ret_code, content = split_stock_str(stock_str)
+            if ret_code != RET_OK:
+                error_str = content
+                failure_tuple_list.append((ret_code, error_str))
+                continue
+            market_code, stock_code = content
+            stock_tuple_list.append((market_code, stock_code))
+        if len(failure_tuple_list) > 0:
+            error_str = '\n'.join([x[1] for x in failure_tuple_list])
+            return RET_ERROR, error_str, None
+
+        # 开始组包
+        from futu.common.pb.Qot_GetFutureInfo_pb2 import Request
+        req = Request()
+        for market_code, stock_code in stock_tuple_list:
+            stock_inst = req.c2s.securityList.add()
+            stock_inst.market = market_code
+            stock_inst.code = stock_code
+
+        return pack_pb_req(req, ProtoId.Qot_GetFutureInfo, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        ret_list = list()
+        #  期货合约资料 type = Qot_GetFutureInfo.FutureInfo
+        future_info_list = rsp_pb.s2c.futureInfoList
+        for item in future_info_list:
+            data = {}
+            #  合约名称 type = string
+            data['name'] = item.name
+            #  合约代码 type = string
+            data['code'] = merge_qot_mkt_stock_str(item.security.market,item.security.code)
+            #  最后交易日，只有非主连期货合约才有该字段 type = string
+            data['last_trade_time'] = item.lastTradeTime
+            if item.HasField('owner'):
+                data['owner'] = merge_qot_mkt_stock_str(item.owner.market,item.owner.code)
+            else:
+                data['owner'] = item.ownerOther
+            #  交易所 type = string
+            data['exchange'] = item.exchange
+            #  合约类型 type = string
+            data['type'] = item.contractType
+            #  合约规模 type = double
+            data['size'] = item.contractSize
+            #  合约规模的单位 type = string
+            data['size_unit'] = item.contractSizeUnit
+            #  报价货币 type = string
+            data['price_currency'] = item.quoteCurrency
+            #  报价单位 type = string
+            data['price_unit'] = item.quoteUnit
+            #  最小变动单位 type = double
+            data['min_change'] = item.minVar
+            #  最小变动单位的单位 type = string
+            data['min_change_unit'] = item.minVarUnit
+            #  交易时间 type = Qot_GetFutureInfo.TradeTime
+            trade_time = ''
+            for time_range in item.tradeTime:
+                if (len(trade_time) > 0):
+                    trade_time += ', '
+                begin_neg = time_range.begin < 0
+                if begin_neg:
+                    begin = time.strftime("%M:%S", time.localtime(24 * 60 + time_range.begin))
+                else:
+                    begin = time.strftime("%M:%S", time.localtime(time_range.begin))
+                end = time.strftime("%M:%S", time.localtime(abs(time_range.end)))
+                trade_time += '(%s%s - %s)' % (begin, '(T-1)' if begin_neg else '', end)
+
+            data['trade_time'] = trade_time
+            #  所在时区 type = string
+            data['time_zone'] = item.timeZone
+            #  交易所规格 type = string
+            data['exchange_format_url'] = item.exchangeFormatUrl
+            ret_list.append(data)
+        return RET_OK, "", ret_list
