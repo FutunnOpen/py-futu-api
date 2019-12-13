@@ -2331,7 +2331,8 @@ class OpenQuoteContext(OpenContextBase):
             col_list = [
                 'code', 'name', 'lot_size', 'stock_type', 'stock_child_type', 'stock_owner',
                 'option_type', 'strike_time', 'strike_price', 'suspension',
-                'listing_date', 'stock_id', 'delisting'
+                'listing_date', 'stock_id', 'delisting',
+                'main_contract', 'last_trade_time'
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)
             return RET_OK, ret_frame

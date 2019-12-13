@@ -2702,7 +2702,9 @@ class GetUserSecurityQuery:
             "strike_price": record.optionExData.strikePrice if record.HasField(
                 'optionExData') else NoneDataType,
             "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
-            "delisting": record.basic.delisting if record.basic.HasField('delisting') else NoneDataType
+            "delisting": record.basic.delisting if record.basic.HasField('delisting') else NoneDataType,
+            "main_contract": record.futureExData.isMainContract,
+            "last_trade_time": record.futureExData.lastTradeTime,
         } for record in static_info_list]
         return RET_OK, "", basic_info_list
 

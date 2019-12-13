@@ -1468,6 +1468,10 @@ class SortField(FtEnum):
     LOWER_STRIKE_PRICE = "LOWER_STRIKE_PRICE"  # 下限价，仅界内证支持该字段
     INLINE_PRICE_STATUS = "INLINE_PRICE_STATUS"  # 界内界外，仅界内证支持该字段
 
+    LAST_SETTLE_PRICE = "LAST_SETTLE_PRICE" #期货昨结
+    POSITION = "POSITION"  # 期货持仓量
+    POSITION_CHANGE = "POSITION_CHANGE"  # 期货日持仓
+
     def load_dic(self):
         return {
             self.NONE: Qot_Common_pb2.SortField_Unknow,
@@ -1517,7 +1521,10 @@ class SortField(FtEnum):
             self.AFTER_TURNOVER: Qot_Common_pb2.SortField_AfterTurnover,
             self.UPPER_STRIKE_PRICE: Qot_Common_pb2.SortField_UpperStrikePrice,
             self.LOWER_STRIKE_PRICE: Qot_Common_pb2.SortField_LowerStrikePrice,
-            self.INLINE_PRICE_STATUS: Qot_Common_pb2.SortField_InLinePriceStatus
+            self.INLINE_PRICE_STATUS: Qot_Common_pb2.SortField_InLinePriceStatus,
+            self.LAST_SETTLE_PRICE: Qot_Common_pb2.SortField_LastSettlePrice,
+            self.POSITION: Qot_Common_pb2.SortField_Position,
+            self.POSITION_CHANGE: Qot_Common_pb2.SortField_PositionChange,
         }
 
 
