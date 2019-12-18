@@ -2991,3 +2991,32 @@ class GetFutureInfoQuery:
             data['exchange_format_url'] = item.exchangeFormatUrl
             ret_list.append(data)
         return RET_OK, "", ret_list
+
+class TestCmd:
+    @classmethod
+    def pack_req(cls, cmd, params):
+
+        from futu.common.pb.TestCmd_pb2 import Request
+        req = Request()
+        req.c2s.cmd = cmd
+        req.c2s.params = params
+
+        return pack_pb_req(req, ProtoId.TestCmd, 0)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        """Unpack the init connect response"""
+        ret_type = rsp_pb.retType
+        ret_msg = rsp_pb.retMsg
+
+        if ret_type != RET_OK:
+            return RET_ERROR, ret_msg, None
+
+        res = {}
+        if rsp_pb.HasField('s2c'):
+            res['cmd'] = rsp_pb.s2c.cmd
+            res['result'] = rsp_pb.s2c.result
+        else:
+            return RET_ERROR, "rsp_pb error", None
+
+        return RET_OK, "", res

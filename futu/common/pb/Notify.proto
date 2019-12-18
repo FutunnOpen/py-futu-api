@@ -58,6 +58,7 @@ message QotRight
 	required int32 cnQotRight = 6; //A股行情权限, Qot_Common.QotRight
 	optional int32 hkOptionQotRight = 7; //港股期权行情权限, Qot_Common.QotRight
 	optional bool hasUSOptionQotRight = 8; //是否有美股期权行情权限
+	optional int32 hkFutureQotRight = 9; //港股期货行情权限, Qot_Common.QotRight
 }
 
 message APILevel

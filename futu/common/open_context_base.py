@@ -10,7 +10,7 @@ from datetime import datetime
 from threading import RLock, Thread
 from futu.common.utils import *
 from futu.common.handler_context import HandlerContext
-from futu.quote.quote_query import InitConnect
+from futu.quote.quote_query import InitConnect, TestCmd
 from futu.quote.quote_response_handler import AsyncHandler_InitConnect
 from futu.quote.quote_query import GlobalStateQuery
 from futu.quote.quote_query import KeepAlive, parse_head
@@ -492,4 +492,16 @@ class OpenContextBase(object):
 
         self._socket_reconnect_and_wait_ready()
 
+    def test_cmd(self, cmd, params):
+        query_processor = self._get_sync_query_processor(
+            TestCmd.pack_req, TestCmd.unpack_rsp)
 
+        kargs = {
+            'cmd': cmd,
+            'params': params,
+        }
+        ret_code, msg, state_dict = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return ret_code, msg
+
+        return RET_OK, state_dict

@@ -760,6 +760,7 @@ class ProtoId(object):
     GetUserInfo = 1005  # 获取用户信息
     Verification = 1006  # 请求或输入验证码
     GetDelayStatistics = 1007  # 获取延迟统计
+    TestCmd = 1008
 
     Trd_GetAccList = 2001  # 获取业务账户列表
     Trd_UnlockTrade = 2005  # 解锁或锁定交易
@@ -1103,6 +1104,7 @@ class TrdMarket(object):
     US = "US"      # 美国市场
     CN = "CN"      # 大陆市场
     HKCC = "HKCC"  # 香港A股通市场
+    FUTURES = "FUTURES"  # 期货市场，
 
 
 TRD_MKT_MAP = {
@@ -1111,6 +1113,7 @@ TRD_MKT_MAP = {
     TrdMarket.US: 2,
     TrdMarket.CN: 3,
     TrdMarket.HKCC: 4,
+    TrdMarket.FUTURES: 5
 }
 
 
@@ -1349,6 +1352,9 @@ MKT_ENV_ENABLE_MAP = {
 
     (TrdMarket.CN, TrdEnv.REAL): False,
     (TrdMarket.CN, TrdEnv.SIMULATE): True,
+
+    (TrdMarket.FUTURES, TrdEnv.REAL): True,
+    (TrdMarket.FUTURES, TrdEnv.SIMULATE): False
 }
 
 
@@ -2184,3 +2190,35 @@ class OptionAreaType(FtEnum):
             self.BERMUDA: Qot_Common_pb2.OptionAreaType_Bermuda
         }
 
+
+class Currency(FtEnum):
+    NONE = 'N/A' # 未知
+    HKD = 'HKD'  # 港币
+    USD = 'USD'  # 美元
+    CNH = 'CNH'  # 离岸人民币
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.Currency_Unknown,
+            self.HKD: Trd_Common_pb2.Currency_HKD,
+            self.USD: Trd_Common_pb2.Currency_USD,
+            self.CNH: Trd_Common_pb2.Currency_CNH
+        }
+
+class CltRiskLevel(FtEnum):
+    NONE = 'N/A'    # 未知
+    SAFE = 'SAFE'   # 安全
+    WARNING = 'WARNING'     # 预警
+    DANGER = 'DANGER'       # 危险
+    ABSOLUTE_SAFE = 'ABSOLUTE_SAFE'     # 绝对安全
+    OPT_DANGER = 'OPT_DANGER'           # 危险，期权相关
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.CltRiskLevel_Unknown,
+            self.SAFE: Trd_Common_pb2.CltRiskLevel_Safe,
+            self.WARNING: Trd_Common_pb2.CltRiskLevel_Warning,
+            self.DANGER: Trd_Common_pb2.CltRiskLevel_Danger,
+            self.ABSOLUTE_SAFE: Trd_Common_pb2.CltRiskLevel_AbsoluteSafe,
+            self.OPT_DANGER: Trd_Common_pb2.CltRiskLevel_OptDanger
+        }

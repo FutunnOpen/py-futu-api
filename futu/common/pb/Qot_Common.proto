@@ -312,11 +312,6 @@ enum SortField
 	SortField_AfterAmplitude = 42; //盘后振幅%
 	SortField_PreTurnover = 43; //盘前成交额
 	SortField_AfterTurnover = 44; //盘后成交额
-
-	//以下排序字段只支持用于Qot_GetPlateSecurity协议，并仅支持期货
-	SortField_LastSettlePrice = 48; //昨结
-	SortField_Position = 49; //持仓量
-	SortField_PositionChange = 50; //日增仓
 }
 
 //窝轮发行人
