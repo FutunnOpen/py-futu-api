@@ -166,7 +166,7 @@ def merge_qot_mkt_stock_str(qot_mkt, partial_stock_str):
     return stock_str
 
 
-def merge_trd_mkt_stock_str(trd_mkt, partial_stock_str):
+def merge_trd_mkt_stock_str(trd_sec_mkt, partial_stock_str):
     """
     Merge the string of stocks
     :param market: market code
@@ -175,16 +175,14 @@ def merge_trd_mkt_stock_str(trd_mkt, partial_stock_str):
 
     """
     mkt_qot = Market.NONE
-    mkt = TRADE.REV_TRD_MKT_MAP[trd_mkt] if trd_mkt in TRADE.REV_TRD_MKT_MAP else TrdMarket.NONE
-    if mkt == TrdMarket.HK:
+    if trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_HK:
         mkt_qot = Market.HK
-    elif mkt == TrdMarket.US:
+    elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_CN_SH:
+        mkt_qot = Market.SH
+    elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_CN_SZ:
+        mkt_qot = Market.SZ
+    elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_US:
         mkt_qot = Market.US
-    elif mkt == TrdMarket.HKCC or mkt == TrdMarket.CN:
-        if partial_stock_str.startswith('6') or partial_stock_str.startswith('9'):
-            mkt_qot = Market.SH
-        else:
-            mkt_qot = Market.SZ
     else:
         raise Exception("merge_trd_mkt_stock_str: unknown trd_mkt.")
 
@@ -284,6 +282,10 @@ class ProtobufMap(dict):
         """ GetUserInfo = 1007  # 获取延迟统计 """
         from futu.common.pb.GetDelayStatistics_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.GetDelayStatistics] = Response()
+
+        """ TestCmd = 1008  # 测试命令 """
+        from futu.common.pb.TestCmd_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.TestCmd] = Response()
 
         """ Trd_GetAccList = 2001  # 获取业务账户列表 """
         from futu.common.pb.Trd_GetAccList_pb2 import Response
@@ -495,6 +497,9 @@ class ProtobufMap(dict):
 
         from futu.common.pb.Qot_GetIpoList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetIpoList] = Response()
+        
+        from futu.common.pb.Qot_GetFutureInfo_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetFutureInfo] = Response()
 
     def __getitem__(self, key):
         return ProtobufMap.created_protobuf_map[key] if key in ProtobufMap.created_protobuf_map else None

@@ -104,6 +104,7 @@ from futu.trade.open_trade_context import OpenHKTradeContext
 from futu.trade.open_trade_context import OpenUSTradeContext
 from futu.trade.open_trade_context import OpenHKCCTradeContext
 from futu.trade.open_trade_context import OpenCNTradeContext
+from futu.trade.open_trade_context import OpenFutureTradeContext
 
 #import constant values
 from futu.common import *

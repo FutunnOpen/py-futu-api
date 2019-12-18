@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetReference.proto',
   package='Qot_GetReference',
   syntax='proto2',
-  serialized_pb=_b('\n\x16Qot_GetReference.proto\x12\x10Qot_GetReference\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"D\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x15\n\rreferenceType\x18\x02 \x02(\x05\"=\n\x03S2C\x12\x36\n\x0estaticInfoList\x18\x02 \x03(\x0b\x32\x1e.Qot_Common.SecurityStaticInfo\"-\n\x07Request\x12\"\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x15.Qot_GetReference.C2S\"f\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\"\n\x03s2c\x18\x04 \x01(\x0b\x32\x15.Qot_GetReference.S2C*D\n\rReferenceType\x12\x18\n\x14ReferenceType_Unknow\x10\x00\x12\x19\n\x15ReferenceType_Warrant\x10\x01\x42\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x16Qot_GetReference.proto\x12\x10Qot_GetReference\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"D\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x15\n\rreferenceType\x18\x02 \x02(\x05\"=\n\x03S2C\x12\x36\n\x0estaticInfoList\x18\x02 \x03(\x0b\x32\x1e.Qot_Common.SecurityStaticInfo\"-\n\x07Request\x12\"\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x15.Qot_GetReference.C2S\"f\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\"\n\x03s2c\x18\x04 \x01(\x0b\x32\x15.Qot_GetReference.S2C*^\n\rReferenceType\x12\x18\n\x14ReferenceType_Unknow\x10\x00\x12\x19\n\x15ReferenceType_Warrant\x10\x01\x12\x18\n\x14ReferenceType_Future\x10\x02\x42\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -40,17 +40,22 @@ _REFERENCETYPE = _descriptor.EnumDescriptor(
       name='ReferenceType_Warrant', index=1, number=1,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ReferenceType_Future', index=2, number=2,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=360,
-  serialized_end=428,
+  serialized_end=454,
 )
 _sym_db.RegisterEnumDescriptor(_REFERENCETYPE)
 
 ReferenceType = enum_type_wrapper.EnumTypeWrapper(_REFERENCETYPE)
 ReferenceType_Unknow = 0
 ReferenceType_Warrant = 1
+ReferenceType_Future = 2
 
 
 

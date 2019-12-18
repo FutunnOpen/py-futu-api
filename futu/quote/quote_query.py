@@ -76,6 +76,12 @@ pb_field_map_OptionBasicQotExData = [
     ('contract_multiplier', 'contractMultiplier', False, None),
 ]
 
+pb_field_map_FutureBasicQotExData = [
+    ('last_settle_price', 'lastSettlePrice', True, None),
+    ('position', 'position', True, None),
+    ('position_change', 'positionChange', True, None),
+]
+
 pb_field_map_PreAfterMarketData_pre = [
     ("pre_price", "price", False, None),
     ("pre_high_price", "highPrice", False, None),
@@ -329,7 +335,8 @@ class StockBasicInfoQuery:
             "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
             "delisting": record.basic.delisting if record.basic.HasField('delisting') else NoneDataType,
             "index_option_type": IndexOptionType.to_string2(record.optionExData.indexOptionType) if record.HasField('optionExData') else NoneDataType,
-
+            "main_contract": record.futureExData.isMainContract,
+            "last_trade_time": record.futureExData.lastTradeTime,
         } for record in raw_basic_info_list]
         return RET_OK, "", basic_info_list
 
@@ -560,6 +567,15 @@ class MarketSnapshotQuery:
                 #  板块类型平盘支数 type=int32
                 snapshot_tmp["plate_equal_count"] = record.plateExData.equalCount
 
+            snapshot_tmp['future_valid'] = False
+            if record.basic.type == SEC_TYPE_MAP[SecurityType.FUTURE]:
+                snapshot_tmp['future_valid'] = True
+                snapshot_tmp['future_last_settle_price'] = record.futureExData.lastSettlePrice
+                snapshot_tmp['future_position'] = record.futureExData.position
+                snapshot_tmp['future_position_change'] = record.futureExData.positionChange
+                snapshot_tmp['future_main_contract'] = record.futureExData.isMainContract
+                snapshot_tmp['future_last_trade_time'] = record.futureExData.lastTradeTime
+
             snapshot_list.append(snapshot_tmp)
 
         return RET_OK, "", snapshot_list
@@ -702,6 +718,8 @@ class PlateStockQuery:
             stock_tmp['stock_name'] = record.basic.name
             stock_tmp['list_time'] = record.basic.listTime
             stock_tmp['stock_type'] = QUOTE.REV_SEC_TYPE_MAP[record.basic.secType] if record.basic.secType in QUOTE.REV_SEC_TYPE_MAP else SecurityType.NONE
+            stock_tmp['main_contract'] = record.futureExData.isMainContract
+            stock_tmp['last_trade_time'] = record.futureExData.lastTradeTime
             stock_list.append(stock_tmp)
 
         return RET_OK, "", stock_list
@@ -1234,6 +1252,11 @@ def parse_pb_BasicQot(pb):
             set_item_from_pb(item, pb.optionExData, pb_field_map_OptionBasicQotExData)
         else:
             set_item_none(item, pb_field_map_OptionBasicQotExData)
+
+        if pb.HasField('futureExData'):
+            set_item_from_pb(item, pb.futureExData, pb_field_map_FutureBasicQotExData)
+        else:
+            set_item_none(item, pb_field_map_FutureBasicQotExData)
 
         if pb.HasField('preMarket'):
             set_item_from_pb(item, pb.preMarket, pb_field_map_PreAfterMarketData_pre)
@@ -1845,6 +1868,13 @@ class StockReferenceList:
                                                            info.warrantExData.owner.code)
             else:
                 data['wrt_valid'] = False
+
+            if info.HasField('futureExData'):
+                data['future_valid'] = True
+                data['future_main_contract'] = info.futureExData.isMainContract
+                data['future_last_trade_time'] = info.futureExData.lastTradeTime
+            else:
+                data['future_valid'] = False
 
             data_list.append(data)
 
@@ -2672,7 +2702,9 @@ class GetUserSecurityQuery:
             "strike_price": record.optionExData.strikePrice if record.HasField(
                 'optionExData') else NoneDataType,
             "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
-            "delisting": record.basic.delisting if record.basic.HasField('delisting') else NoneDataType
+            "delisting": record.basic.delisting if record.basic.HasField('delisting') else NoneDataType,
+            "main_contract": record.futureExData.isMainContract,
+            "last_trade_time": record.futureExData.lastTradeTime,
         } for record in static_info_list]
         return RET_OK, "", basic_info_list
 
@@ -2868,3 +2900,123 @@ class GetIpoListQuery:
 
             ret_list.append(data)
         return RET_OK, "", ret_list
+
+class GetFutureInfoQuery:
+    """
+    Query GetFutureInfo.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code_list, conn_id):
+        """check code_list 股票列表"""
+        stock_tuple_list = []
+        failure_tuple_list = []
+        for stock_str in code_list:
+            ret_code, content = split_stock_str(stock_str)
+            if ret_code != RET_OK:
+                error_str = content
+                failure_tuple_list.append((ret_code, error_str))
+                continue
+            market_code, stock_code = content
+            stock_tuple_list.append((market_code, stock_code))
+        if len(failure_tuple_list) > 0:
+            error_str = '\n'.join([x[1] for x in failure_tuple_list])
+            return RET_ERROR, error_str, None
+
+        # 开始组包
+        from futu.common.pb.Qot_GetFutureInfo_pb2 import Request
+        req = Request()
+        for market_code, stock_code in stock_tuple_list:
+            stock_inst = req.c2s.securityList.add()
+            stock_inst.market = market_code
+            stock_inst.code = stock_code
+
+        return pack_pb_req(req, ProtoId.Qot_GetFutureInfo, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        ret_list = list()
+        #  期货合约资料 type = Qot_GetFutureInfo.FutureInfo
+        future_info_list = rsp_pb.s2c.futureInfoList
+        for item in future_info_list:
+            data = {}
+            #  合约名称 type = string
+            data['name'] = item.name
+            #  合约代码 type = string
+            data['code'] = merge_qot_mkt_stock_str(item.security.market,item.security.code)
+            #  最后交易日，只有非主连期货合约才有该字段 type = string
+            data['last_trade_time'] = item.lastTradeTime
+            if item.HasField('owner'):
+                data['owner'] = merge_qot_mkt_stock_str(item.owner.market,item.owner.code)
+            else:
+                data['owner'] = item.ownerOther
+            #  交易所 type = string
+            data['exchange'] = item.exchange
+            #  合约类型 type = string
+            data['type'] = item.contractType
+            #  合约规模 type = double
+            data['size'] = item.contractSize
+            #  合约规模的单位 type = string
+            data['size_unit'] = item.contractSizeUnit
+            #  报价货币 type = string
+            data['price_currency'] = item.quoteCurrency
+            #  报价单位 type = string
+            data['price_unit'] = item.quoteUnit
+            #  最小变动单位 type = double
+            data['min_change'] = item.minVar
+            #  最小变动单位的单位 type = string
+            data['min_change_unit'] = item.minVarUnit
+            #  交易时间 type = Qot_GetFutureInfo.TradeTime
+            trade_time = ''
+            for time_range in item.tradeTime:
+                if (len(trade_time) > 0):
+                    trade_time += ', '
+                begin_neg = time_range.begin < 0
+                if begin_neg:
+                    begin = time.strftime("%M:%S", time.localtime(24 * 60 + time_range.begin))
+                else:
+                    begin = time.strftime("%M:%S", time.localtime(time_range.begin))
+                end = time.strftime("%M:%S", time.localtime(abs(time_range.end)))
+                trade_time += '(%s%s - %s)' % (begin, '(T-1)' if begin_neg else '', end)
+
+            data['trade_time'] = trade_time
+            #  所在时区 type = string
+            data['time_zone'] = item.timeZone
+            #  交易所规格 type = string
+            data['exchange_format_url'] = item.exchangeFormatUrl
+            ret_list.append(data)
+        return RET_OK, "", ret_list
+
+class TestCmd:
+    @classmethod
+    def pack_req(cls, cmd, params):
+
+        from futu.common.pb.TestCmd_pb2 import Request
+        req = Request()
+        req.c2s.cmd = cmd
+        req.c2s.params = params
+
+        return pack_pb_req(req, ProtoId.TestCmd, 0)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        """Unpack the init connect response"""
+        ret_type = rsp_pb.retType
+        ret_msg = rsp_pb.retMsg
+
+        if ret_type != RET_OK:
+            return RET_ERROR, ret_msg, None
+
+        res = {}
+        if rsp_pb.HasField('s2c'):
+            res['cmd'] = rsp_pb.s2c.cmd
+            res['result'] = rsp_pb.s2c.result
+        else:
+            return RET_ERROR, "rsp_pb error", None
+
+        return RET_OK, "", res
