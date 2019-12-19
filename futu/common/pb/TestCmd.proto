@@ -1,0 +1,31 @@
+syntax = "proto2";
+package TestCmd;
+option java_package = "com.futu.openapi.pb";
+
+
+//内部使用
+message C2S
+{
+	required string cmd = 1; 
+	optional string params = 2;  
+}
+
+message S2C
+{
+	required string cmd = 1; 
+	required string result = 2;
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //返回结果，参见Common.RetType的枚举定义
+	optional string retMsg = 2; //返回结果描述
+	optional int32 errCode = 3; //错误码，客户端一般通过retType和retMsg来判断结果和详情，errCode只做日志记录，仅在个别协议失败时对账用
+	
+	optional S2C s2c = 4;
+}
