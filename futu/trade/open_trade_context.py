@@ -363,6 +363,10 @@ class OpenTradeContextBase(OpenContextBase):
     def order_list_query(self, order_id="", status_filter_list=[], code='', start='', end='',
                          trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
 
+        ret, msg = self._check_trd_env(trd_env)
+        if ret != RET_OK:
+            return ret, msg
+
         ret, msg, acc_id = self._check_acc_id_and_acc_index(trd_env, acc_id, acc_index)
         if ret != RET_OK:
             return ret, msg
