@@ -19,6 +19,7 @@ enum TrdMarket
 	TrdMarket_US = 2; //美国市场
 	TrdMarket_CN = 3; //大陆市场
 	TrdMarket_HKCC = 4; //香港A股通市场
+	TrdMarket_Futures = 5; //期货市场
 }
 
 //可交易证券所属市场，目前主要是区分A股的沪市和深市，香港和美国暂不需要细分
@@ -126,6 +127,7 @@ enum Currency
 //账户风险控制等级
 enum CltRiskLevel
 {
+	CltRiskLevel_Unknown = -1;		// 未知
     CltRiskLevel_Safe = 0;          // 安全
     CltRiskLevel_Warning = 1;       // 预警
     CltRiskLevel_Danger = 2;        // 危险
