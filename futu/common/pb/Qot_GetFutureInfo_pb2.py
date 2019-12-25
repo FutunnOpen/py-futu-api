@@ -21,42 +21,11 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetFutureInfo.proto',
   package='Qot_GetFutureInfo',
   syntax='proto2',
-  serialized_pb=_b('\n\x17Qot_GetFutureInfo.proto\x12\x11Qot_GetFutureInfo\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"1\n\x03\x43\x32S\x12*\n\x0csecurityList\x18\x01 \x03(\x0b\x32\x14.Qot_Common.Security\"\'\n\tTradeTime\x12\r\n\x05\x62\x65gin\x18\x01 \x01(\x01\x12\x0b\n\x03\x65nd\x18\x02 \x01(\x01\"\xb2\x03\n\nFutureInfo\x12\x0c\n\x04name\x18\x01 \x02(\t\x12&\n\x08security\x18\x02 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x15\n\rlastTradeTime\x18\x03 \x02(\t\x12\x1a\n\x12lastTradeTimestamp\x18\x04 \x01(\x01\x12#\n\x05owner\x18\x05 \x01(\x0b\x32\x14.Qot_Common.Security\x12\x12\n\nownerOther\x18\x06 \x02(\t\x12\x10\n\x08\x65xchange\x18\x07 \x02(\t\x12\x14\n\x0c\x63ontractType\x18\x08 \x02(\t\x12\x14\n\x0c\x63ontractSize\x18\t \x02(\x01\x12\x18\n\x10\x63ontractSizeUnit\x18\n \x02(\t\x12\x15\n\rquoteCurrency\x18\x0b \x02(\t\x12\x0e\n\x06minVar\x18\x0c \x02(\x01\x12\x12\n\nminVarUnit\x18\r \x02(\t\x12\x11\n\tquoteUnit\x18\x0e \x02(\t\x12/\n\ttradeTime\x18\x0f \x03(\x0b\x32\x1c.Qot_GetFutureInfo.TradeTime\x12\x10\n\x08timeZone\x18\x10 \x02(\t\x12\x19\n\x11\x65xchangeFormatUrl\x18\x11 \x02(\t\"<\n\x03S2C\x12\x35\n\x0e\x66utureInfoList\x18\x01 \x03(\x0b\x32\x1d.Qot_GetFutureInfo.FutureInfo\".\n\x07Request\x12#\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x16.Qot_GetFutureInfo.C2S\"g\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12#\n\x03s2c\x18\x04 \x01(\x0b\x32\x16.Qot_GetFutureInfo.S2CB\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x17Qot_GetFutureInfo.proto\x12\x11Qot_GetFutureInfo\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\'\n\tTradeTime\x12\r\n\x05\x62\x65gin\x18\x01 \x01(\x01\x12\x0b\n\x03\x65nd\x18\x02 \x01(\x01\"\xb2\x03\n\nFutureInfo\x12\x0c\n\x04name\x18\x01 \x02(\t\x12&\n\x08security\x18\x02 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x15\n\rlastTradeTime\x18\x03 \x02(\t\x12\x1a\n\x12lastTradeTimestamp\x18\x04 \x01(\x01\x12#\n\x05owner\x18\x05 \x01(\x0b\x32\x14.Qot_Common.Security\x12\x12\n\nownerOther\x18\x06 \x02(\t\x12\x10\n\x08\x65xchange\x18\x07 \x02(\t\x12\x14\n\x0c\x63ontractType\x18\x08 \x02(\t\x12\x14\n\x0c\x63ontractSize\x18\t \x02(\x01\x12\x18\n\x10\x63ontractSizeUnit\x18\n \x02(\t\x12\x15\n\rquoteCurrency\x18\x0b \x02(\t\x12\x0e\n\x06minVar\x18\x0c \x02(\x01\x12\x12\n\nminVarUnit\x18\r \x02(\t\x12\x11\n\tquoteUnit\x18\x0e \x01(\t\x12/\n\ttradeTime\x18\x0f \x03(\x0b\x32\x1c.Qot_GetFutureInfo.TradeTime\x12\x10\n\x08timeZone\x18\x10 \x02(\t\x12\x19\n\x11\x65xchangeFormatUrl\x18\x11 \x02(\t\"1\n\x03\x43\x32S\x12*\n\x0csecurityList\x18\x01 \x03(\x0b\x32\x14.Qot_Common.Security\"<\n\x03S2C\x12\x35\n\x0e\x66utureInfoList\x18\x01 \x03(\x0b\x32\x1d.Qot_GetFutureInfo.FutureInfo\".\n\x07Request\x12#\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x16.Qot_GetFutureInfo.C2S\"g\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12#\n\x03s2c\x18\x04 \x01(\x0b\x32\x16.Qot_GetFutureInfo.S2CB\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
 
-
-
-_C2S = _descriptor.Descriptor(
-  name='C2S',
-  full_name='Qot_GetFutureInfo.C2S',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='securityList', full_name='Qot_GetFutureInfo.C2S.securityList', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=78,
-  serialized_end=127,
-)
 
 
 _TRADETIME = _descriptor.Descriptor(
@@ -92,8 +61,8 @@ _TRADETIME = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=129,
-  serialized_end=168,
+  serialized_start=78,
+  serialized_end=117,
 )
 
 
@@ -197,7 +166,7 @@ _FUTUREINFO = _descriptor.Descriptor(
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='quoteUnit', full_name='Qot_GetFutureInfo.FutureInfo.quoteUnit', index=13,
-      number=14, type=9, cpp_type=9, label=2,
+      number=14, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -235,7 +204,38 @@ _FUTUREINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=171,
+  serialized_start=120,
+  serialized_end=554,
+)
+
+
+_C2S = _descriptor.Descriptor(
+  name='C2S',
+  full_name='Qot_GetFutureInfo.C2S',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='securityList', full_name='Qot_GetFutureInfo.C2S.securityList', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=556,
   serialized_end=605,
 )
 
@@ -353,27 +353,20 @@ _RESPONSE = _descriptor.Descriptor(
   serialized_end=820,
 )
 
-_C2S.fields_by_name['securityList'].message_type = Qot__Common__pb2._SECURITY
 _FUTUREINFO.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY
 _FUTUREINFO.fields_by_name['owner'].message_type = Qot__Common__pb2._SECURITY
 _FUTUREINFO.fields_by_name['tradeTime'].message_type = _TRADETIME
+_C2S.fields_by_name['securityList'].message_type = Qot__Common__pb2._SECURITY
 _S2C.fields_by_name['futureInfoList'].message_type = _FUTUREINFO
 _REQUEST.fields_by_name['c2s'].message_type = _C2S
 _RESPONSE.fields_by_name['s2c'].message_type = _S2C
-DESCRIPTOR.message_types_by_name['C2S'] = _C2S
 DESCRIPTOR.message_types_by_name['TradeTime'] = _TRADETIME
 DESCRIPTOR.message_types_by_name['FutureInfo'] = _FUTUREINFO
+DESCRIPTOR.message_types_by_name['C2S'] = _C2S
 DESCRIPTOR.message_types_by_name['S2C'] = _S2C
 DESCRIPTOR.message_types_by_name['Request'] = _REQUEST
 DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
-
-C2S = _reflection.GeneratedProtocolMessageType('C2S', (_message.Message,), dict(
-  DESCRIPTOR = _C2S,
-  __module__ = 'Qot_GetFutureInfo_pb2'
-  # @@protoc_insertion_point(class_scope:Qot_GetFutureInfo.C2S)
-  ))
-_sym_db.RegisterMessage(C2S)
 
 TradeTime = _reflection.GeneratedProtocolMessageType('TradeTime', (_message.Message,), dict(
   DESCRIPTOR = _TRADETIME,
@@ -388,6 +381,13 @@ FutureInfo = _reflection.GeneratedProtocolMessageType('FutureInfo', (_message.Me
   # @@protoc_insertion_point(class_scope:Qot_GetFutureInfo.FutureInfo)
   ))
 _sym_db.RegisterMessage(FutureInfo)
+
+C2S = _reflection.GeneratedProtocolMessageType('C2S', (_message.Message,), dict(
+  DESCRIPTOR = _C2S,
+  __module__ = 'Qot_GetFutureInfo_pb2'
+  # @@protoc_insertion_point(class_scope:Qot_GetFutureInfo.C2S)
+  ))
+_sym_db.RegisterMessage(C2S)
 
 S2C = _reflection.GeneratedProtocolMessageType('S2C', (_message.Message,), dict(
   DESCRIPTOR = _S2C,

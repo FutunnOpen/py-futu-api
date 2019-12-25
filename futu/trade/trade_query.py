@@ -141,7 +141,11 @@ class AccInfoQuery:
             'realized_pl': raw_funds.realizedPL if raw_funds.HasField('realizedPL') else NoneDataValue,
             'risk_level': CltRiskLevel.to_string2(raw_funds.riskLevel) if raw_funds.HasField('riskLevel') else CltRiskLevel.NONE,
             'initial_margin': raw_funds.initialMargin if raw_funds.HasField('initialMargin') else NoneDataValue,
-            'maintenance_margin': raw_funds.maintenanceMargin if raw_funds.HasField('maintenanceMargin') else NoneDataValue
+            'maintenance_margin': raw_funds.maintenanceMargin if raw_funds.HasField('maintenanceMargin') else NoneDataValue,
+            'hk_cash': NoneDataValue,
+            'hk_avl_withdrawal_cash': NoneDataValue,
+            'us_cash': NoneDataValue,
+            'us_avl_withdrawal_cash': NoneDataValue
         }]
         for cashInfo in raw_funds.cashInfoList:
             if cashInfo.currency == Trd_Common_pb2.Currency_HKD:
