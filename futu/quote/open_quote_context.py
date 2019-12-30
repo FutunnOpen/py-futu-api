@@ -568,6 +568,9 @@ class OpenQuoteContext(OpenContextBase):
 
         """
         code_list = unique_and_normalize_list(code_list)
+        if not code_list:
+            error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
+            return RET_ERROR, error_str
 
         for code in code_list:
             if code is None or is_str(code) is False:
@@ -1806,6 +1809,10 @@ class OpenQuoteContext(OpenContextBase):
             return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
 
         code_list = unique_and_normalize_list(code_list)
+        if not code_list:
+            error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
+            return RET_ERROR, error_str
+
         for code in code_list:
             if code is None or is_str(code) is False:
                 error_str = ERROR_STR_PREFIX + "the type of param in code_list is wrong"
@@ -2531,6 +2538,11 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
         code_list = unique_and_normalize_list(code_list)
+
+        if not code_list:
+            error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
+            return RET_ERROR, error_str
+
         for code in code_list:
             if code is None or is_str(code) is False:
                 error_str = ERROR_STR_PREFIX + "the type of param in code_list is wrong"
