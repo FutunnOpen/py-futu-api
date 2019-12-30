@@ -80,6 +80,7 @@ pb_field_map_FutureBasicQotExData = [
     ('last_settle_price', 'lastSettlePrice', True, None),
     ('position', 'position', True, None),
     ('position_change', 'positionChange', True, None),
+    ('expiry_date_distance', 'expiryDateDistance', False, None),
 ]
 
 pb_field_map_PreAfterMarketData_pre = [
