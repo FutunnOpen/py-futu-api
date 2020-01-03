@@ -1761,7 +1761,7 @@ class OpenQuoteContext(OpenContextBase):
 
 
         if reference_type is not None and not reference_type in STOCK_REFERENCE_TYPE_MAP:
-            error_str = ERROR_STR_PREFIX + "the type of autype param is wrong"
+            error_str = ERROR_STR_PREFIX + "the type of reference_type param is wrong"
             return RET_ERROR, error_str
 
         query_processor = self._get_sync_query_processor(
