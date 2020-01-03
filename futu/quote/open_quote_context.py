@@ -1759,6 +1759,11 @@ class OpenQuoteContext(OpenContextBase):
             error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
             return RET_ERROR, error_str
 
+
+        if reference_type is not None and not reference_type in STOCK_REFERENCE_TYPE_MAP:
+            error_str = ERROR_STR_PREFIX + "the type of autype param is wrong"
+            return RET_ERROR, error_str
+
         query_processor = self._get_sync_query_processor(
             StockReferenceList.pack_req,
             StockReferenceList.unpack_rsp,
