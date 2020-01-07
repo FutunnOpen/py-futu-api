@@ -831,6 +831,7 @@ class ProtoId(object):
     Qot_GetCodeChange = 3216   # 代码变换
     Qot_GetIpoList = 3217  # 获取新股Ipo
     Qot_GetFutureInfo = 3218 #获取期货资料
+    Qot_RequestTradeDate = 3219 #在线拉取交易日
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
 
@@ -2221,4 +2222,22 @@ class CltRiskLevel(FtEnum):
             self.DANGER: Trd_Common_pb2.CltRiskLevel_Danger,
             self.ABSOLUTE_SAFE: Trd_Common_pb2.CltRiskLevel_AbsoluteSafe,
             self.OPT_DANGER: Trd_Common_pb2.CltRiskLevel_OptDanger
+        }
+
+class TradeDateMarket(FtEnum):
+    NONE = 'N/A'  # 未知
+    HK = 'HK'  # 港股市场
+    US = 'US'  # 美股市场
+    CN = 'CN'  # A股市场
+    NT = 'NT'  # 深（沪）股通
+    ST = 'ST'  # 港股通（深、沪）
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.TradeDateMarket_Unknown,
+            self.HK: Qot_Common_pb2.TradeDateMarket_HK,
+            self.US: Qot_Common_pb2.TradeDateMarket_US,
+            self.CN: Qot_Common_pb2.TradeDateMarket_CN,
+            self.NT: Qot_Common_pb2.TradeDateMarket_NT,
+            self.ST: Qot_Common_pb2.TradeDateMarket_ST
         }

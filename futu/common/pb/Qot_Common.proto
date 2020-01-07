@@ -12,6 +12,7 @@ enum QotMarket
     QotMarket_US_Security = 11; //美股
     QotMarket_CNSH_Security = 21; //沪股
     QotMarket_CNSZ_Security = 22; //深股
+	QotMarket_FX = 31; //外汇
 }
 
 enum SecurityType
@@ -92,7 +93,18 @@ enum QotMarketState
 	QotMarketState_HkCas = 19; // 盘后竞价,港股市场增加CAS机制对应的市场状态
 }
 
-//交易时间类型
+//交易日查询市场
+enum TradeDateMarket
+{
+	TradeDateMarket_Unknown = 0; //未知
+	TradeDateMarket_HK = 1; //港股市场
+	TradeDateMarket_US = 2; //美股市场
+	TradeDateMarket_CN = 3; //A股市场
+	TradeDateMarket_NT = 4; //深（沪）股通
+	TradeDateMarket_ST = 5; //港股通（深、沪）
+}
+
+//交易日类型
 enum TradeDateType
 {
 	TradeDateType_Whole = 0; //全天交易
@@ -108,7 +120,6 @@ enum RehabType
 }
 
  //枚举值兼容旧协议定义
- //新类型季K,年K,3分K暂时没有支持历史K线
 enum KLType
 {
 	KLType_Unknown = 0; //未知
@@ -312,6 +323,11 @@ enum SortField
 	SortField_AfterAmplitude = 42; //盘后振幅%
 	SortField_PreTurnover = 43; //盘前成交额
 	SortField_AfterTurnover = 44; //盘后成交额
+
+	//以下排序字段只支持用于Qot_GetPlateSecurity协议，并仅支持期货
+	SortField_LastSettlePrice = 48; //昨结
+	SortField_Position = 49; //持仓量
+	SortField_PositionChange = 50; //日增仓
 }
 
 //窝轮发行人
@@ -462,6 +478,12 @@ message FutureBasicQotExData
 	optional int32 expiryDateDistance = 4; //距离到期日天数
 }
 
+message ForexBasicQotExData
+{
+	optional double askPrice = 1;//卖出价
+    optional double bidPrice = 2;//买入价
+}
+
 message BasicQot
 {
 	required Security security = 1; //股票
@@ -487,6 +509,7 @@ message BasicQot
 	optional int32 secStatus = 21; //SecurityStatus, 股票状态
 
 	optional FutureBasicQotExData futureExData = 22; //期货特有字段
+	optional ForexBasicQotExData forexExData = 23; //外汇特有字段
 }
 
 message TimeShare
@@ -539,12 +562,18 @@ message FutureStaticExData
 	required bool isMainContract = 3; //是否主连合约
 }
 
+message ForexStaticExData
+{
+	optional int64 reForexID = 1; //反向汇率ID
+}
+
 message SecurityStaticInfo
 {
 	required SecurityStaticBasic basic = 1; //基本股票静态信息
 	optional WarrantStaticExData warrantExData = 2; //窝轮额外股票静态信息
 	optional OptionStaticExData optionExData = 3; //期权额外股票静态信息
 	optional FutureStaticExData futureExData = 4; //期货额外股票静态信息
+	optional ForexStaticExData forexExData = 5; //外汇额外股票静态信息
 }
 
 message Broker
