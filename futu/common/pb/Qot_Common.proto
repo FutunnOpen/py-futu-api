@@ -480,8 +480,7 @@ message FutureBasicQotExData
 
 message ForexBasicQotExData
 {
-	optional double askPrice = 1;//卖出价
-    optional double bidPrice = 2;//买入价
+
 }
 
 message BasicQot
@@ -507,9 +506,9 @@ message BasicQot
 	optional PreAfterMarketData preMarket = 19; //盘前数据
 	optional PreAfterMarketData afterMarket = 20; //盘后数据
 	optional int32 secStatus = 21; //SecurityStatus, 股票状态
-
 	optional FutureBasicQotExData futureExData = 22; //期货特有字段
-	optional ForexBasicQotExData forexExData = 23; //外汇特有字段
+	optional double askPrice = 23;//卖出价
+    optional double bidPrice = 24;//买入价
 }
 
 message TimeShare
@@ -564,7 +563,7 @@ message FutureStaticExData
 
 message ForexStaticExData
 {
-	optional int64 reForexID = 1; //反向汇率ID
+	optional Qot_Common.Security reverseForex = 1; // 反向汇率股票
 }
 
 message SecurityStaticInfo
