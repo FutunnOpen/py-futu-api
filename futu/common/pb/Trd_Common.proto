@@ -19,6 +19,7 @@ enum TrdMarket
 	TrdMarket_US = 2; //美国市场
 	TrdMarket_CN = 3; //大陆市场
 	TrdMarket_HKCC = 4; //香港A股通市场
+	TrdMarket_Futures = 5; //期货市场
 }
 
 //可交易证券所属市场，目前主要是区分A股的沪市和深市，香港和美国暂不需要细分
@@ -114,6 +115,34 @@ enum TrdAccType
 	TrdAccType_Margin = 2;  //保证金账户
 };
 
+//货币种类
+enum Currency
+{
+	Currency_Unknown = 0;  //未知货币
+	Currency_HKD = 1;   // 港币
+    Currency_USD = 2;   // 美元
+    Currency_CNH = 3;   // 离岸人民币
+}
+
+//账户风险控制等级
+enum CltRiskLevel
+{
+	CltRiskLevel_Unknown = -1;		// 未知
+    CltRiskLevel_Safe = 0;          // 安全
+    CltRiskLevel_Warning = 1;       // 预警
+    CltRiskLevel_Danger = 2;        // 危险
+    CltRiskLevel_AbsoluteSafe = 3;  // 绝对安全
+    CltRiskLevel_OptDanger = 4;     // 危险, 期权相关
+}
+
+//账户现金信息，目前仅用于期货账户
+message AccCashInfo
+{
+    optional int32 currency = 1;        // 货币类型，取值参考 Currency
+    optional double cash = 2;           // 现金结余
+    optional double availableBalance = 3;   // 现金可提金额
+}
+
 //交易协议公共参数头
 message TrdHeader
 {
@@ -135,92 +164,105 @@ message TrdAcc
 //账户资金结构
 message Funds
 {
-	required double power = 1; //最大购买力（做多），3位精度，下同
+	required double power = 1; //最大购买力（做多），3位精度，下同。期货账户此字段为0
 	required double totalAssets = 2; //资产净值
-	required double cash = 3; //现金
-	required double marketVal = 4; //证券市值
+	required double cash = 3; //现金, 期货账户此字段为0
+	required double marketVal = 4; //证券市值, 期货账户此字段为0
 	required double frozenCash = 5; //冻结金额
-	required double debtCash = 6; //欠款金额
-	required double avlWithdrawalCash = 7; //可提金额
+	required double debtCash = 6; //欠款金额, 期货账户此字段为0
+	required double avlWithdrawalCash = 7; //可提金额, 期货账户此字段为0
+
+	optional int32 currency = 8;            //币种，本结构体资金相关的货币类型，取值参见 Currency，期货适用
+    optional double availableFunds = 9;     //可用资金，期货适用
+    optional double unrealizedPL = 10;      //未实现盈亏，期货适用
+    optional double realizedPL = 11;        //已实现盈亏，期货适用
+    optional int32 riskLevel = 12;           //风控状态，参见 CltRiskLevel, 期货适用
+    optional double initialMargin = 13;      //初始保证金，期货适用
+    optional double maintenanceMargin = 14;  //维持保证金，期货适用
+    repeated AccCashInfo cashInfoList = 15;  //分币种的现金信息，期货适用
 }
 
 //账户持仓结构
 message Position
 {
-	required uint64 positionID = 1; //持仓ID，一条持仓的唯一标识
-	required int32 positionSide = 2; //持仓方向，参见PositionSide的枚举定义
-    required string code = 3; //代码
-	required string name = 4; //名称
-    required double qty = 5; //持有数量，2位精度，期权单位是"张"，下同
-    required double canSellQty = 6; //可卖数量
-    required double price = 7; //市价，3位精度
-    optional double costPrice = 8; //成本价，无精度限制，如果没传，代表此时此值无效
-	required double val = 9; //市值，3位精度
-    required double plVal = 10; //盈亏金额，3位精度
-    optional double plRatio = 11; //盈亏百分比(如plRatio等于8.8代表涨8.8%)，无精度限制，如果没传，代表此时此值无效
-	optional int32 secMarket = 12; //证券所属市场，参见TrdSecMarket的枚举定义
+	required uint64 positionID = 1;     //持仓ID，一条持仓的唯一标识
+    required int32 positionSide = 2;    //持仓方向，参见PositionSide的枚举定义
+    required string code = 3;           //代码
+    required string name = 4;           //名称
+    required double qty = 5;            //持有数量，2位精度，期权单位是"张"，下同
+    required double canSellQty = 6;     //可卖数量
+    required double price = 7;          //市价，3位精度，期货为2位精度
+    optional double costPrice = 8;      //成本价，无精度限制，期货为2位精度，如果没传，代表此时此值无效,
+    required double val = 9;            //市值，3位精度, 期货此字段值为0
+    required double plVal = 10;         //盈亏金额，3位精度，期货为2位精度
+    optional double plRatio = 11;       //盈亏百分比(如plRatio等于8.8代表涨8.8%)，无精度限制，如果没传，代表此时此值无效
+    optional int32 secMarket = 12;      //证券所属市场，参见TrdSecMarket的枚举定义
+    
 	//以下是此持仓今日统计
-	optional double td_plVal = 21; //今日盈亏金额，3位精度，下同
-	optional double td_trdVal = 22; //今日交易额
-	optional double td_buyVal = 23; //今日买入总额
-	optional double td_buyQty = 24; //今日买入总量
-	optional double td_sellVal = 25; //今日卖出总额
-	optional double td_sellQty = 26; //今日卖出总量
+    optional double td_plVal = 21;      //今日盈亏金额，3位精度，下同, 期货为2位精度
+    optional double td_trdVal = 22;     //今日交易额，期货不适用
+    optional double td_buyVal = 23;     //今日买入总额，期货不适用
+    optional double td_buyQty = 24;     //今日买入总量，期货不适用
+    optional double td_sellVal = 25;    //今日卖出总额，期货不适用
+    optional double td_sellQty = 26;    //今日卖出总量，期货不适用
+
+    optional double unrealizedPL = 28;       //未实现盈亏，期货适用
+    optional double realizedPL = 29;         //已实现盈亏，期货适用
 }
 
 //订单结构
 message Order
 {
 	required int32 trdSide = 1; //交易方向, 参见TrdSide的枚举定义
-	required int32 orderType = 2; //订单类型, 参见OrderType的枚举定义
-	required int32 orderStatus = 3; //订单状态, 参见OrderStatus的枚举定义
-	required uint64 orderID = 4; //订单号
-	required string orderIDEx = 5; //扩展订单号(仅查问题时备用)
-	required string code = 6; //代码
-	required string name = 7; //名称
-	required double qty = 8; //订单数量，2位精度，期权单位是"张"
-	optional double price = 9; //订单价格，3位精度
-	required string createTime = 10; //创建时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传
-	required string updateTime = 11; //最后更新时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传
-	optional double fillQty = 12; //成交数量，2位精度，期权单位是"张"
-	optional double fillAvgPrice = 13; //成交均价，无精度限制
-	optional string lastErrMsg = 14; //最后的错误描述，如果有错误，会有此描述最后一次错误的原因，无错误为空
-	optional int32 secMarket = 15; //证券所属市场，参见TrdSecMarket的枚举定义
-	optional double createTimestamp = 16; //创建时间戳
-	optional double updateTimestamp = 17; //最后更新时间戳
-	optional string remark = 18; //用户备注字符串，最大长度64字节
+    required int32 orderType = 2; //订单类型, 参见OrderType的枚举定义
+    required int32 orderStatus = 3; //订单状态, 参见OrderStatus的枚举定义
+    required uint64 orderID = 4; //订单号
+    required string orderIDEx = 5; //扩展订单号(仅查问题时备用)
+    required string code = 6; //代码
+    required string name = 7; //名称
+    required double qty = 8; //订单数量，2位精度，期权单位是"张"
+    optional double price = 9; //订单价格，3位精度
+    required string createTime = 10; //创建时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传
+    required string updateTime = 11; //最后更新时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传
+    optional double fillQty = 12; //成交数量，2位精度，期权单位是"张"
+    optional double fillAvgPrice = 13; //成交均价，无精度限制
+    optional string lastErrMsg = 14; //最后的错误描述，如果有错误，会有此描述最后一次错误的原因，无错误为空
+    optional int32 secMarket = 15; //证券所属市场，参见TrdSecMarket的枚举定义
+    optional double createTimestamp = 16; //创建时间戳
+    optional double updateTimestamp = 17; //最后更新时间戳
+    optional string remark = 18; //用户备注字符串，最大长度64字节
 }
 
 //成交结构
 message OrderFill
 {
 	required int32 trdSide = 1; //交易方向, 参见TrdSide的枚举定义
-	required uint64 fillID = 2; //成交号
-	required string fillIDEx = 3; //扩展成交号(仅查问题时备用)
-	optional uint64 orderID = 4; //订单号
-	optional string orderIDEx = 5; //扩展订单号(仅查问题时备用)
-	required string code = 6; //代码
-	required string name = 7; //名称
-	required double qty = 8; //成交数量，2位精度，期权单位是"张"
-	required double price = 9; //成交价格，3位精度
-	required string createTime = 10; //创建时间（成交时间），严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传
-	optional int32 counterBrokerID = 11; //对手经纪号，港股有效
-	optional string counterBrokerName = 12; //对手经纪名称，港股有效
-	optional int32 secMarket = 13; //证券所属市场，参见TrdSecMarket的枚举定义
-	optional double createTimestamp = 14; //创建时间戳
-	optional double updateTimestamp = 15; //最后更新时间戳
-	optional int32 status = 16; //成交状态, 参见OrderFillStatus的枚举定义
+    required uint64 fillID = 2; //成交号
+    required string fillIDEx = 3; //扩展成交号(仅查问题时备用)
+    optional uint64 orderID = 4; //订单号
+    optional string orderIDEx = 5; //扩展订单号(仅查问题时备用)
+    required string code = 6; //代码
+    required string name = 7; //名称
+    required double qty = 8; //成交数量，2位精度，期权单位是"张"
+    required double price = 9; //成交价格，3位精度
+    required string createTime = 10; //创建时间（成交时间），严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传
+    optional int32 counterBrokerID = 11; //对手经纪号，港股有效
+    optional string counterBrokerName = 12; //对手经纪名称，港股有效
+    optional int32 secMarket = 13; //证券所属市场，参见TrdSecMarket的枚举定义
+    optional double createTimestamp = 14; //创建时间戳
+    optional double updateTimestamp = 15; //最后更新时间戳
+    optional int32 status = 16; //成交状态, 参见OrderFillStatus的枚举定义
 }
 
 //最大可交易数量
 message MaxTrdQtys
 {
 	//因目前服务器实现的问题，卖空需要先卖掉持仓才能再卖空，是分开两步卖的，买回来同样是逆向两步；而看多的买是可以现金加融资一起一步买的，请注意这个差异
-	required double maxCashBuy = 1; //不使用融资，仅自己的现金最大可买整手股数
-	optional double maxCashAndMarginBuy = 2; //使用融资，自己的现金 + 融资资金总共的最大可买整手股数
-	required double maxPositionSell = 3; //不使用融券(卖空)，仅自己的持仓最大可卖整手股数
-	optional double maxSellShort = 4; //使用融券(卖空)，最大可卖空整手股数，不包括多仓
-	optional double maxBuyBack = 5; //卖空后，需要买回的最大整手股数。因为卖空后，必须先买回已卖空的股数，还掉股票，才能再继续买多。
+	required double maxCashBuy = 1;             //不使用融资，仅自己的现金最大可买整手股数，期货此字段值为0
+    optional double maxCashAndMarginBuy = 2;    //使用融资，自己的现金 + 融资资金总共的最大可买整手股数，期货不适用
+    required double maxPositionSell = 3;        //不使用融券(卖空)，仅自己的持仓最大可卖整手股数
+    optional double maxSellShort = 4;           //使用融券(卖空)，最大可卖空整手股数，不包括多仓，期货不适用
+    optional double maxBuyBack = 5;             //卖空后，需要买回的最大整手股数。因为卖空后，必须先买回已卖空的股数，还掉股票，才能再继续买多。期货不适用
 }
 
 //过滤条件，条件组合是"与"不是"或"，用于获取订单、成交、持仓等时二次过滤

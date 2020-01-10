@@ -287,6 +287,8 @@ class SecurityType(object):
       债券
     ..  py:attribute:: DRVT
       期权
+    ..  py:attribute:: FUTURE
+      期货
      ..  py:attribute:: NONE
       未知
     """
@@ -296,6 +298,7 @@ class SecurityType(object):
     WARRANT = "WARRANT"
     BOND = "BOND"
     DRVT = "DRVT"
+    FUTURE = "FUTURE"
     NONE = "N/A"
 
 
@@ -306,6 +309,7 @@ SEC_TYPE_MAP = {
     SecurityType.WARRANT: 5,
     SecurityType.BOND: 1,
     SecurityType.DRVT: 8,
+    SecurityType.FUTURE: 10,
     SecurityType.NONE: 0
 }
 
@@ -756,6 +760,7 @@ class ProtoId(object):
     GetUserInfo = 1005  # 获取用户信息
     Verification = 1006  # 请求或输入验证码
     GetDelayStatistics = 1007  # 获取延迟统计
+    TestCmd = 1008
 
     Trd_GetAccList = 2001  # 获取业务账户列表
     Trd_UnlockTrade = 2005  # 解锁或锁定交易
@@ -825,6 +830,7 @@ class ProtoId(object):
     Qot_StockFilter = 3215   # 条件选股
     Qot_GetCodeChange = 3216   # 代码变换
     Qot_GetIpoList = 3217  # 获取新股Ipo
+    Qot_GetFutureInfo = 3218 #获取期货资料
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
 
@@ -1098,6 +1104,7 @@ class TrdMarket(object):
     US = "US"      # 美国市场
     CN = "CN"      # 大陆市场
     HKCC = "HKCC"  # 香港A股通市场
+    FUTURES = "FUTURES"  # 期货市场，
 
 
 TRD_MKT_MAP = {
@@ -1106,6 +1113,7 @@ TRD_MKT_MAP = {
     TrdMarket.US: 2,
     TrdMarket.CN: 3,
     TrdMarket.HKCC: 4,
+    TrdMarket.FUTURES: 5
 }
 
 
@@ -1344,6 +1352,9 @@ MKT_ENV_ENABLE_MAP = {
 
     (TrdMarket.CN, TrdEnv.REAL): False,
     (TrdMarket.CN, TrdEnv.SIMULATE): True,
+
+    (TrdMarket.FUTURES, TrdEnv.REAL): True,
+    (TrdMarket.FUTURES, TrdEnv.SIMULATE): False
 }
 
 
@@ -1376,11 +1387,13 @@ class SecurityReferenceType:
     """
     NONE = 'N/A'
     WARRANT = 'WARRANT'
+    FUTURE = 'FUTURE'
 
 
 STOCK_REFERENCE_TYPE_MAP = {
     SecurityReferenceType.NONE: Qot_GetReference_pb2.ReferenceType_Unknow,
-    SecurityReferenceType.WARRANT: Qot_GetReference_pb2.ReferenceType_Warrant
+    SecurityReferenceType.WARRANT: Qot_GetReference_pb2.ReferenceType_Warrant,
+    SecurityReferenceType.FUTURE: Qot_GetReference_pb2.ReferenceType_Future,
 }
 
 
@@ -1461,6 +1474,10 @@ class SortField(FtEnum):
     LOWER_STRIKE_PRICE = "LOWER_STRIKE_PRICE"  # 下限价，仅界内证支持该字段
     INLINE_PRICE_STATUS = "INLINE_PRICE_STATUS"  # 界内界外，仅界内证支持该字段
 
+    LAST_SETTLE_PRICE = "LAST_SETTLE_PRICE" #期货昨结
+    POSITION = "POSITION"  # 期货持仓量
+    POSITION_CHANGE = "POSITION_CHANGE"  # 期货日持仓
+
     def load_dic(self):
         return {
             self.NONE: Qot_Common_pb2.SortField_Unknow,
@@ -1510,7 +1527,10 @@ class SortField(FtEnum):
             self.AFTER_TURNOVER: Qot_Common_pb2.SortField_AfterTurnover,
             self.UPPER_STRIKE_PRICE: Qot_Common_pb2.SortField_UpperStrikePrice,
             self.LOWER_STRIKE_PRICE: Qot_Common_pb2.SortField_LowerStrikePrice,
-            self.INLINE_PRICE_STATUS: Qot_Common_pb2.SortField_InLinePriceStatus
+            self.INLINE_PRICE_STATUS: Qot_Common_pb2.SortField_InLinePriceStatus,
+            self.LAST_SETTLE_PRICE: Qot_Common_pb2.SortField_LastSettlePrice,
+            self.POSITION: Qot_Common_pb2.SortField_Position,
+            self.POSITION_CHANGE: Qot_Common_pb2.SortField_PositionChange,
         }
 
 
@@ -2170,3 +2190,35 @@ class OptionAreaType(FtEnum):
             self.BERMUDA: Qot_Common_pb2.OptionAreaType_Bermuda
         }
 
+
+class Currency(FtEnum):
+    NONE = 'N/A' # 未知
+    HKD = 'HKD'  # 港币
+    USD = 'USD'  # 美元
+    CNH = 'CNH'  # 离岸人民币
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.Currency_Unknown,
+            self.HKD: Trd_Common_pb2.Currency_HKD,
+            self.USD: Trd_Common_pb2.Currency_USD,
+            self.CNH: Trd_Common_pb2.Currency_CNH
+        }
+
+class CltRiskLevel(FtEnum):
+    NONE = 'N/A'    # 未知
+    SAFE = 'SAFE'   # 安全
+    WARNING = 'WARNING'     # 预警
+    DANGER = 'DANGER'       # 危险
+    ABSOLUTE_SAFE = 'ABSOLUTE_SAFE'     # 绝对安全
+    OPT_DANGER = 'OPT_DANGER'           # 危险，期权相关
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.CltRiskLevel_Unknown,
+            self.SAFE: Trd_Common_pb2.CltRiskLevel_Safe,
+            self.WARNING: Trd_Common_pb2.CltRiskLevel_Warning,
+            self.DANGER: Trd_Common_pb2.CltRiskLevel_Danger,
+            self.ABSOLUTE_SAFE: Trd_Common_pb2.CltRiskLevel_AbsoluteSafe,
+            self.OPT_DANGER: Trd_Common_pb2.CltRiskLevel_OptDanger
+        }

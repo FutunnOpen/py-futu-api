@@ -8,7 +8,7 @@ enum QotMarket
 {
     QotMarket_Unknown = 0; //未知市场
     QotMarket_HK_Security = 1; //港股
-    QotMarket_HK_Future = 2; //港期货(目前是恒指的当月、下月期货行情)
+    QotMarket_HK_Future = 2; //港期货(已废弃，使用QotMarket_HK_Security即可)
     QotMarket_US_Security = 11; //美股
     QotMarket_CNSH_Security = 21; //沪股
     QotMarket_CNSZ_Security = 22; //深股
@@ -26,6 +26,7 @@ enum SecurityType
     SecurityType_Plate = 7; //板块
     SecurityType_Drvt = 8; //期权
     SecurityType_PlateSet = 9; //板块集
+	SecurityType_Future = 10; //期货
 }
 
 enum PlateSetType
@@ -311,6 +312,11 @@ enum SortField
 	SortField_AfterAmplitude = 42; //盘后振幅%
 	SortField_PreTurnover = 43; //盘前成交额
 	SortField_AfterTurnover = 44; //盘后成交额
+
+	//以下排序字段只支持用于Qot_GetPlateSecurity协议，并仅支持期货
+	SortField_LastSettlePrice = 48; //昨结
+	SortField_Position = 49; //持仓量
+	SortField_PositionChange = 50; //日增仓
 }
 
 //窝轮发行人
@@ -453,6 +459,14 @@ message PreAfterMarketData
     optional double amplitude = 8;  // 盘前或盘后 - 振幅（该字段为百分比字段，默认不展示%，如20实际对应20%）
 }
 
+message FutureBasicQotExData
+{
+	required double lastSettlePrice = 1; //昨结
+	required int32 position = 2; //持仓量
+	required int32 positionChange = 3; //日增仓
+	optional int32 expiryDateDistance = 4; //距离到期日天数
+}
+
 message BasicQot
 {
 	required Security security = 1; //股票
@@ -476,6 +490,8 @@ message BasicQot
 	optional PreAfterMarketData preMarket = 19; //盘前数据
 	optional PreAfterMarketData afterMarket = 20; //盘后数据
 	optional int32 secStatus = 21; //SecurityStatus, 股票状态
+
+	optional FutureBasicQotExData futureExData = 22; //期货特有字段
 }
 
 message TimeShare
@@ -495,7 +511,7 @@ message SecurityStaticBasic
 {
 	required Qot_Common.Security security = 1; //股票
 	required int64 id = 2; //股票ID
-	required int32 lotSize = 3; //每手数量,期权类型表示一份合约的股数
+	required int32 lotSize = 3; //每手数量,期权以及期货类型表示合约乘数
 	required int32 secType = 4; //Qot_Common.SecurityType,股票类型
 	required string name = 5; //股票名字
 	required string listTime = 6; //上市时间字符串
@@ -521,11 +537,19 @@ message OptionStaticExData
 	optional int32 indexOptionType = 8; //Qot_Common.IndexOptionType, 指数期权的类型，仅在指数期权有效
 }
 
+message FutureStaticExData
+{
+	required string lastTradeTime = 1; //最后交易日，只有非主连期货合约才有该字段
+	optional double lastTradeTimestamp = 2; //最后交易日时间戳，只有非主连期货合约才有该字段
+	required bool isMainContract = 3; //是否主连合约
+}
+
 message SecurityStaticInfo
 {
 	required SecurityStaticBasic basic = 1; //基本股票静态信息
 	optional WarrantStaticExData warrantExData = 2; //窝轮额外股票静态信息
 	optional OptionStaticExData optionExData = 3; //期权额外股票静态信息
+	optional FutureStaticExData futureExData = 4; //期货额外股票静态信息
 }
 
 message Broker

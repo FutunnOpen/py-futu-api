@@ -249,7 +249,7 @@ class OpenTradeContextBase(OpenContextBase):
                 return ret, msg, acc_id
         return RET_OK, "", acc_id
 
-    def accinfo_query(self, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
+    def accinfo_query(self, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False, currency=Currency.HKD):
         """
         :param trd_env:
         :param acc_id:
@@ -272,7 +272,8 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_env': trd_env,
             'trd_market': self.__trd_mkt,
             'conn_id': self.get_sync_conn_id(),
-            'refresh_cache': refresh_cache
+            'refresh_cache': refresh_cache,
+            'currency': currency
         }
 
         ret_code, msg, accinfo_list = query_processor(**kargs)
@@ -280,7 +281,9 @@ class OpenTradeContextBase(OpenContextBase):
             return RET_ERROR, msg
 
         col_list = [
-            'power', 'total_assets', 'cash', 'market_val', 'frozen_cash', 'avl_withdrawal_cash'
+            'power', 'total_assets', 'cash', 'market_val', 'frozen_cash', 'avl_withdrawal_cash', 'currency',
+            'available_funds', 'unrealized_pl', 'realized_pl', 'risk_level', 'initial_margin', 'maintenance_margin',
+            'hk_cash', 'hk_avl_withdrawal_cash', 'us_cash', 'us_avl_withdrawal_cash'
         ]
         accinfo_frame_table = pd.DataFrame(accinfo_list, columns=col_list)
 
@@ -351,7 +354,7 @@ class OpenTradeContextBase(OpenContextBase):
             "cost_price_valid", "market_val", "nominal_price", "pl_ratio",
             "pl_ratio_valid", "pl_val", "pl_val_valid", "today_buy_qty",
             "today_buy_val", "today_pl_val", "today_sell_qty", "today_sell_val",
-            "position_side"
+            "position_side", "unrealized_pl", "realized_pl"
         ]
 
         position_list_table = pd.DataFrame(position_list, columns=col_list)
@@ -359,6 +362,10 @@ class OpenTradeContextBase(OpenContextBase):
 
     def order_list_query(self, order_id="", status_filter_list=[], code='', start='', end='',
                          trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
+
+        ret, msg = self._check_trd_env(trd_env)
+        if ret != RET_OK:
+            return ret, msg
 
         ret, msg, acc_id = self._check_acc_id_and_acc_index(trd_env, acc_id, acc_index)
         if ret != RET_OK:
@@ -802,3 +809,9 @@ class OpenHKCCTradeContext(OpenTradeContextBase):
 class OpenCNTradeContext(OpenTradeContextBase):
     def __init__(self, host="127.0.0.1", port=11111, is_encrypt=None):
         super(OpenCNTradeContext, self).__init__(TrdMarket.CN, host, port, is_encrypt=is_encrypt)
+
+
+# 期货交易接口
+class OpenFutureTradeContext(OpenTradeContextBase):
+    def __init__(self, host="127.0.0.1", port=11111, is_encrypt=None):
+        super(OpenFutureTradeContext, self).__init__(TrdMarket.FUTURES, host, port, is_encrypt=is_encrypt)

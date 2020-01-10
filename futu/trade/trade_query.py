@@ -110,7 +110,7 @@ class AccInfoQuery:
         pass
 
     @classmethod
-    def pack_req(cls, acc_id, trd_market, trd_env, conn_id, refresh_cache):
+    def pack_req(cls, acc_id, trd_market, trd_env, conn_id, refresh_cache, currency):
         from futu.common.pb.Trd_GetFunds_pb2 import Request
         req = Request()
         req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
@@ -118,7 +118,7 @@ class AccInfoQuery:
         req.c2s.header.trdMarket = TRD_MKT_MAP[trd_market]
         if refresh_cache:
             req.c2s.refreshCache = refresh_cache
-
+        req.c2s.currency = Currency.to_number(currency)[1]
         return pack_pb_req(req, ProtoId.Trd_GetFunds, conn_id)
 
     @classmethod
@@ -135,7 +135,25 @@ class AccInfoQuery:
             'market_val': raw_funds.marketVal,
             'frozen_cash': raw_funds.frozenCash,
             'avl_withdrawal_cash': raw_funds.avlWithdrawalCash,
+            'currency': Currency.to_string2(raw_funds.currency) if raw_funds.HasField('currency') else Currency.NONE,
+            'available_funds': raw_funds.availableFunds if raw_funds.HasField('availableFunds') else NoneDataValue,
+            'unrealized_pl': raw_funds.unrealizedPL if raw_funds.HasField('unrealizedPL') else NoneDataValue,
+            'realized_pl': raw_funds.realizedPL if raw_funds.HasField('realizedPL') else NoneDataValue,
+            'risk_level': CltRiskLevel.to_string2(raw_funds.riskLevel) if raw_funds.HasField('riskLevel') else CltRiskLevel.NONE,
+            'initial_margin': raw_funds.initialMargin if raw_funds.HasField('initialMargin') else NoneDataValue,
+            'maintenance_margin': raw_funds.maintenanceMargin if raw_funds.HasField('maintenanceMargin') else NoneDataValue,
+            'hk_cash': NoneDataValue,
+            'hk_avl_withdrawal_cash': NoneDataValue,
+            'us_cash': NoneDataValue,
+            'us_avl_withdrawal_cash': NoneDataValue
         }]
+        for cashInfo in raw_funds.cashInfoList:
+            if cashInfo.currency == Trd_Common_pb2.Currency_HKD:
+                accinfo_list[0]['hk_cash'] = cashInfo.cash
+                accinfo_list[0]['hk_avl_withdrawal_cash'] = cashInfo.availableBalance
+            elif cashInfo.currency == Trd_Common_pb2.Currency_USD:
+                accinfo_list[0]['us_cash'] = cashInfo.cash
+                accinfo_list[0]['us_avl_withdrawal_cash'] = cashInfo.availableBalance
         return RET_OK, "", accinfo_list
 
 
@@ -174,25 +192,27 @@ class PositionListQuery:
         raw_position_list = rsp_pb.s2c.positionList
 
         position_list = [{
-                             "code": merge_trd_mkt_stock_str(rsp_pb.s2c.header.trdMarket, position.code),
+                             "code": merge_trd_mkt_stock_str(position.secMarket, position.code),
                              "stock_name": position.name,
                              "qty": position.qty,
                              "can_sell_qty": position.canSellQty,
-                             "cost_price": position.costPrice if position.HasField('costPrice') else 0,
+                             "cost_price": position.costPrice if position.HasField('costPrice') else NoneDataValue,
                              "cost_price_valid": position.HasField('costPrice'),
                              "market_val": position.val,
                              "nominal_price": position.price,
-                             "pl_ratio": 100 * position.plRatio if position.HasField('plRatio') else 0,
+                             "pl_ratio": 100 * position.plRatio if position.HasField('plRatio') else NoneDataValue,
                              "pl_ratio_valid": position.HasField('plRatio'),
-                             "pl_val": position.plVal if position.HasField('plVal') else 0,
+                             "pl_val": position.plVal,
                              "pl_val_valid": position.HasField('plVal'),
-                             "today_buy_qty": position.td_buyQty if position.HasField('td_buyQty') else 0,
-                             "today_buy_val": position.td_buyVal if position.HasField('td_buyVal') else 0,
-                             "today_pl_val": position.td_plVal if position.HasField('td_plVal') else 0,
-                             "today_sell_qty": position.td_sellQty if position.HasField('td_sellQty') else 0,
-                             "today_sell_val": position.td_sellVal if position.HasField('td_sellVal') else 0,
+                             "today_buy_qty": position.td_buyQty if position.HasField('td_buyQty') else NoneDataValue,
+                             "today_buy_val": position.td_buyVal if position.HasField('td_buyVal') else NoneDataValue,
+                             "today_pl_val": position.td_plVal if position.HasField('td_plVal') else NoneDataValue,
+                             "today_sell_qty": position.td_sellQty if position.HasField('td_sellQty') else NoneDataValue,
+                             "today_sell_val": position.td_sellVal if position.HasField('td_sellVal') else NoneDataValue,
                              "position_side": TRADE.REV_POSITION_SIDE_MAP[position.positionSide]
-                                if position.positionSide in TRADE.REV_POSITION_SIDE_MAP else PositionSide.NONE
+                                if position.positionSide in TRADE.REV_POSITION_SIDE_MAP else PositionSide.NONE,
+                             "unrealized_pl": position.unrealizedPL if position.HasField('unrealizedPL') else NoneDataValue,
+                             "realized_pl": position.realizedPL if position.HasField('realizedPL') else NoneDataValue
                          } for position in raw_position_list]
         return RET_OK, "", position_list
 
@@ -233,7 +253,7 @@ class OrderListQuery:
     @classmethod
     def parse_order(cls, rsp_pb, order):
         order_dict = {
-            "code": merge_trd_mkt_stock_str(rsp_pb.s2c.header.trdMarket, order.code),
+            "code": merge_trd_mkt_stock_str(order.secMarket, order.code),
             "stock_name": order.name,
             "trd_side": TRADE.REV_TRD_SIDE_MAP[order.trdSide] if order.trdSide in TRADE.REV_TRD_SIDE_MAP else TrdSide.NONE,
             "order_type": TRADE.REV_ORDER_TYPE_MAP[order.orderType] if order.orderType in TRADE.REV_ORDER_TYPE_MAP else OrderType.NONE,
@@ -409,7 +429,7 @@ class DealListQuery:
     @classmethod
     def parse_deal(cls, rsp_pb, deal):
         deal_dict = {
-            "code": merge_trd_mkt_stock_str(rsp_pb.s2c.header.trdMarket, deal.code),
+            "code": merge_trd_mkt_stock_str(deal.secMarket, deal.code),
             "stock_name": deal.name,
             "deal_id": deal.fillID,
             "order_id": str(deal.orderID) if deal.HasField('orderID') else NoneDataValue,
@@ -471,7 +491,7 @@ class HistoryOrderListQuery:
 
         raw_order_list = rsp_pb.s2c.orderList
         order_list = [{
-                      "code": merge_trd_mkt_stock_str(rsp_pb.s2c.header.trdMarket, order.code),
+                      "code": merge_trd_mkt_stock_str(order.secMarket, order.code),
                       "stock_name": order.name,
                       "trd_side": TRADE.REV_TRD_SIDE_MAP[order.trdSide] if order.trdSide in TRADE.REV_TRD_SIDE_MAP else TrdSide.NONE,
                       "order_type": TRADE.REV_ORDER_TYPE_MAP[order.orderType] if order.orderType in TRADE.REV_ORDER_TYPE_MAP else OrderType.NONE,
@@ -520,7 +540,7 @@ class HistoryDealListQuery:
 
         raw_deal_list = rsp_pb.s2c.orderFillList
         deal_list = [{
-                    "code": merge_trd_mkt_stock_str(rsp_pb.s2c.header.trdMarket, deal.code),
+                    "code": merge_trd_mkt_stock_str(deal.secMarket, deal.code),
                     "stock_name": deal.name,
                     "deal_id": deal.fillID,
                     "order_id": str(deal.orderID) if deal.HasField('orderID') else "",
@@ -612,10 +632,10 @@ class AccTradingInfoQuery:
         info = rsp_pb.s2c.maxTrdQtys    # type: MaxTrdQtys
         data = [{
             'max_cash_buy': info.maxCashBuy,
-            'max_cash_and_margin_buy': info.maxCashAndMarginBuy if info.HasField('maxCashAndMarginBuy') else 0,
+            'max_cash_and_margin_buy': info.maxCashAndMarginBuy if info.HasField('maxCashAndMarginBuy') else NoneDataValue,
             'max_position_sell': info.maxPositionSell,
-            'max_sell_short': info.maxSellShort if info.HasField('maxSellShort') else 0,
-            'max_buy_back': info.maxBuyBack if info.HasField('maxBuyBack') else 0
+            'max_sell_short': info.maxSellShort if info.HasField('maxSellShort') else NoneDataValue,
+            'max_buy_back': info.maxBuyBack if info.HasField('maxBuyBack') else NoneDataValue
         }]
 
         return RET_OK, "", data
