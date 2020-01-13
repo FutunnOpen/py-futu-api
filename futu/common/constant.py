@@ -797,7 +797,8 @@ class ProtoId(object):
     Qot_UpdateOrderBook = 3013  # 推送买卖盘
     Qot_GetBroker = 3014  # 获取经纪队列
     Qot_UpdateBroker = 3015  # 推送经纪队列
-
+    Qot_UpdatePriceReminder = 3019 #到价提醒通知
+	
     # 历史数据
     Qot_GetHistoryKL = 3100  # 获取历史K线
     Qot_GetHistoryKLPoints = 3101  # 获取多只股票历史单点K线
@@ -832,7 +833,7 @@ class ProtoId(object):
     Qot_GetIpoList = 3217  # 获取新股Ipo
     Qot_GetFutureInfo = 3218 #获取期货资料
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
-                  Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
+                  Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
     @classmethod
     def is_proto_id_push(cls, id):

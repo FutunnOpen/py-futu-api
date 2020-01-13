@@ -167,6 +167,7 @@ class OpenContextBase(object):
                     TickerHandlerBase                   逐笔处理基类
                     RTDataHandlerBase                   分时数据处理基类
                     BrokerHandlerBase                   经济队列处理基类
+                    PriceReminderHandlerBase            到价提醒处理基类
                     ===============================    =========================
 
         :return: RET_OK: 设置成功
