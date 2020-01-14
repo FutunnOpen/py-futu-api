@@ -12,7 +12,6 @@ enum QotMarket
     QotMarket_US_Security = 11; //美股
     QotMarket_CNSH_Security = 21; //沪股
     QotMarket_CNSZ_Security = 22; //深股
-	QotMarket_FX = 31; //外汇
 }
 
 enum SecurityType
@@ -478,11 +477,6 @@ message FutureBasicQotExData
 	optional int32 expiryDateDistance = 4; //距离到期日天数
 }
 
-message ForexBasicQotExData
-{
-
-}
-
 message BasicQot
 {
 	required Security security = 1; //股票
@@ -561,18 +555,12 @@ message FutureStaticExData
 	required bool isMainContract = 3; //是否主连合约
 }
 
-message ForexStaticExData
-{
-	optional Qot_Common.Security reverseForex = 1; // 反向汇率股票
-}
-
 message SecurityStaticInfo
 {
 	required SecurityStaticBasic basic = 1; //基本股票静态信息
 	optional WarrantStaticExData warrantExData = 2; //窝轮额外股票静态信息
 	optional OptionStaticExData optionExData = 3; //期权额外股票静态信息
 	optional FutureStaticExData futureExData = 4; //期货额外股票静态信息
-	optional ForexStaticExData forexExData = 5; //外汇额外股票静态信息
 }
 
 message Broker
