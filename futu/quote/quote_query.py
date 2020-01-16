@@ -264,6 +264,72 @@ class TradeDayQuery:
 
         return RET_OK, "", trading_day_list
 
+class RequestTradeDayQuery:
+    """
+    Query Conversion for getting trading days.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, market, conn_id, start_date=None, end_date=None):
+
+        # '''Parameter check'''
+        r, v = TradeDateMarket.to_number(market)
+        if not r:
+            error_str = ERROR_STR_PREFIX + " market is %s, which is not valid." \
+                                           % (market)
+            return RET_ERROR, error_str, None
+
+        if start_date is None:
+            today = datetime.today()
+            start = today - timedelta(days=365)
+
+            start_date = start.strftime("%Y-%m-%d")
+        else:
+            ret, msg = normalize_date_format(start_date)
+            if ret != RET_OK:
+                return ret, msg, None
+            start_date = msg
+
+        if end_date is None:
+            today = datetime.today()
+            end_date = today.strftime("%Y-%m-%d")
+        else:
+            ret, msg = normalize_date_format(end_date)
+            if ret != RET_OK:
+                return ret, msg, None
+            end_date = msg
+
+        # pack to json
+        from futu.common.pb.Qot_RequestTradeDate_pb2 import Request
+        req = Request()
+        req.c2s.market = v
+        req.c2s.beginTime = start_date
+        req.c2s.endTime = end_date
+
+        return pack_pb_req(req, ProtoId.Qot_RequestTradeDate, conn_id)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+
+        # response check and unpack response json to objects
+        ret_type = rsp_pb.retType
+        ret_msg = rsp_pb.retMsg
+
+        if ret_type != RET_OK:
+            return RET_ERROR, ret_msg, None
+
+        raw_trading_day_list = rsp_pb.s2c.tradeDateList
+        trading_day_list = list()
+
+        for x in raw_trading_day_list:
+            if x.time is not None and len(x.time) > 0:
+                trading_day_list.append(
+                    {"time": x.time, "trade_date_type": TradeDateType.to_string2(x.tradeDateType)})
+
+        return RET_OK, "", trading_day_list
 
 class StockBasicInfoQuery:
     """

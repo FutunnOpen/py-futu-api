@@ -92,7 +92,18 @@ enum QotMarketState
 	QotMarketState_HkCas = 19; // 盘后竞价,港股市场增加CAS机制对应的市场状态
 }
 
-//交易时间类型
+//交易日查询市场
+enum TradeDateMarket
+{
+	TradeDateMarket_Unknown = 0; //未知
+	TradeDateMarket_HK = 1; //港股市场
+	TradeDateMarket_US = 2; //美股市场
+	TradeDateMarket_CN = 3; //A股市场
+	TradeDateMarket_NT = 4; //深（沪）股通
+	TradeDateMarket_ST = 5; //港股通（深、沪）
+}
+
+//交易日类型
 enum TradeDateType
 {
 	TradeDateType_Whole = 0; //全天交易
@@ -108,7 +119,6 @@ enum RehabType
 }
 
  //枚举值兼容旧协议定义
- //新类型季K,年K,3分K暂时没有支持历史K线
 enum KLType
 {
 	KLType_Unknown = 0; //未知
@@ -490,8 +500,9 @@ message BasicQot
 	optional PreAfterMarketData preMarket = 19; //盘前数据
 	optional PreAfterMarketData afterMarket = 20; //盘后数据
 	optional int32 secStatus = 21; //SecurityStatus, 股票状态
-
 	optional FutureBasicQotExData futureExData = 22; //期货特有字段
+	optional double askPrice = 23;//卖出价
+    optional double bidPrice = 24;//买入价
 }
 
 message TimeShare

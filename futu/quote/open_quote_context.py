@@ -141,6 +141,47 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, trade_day_list
 
+    def request_trading_days(self, market, start=None, end=None):
+        """获取交易日
+        :param market: 市场类型，TradeDateMarket_
+        :param start: 起始日期。例如'2018-01-01'。
+        :param end: 结束日期。例如'2018-01-01'。
+         start和end的组合如下：
+         ==========    ==========    ========================================
+         start类型      end类型       说明
+         ==========    ==========    ========================================
+         str            str           start和end分别为指定的日期
+         None           str           start为end往前365天
+         str            None          end为start往后365天
+         None           None          end为当前日期，start为end往前365天
+         ==========    ==========    ========================================
+        :return: 成功时返回(RET_OK, data)，data是[{'trade_date_type': 0, 'time': '2018-01-05'}]数组；失败时返回(RET_ERROR, data)，其中data是错误描述字符串
+        """
+        if market is None or is_str(market) is False:
+            error_str = ERROR_STR_PREFIX + "the type of market param is wrong"
+            return RET_ERROR, error_str
+
+        ret, msg, start, end = normalize_start_end_date(start, end, 365)
+        if ret != RET_OK:
+            return ret, msg
+
+        query_processor = self._get_sync_query_processor(
+            RequestTradeDayQuery.pack_req, RequestTradeDayQuery.unpack_rsp)
+
+        # the keys of kargs should be corresponding to the actual function arguments
+        kargs = {
+            'market': market,
+            'start_date': start,
+            'end_date': end,
+            'conn_id': self.get_sync_conn_id()
+        }
+        ret_code, msg, trade_day_list = query_processor(**kargs)
+
+        if ret_code != RET_OK:
+            return RET_ERROR, msg
+
+        return RET_OK, trade_day_list
+
     def get_stock_basicinfo(self, market, stock_type=SecurityType.STOCK, code_list=None):
         """
         获取指定市场中特定类型的股票基本信息
