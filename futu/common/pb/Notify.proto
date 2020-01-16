@@ -11,7 +11,8 @@ enum NotifyType
 	NotifyType_ProgramStatus = 2; //程序状态
 	NotifyType_ConnStatus = 3; //连接状态
 	NotifyType_QotRight = 4; //行情权限
-	NotifyType_APILevel = 5; //用户等级
+	NotifyType_APILevel = 5; //用户等级，已在2.10版本之后废弃
+	NotifyType_APIQuota = 6; //API额度
 }
 
 enum GtwEventType
@@ -63,7 +64,13 @@ message QotRight
 
 message APILevel
 {
-	required string apiLevel = 3; //api用户等级描述
+	required string apiLevel = 3; //api用户等级描述，已在2.10版本之后废弃
+}
+
+message APIQuota
+{
+	required int32 subQuota = 1; //订阅额度
+	required int32 historyKLQuota = 2; //历史K线额度
 }
 
 message S2C
@@ -73,7 +80,8 @@ message S2C
 	optional ProgramStatus programStatus = 3; //程序状态
 	optional ConnectStatus connectStatus = 4; //连接状态
 	optional QotRight qotRight = 5; //行情权限
-	optional APILevel apiLevel = 6; //用户等级
+	optional APILevel apiLevel = 6; //用户等级，已在2.10版本之后废弃
+	optional APIQuota apiQuota = 7; //API额度
 }
 
 message Response
