@@ -900,7 +900,7 @@ class TickerType:
     REOPENINGP_RICED = 'REOPENINGP_RICED'
     CLOSING_PRICED = 'CLOSING_PRICED'
     COMPREHENSIVE_DELAY_PRICE = 'COMPREHENSIVE_DELAY_PRICE'
-
+	REOPENING_PRICED = 'REOPENING_PRICED'
 
 TICKER_TYPE_MAP = {
     TickerType.UNKNOWN: Qot_Common_pb2.TickerType_Unknown,
@@ -934,6 +934,7 @@ TICKER_TYPE_MAP = {
     TickerType.REOPENINGP_RICED: Qot_Common_pb2.TickerType_ReOpeningPriced,
     TickerType.CLOSING_PRICED: Qot_Common_pb2.TickerType_ClosingPriced,
     TickerType.COMPREHENSIVE_DELAY_PRICE: Qot_Common_pb2.TickerType_ComprehensiveDelayPrice
+	TickerType.REOPENING_PRICED: Qot_Common_pb2.TickerType_ReOpeningPriced,
 }
 
 
