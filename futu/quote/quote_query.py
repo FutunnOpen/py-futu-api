@@ -3087,3 +3087,28 @@ class TestCmd:
             return RET_ERROR, "rsp_pb error", None
 
         return RET_OK, "", res
+
+
+class UpdatePriceReminder:
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        """Unpack the init connect response"""
+        ret_type = rsp_pb.retType
+        ret_msg = rsp_pb.retMsg
+
+        if ret_type != RET_OK:
+            return RET_ERROR, ret_msg, None
+
+        res = {}
+        if rsp_pb.HasField('s2c'):
+            res['code'] = merge_qot_mkt_stock_str(rsp_pb.s2c.security.market,
+                                                  rsp_pb.s2c.security.code)
+            res['price'] = rsp_pb.s2c.price
+            res['change_rate'] = rsp_pb.s2c.changeRate
+            res['market_status'] = rsp_pb.s2c.marketStatus
+            res['content'] = rsp_pb.s2c.content
+            res['note'] = rsp_pb.s2c.note
+        else:
+            return RET_ERROR, "rsp_pb error", None
+
+        return RET_OK, "", res

@@ -797,7 +797,8 @@ class ProtoId(object):
     Qot_UpdateOrderBook = 3013  # 推送买卖盘
     Qot_GetBroker = 3014  # 获取经纪队列
     Qot_UpdateBroker = 3015  # 推送经纪队列
-
+    Qot_UpdatePriceReminder = 3019 #到价提醒通知
+	
     # 历史数据
     Qot_GetHistoryKL = 3100  # 获取历史K线
     Qot_GetHistoryKLPoints = 3101  # 获取多只股票历史单点K线
@@ -833,7 +834,7 @@ class ProtoId(object):
     Qot_GetFutureInfo = 3218 #获取期货资料
     Qot_RequestTradeDate = 3219 #在线拉取交易日
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
-                  Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
+                  Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
     @classmethod
     def is_proto_id_push(cls, id):
@@ -900,7 +901,7 @@ class TickerType:
     REOPENINGP_RICED = 'REOPENINGP_RICED'
     CLOSING_PRICED = 'CLOSING_PRICED'
     COMPREHENSIVE_DELAY_PRICE = 'COMPREHENSIVE_DELAY_PRICE'
-
+	REOPENING_PRICED = 'REOPENING_PRICED'
 
 TICKER_TYPE_MAP = {
     TickerType.UNKNOWN: Qot_Common_pb2.TickerType_Unknown,
@@ -934,6 +935,7 @@ TICKER_TYPE_MAP = {
     TickerType.REOPENINGP_RICED: Qot_Common_pb2.TickerType_ReOpeningPriced,
     TickerType.CLOSING_PRICED: Qot_Common_pb2.TickerType_ClosingPriced,
     TickerType.COMPREHENSIVE_DELAY_PRICE: Qot_Common_pb2.TickerType_ComprehensiveDelayPrice
+	TickerType.REOPENING_PRICED: Qot_Common_pb2.TickerType_ReOpeningPriced,
 }
 
 
