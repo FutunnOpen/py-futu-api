@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_StockFilter.proto',
   package='Qot_StockFilter',
   syntax='proto2',
-  serialized_pb=_b('\n\x15Qot_StockFilter.proto\x12\x0fQot_StockFilter\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"f\n\nBaseFilter\x12\r\n\x05\x66ield\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\"z\n\x10\x41\x63\x63umulateFilter\x12\r\n\x05\x66ield\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\x12\x0c\n\x04\x64\x61ys\x18\x06 \x02(\x05\"|\n\x0f\x46inancialFilter\x12\r\n\x05\x66ield\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\x12\x0f\n\x07quarter\x18\x06 \x02(\x05\"(\n\x08\x42\x61seData\x12\r\n\x05\x66ield\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\"<\n\x0e\x41\x63\x63umulateData\x12\r\n\x05\x66ield\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0c\n\x04\x64\x61ys\x18\x03 \x02(\x05\">\n\rFinancialData\x12\r\n\x05\x66ield\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0f\n\x07quarter\x18\x03 \x02(\x05\"\xea\x01\n\tStockData\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x02 \x02(\t\x12/\n\x0c\x62\x61seDataList\x18\x03 \x03(\x0b\x32\x19.Qot_StockFilter.BaseData\x12;\n\x12\x61\x63\x63umulateDataList\x18\x04 \x03(\x0b\x32\x1f.Qot_StockFilter.AccumulateData\x12\x39\n\x11\x66inancialDataList\x18\x05 \x03(\x0b\x32\x1e.Qot_StockFilter.FinancialData\"\x8b\x02\n\x03\x43\x32S\x12\r\n\x05\x62\x65gin\x18\x01 \x02(\x05\x12\x0b\n\x03num\x18\x02 \x02(\x05\x12\x0e\n\x06market\x18\x03 \x02(\x05\x12#\n\x05plate\x18\x04 \x01(\x0b\x32\x14.Qot_Common.Security\x12\x33\n\x0e\x62\x61seFilterList\x18\x05 \x03(\x0b\x32\x1b.Qot_StockFilter.BaseFilter\x12?\n\x14\x61\x63\x63umulateFilterList\x18\x06 \x03(\x0b\x32!.Qot_StockFilter.AccumulateFilter\x12=\n\x13\x66inancialFilterList\x18\x07 \x03(\x0b\x32 .Qot_StockFilter.FinancialFilter\"W\n\x03S2C\x12\x10\n\x08lastPage\x18\x01 \x02(\x08\x12\x10\n\x08\x61llCount\x18\x02 \x02(\x05\x12,\n\x08\x64\x61taList\x18\x03 \x03(\x0b\x32\x1a.Qot_StockFilter.StockData\",\n\x07Request\x12!\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x14.Qot_StockFilter.C2S\"e\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12!\n\x03s2c\x18\x04 \x01(\x0b\x32\x14.Qot_StockFilter.S2C*\x9c\x04\n\nStockField\x12\x16\n\x12StockField_Unknown\x10\x00\x12\x18\n\x14StockField_StockCode\x10\x01\x12\x18\n\x14StockField_StockName\x10\x02\x12\x17\n\x13StockField_CurPrice\x10\x03\x12,\n(StockField_CurPriceToHighest52WeeksRatio\x10\x04\x12+\n\'StockField_CurPriceToLowest52WeeksRatio\x10\x05\x12-\n)StockField_HighPriceToHighest52WeeksRatio\x10\x06\x12+\n\'StockField_LowPriceToLowest52WeeksRatio\x10\x07\x12\x1a\n\x16StockField_VolumeRatio\x10\x08\x12\x1a\n\x16StockField_BidAskRatio\x10\t\x12\x17\n\x13StockField_LotPrice\x10\n\x12\x18\n\x14StockField_MarketVal\x10\x0b\x12\x17\n\x13StockField_PeAnnual\x10\x0c\x12\x14\n\x10StockField_PeTTM\x10\r\x12\x15\n\x11StockField_PbRate\x10\x0e\x12\x1d\n\x19StockField_ChangeRate5min\x10\x0f\x12\"\n\x1eStockField_ChangeRateBeginYear\x10\x10*\xc9\x01\n\x0f\x41\x63\x63umulateField\x12\x1b\n\x17\x41\x63\x63umulateField_Unknown\x10\x00\x12\x1e\n\x1a\x41\x63\x63umulateField_ChangeRate\x10\x01\x12\x1d\n\x19\x41\x63\x63umulateField_Amplitude\x10\x02\x12\x1a\n\x16\x41\x63\x63umulateField_Volume\x10\x03\x12\x1c\n\x18\x41\x63\x63umulateField_Turnover\x10\x04\x12 \n\x1c\x41\x63\x63umulateField_TurnoverRate\x10\x05*\xc7\x02\n\x0e\x46inancialField\x12\x1a\n\x16\x46inancialField_Unknown\x10\x00\x12\x1c\n\x18\x46inancialField_NetProfit\x10\x01\x12\"\n\x1e\x46inancialField_NetProfitGrowth\x10\x02\x12 \n\x1c\x46inancialField_SumOfBusiness\x10\x03\x12&\n\"FinancialField_SumOfBusinessGrowth\x10\x04\x12 \n\x1c\x46inancialField_NetProfitRate\x10\x05\x12\"\n\x1e\x46inancialField_GrossProfitRate\x10\x06\x12 \n\x1c\x46inancialField_DebtAssetRate\x10\x07\x12%\n!FinancialField_ReturnOnEquityRate\x10\x08*\xd9\x01\n\x10\x46inancialQuarter\x12\x1c\n\x18\x46inancialQuarter_Unknown\x10\x00\x12\x1b\n\x17\x46inancialQuarter_Annual\x10\x01\x12!\n\x1d\x46inancialQuarter_FirstQuarter\x10\x02\x12\x1c\n\x18\x46inancialQuarter_Interim\x10\x03\x12!\n\x1d\x46inancialQuarter_ThirdQuarter\x10\x04\x12&\n\"FinancialQuarter_MostRecentQuarter\x10\x05*B\n\x07SortDir\x12\x0e\n\nSortDir_No\x10\x00\x12\x12\n\x0eSortDir_Ascend\x10\x01\x12\x13\n\x0fSortDir_Descend\x10\x02\x42\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x15Qot_StockFilter.proto\x12\x0fQot_StockFilter\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"j\n\nBaseFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\"~\n\x10\x41\x63\x63umulateFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\x12\x0c\n\x04\x64\x61ys\x18\x06 \x02(\x05\"\x80\x01\n\x0f\x46inancialFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\x12\x0f\n\x07quarter\x18\x06 \x02(\x05\",\n\x08\x42\x61seData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\"@\n\x0e\x41\x63\x63umulateData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0c\n\x04\x64\x61ys\x18\x03 \x02(\x05\"B\n\rFinancialData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0f\n\x07quarter\x18\x03 \x02(\x05\"\xea\x01\n\tStockData\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x02 \x02(\t\x12/\n\x0c\x62\x61seDataList\x18\x03 \x03(\x0b\x32\x19.Qot_StockFilter.BaseData\x12;\n\x12\x61\x63\x63umulateDataList\x18\x04 \x03(\x0b\x32\x1f.Qot_StockFilter.AccumulateData\x12\x39\n\x11\x66inancialDataList\x18\x05 \x03(\x0b\x32\x1e.Qot_StockFilter.FinancialData\"\x8b\x02\n\x03\x43\x32S\x12\r\n\x05\x62\x65gin\x18\x01 \x02(\x05\x12\x0b\n\x03num\x18\x02 \x02(\x05\x12\x0e\n\x06market\x18\x03 \x02(\x05\x12#\n\x05plate\x18\x04 \x01(\x0b\x32\x14.Qot_Common.Security\x12\x33\n\x0e\x62\x61seFilterList\x18\x05 \x03(\x0b\x32\x1b.Qot_StockFilter.BaseFilter\x12?\n\x14\x61\x63\x63umulateFilterList\x18\x06 \x03(\x0b\x32!.Qot_StockFilter.AccumulateFilter\x12=\n\x13\x66inancialFilterList\x18\x07 \x03(\x0b\x32 .Qot_StockFilter.FinancialFilter\"W\n\x03S2C\x12\x10\n\x08lastPage\x18\x01 \x02(\x08\x12\x10\n\x08\x61llCount\x18\x02 \x02(\x05\x12,\n\x08\x64\x61taList\x18\x03 \x03(\x0b\x32\x1a.Qot_StockFilter.StockData\",\n\x07Request\x12!\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x14.Qot_StockFilter.C2S\"e\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12!\n\x03s2c\x18\x04 \x01(\x0b\x32\x14.Qot_StockFilter.S2C*\x9c\x04\n\nStockField\x12\x16\n\x12StockField_Unknown\x10\x00\x12\x18\n\x14StockField_StockCode\x10\x01\x12\x18\n\x14StockField_StockName\x10\x02\x12\x17\n\x13StockField_CurPrice\x10\x03\x12,\n(StockField_CurPriceToHighest52WeeksRatio\x10\x04\x12+\n\'StockField_CurPriceToLowest52WeeksRatio\x10\x05\x12-\n)StockField_HighPriceToHighest52WeeksRatio\x10\x06\x12+\n\'StockField_LowPriceToLowest52WeeksRatio\x10\x07\x12\x1a\n\x16StockField_VolumeRatio\x10\x08\x12\x1a\n\x16StockField_BidAskRatio\x10\t\x12\x17\n\x13StockField_LotPrice\x10\n\x12\x18\n\x14StockField_MarketVal\x10\x0b\x12\x17\n\x13StockField_PeAnnual\x10\x0c\x12\x14\n\x10StockField_PeTTM\x10\r\x12\x15\n\x11StockField_PbRate\x10\x0e\x12\x1d\n\x19StockField_ChangeRate5min\x10\x0f\x12\"\n\x1eStockField_ChangeRateBeginYear\x10\x10*\xc9\x01\n\x0f\x41\x63\x63umulateField\x12\x1b\n\x17\x41\x63\x63umulateField_Unknown\x10\x00\x12\x1e\n\x1a\x41\x63\x63umulateField_ChangeRate\x10\x01\x12\x1d\n\x19\x41\x63\x63umulateField_Amplitude\x10\x02\x12\x1a\n\x16\x41\x63\x63umulateField_Volume\x10\x03\x12\x1c\n\x18\x41\x63\x63umulateField_Turnover\x10\x04\x12 \n\x1c\x41\x63\x63umulateField_TurnoverRate\x10\x05*\xc7\x02\n\x0e\x46inancialField\x12\x1a\n\x16\x46inancialField_Unknown\x10\x00\x12\x1c\n\x18\x46inancialField_NetProfit\x10\x01\x12\"\n\x1e\x46inancialField_NetProfitGrowth\x10\x02\x12 \n\x1c\x46inancialField_SumOfBusiness\x10\x03\x12&\n\"FinancialField_SumOfBusinessGrowth\x10\x04\x12 \n\x1c\x46inancialField_NetProfitRate\x10\x05\x12\"\n\x1e\x46inancialField_GrossProfitRate\x10\x06\x12 \n\x1c\x46inancialField_DebtAssetRate\x10\x07\x12%\n!FinancialField_ReturnOnEquityRate\x10\x08*\xd9\x01\n\x10\x46inancialQuarter\x12\x1c\n\x18\x46inancialQuarter_Unknown\x10\x00\x12\x1b\n\x17\x46inancialQuarter_Annual\x10\x01\x12!\n\x1d\x46inancialQuarter_FirstQuarter\x10\x02\x12\x1c\n\x18\x46inancialQuarter_Interim\x10\x03\x12!\n\x1d\x46inancialQuarter_ThirdQuarter\x10\x04\x12&\n\"FinancialQuarter_MostRecentQuarter\x10\x05*B\n\x07SortDir\x12\x0e\n\nSortDir_No\x10\x00\x12\x12\n\x0eSortDir_Ascend\x10\x01\x12\x13\n\x0fSortDir_Descend\x10\x02\x42\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -103,8 +103,8 @@ _STOCKFIELD = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1342,
-  serialized_end=1882,
+  serialized_start=1367,
+  serialized_end=1907,
 )
 _sym_db.RegisterEnumDescriptor(_STOCKFIELD)
 
@@ -142,8 +142,8 @@ _ACCUMULATEFIELD = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1885,
-  serialized_end=2086,
+  serialized_start=1910,
+  serialized_end=2111,
 )
 _sym_db.RegisterEnumDescriptor(_ACCUMULATEFIELD)
 
@@ -193,8 +193,8 @@ _FINANCIALFIELD = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2089,
-  serialized_end=2416,
+  serialized_start=2114,
+  serialized_end=2441,
 )
 _sym_db.RegisterEnumDescriptor(_FINANCIALFIELD)
 
@@ -232,8 +232,8 @@ _FINANCIALQUARTER = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2419,
-  serialized_end=2636,
+  serialized_start=2444,
+  serialized_end=2661,
 )
 _sym_db.RegisterEnumDescriptor(_FINANCIALQUARTER)
 
@@ -259,8 +259,8 @@ _SORTDIR = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2638,
-  serialized_end=2704,
+  serialized_start=2663,
+  serialized_end=2729,
 )
 _sym_db.RegisterEnumDescriptor(_SORTDIR)
 
@@ -317,7 +317,7 @@ _BASEFILTER = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='field', full_name='Qot_StockFilter.BaseFilter.field', index=0,
+      name='fieldName', full_name='Qot_StockFilter.BaseFilter.fieldName', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -364,7 +364,7 @@ _BASEFILTER = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=74,
-  serialized_end=176,
+  serialized_end=180,
 )
 
 
@@ -376,7 +376,7 @@ _ACCUMULATEFILTER = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='field', full_name='Qot_StockFilter.AccumulateFilter.field', index=0,
+      name='fieldName', full_name='Qot_StockFilter.AccumulateFilter.fieldName', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -429,8 +429,8 @@ _ACCUMULATEFILTER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=178,
-  serialized_end=300,
+  serialized_start=182,
+  serialized_end=308,
 )
 
 
@@ -442,7 +442,7 @@ _FINANCIALFILTER = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='field', full_name='Qot_StockFilter.FinancialFilter.field', index=0,
+      name='fieldName', full_name='Qot_StockFilter.FinancialFilter.fieldName', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -495,8 +495,8 @@ _FINANCIALFILTER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=302,
-  serialized_end=426,
+  serialized_start=311,
+  serialized_end=439,
 )
 
 
@@ -508,7 +508,7 @@ _BASEDATA = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='field', full_name='Qot_StockFilter.BaseData.field', index=0,
+      name='fieldName', full_name='Qot_StockFilter.BaseData.fieldName', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -533,8 +533,8 @@ _BASEDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=428,
-  serialized_end=468,
+  serialized_start=441,
+  serialized_end=485,
 )
 
 
@@ -546,7 +546,7 @@ _ACCUMULATEDATA = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='field', full_name='Qot_StockFilter.AccumulateData.field', index=0,
+      name='fieldName', full_name='Qot_StockFilter.AccumulateData.fieldName', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -578,8 +578,8 @@ _ACCUMULATEDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=470,
-  serialized_end=530,
+  serialized_start=487,
+  serialized_end=551,
 )
 
 
@@ -591,7 +591,7 @@ _FINANCIALDATA = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='field', full_name='Qot_StockFilter.FinancialData.field', index=0,
+      name='fieldName', full_name='Qot_StockFilter.FinancialData.fieldName', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -623,8 +623,8 @@ _FINANCIALDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=532,
-  serialized_end=594,
+  serialized_start=553,
+  serialized_end=619,
 )
 
 
@@ -682,8 +682,8 @@ _STOCKDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=597,
-  serialized_end=831,
+  serialized_start=622,
+  serialized_end=856,
 )
 
 
@@ -755,8 +755,8 @@ _C2S = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=834,
-  serialized_end=1101,
+  serialized_start=859,
+  serialized_end=1126,
 )
 
 
@@ -800,8 +800,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1103,
-  serialized_end=1190,
+  serialized_start=1128,
+  serialized_end=1215,
 )
 
 
@@ -831,8 +831,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1192,
-  serialized_end=1236,
+  serialized_start=1217,
+  serialized_end=1261,
 )
 
 
@@ -883,8 +883,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1238,
-  serialized_end=1339,
+  serialized_start=1263,
+  serialized_end=1364,
 )
 
 _STOCKDATA.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY

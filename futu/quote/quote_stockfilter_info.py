@@ -25,7 +25,7 @@ class SimpleFilter(object):
         r, v = StockField.to_number(self.stock_field)
         if not r:
             return RET_ERROR, 'stock_field is wrong. must be StockField'
-        filter_req.field = v - StockField.simple_enum_begin
+        filter_req.fieldName = v - StockField.simple_enum_begin
         """有了这个字段，别的字段都可以不要了"""
         if self.is_no_filter is False:
             filter_req.isNoFilter = False
@@ -61,7 +61,7 @@ class AccumulateFilter(object):
         r, v = StockField.to_number(self.stock_field)
         if not r:
             return RET_ERROR, 'stock_field is wrong. must be StockField'
-        filter_req.field = v - StockField.acc_enum_begin
+        filter_req.fieldName = v - StockField.acc_enum_begin
         filter_req.days = self.days
         """有了这个字段，别的字段都可以不要了"""
         if self.is_no_filter is False:
@@ -98,7 +98,7 @@ class FinancialFilter(object):
         r, v = StockField.to_number(self.stock_field)
         if not r:
             return RET_ERROR, 'stock_field is wrong. must be StockField'
-        filter_req.field = v - StockField.financial_enum_begin
+        filter_req.fieldName = v - StockField.financial_enum_begin
         
         r, v = FinancialQuarter.to_number(self.quarter)
         if not r:
@@ -176,21 +176,21 @@ class FilterStockData(object):
         #  筛选后的简单属性数据 type = Qot_StockFilter.BaseData
         base_data_list = rsp_item.baseDataList
         for sub_item in base_data_list:
-            ret, field = StockField.to_string(sub_item.field + StockField.simple_enum_begin)
+            ret, field = StockField.to_string(sub_item.fieldName + StockField.simple_enum_begin)
             if ret:
                 self.__dict__[field.lower()] = sub_item.value
                 
         #  筛选后的简单属性数据 type = Qot_StockFilter.AccumulateData
         base_data_list = rsp_item.accumulateDataList
         for sub_item in base_data_list:
-            ret, field = StockField.to_string(sub_item.field + StockField.acc_enum_begin)
+            ret, field = StockField.to_string(sub_item.fieldName + StockField.acc_enum_begin)
             if ret:
                 self.__dict__[(field.lower(), sub_item.days)] = sub_item.value
                 
         #  筛选后的简单属性数据 type = Qot_StockFilter.FinancialData
         base_data_list = rsp_item.financialDataList
         for sub_item in base_data_list:
-            ret1, field = StockField.to_string(sub_item.field + StockField.financial_enum_begin)
+            ret1, field = StockField.to_string(sub_item.fieldName + StockField.financial_enum_begin)
             ret2, quarter = FinancialQuarter.to_string(sub_item.quarter)
             if ret1 and ret2:
                 self.__dict__[(field.lower(), quarter.lower())] = sub_item.value

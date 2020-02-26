@@ -5,8 +5,10 @@ option java_package = "com.futu.openapi.pb";
 import "Common.proto";
 import "Qot_Common.proto";
 
+// 使用到以下 6 个结构体（BaseFilter，AccumulateFilter，FinancialFilter，BaseData， AccumulateData，FinancialData）的用户请注意，由于属性字段名“field”与 C # 的 protobuf 保留函数名产生冲突，Futu API 将从 3.18 版本开始将这一字段统一更名为“fieldName”，请注意修改使用到对应接口的字段名。
+
 // 简单属性
-enum StockField 
+enum StockField  
 {
 	StockField_Unknown = 0; // 未知
 	StockField_StockCode = 1; // 股票代码，不能填区间上下限值。
@@ -74,7 +76,7 @@ enum SortDir
 // 简单属性筛选
 message BaseFilter 
 { 
-    required int32 field = 1; // StockField 简单属性
+    required int32 fieldName = 1; // StockField 简单属性
 	optional double filterMin = 2; // 区间下限，闭区间
     optional double filterMax = 3; // 区间上限，闭区间
 	optional bool isNoFilter = 4; // 该字段是否需要筛选。当该字段为true时，表示不需要筛选，以上filterMin，filterMax区间两个字段无效。默认True，不需要筛选。
@@ -84,7 +86,7 @@ message BaseFilter
 // 累积属性筛选
 message AccumulateFilter
 {
-	required int32 field = 1; // AccumulateField 累积属性
+	required int32 fieldName = 1; // AccumulateField 累积属性
 	optional double filterMin = 2; // 区间下限，闭区间
     optional double filterMax = 3; // 区间上限，闭区间
 	optional bool isNoFilter = 4; // 该字段是否需要筛选。当该字段为true时，表示不需要筛选，以上filterMin，filterMax区间两个字段无效。默认True，不需要筛选。
@@ -95,7 +97,7 @@ message AccumulateFilter
 // 财务属性筛选
 message FinancialFilter
 {
-	required int32 field = 1; // FinancialField 财务属性
+	required int32 fieldName = 1; // FinancialField 财务属性
 	optional double filterMin = 2; // 区间下限，闭区间
     optional double filterMax = 3; // 区间上限，闭区间
 	optional bool isNoFilter = 4; // 该字段是否需要筛选。当该字段为true时，表示不需要筛选，以上filterMin，filterMax区间两个字段无效。默认True，不需要筛选。
@@ -106,14 +108,14 @@ message FinancialFilter
 // 简单属性数据
 message BaseData 
 { 
-	required int32 field = 1; // StockField 简单属性
+	required int32 fieldName = 1; // StockField 简单属性
     required double value = 2;
 };
 
 // 累积指标数据
 message AccumulateData
 {
-	required int32 field = 1; // AccumulateField 累积属性
+	required int32 fieldName = 1; // AccumulateField 累积属性
     required double value = 2;
 	required int32 days = 3; // 近几日，累积时间
 }
@@ -121,7 +123,7 @@ message AccumulateData
 // 财务属性数据
 message FinancialData
 {
-	required int32 field = 1; // FinancialField 财务属性
+	required int32 fieldName = 1; // FinancialField 财务属性
     required double value = 2;
 	required int32 quarter = 3; // FinancialQuarter 财报累积时间
 }
