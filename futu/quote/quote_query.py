@@ -3112,3 +3112,101 @@ class UpdatePriceReminder:
             return RET_ERROR, "rsp_pb error", None
 
         return RET_OK, "", res
+
+class SetPriceReminderQuery:
+    """
+    Query SetPriceReminder.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code, op, key, type, freq, value, note, conn_id):
+        """check stock_code 股票"""
+        ret, content = split_stock_str(code)
+        if ret == RET_ERROR:
+            error_str = content
+            return RET_ERROR, error_str, None
+        market_code, stock_code = content
+
+        # 开始组包
+        from futu.common.pb.Qot_SetPriceReminder_pb2 import Request
+        req = Request()
+        req.c2s.security.market = market_code
+        req.c2s.security.code = stock_code
+        r, req.c2s.op = SetPriceReminderOp.to_number(op)
+
+        if key is not None:
+            req.c2s.key = key
+        if type is not None:
+            r, req.c2s.type = PriceReminderType.to_number(type)
+        if freq is not None:
+            r, req.c2s.freq = PriceReminderFreq.to_number(freq)
+        if value is not None:
+            req.c2s.value = value
+        if note is not None:
+            req.c2s.note = note
+
+        return pack_pb_req(req, ProtoId.Qot_SetPriceReminder, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+        return RET_OK, "", None
+
+
+class GetPriceReminderQuery:
+    """
+    Query GetPriceReminder.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code, market, conn_id):
+        """check stock_code 查询股票下的到价提醒项"""
+        ret, content = split_stock_str(code)
+        if ret == RET_ERROR:
+            error_str = content
+            return RET_ERROR, error_str, None
+        market_code, stock_code = content
+
+        # 开始组包
+        from futu.common.pb.Qot_GetPriceReminder_pb2 import Request
+        req = Request()
+        req.c2s.security.market = market_code
+        req.c2s.security.code = stock_code
+        req.c2s.market = market
+
+        return pack_pb_req(req, ProtoId.Qot_GetPriceReminder, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        ret_list = list()
+        #  到价提醒 type = Qot_GetPriceReminder.PriceReminder
+        for item in rsp_pb.s2c.priceReminderList:
+            stock_code = merge_qot_mkt_stock_str(item.security.market, item.security.code)
+            #  提醒信息列表 type = Qot_GetPriceReminder.PriceReminderItem
+            for sub_item in item.itemList:
+                data = {}
+                data["code"] = stock_code
+                #  每个提醒的唯一标识 type = int64
+                data["key"] = sub_item.key
+                #  Qot_Common::PriceReminderType 提醒类型 type = int32
+                data["type"] = PriceReminderType.to_string2(sub_item.type)
+                #  Qot_Common::PriceReminderFreq 提醒频率类型 type = int32
+                data["freq"] = PriceReminderFreq.to_string2(sub_item.freq)
+                #  提醒参数值 type = double
+                data["value"] = sub_item.value
+                #  该提醒设置是否生效。false不生效，true生效 type = bool
+                data["enable"] = sub_item.isEnable
+                #  用户设置到价提醒时的标注 type = string
+                data["note"] = sub_item.note
+                ret_list.append(data)
+        return RET_OK, "", ret_list

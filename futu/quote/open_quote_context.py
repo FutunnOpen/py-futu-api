@@ -2626,3 +2626,116 @@ class OpenQuoteContext(OpenContextBase):
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)
             return RET_OK, ret_frame
+
+    def set_price_reminder(self, stock_code, op, key=None, type=None, freq=None, value=None, note=None):
+        """
+         设置到价提醒
+        :param stock_code: 股票
+        :param op：SetPriceReminderOp，操作类型
+        :param key: int64，标识，新增的情况不需要填
+        :param type: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况不需要填
+        :param freq: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况不需要填
+        :param value: float，提醒值，修改该项需要连type一起指定，删除、启用、禁用的情况不需要填
+        :param note: str，备注，删除、启用、禁用的情况不需要填
+        :return: (ret, data)
+        ret != RET_OK 返回错误字符串
+        ret == RET_OK data为success
+        """
+        if stock_code is None or is_str(stock_code) is False:
+            error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
+            return RET_ERROR, error_str
+
+        if op is not None :
+            r, v = SetPriceReminderOp.to_number(op)
+            if r is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in op is wrong"
+                return RET_ERROR, error_str
+
+        if type is not None :
+            r, v = PriceReminderType.to_number(type)
+            if r is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in type is wrong"
+                return RET_ERROR, error_str
+
+        if freq is not None :
+            r, v = PriceReminderFreq.to_number(freq)
+            if r is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in freq is wrong"
+                return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            SetPriceReminderQuery.pack_req,
+            SetPriceReminderQuery.unpack,
+        )
+
+        kargs = {
+            "code": stock_code,
+            "op": op,
+            "key": key,
+            "type": type,
+            "freq": freq,
+            "value": value,
+            "note": note,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        else:
+            return RET_OK, "success"
+
+    def get_price_reminder(self, stock_code = None, market = None):
+        """
+         获取对某只股票(某个市场)设置的到价提醒列表，每只股票每种类型最多可设置10个提醒
+        :param code: 获取该股票的到价提醒，code和market二选一，都存在的情况下code优先
+        :param market: 获取该市场的到价提醒，注意传入沪深都会认为是A股市场
+        :return: (ret, data)
+        ret != RET_OK 返回错误字符串
+        ret == RET_OK data为DataFrame类型，字段如下:
+        =========================   ==================   =========================
+        参数                         类型                 说明
+        =========================   ==================   =========================
+        code                        str                  股票代码
+        key                         int64                标识，用于修改到价提醒
+        type                        PriceReminderType    到价提醒的类型
+        freq                        PriceReminderFreq    到价提醒的频率
+        value                       float                提醒值
+        enable                      bool                 是否启用
+        note                        string               备注，最多10个字符
+        =========================   ==================   =========================
+        """
+        if stock_code is not None and is_str(stock_code) is False:
+            error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
+            return RET_ERROR, error_str
+
+        if market is not None and market not in MKT_MAP:
+            error_str = ERROR_STR_PREFIX + "the type of param in market is wrong"
+            return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            GetPriceReminderQuery.pack_req,
+            GetPriceReminderQuery.unpack,
+        )
+
+        kargs = {
+                "code": stock_code,
+                "market": market,
+                "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+                'code',
+                'key',
+                'type',
+                'freq',
+                'value',
+                'enable'
+                'note',
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
