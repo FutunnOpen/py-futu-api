@@ -2629,14 +2629,14 @@ class OpenQuoteContext(OpenContextBase):
 
     def set_price_reminder(self, stock_code, op, key=None, type=None, freq=None, value=None, note=None):
         """
-         设置到价提醒
+         新增、删除、修改、启用、禁用 某只股票的到价提醒，每只股票每种类型最多可设置10个提醒
         :param stock_code: 股票
         :param op：SetPriceReminderOp，操作类型
         :param key: int64，标识，新增的情况不需要填
         :param type: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况不需要填
         :param freq: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况不需要填
         :param value: float，提醒值，修改该项需要连type一起指定，删除、启用、禁用的情况不需要填
-        :param note: str，备注，删除、启用、禁用的情况不需要填
+        :param note: str，用户设置的备注，删除、启用、禁用的情况不需要填
         :return: (ret, data)
         ret != RET_OK 返回错误字符串
         ret == RET_OK data为success
@@ -2645,11 +2645,10 @@ class OpenQuoteContext(OpenContextBase):
             error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
             return RET_ERROR, error_str
 
-        if op is not None :
-            r, v = SetPriceReminderOp.to_number(op)
-            if r is False:
-                error_str = ERROR_STR_PREFIX + "the type of param in op is wrong"
-                return RET_ERROR, error_str
+        r, v = SetPriceReminderOp.to_number(op)
+        if r is False:
+            error_str = ERROR_STR_PREFIX + "the type of param in op is wrong"
+            return RET_ERROR, error_str
 
         if type is not None :
             r, v = PriceReminderType.to_number(type)
@@ -2686,7 +2685,7 @@ class OpenQuoteContext(OpenContextBase):
 
     def get_price_reminder(self, stock_code = None, market = None):
         """
-         获取对某只股票(某个市场)设置的到价提醒列表，每只股票每种类型最多可设置10个提醒
+         获取对某只股票(某个市场)设置的到价提醒列表
         :param code: 获取该股票的到价提醒，code和market二选一，都存在的情况下code优先
         :param market: 获取该市场的到价提醒，注意传入沪深都会认为是A股市场
         :return: (ret, data)
