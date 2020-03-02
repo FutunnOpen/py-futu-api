@@ -3105,7 +3105,7 @@ class UpdatePriceReminder:
                                                   rsp_pb.s2c.security.code)
             res['price'] = rsp_pb.s2c.price
             res['change_rate'] = rsp_pb.s2c.changeRate
-            res['market_status'] = rsp_pb.s2c.marketStatus
+            res['market_status'] = PriceReminderMarketStatus.to_string2(rsp_pb.s2c.marketStatus)
             res['content'] = rsp_pb.s2c.content
             res['note'] = rsp_pb.s2c.note
         else:

@@ -13,6 +13,7 @@ from futu.common.pb import Qot_GetReference_pb2
 from futu.common.pb import Qot_Common_pb2
 from futu.common.pb import Trd_Common_pb2
 from futu.common.pb import Qot_SetPriceReminder_pb2
+from futu.common.pb import Qot_UpdatePriceReminder_pb2
 from copy import copy
 from abc import abstractmethod
 
@@ -2311,4 +2312,18 @@ class PriceReminderType(FtEnum):
             self.ASK_PRICE_DOWN: Qot_Common_pb2.PriceReminderType_AskPriceDown,
             self.BID_VOL_UP: Qot_Common_pb2.PriceReminderType_BidVolUp,
             self.ASK_VOL_UP: Qot_Common_pb2.PriceReminderType_AskVolUp,
+        }
+
+class PriceReminderMarketStatus(FtEnum):
+    NONE = "N/A"
+    OPEN = "OPEN"
+    US_PRE = "US_PRE"
+    US_AFTER = "US_AFTER"
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_UpdatePriceReminder_pb2.MarketStatus_Unknow,
+            self.OPEN: Qot_UpdatePriceReminder_pb2.MarketStatus_Open,
+            self.US_PRE: Qot_UpdatePriceReminder_pb2.MarketStatus_USPre,
+            self.US_AFTER: Qot_UpdatePriceReminder_pb2.MarketStatus_USAfter,
         }

@@ -385,11 +385,11 @@ class PriceReminderHandlerBase(RspHandlerBase):
     """
     @classmethod
     def parse_rsp_pb(cls, rsp_pb):
-        ret_code, msg, quote_list = UpdatePriceReminder.unpack_rsp(rsp_pb)
+        ret_code, msg, data = UpdatePriceReminder.unpack_rsp(rsp_pb)
         if ret_code != RET_OK:
             return ret_code, msg
         else:
-            return RET_OK, quote_list
+            return RET_OK, data
 
     def on_recv_rsp(self, rsp_pb):
         """
