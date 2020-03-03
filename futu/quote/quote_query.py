@@ -3179,7 +3179,7 @@ class GetPriceReminderQuery:
         req = Request()
         req.c2s.security.market = market_code
         req.c2s.security.code = stock_code
-        req.c2s.market = market
+        req.c2s.market = market_code
 
         return pack_pb_req(req, ProtoId.Qot_GetPriceReminder, conn_id)
 
