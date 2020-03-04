@@ -22,13 +22,13 @@ message C2S
 	optional int64 key = 3; // 到价提醒的标识，GetPriceReminder协议可获得，用于指定要操作的到价提醒项，对于新增的情况不需要填
 	optional int32 type = 4; // Qot_Common::PriceReminderType，提醒类型，删除、启用、禁用的情况不需要填
 	optional int32 freq = 7; // Qot_Common::PriceReminderFreq，提醒频率类型，删除、启用、禁用的情况不需要填
-	optional double value = 5; // 提醒值，注意修改提醒值时，type也需要指定，删除、启用、禁用的情况不需要填
-	optional string note = 6; // 用户设置到价提醒时的标注，删除、启用、禁用的情况不需要填
+	optional double value = 5; // 提醒值，删除、启用、禁用的情况不需要填
+	optional string note = 6; // 用户设置到价提醒时的标注，最多10个字符，删除、启用、禁用的情况不需要填
 }
 
 message S2C
 {
-	
+	required int64 key = 1; //设置成功的情况下返回对应的key，不成功返回0
 }
 
 message Request

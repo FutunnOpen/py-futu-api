@@ -2635,11 +2635,11 @@ class OpenQuoteContext(OpenContextBase):
         :param key: int64，标识，新增的情况不需要填
         :param type: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况不需要填
         :param freq: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况不需要填
-        :param value: float，提醒值，修改该项需要连type一起指定，删除、启用、禁用的情况不需要填
+        :param value: float，提醒值，删除、启用、禁用的情况不需要填
         :param note: str，用户设置的备注，删除、启用、禁用的情况不需要填
         :return: (ret, data)
         ret != RET_OK 返回错误字符串
-        ret == RET_OK data为success
+        ret == RET_OK data为key
         """
         if stock_code is None or is_str(stock_code) is False:
             error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
@@ -2677,11 +2677,11 @@ class OpenQuoteContext(OpenContextBase):
             "note": note,
             "conn_id": self.get_sync_conn_id()
         }
-        ret_code, msg, ret = query_processor(**kargs)
+        ret_code, msg, key = query_processor(**kargs)
         if ret_code == RET_ERROR:
             return ret_code, msg
         else:
-            return RET_OK, "success"
+            return RET_OK, key
 
     def get_price_reminder(self, stock_code = None, market = None):
         """

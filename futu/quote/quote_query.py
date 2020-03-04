@@ -3154,7 +3154,9 @@ class SetPriceReminderQuery:
     def unpack(cls, rsp_pb):
         if rsp_pb.retType != RET_OK:
             return RET_ERROR, rsp_pb.retMsg, None
-        return RET_OK, "", None
+
+        key = rsp_pb.s2c.key
+        return RET_OK, "", key
 
 
 class GetPriceReminderQuery:

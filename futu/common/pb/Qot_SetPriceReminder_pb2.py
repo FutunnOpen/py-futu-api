@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_SetPriceReminder.proto',
   package='Qot_SetPriceReminder',
   syntax='proto2',
-  serialized_pb=_b('\n\x1aQot_SetPriceReminder.proto\x12\x14Qot_SetPriceReminder\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x7f\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\n\n\x02op\x18\x02 \x02(\x05\x12\x0b\n\x03key\x18\x03 \x01(\x03\x12\x0c\n\x04type\x18\x04 \x01(\x05\x12\x0c\n\x04\x66req\x18\x07 \x01(\x05\x12\r\n\x05value\x18\x05 \x01(\x01\x12\x0c\n\x04note\x18\x06 \x01(\t\"\x05\n\x03S2C\"1\n\x07Request\x12&\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x19.Qot_SetPriceReminder.C2S\"j\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12&\n\x03s2c\x18\x04 \x01(\x0b\x32\x19.Qot_SetPriceReminder.S2C*\xca\x01\n\x12SetPriceReminderOp\x12\x1e\n\x1aSetPriceReminderOp_Unknown\x10\x00\x12\x1a\n\x16SetPriceReminderOp_Add\x10\x01\x12\x1a\n\x16SetPriceReminderOp_Del\x10\x02\x12\x1d\n\x19SetPriceReminderOp_Enable\x10\x03\x12\x1e\n\x1aSetPriceReminderOp_Disable\x10\x04\x12\x1d\n\x19SetPriceReminderOp_Modify\x10\x05\x42\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x1aQot_SetPriceReminder.proto\x12\x14Qot_SetPriceReminder\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x7f\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\n\n\x02op\x18\x02 \x02(\x05\x12\x0b\n\x03key\x18\x03 \x01(\x03\x12\x0c\n\x04type\x18\x04 \x01(\x05\x12\x0c\n\x04\x66req\x18\x07 \x01(\x05\x12\r\n\x05value\x18\x05 \x01(\x01\x12\x0c\n\x04note\x18\x06 \x01(\t\"\x12\n\x03S2C\x12\x0b\n\x03key\x18\x01 \x02(\x03\"1\n\x07Request\x12&\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x19.Qot_SetPriceReminder.C2S\"j\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12&\n\x03s2c\x18\x04 \x01(\x0b\x32\x19.Qot_SetPriceReminder.S2C*\xca\x01\n\x12SetPriceReminderOp\x12\x1e\n\x1aSetPriceReminderOp_Unknown\x10\x00\x12\x1a\n\x16SetPriceReminderOp_Add\x10\x01\x12\x1a\n\x16SetPriceReminderOp_Del\x10\x02\x12\x1d\n\x19SetPriceReminderOp_Enable\x10\x03\x12\x1e\n\x1aSetPriceReminderOp_Disable\x10\x04\x12\x1d\n\x19SetPriceReminderOp_Modify\x10\x05\x42\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -59,8 +59,8 @@ _SETPRICEREMINDEROP = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=380,
-  serialized_end=582,
+  serialized_start=393,
+  serialized_end=595,
 )
 _sym_db.RegisterEnumDescriptor(_SETPRICEREMINDEROP)
 
@@ -154,6 +154,13 @@ _S2C = _descriptor.Descriptor(
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='Qot_SetPriceReminder.S2C.key', index=0,
+      number=1, type=3, cpp_type=2, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -167,7 +174,7 @@ _S2C = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=213,
-  serialized_end=218,
+  serialized_end=231,
 )
 
 
@@ -197,8 +204,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=220,
-  serialized_end=269,
+  serialized_start=233,
+  serialized_end=282,
 )
 
 
@@ -249,8 +256,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=271,
-  serialized_end=377,
+  serialized_start=284,
+  serialized_end=390,
 )
 
 _C2S.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY
