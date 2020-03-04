@@ -2731,7 +2731,7 @@ class OpenQuoteContext(OpenContextBase):
                 'type',
                 'freq',
                 'value',
-                'enable'
+                'enable',
                 'note',
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)
