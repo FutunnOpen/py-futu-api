@@ -3170,18 +3170,23 @@ class GetPriceReminderQuery:
     @classmethod
     def pack_req(cls, code, market, conn_id):
         """check stock_code 查询股票下的到价提醒项"""
-        ret, content = split_stock_str(code)
-        if ret == RET_ERROR:
-            error_str = content
-            return RET_ERROR, error_str, None
-        market_code, stock_code = content
+        market_code = 0
+        stock_code = ''
+        if code is not None:
+            ret, content = split_stock_str(code)
+            if ret == RET_ERROR:
+                error_str = content
+                return RET_ERROR, error_str, None
+            market_code, stock_code = content
 
         # 开始组包
         from futu.common.pb.Qot_GetPriceReminder_pb2 import Request
         req = Request()
-        req.c2s.security.market = market_code
-        req.c2s.security.code = stock_code
-        req.c2s.market = market_code
+        if code is not None:
+            req.c2s.security.market = market_code
+            req.c2s.security.code = stock_code
+        if market is not None and market is not Market.NONE:
+            req.c2s.market = MKT_MAP[market]
 
         return pack_pb_req(req, ProtoId.Qot_GetPriceReminder, conn_id)
 
