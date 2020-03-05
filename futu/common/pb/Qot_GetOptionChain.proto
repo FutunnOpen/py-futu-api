@@ -12,6 +12,37 @@ enum OptionCondType
 	OptionCondType_Outside = 2; //价外
 }
 
+//以下为数据字段筛选，可选字段，不填表示不过滤
+message DataFilter
+{
+	optional double impliedVolatilityMin = 1; //隐含波动率过滤起点
+	optional double impliedVolatilityMax = 2; //隐含波动率过滤终点
+
+	optional double deltaMin = 3; //希腊值 Delta过滤起点
+	optional double deltaMax = 4; //希腊值 Delta过滤终点
+
+	optional double gammaMin = 5; //希腊值 Gamma过滤起点
+	optional double gammaMax = 6; //希腊值 Gamma过滤终点
+
+	optional double vegaMin = 7; //希腊值 Vega过滤起点
+	optional double vegaMax = 8; //希腊值 Vega过滤终点
+
+	optional double thetaMin = 9; //希腊值 Theta过滤起点
+	optional double thetaMax = 10; //希腊值 Theta过滤终点
+
+	optional double rhoMin = 11; //希腊值 Rho过滤起点
+	optional double rhoMax = 12; //希腊值 Rho过滤终点
+
+	optional double netOpenInterestMin = 13; //净未平仓合约数过滤起点
+	optional double netOpenInterestMax = 14; //净未平仓合约数过滤终点
+
+	optional double openInterestMin = 15; //未平仓合约数过滤起点
+	optional double openInterestMax = 16; //未平仓合约数过滤终点
+
+	optional double volMin = 17; //成交量过滤起点
+	optional double volMax = 18; //成交量过滤终点
+}
+
 message C2S
 {
 	required Qot_Common.Security owner = 1; //期权标的股,目前仅支持传入港美正股以及恒指国指
@@ -20,6 +51,7 @@ message C2S
 	optional int32 condition = 3; //OptionCondType,价内价外,可选字段,不指定则表示都返回
 	required string beginTime = 4; //期权到期日开始时间
 	required string endTime = 5; //期权到期日结束时间,时间跨度最多一个月
+	optional DataFilter dataFilter = 7; //数据字段筛选
 }
 
 message OptionItem

@@ -11,7 +11,7 @@ message PriceReminderItem
     required int64 key = 1; // 每个提醒的唯一标识
 	required int32 type = 2; // Qot_Common::PriceReminderType 提醒类型
 	required double value = 3; // 提醒参数值
-	required string note = 4; // 用户设置到价提醒时的标注
+	required string note = 4; // 备注
 	required int32 freq = 5; // Qot_Common::PriceReminderFreq 提醒频率类型
 	required bool isEnable = 6; // 该提醒设置是否生效。false不生效，true生效
 }
@@ -24,7 +24,7 @@ message PriceReminder
 
 message C2S
 {
-	optional Qot_Common.Security security = 1; // 查询股票下的到价提醒项
+	optional Qot_Common.Security security = 1; // 查询股票下的到价提醒项，security和market二选一，都存在的情况下security优先。
 	optional int32 market = 2; //Qot_Common::QotMarket 市场，查询市场下的到价提醒项，不区分沪深
 }
 
