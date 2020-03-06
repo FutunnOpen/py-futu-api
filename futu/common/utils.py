@@ -399,6 +399,10 @@ class ProtobufMap(dict):
         from futu.common.pb.Qot_UpdateBroker_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdateBroker] = Response()
 
+        """ Qot_UpdatePriceReminder = 3019  # 推送到价提醒 """
+        from futu.common.pb.Qot_UpdatePriceReminder_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdatePriceReminder] = Response()
+
         """ Qot_GetHistoryKL = 3100  # 获取历史K线 """
         from futu.common.pb.Qot_GetHistoryKL_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetHistoryKL] = Response()
@@ -503,6 +507,12 @@ class ProtobufMap(dict):
 		
         from futu.common.pb.Qot_RequestTradeDate_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_RequestTradeDate] = Response()
+
+        from futu.common.pb.Qot_SetPriceReminder_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_SetPriceReminder] = Response()
+
+        from futu.common.pb.Qot_GetPriceReminder_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetPriceReminder] = Response()
 
     def __getitem__(self, key):
         return ProtobufMap.created_protobuf_map[key] if key in ProtobufMap.created_protobuf_map else None

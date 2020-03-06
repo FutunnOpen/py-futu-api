@@ -1,0 +1,48 @@
+syntax = "proto2";
+package Qot_GetPriceReminder;
+option java_package = "com.futu.openapi.pb";
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+// 提醒信息列表
+message PriceReminderItem
+{
+    required int64 key = 1; // 每个提醒的唯一标识
+	required int32 type = 2; // Qot_Common::PriceReminderType 提醒类型
+	required double value = 3; // 提醒参数值
+	required string note = 4; // 备注
+	required int32 freq = 5; // Qot_Common::PriceReminderFreq 提醒频率类型
+	required bool isEnable = 6; // 该提醒设置是否生效。false不生效，true生效
+}
+
+message PriceReminder
+{
+	required Qot_Common.Security security = 1; // 股票
+	repeated PriceReminderItem itemList = 2; // 提醒信息列表
+}
+
+message C2S
+{
+	optional Qot_Common.Security security = 1; // 查询股票下的到价提醒项，security和market二选一，都存在的情况下security优先。
+	optional int32 market = 2; //Qot_Common::QotMarket 市场，查询市场下的到价提醒项，不区分沪深
+}
+
+message S2C
+{
+	repeated PriceReminder priceReminderList = 1; //到价提醒
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}
