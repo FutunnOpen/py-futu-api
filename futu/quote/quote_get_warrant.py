@@ -63,9 +63,6 @@ class Request(object):
         self.premium_min = None
         self.premium_max = None
         self.leverage_ratio_min = None
-        self.delta_max = None
-        self.delta_max = None
-        self.delta_max = None
         self.leverage_ratio_max = None
         self.delta_min = None
         self.delta_max = None

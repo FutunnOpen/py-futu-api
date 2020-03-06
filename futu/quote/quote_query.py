@@ -2071,6 +2071,53 @@ class HoldingChangeList:
 
         return RET_OK, "", data_list
 
+class OptionDataFilter:
+    implied_volatility_min = None  # 隐含波动率过滤起点 %
+    implied_volatility_max = None  # 隐含波动率过滤终点 %
+
+    delta_min = None   # 希腊值 Delta过滤起点
+    delta_max = None  # 希腊值 Delta过滤终点
+
+    gamma_min = None  # 希腊值 Gamma过滤起点
+    gamma_max = None  # 希腊值 Gamma过滤终点
+
+    vega_min = None  # 希腊值 Vega过滤起点
+    vega_max = None  # 希腊值 Vega过滤终点
+
+    theta_min = None  # 希腊值 Theta过滤起点
+    theta_max = None  # 希腊值 Theta过滤终点
+
+    rho_min = None  # 希腊值 Rho过滤起点
+    rho_max = None  # 希腊值 Rho过滤终点
+
+    net_open_interest_min = None  # 净未平仓合约数过滤起点
+    net_open_interest_max = None  # 净未平仓合约数过滤终点
+
+    open_interest_min = None  # 未平仓合约数过滤起点
+    open_interest_max = None  # 未平仓合约数过滤终点
+
+    vol_min = None  # 成交量过滤起点
+    vol_max = None  # 成交量过滤终点
+
+    def __init__(self):
+        self.implied_volatility_min = None
+        self.implied_volatility_max = None
+        self.delta_min = None
+        self.delta_max = None
+        self.gamma_min = None
+        self.gamma_max = None
+        self.vega_min = None
+        self.vega_max = None
+        self.theta_min = None
+        self.theta_max = None
+        self.rho_min = None
+        self.rho_max = None
+        self.net_open_interest_min = None
+        self.net_open_interest_max = None
+        self.open_interest_min = None
+        self.open_interest_max = None
+        self.vol_min = None
+        self.vol_max = None
 
 class OptionChain:
     """
@@ -2081,7 +2128,7 @@ class OptionChain:
         pass
 
     @classmethod
-    def pack_req(cls, code, index_option_type, conn_id, start_date, end_date=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL):
+    def pack_req(cls, code, index_option_type, conn_id, start_date, end_date=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL, data_filter = None):
 
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
@@ -2127,6 +2174,52 @@ class OptionChain:
             req.c2s.type = option_type
         if option_cond_type is not None:
             req.c2s.condition = option_cond_type
+
+        if data_filter is not None:
+            if data_filter.implied_volatility_min is not None:
+                req.c2s.dataFilter.impliedVolatilityMin = data_filter.implied_volatility_min
+            if data_filter.implied_volatility_max is not None:
+                req.c2s.dataFilter.impliedVolatilityMax = data_filter.implied_volatility_max
+
+            if data_filter.delta_min is not None:
+                req.c2s.dataFilter.deltaMin = data_filter.delta_min
+            if data_filter.delta_max is not None:
+                req.c2s.dataFilter.deltaMax = data_filter.delta_max
+
+            if data_filter.gamma_min is not None:
+                req.c2s.dataFilter.gammaMin = data_filter.gamma_min
+            if data_filter.gamma_max is not None:
+                req.c2s.dataFilter.gammaMax = data_filter.gamma_max
+
+            if data_filter.vega_min is not None:
+                req.c2s.dataFilter.vegaMin = data_filter.vega_min
+            if data_filter.vega_max is not None:
+                req.c2s.dataFilter.vegaMax = data_filter.vega_max
+
+            if data_filter.theta_min is not None:
+                req.c2s.dataFilter.thetaMin = data_filter.theta_min
+            if data_filter.theta_max is not None:
+                req.c2s.dataFilter.thetaMax = data_filter.theta_max
+
+            if data_filter.rho_min is not None:
+                req.c2s.dataFilter.rhoMin = data_filter.rho_min
+            if data_filter.rho_max is not None:
+                req.c2s.dataFilter.rhoMax = data_filter.rho_max
+
+            if data_filter.net_open_interest_min is not None:
+                req.c2s.dataFilter.netOpenInterestMin = data_filter.net_open_interest_min
+            if data_filter.net_open_interest_max is not None:
+                req.c2s.dataFilter.netOpenInterestMax = data_filter.net_open_interest_max
+
+            if data_filter.open_interest_min is not None:
+                req.c2s.dataFilter.openInterestMin = data_filter.open_interest_min
+            if data_filter.open_interest_max is not None:
+                req.c2s.dataFilter.openInterestMax = data_filter.open_interest_max
+
+            if data_filter.vol_min is not None:
+                req.c2s.dataFilter.volMin = data_filter.vol_min
+            if data_filter.vol_max is not None:
+                req.c2s.dataFilter.volMax = data_filter.vol_max
 
         return pack_pb_req(req, ProtoId.Qot_GetOptionChain, conn_id)
 

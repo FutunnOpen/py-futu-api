@@ -1955,7 +1955,7 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, holding_change_list
 
-    def get_option_chain(self, code, index_option_type=IndexOptionType.NORMAL, start=None, end=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL):
+    def get_option_chain(self, code, index_option_type=IndexOptionType.NORMAL, start=None, end=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL, data_filter = None):
         """
         通过标的股查询期权
 
@@ -1974,6 +1974,30 @@ class OpenQuoteContext(OpenContextBase):
                 ==========    ==========    ========================================
         :param option_type: 期权类型,默认全部，全部/看涨/看跌，futu.common.constant.OptionType
         :param option_cond_type: 默认全部，全部/价内/价外，futu.common.constant.OptionCondType
+        :param data_filter: 数据筛选条件，默认不筛选，参考OptionDataFilter,
+                OptionDataFilter字段如下：
+                ============================    ==========    ========================================
+                 字段                            类型           说明
+                ============================    ==========    ========================================
+                 implied_volatility_min         float          隐含波动率过滤起点 %
+                 implied_volatility_max         float          隐含波动率过滤终点 %
+                 delta_min                      float          希腊值 Delta过滤起点
+                 delta_max                      float          希腊值 Delta过滤终点
+                 gamma_min                      float          希腊值 Gamma过滤起点
+                 gamma_max                      float          希腊值 Gamma过滤终点
+                 vega_min                       float          希腊值 Vega过滤起点
+                 vega_max                       float          希腊值 Vega过滤终点
+                 theta_min                      float          希腊值 Theta过滤起点
+                 theta_max                      float          希腊值 Theta过滤终点
+                 rho_min                        float          希腊值 Rho过滤起点
+                 rho_max                        float          希腊值 Rho过滤终点
+                 net_open_interest_min          float          净未平仓合约数过滤起点
+                 net_open_interest_max          float          净未平仓合约数过滤终点
+                 open_interest_min              float          未平仓合约数过滤起点
+                 open_interest_max              float          未平仓合约数过滤终点
+                 vol_min                        float          成交量过滤起点
+                 vol_max                        float          成交量过滤终点
+                ============================    ==========    ========================================
         :return: (ret, data)
 
                 ret == RET_OK 返回pd dataframe数据，数据列格式如下
@@ -2007,6 +2031,10 @@ class OpenQuoteContext(OpenContextBase):
             msg = ERROR_STR_PREFIX + "the type of index_option_type param is wrong"
             return RET_ERROR, msg
 
+        if data_filter is not None and not isinstance(data_filter, OptionDataFilter):
+            msg = ERROR_STR_PREFIX + "the type of data_filter param is wrong"
+            return RET_ERROR, msg
+
         ret_code, msg, start, end = normalize_start_end_date(
             start, end, delta_days=29, default_time_end='00:00:00', prefer_end_now=False)
         if ret_code != RET_OK:
@@ -2021,7 +2049,8 @@ class OpenQuoteContext(OpenContextBase):
             "start_date": start,
             "end_date": end,
             "option_cond_type": option_cond_type,
-            "option_type": option_type
+            "option_type": option_type,
+            "data_filter": data_filter
         }
 
         ret_code, msg, option_chain_list = query_processor(**kargs)
