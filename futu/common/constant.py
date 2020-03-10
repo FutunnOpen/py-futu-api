@@ -2290,7 +2290,7 @@ class PriceReminderType(FtEnum):
     FIVE_MIN_CHANGE_RATE_DOWN = "FIVE_MIN_CHANGE_RATE_DOWN"  # 5分钟跌幅
     VOLUME_UP = "VOLUME_UP"  # 成交量大于
     TURNOVER_UP = "TURNOVER_UP"  # 成交额大于
-    TURNOVER_RATE_UP = "TURNOVER_UP"  # 换手率大于
+    TURNOVER_RATE_UP = "TURNOVER_RATE_UP"  # 换手率大于
     BID_PRICE_UP = "BID_PRICE_UP"  # 买一价高于
     ASK_PRICE_DOWN = "ASK_PRICE_DOWN"  # 卖一价低于
     BID_VOL_UP = "BID_VOL_UP"  # 买一量高于
