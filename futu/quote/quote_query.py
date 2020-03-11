@@ -2072,52 +2072,25 @@ class HoldingChangeList:
         return RET_OK, "", data_list
 
 class OptionDataFilter:
-    implied_volatility_min = None  # 隐含波动率过滤起点 %
-    implied_volatility_max = None  # 隐含波动率过滤终点 %
-
-    delta_min = None   # 希腊值 Delta过滤起点
-    delta_max = None  # 希腊值 Delta过滤终点
-
-    gamma_min = None  # 希腊值 Gamma过滤起点
-    gamma_max = None  # 希腊值 Gamma过滤终点
-
-    vega_min = None  # 希腊值 Vega过滤起点
-    vega_max = None  # 希腊值 Vega过滤终点
-
-    theta_min = None  # 希腊值 Theta过滤起点
-    theta_max = None  # 希腊值 Theta过滤终点
-
-    rho_min = None  # 希腊值 Rho过滤起点
-    rho_max = None  # 希腊值 Rho过滤终点
-
-    net_open_interest_min = None  # 净未平仓合约数过滤起点
-    net_open_interest_max = None  # 净未平仓合约数过滤终点
-
-    open_interest_min = None  # 未平仓合约数过滤起点
-    open_interest_max = None  # 未平仓合约数过滤终点
-
-    vol_min = None  # 成交量过滤起点
-    vol_max = None  # 成交量过滤终点
-
     def __init__(self):
-        self.implied_volatility_min = None
-        self.implied_volatility_max = None
-        self.delta_min = None
-        self.delta_max = None
-        self.gamma_min = None
-        self.gamma_max = None
-        self.vega_min = None
-        self.vega_max = None
-        self.theta_min = None
-        self.theta_max = None
-        self.rho_min = None
-        self.rho_max = None
-        self.net_open_interest_min = None
-        self.net_open_interest_max = None
-        self.open_interest_min = None
-        self.open_interest_max = None
-        self.vol_min = None
-        self.vol_max = None
+        self.implied_volatility_min = None  # 隐含波动率过滤起点 %
+        self.implied_volatility_max = None  # 隐含波动率过滤终点 %
+        self.delta_min = None  # 希腊值 Delta过滤起点
+        self.delta_max = None  # 希腊值 Delta过滤终点
+        self.gamma_min = None  # 希腊值 Gamma过滤起点
+        self.gamma_max = None  # 希腊值 Gamma过滤终点
+        self.vega_min = None # 希腊值 Vega过滤起点
+        self.vega_max = None  # 希腊值 Vega过滤终点
+        self.theta_min = None  # 希腊值 Theta过滤起点
+        self.theta_max = None  # 希腊值 Theta过滤终点
+        self.rho_min = None  # 希腊值 Rho过滤起点
+        self.rho_max = None  # 希腊值 Rho过滤终点
+        self.net_open_interest_min = None  # 净未平仓合约数过滤起点
+        self.net_open_interest_max = None  # 净未平仓合约数过滤终点
+        self.open_interest_min = None  # 未平仓合约数过滤起点
+        self.open_interest_max = None  # 未平仓合约数过滤终点
+        self.vol_min = None  # 成交量过滤起点
+        self.vol_max = None  # 成交量过滤终点
 
 class OptionChain:
     """
