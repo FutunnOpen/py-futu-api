@@ -2035,6 +2035,14 @@ class OpenQuoteContext(OpenContextBase):
             msg = ERROR_STR_PREFIX + "the type of data_filter param is wrong"
             return RET_ERROR, msg
 
+        if option_type not in OPTION_TYPE_CLASS_MAP:
+            msg = ERROR_STR_PREFIX + "the type of option_type param is wrong"
+            return RET_ERROR, msg
+
+        if option_cond_type not in OPTION_COND_TYPE_CLASS_MAP:
+            msg = ERROR_STR_PREFIX + "the type of option_cond_type param is wrong"
+            return RET_ERROR, msg
+
         ret_code, msg, start, end = normalize_start_end_date(
             start, end, delta_days=29, default_time_end='00:00:00', prefer_end_now=False)
         if ret_code != RET_OK:
@@ -2121,6 +2129,10 @@ class OpenQuoteContext(OpenContextBase):
 
         if stock_owner is not None:
             req.stock_owner = stock_owner
+
+        #r, v = SortField.to_number(req.sort_field)
+        #if not r:
+        #    return RET_ERROR, 'sort_field is wrong. must be SortField'
 
         query_processor = self._get_sync_query_processor(
             QuoteWarrant.pack_req, QuoteWarrant.unpack_rsp)
@@ -2736,8 +2748,12 @@ class OpenQuoteContext(OpenContextBase):
             error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
             return RET_ERROR, error_str
 
-        if market is not None and market not in MKT_MAP:
+        if stock_code is None and market is not None and market not in MKT_MAP:
             error_str = ERROR_STR_PREFIX + "the type of param in market is wrong"
+            return RET_ERROR, error_str
+
+        if stock_code is None and market is None:
+            error_str = ERROR_STR_PREFIX + "must be use one of these params(code, market)"
             return RET_ERROR, error_str
 
         query_processor = self._get_sync_query_processor(

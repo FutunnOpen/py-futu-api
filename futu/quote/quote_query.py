@@ -3251,9 +3251,8 @@ class GetPriceReminderQuery:
         if code is not None:
             req.c2s.security.market = market_code
             req.c2s.security.code = stock_code
-        if market is not None and market is not Market.NONE:
+        elif market is not None and market is not Market.NONE:
             req.c2s.market = MKT_MAP[market]
-
         return pack_pb_req(req, ProtoId.Qot_GetPriceReminder, conn_id)
 
     @classmethod
