@@ -3188,7 +3188,7 @@ class SetPriceReminderQuery:
         pass
 
     @classmethod
-    def pack_req(cls, code, op, key, type, freq, value, note, conn_id):
+    def pack_req(cls, code, op, key, reminder_type, reminder_freq, value, note, conn_id):
         """check stock_code 股票"""
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
@@ -3205,10 +3205,10 @@ class SetPriceReminderQuery:
 
         if key is not None:
             req.c2s.key = key
-        if type is not None:
-            r, req.c2s.type = PriceReminderType.to_number(type)
-        if freq is not None:
-            r, req.c2s.freq = PriceReminderFreq.to_number(freq)
+        if reminder_type is not None:
+            r, req.c2s.type = PriceReminderType.to_number(reminder_type)
+        if reminder_freq is not None:
+            r, req.c2s.freq = PriceReminderFreq.to_number(reminder_freq)
         if value is not None:
             req.c2s.value = value
         if note is not None:
@@ -3271,9 +3271,9 @@ class GetPriceReminderQuery:
                 #  每个提醒的唯一标识 type = int64
                 data["key"] = sub_item.key
                 #  Qot_Common::PriceReminderType 提醒类型 type = int32
-                data["type"] = PriceReminderType.to_string2(sub_item.type)
+                data["reminder_type"] = PriceReminderType.to_string2(sub_item.type)
                 #  Qot_Common::PriceReminderFreq 提醒频率类型 type = int32
-                data["freq"] = PriceReminderFreq.to_string2(sub_item.freq)
+                data["reminder_freq"] = PriceReminderFreq.to_string2(sub_item.freq)
                 #  提醒参数值 type = double
                 data["value"] = sub_item.value
                 #  该提醒设置是否生效。false不生效，true生效 type = bool
