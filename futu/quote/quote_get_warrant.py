@@ -84,9 +84,6 @@ class Request(object):
             return RET_ERROR, 'sort_field is wrong. must be SortField'
         pb.c2s.sortField = v
 
-        if type(self.ascend) != bool:
-            return RET_ERROR, 'ascend is wrong. must be bool'
-
         pb.c2s.ascend = self.ascend
         if self.stock_owner is not None and len(self.stock_owner) != 0:
             """所属正股"""
