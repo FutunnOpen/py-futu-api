@@ -2700,7 +2700,7 @@ class OpenQuoteContext(OpenContextBase):
         if reminder_freq is not None :
             r, v = PriceReminderFreq.to_number(reminder_freq)
             if r is False:
-                error_str = ERROR_STR_PREFIX + "the type of param in freq is wrong"
+                error_str = ERROR_STR_PREFIX + "the type of param in reminder_freq is wrong"
                 return RET_ERROR, error_str
 
         query_processor = self._get_sync_query_processor(
