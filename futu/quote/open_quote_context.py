@@ -1516,7 +1516,7 @@ class OpenQuoteContext(OpenContextBase):
                 =====================   ===========   ==============================================================
                 参数                      类型                        说明
                 =====================   ===========   ==============================================================
-                stock_code               str            股票代码
+                code                     str            股票代码
                 sequence                 int            逐笔序号
                 time                     str            成交时间（美股默认是美东时间，港股A股默认是北京时间）
                 price                    float          成交价格
@@ -2668,10 +2668,10 @@ class OpenQuoteContext(OpenContextBase):
             ret_frame = pd.DataFrame(ret, columns=col_list)
             return RET_OK, ret_frame
 
-    def set_price_reminder(self, stock_code, op, key=None, type=None, freq=None, value=None, note=None):
+    def set_price_reminder(self, code, op, key=None, type=None, freq=None, value=None, note=None):
         """
          新增、删除、修改、启用、禁用 某只股票的到价提醒，每只股票每种类型最多可设置10个提醒
-        :param stock_code: 股票
+        :param code: 股票
         :param op：SetPriceReminderOp，操作类型
         :param key: int64，标识，新增的情况不需要填
         :param type: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况不需要填
@@ -2682,8 +2682,8 @@ class OpenQuoteContext(OpenContextBase):
         ret != RET_OK 返回错误字符串
         ret == RET_OK data为key
         """
-        if stock_code is None or is_str(stock_code) is False:
-            error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
+        if code is None or is_str(code) is False:
+            error_str = ERROR_STR_PREFIX + 'the type of code param is wrong'
             return RET_ERROR, error_str
 
         r, v = SetPriceReminderOp.to_number(op)
@@ -2709,7 +2709,7 @@ class OpenQuoteContext(OpenContextBase):
         )
 
         kargs = {
-            "code": stock_code,
+            "code": code,
             "op": op,
             "key": key,
             "type": type,
@@ -2724,7 +2724,7 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return RET_OK, key
 
-    def get_price_reminder(self, stock_code = None, market = None):
+    def get_price_reminder(self, code = None, market = None):
         """
          获取对某只股票(某个市场)设置的到价提醒列表
         :param code: 获取该股票的到价提醒，code和market二选一，都存在的情况下code优先
@@ -2744,15 +2744,15 @@ class OpenQuoteContext(OpenContextBase):
         note                        string               备注，最多10个字符
         =========================   ==================   =========================
         """
-        if stock_code is not None and is_str(stock_code) is False:
-            error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
+        if code is not None and is_str(code) is False:
+            error_str = ERROR_STR_PREFIX + 'the type of code param is wrong'
             return RET_ERROR, error_str
 
-        if stock_code is None and market is not None and market not in MKT_MAP:
+        if code is None and market is not None and market not in MKT_MAP:
             error_str = ERROR_STR_PREFIX + "the type of param in market is wrong"
             return RET_ERROR, error_str
 
-        if stock_code is None and market is None:
+        if code is None and market is None:
             error_str = ERROR_STR_PREFIX + "must be use one of these params(code, market)"
             return RET_ERROR, error_str
 
@@ -2762,7 +2762,7 @@ class OpenQuoteContext(OpenContextBase):
         )
 
         kargs = {
-                "code": stock_code,
+                "code": code,
                 "market": market,
                 "conn_id": self.get_sync_conn_id()
         }
