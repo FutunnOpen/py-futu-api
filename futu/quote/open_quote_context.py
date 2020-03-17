@@ -2674,10 +2674,10 @@ class OpenQuoteContext(OpenContextBase):
         :param code: 股票
         :param op：SetPriceReminderOp，操作类型
         :param key: int64，标识，新增的情况不需要填
-        :param reminder_type: PriceReminderType，到价提醒的频率，删除、启用、禁用的情况不需要填
-        :param reminder_freq: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况不需要填
-        :param value: float，提醒值，删除、启用、禁用的情况不需要填
-        :param note: str，用户设置的备注，删除、启用、禁用的情况不需要填
+        :param reminder_type: PriceReminderType，到价提醒的频率，删除、启用、禁用的情况下会忽略该入参
+        :param reminder_freq: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况下会忽略该入参
+        :param value: float，提醒值，删除、启用、禁用的情况下会忽略该入参
+        :param note: str，用户设置的备注，删除、启用、禁用的情况下会忽略该入参
         :return: (ret, data)
         ret != RET_OK 返回错误字符串
         ret == RET_OK data为key
