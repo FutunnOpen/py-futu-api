@@ -2668,14 +2668,14 @@ class OpenQuoteContext(OpenContextBase):
             ret_frame = pd.DataFrame(ret, columns=col_list)
             return RET_OK, ret_frame
 
-    def set_price_reminder(self, code, op, key=None, type=None, freq=None, value=None, note=None):
+    def set_price_reminder(self, code, op, key=None, reminder_type=None, reminder_freq=None, value=None, note=None):
         """
          新增、删除、修改、启用、禁用 某只股票的到价提醒，每只股票每种类型最多可设置10个提醒
         :param code: 股票
         :param op：SetPriceReminderOp，操作类型
         :param key: int64，标识，新增的情况不需要填
-        :param type: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况不需要填
-        :param freq: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况不需要填
+        :param reminder_type: PriceReminderType，到价提醒的频率，删除、启用、禁用的情况不需要填
+        :param reminder_freq: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况不需要填
         :param value: float，提醒值，删除、启用、禁用的情况不需要填
         :param note: str，用户设置的备注，删除、启用、禁用的情况不需要填
         :return: (ret, data)
@@ -2691,14 +2691,14 @@ class OpenQuoteContext(OpenContextBase):
             error_str = ERROR_STR_PREFIX + "the type of param in op is wrong"
             return RET_ERROR, error_str
 
-        if type is not None :
-            r, v = PriceReminderType.to_number(type)
+        if reminder_type is not None :
+            r, v = PriceReminderType.to_number(reminder_type)
             if r is False:
-                error_str = ERROR_STR_PREFIX + "the type of param in type is wrong"
+                error_str = ERROR_STR_PREFIX + "the type of param in reminder_type is wrong"
                 return RET_ERROR, error_str
 
-        if freq is not None :
-            r, v = PriceReminderFreq.to_number(freq)
+        if reminder_freq is not None :
+            r, v = PriceReminderFreq.to_number(reminder_freq)
             if r is False:
                 error_str = ERROR_STR_PREFIX + "the type of param in freq is wrong"
                 return RET_ERROR, error_str
@@ -2712,8 +2712,8 @@ class OpenQuoteContext(OpenContextBase):
             "code": code,
             "op": op,
             "key": key,
-            "type": type,
-            "freq": freq,
+            "reminder_type": reminder_type,
+            "reminder_freq": reminder_freq,
             "value": value,
             "note": note,
             "conn_id": self.get_sync_conn_id()
@@ -2724,7 +2724,7 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return RET_OK, key
 
-    def get_price_reminder(self, code = None, market = None):
+    def get_price_reminder(self, code=None, market=None):
         """
          获取对某只股票(某个市场)设置的到价提醒列表
         :param code: 获取该股票的到价提醒，code和market二选一，都存在的情况下code优先
@@ -2737,8 +2737,8 @@ class OpenQuoteContext(OpenContextBase):
         =========================   ==================   =========================
         code                        str                  股票代码
         key                         int64                标识，用于修改到价提醒
-        type                        PriceReminderType    到价提醒的类型
-        freq                        PriceReminderFreq    到价提醒的频率
+        reminder_type               PriceReminderType    到价提醒的类型
+        reminder_freq               PriceReminderFreq    到价提醒的频率
         value                       float                提醒值
         enable                      bool                 是否启用
         note                        string               备注，最多10个字符
@@ -2773,8 +2773,8 @@ class OpenQuoteContext(OpenContextBase):
             col_list = [
                 'code',
                 'key',
-                'type',
-                'freq',
+                'reminder_type',
+                'reminder_freq',
                 'value',
                 'enable',
                 'note',
