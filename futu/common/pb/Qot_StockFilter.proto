@@ -76,10 +76,10 @@ enum SortDir
 // 简单属性筛选
 message BaseFilter 
 { 
-    required int32 fieldName = 1; // StockField 简单属性
-	optional double filterMin = 2; // 区间下限，闭区间
-    optional double filterMax = 3; // 区间上限，闭区间
-	optional bool isNoFilter = 4; // 该字段是否需要筛选。当该字段为true时，表示不需要筛选，以上filterMin，filterMax区间两个字段无效。默认True，不需要筛选。
+	required int32 fieldName = 1; // StockField 简单属性
+	optional double filterMin = 2; // 区间下限（闭区间），不传代表下限为-∞
+	optional double filterMax = 3; // 区间上限（闭区间），不传代表上限为+∞
+	optional bool isNoFilter = 4; // 该字段是否不需要筛选，True代表不筛选，False代表筛选。不传默认为不筛选
 	optional int32 sortDir = 5; // SortDir 排序方向，默认不排序。
 };
 
@@ -87,9 +87,9 @@ message BaseFilter
 message AccumulateFilter
 {
 	required int32 fieldName = 1; // AccumulateField 累积属性
-	optional double filterMin = 2; // 区间下限，闭区间
-    optional double filterMax = 3; // 区间上限，闭区间
-	optional bool isNoFilter = 4; // 该字段是否需要筛选。当该字段为true时，表示不需要筛选，以上filterMin，filterMax区间两个字段无效。默认True，不需要筛选。
+	optional double filterMin = 2; // 区间下限（闭区间），不传代表下限为-∞
+	optional double filterMax = 3; // 区间上限（闭区间），不传代表上限为+∞
+	optional bool isNoFilter = 4; // 该字段是否不需要筛选，True代表不筛选，False代表筛选。不传默认为不筛选
 	optional int32 sortDir = 5; // SortDir 排序方向，默认不排序。
 	required int32 days = 6; // 近几日，累积时间
 }
@@ -98,9 +98,9 @@ message AccumulateFilter
 message FinancialFilter
 {
 	required int32 fieldName = 1; // FinancialField 财务属性
-	optional double filterMin = 2; // 区间下限，闭区间
-    optional double filterMax = 3; // 区间上限，闭区间
-	optional bool isNoFilter = 4; // 该字段是否需要筛选。当该字段为true时，表示不需要筛选，以上filterMin，filterMax区间两个字段无效。默认True，不需要筛选。
+	optional double filterMin = 2; // 区间下限（闭区间），不传代表下限为-∞
+	optional double filterMax = 3; // 区间上限（闭区间），不传代表上限为+∞
+	optional bool isNoFilter = 4; // 该字段是否不需要筛选，True代表不筛选，False代表筛选。不传默认为不筛选
 	optional int32 sortDir = 5; // SortDir 排序方向，默认不排序。
 	required int32 quarter = 6; // FinancialQuarter 财报累积时间
 }

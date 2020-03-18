@@ -2671,6 +2671,14 @@ class OpenQuoteContext(OpenContextBase):
     def set_price_reminder(self, code, op, key=None, reminder_type=None, reminder_freq=None, value=None, note=None):
         """
          新增、删除、修改、启用、禁用 某只股票的到价提醒，每只股票每种类型最多可设置10个提醒
+         注意：
+            1. API 中成交量设置统一以股为单位。但是牛牛客户端中，A 股是以为手为单位展示
+            2. 到价提醒类型，存在最小精度，如下：
+                TURNOVER_UP：成交额最小精度为 10 元（人民币元，港元，美元）。传入的数值会自动向下取整到最小精度的整数倍。
+                    如果设置【00700成交额102元提醒】，设置后会得到【00700成交额100元提醒】；如果设置【00700 成交额 8 元提醒】，设置后会得到【00700 成交额 0 元提醒】
+                VOLUME_UP：A 股成交量最小精度为 1000 股，其他市场股票成交量最小精度为 10 股。传入的数值会自动向下取整到最小精度的整数倍。
+                BID_VOL_UP、ASK_VOL_UP：A 股的买一卖一量最小精度为 100 股。传入的数值会自动向下取整到最小精度的整数倍。
+                其余到价提醒类型精度支持到小数点后 3 位
         :param code: 股票
         :param op：SetPriceReminderOp，操作类型
         :param key: int64，标识，新增的情况不需要填

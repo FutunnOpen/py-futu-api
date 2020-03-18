@@ -149,7 +149,7 @@ def split_stock_str(stock_str_param):
         return RET_OK, (market_code, partial_stock_str)
 
     else:
-        error_str = ERROR_STR_PREFIX + "format of %s is wrong. (US.AAPL, HK.00700, SZ.000001)" % stock_str
+        error_str = ERROR_STR_PREFIX + "format of code %s is wrong. (US.AAPL, HK.00700, SZ.000001)" % stock_str
         return RET_ERROR, error_str
 
 
