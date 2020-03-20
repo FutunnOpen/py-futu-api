@@ -2130,9 +2130,9 @@ class OpenQuoteContext(OpenContextBase):
         if stock_owner is not None:
             req.stock_owner = stock_owner
 
-        #r, v = SortField.to_number(req.sort_field)
-        #if not r:
-        #    return RET_ERROR, 'sort_field is wrong. must be SortField'
+        r, v = SortField.to_number(req.sort_field)
+        if not r:
+            return RET_ERROR, 'sort_field is wrong. must be SortField'
 
         query_processor = self._get_sync_query_processor(
             QuoteWarrant.pack_req, QuoteWarrant.unpack_rsp)
