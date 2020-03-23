@@ -2791,3 +2791,44 @@ class OpenQuoteContext(OpenContextBase):
             return RET_OK, ret_frame
         else:
             return RET_ERROR, "empty data"
+
+    def get_user_security_group(self, group_type = UserSecurityGroupType.ALL):
+        """
+         获取自选股分组列表
+        :param group_type: UserSecurityGroupType，分组类型
+        :return: (ret, data)
+        ret != RET_OK 返回错误字符串
+        ret == RET_OK data为DataFrame类型，字段如下:
+        =========================   ==================   ================================
+        参数                         类型                 说明
+        =========================   ==================   ================================
+        group_name                   str                  分组名
+        group_type                   str                  UserSecurityGroupType，分组类型
+        =========================   ==================   ================================
+        """
+        r, v = UserSecurityGroupType.to_number(group_type)
+        if r is False:
+            error_str = ERROR_STR_PREFIX + "the type of param in group_type is wrong"
+            return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            GetUserSecurityGroupQuery.pack_req,
+            GetUserSecurityGroupQuery.unpack,
+        )
+
+        kargs = {
+            "group_type": group_type,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+                'group_name',
+                'group_type'
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"

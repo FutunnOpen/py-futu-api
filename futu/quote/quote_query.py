@@ -3282,3 +3282,40 @@ class GetPriceReminderQuery:
                 data["note"] = sub_item.note
                 ret_list.append(data)
         return RET_OK, "", ret_list
+
+class GetUserSecurityGroupQuery:
+    """
+    Query GetUserSecurityGroup.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, group_type, conn_id):
+        """check group_type GroupType,自选股分组类型。"""
+
+        # 开始组包
+        from futu.common.pb.Qot_GetUserSecurityGroup_pb2 import Request
+        req = Request()
+        r, req.c2s.groupType = UserSecurityGroupType.to_number(group_type)
+        return pack_pb_req(req, ProtoId.Qot_GetUserSecurityGroup, conn_id)
+
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        ret_list = list()
+        #  自选股分组列表 type = Qot_GetUserSecurityGroup.GroupData
+        group_list = rsp_pb.s2c.groupList
+        for item in group_list:
+            data = {}
+            #  自选股分组名字 type = string
+            data["group_name"] = item.groupName
+            #  GroupType,自选股分组类型。 type = int32
+            data["group_type"] = UserSecurityGroupType.to_string2(item.groupType)
+            ret_list.append(data)
+
+        return RET_OK, "", ret_list

@@ -14,6 +14,7 @@ from futu.common.pb import Qot_Common_pb2
 from futu.common.pb import Trd_Common_pb2
 from futu.common.pb import Qot_SetPriceReminder_pb2
 from futu.common.pb import Qot_UpdatePriceReminder_pb2
+from futu.common.pb import GetUserSecurityGroup_pb2
 from copy import copy
 from abc import abstractmethod
 
@@ -833,11 +834,12 @@ class ProtoId(object):
     Qot_StockFilter = 3215   # 条件选股
     Qot_GetCodeChange = 3216   # 代码变换
     Qot_GetIpoList = 3217  # 获取新股Ipo
-    Qot_GetFutureInfo = 3218 #获取期货资料
-    Qot_RequestTradeDate = 3219 #在线拉取交易日
+    Qot_GetFutureInfo = 3218  # 获取期货资料
+    Qot_RequestTradeDate = 3219  # 在线拉取交易日
     Qot_SetPriceReminder = 3220  # 设置到价提醒
     Qot_GetPriceReminder = 3221  # 获取到价提醒
 
+    Qot_GetUserSecurityGroup = 3222 # 获取自选股分组
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
@@ -2326,4 +2328,20 @@ class PriceReminderMarketStatus(FtEnum):
             self.OPEN: Qot_UpdatePriceReminder_pb2.MarketStatus_Open,
             self.US_PRE: Qot_UpdatePriceReminder_pb2.MarketStatus_USPre,
             self.US_AFTER: Qot_UpdatePriceReminder_pb2.MarketStatus_USAfter,
+        }
+
+
+# 自选股的类型
+class UserSecurityGroupType(FtEnum):
+    NONE = "N/A"                                       # 未知
+    CUSTOM = "CUSTOM"                                  # 自定义分组
+    SYSTEM = "SYSTEM"                                  # 系统分组
+    ALL = "ALL"                                        # 全部分组
+
+    def load_dic(self):
+        return {
+            self.NONE: GetUserSecurityGroup_pb2.GroupType_Unknown,
+            self.CUSTOM: GetUserSecurityGroup_pb2.GroupType_Custom,
+            self.SYSTEM: GetUserSecurityGroup_pb2.GroupType_System,
+            self.ALL: GetUserSecurityGroup_pb2.GroupType_All
         }
