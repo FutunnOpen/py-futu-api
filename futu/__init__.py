@@ -115,6 +115,7 @@ from futu.common.constant import *
 from futu.common.sys_config import SysConfig
 from futu.common.diag import print_sys_info
 from futu.common.err import Err
+from futu.quote.quote_get_warrant import Request as WarrantRequest
 
 with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'VERSION.txt'), 'rb') as f:
     __version__ = f.read().decode('ascii').strip()
