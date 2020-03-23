@@ -14,7 +14,7 @@ from futu.common.pb import Qot_Common_pb2
 from futu.common.pb import Trd_Common_pb2
 from futu.common.pb import Qot_SetPriceReminder_pb2
 from futu.common.pb import Qot_UpdatePriceReminder_pb2
-from futu.common.pb import GetUserSecurityGroup_pb2
+from futu.common.pb import Qot_GetUserSecurityGroup_pb2
 from copy import copy
 from abc import abstractmethod
 
