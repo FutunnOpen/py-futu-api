@@ -1,6 +1,7 @@
 syntax = "proto2";
 package Common;
 option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/common";
 
 
 //返回结果

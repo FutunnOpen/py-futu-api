@@ -101,6 +101,7 @@ _check_package('pycryptodome')
 from futu.quote.open_quote_context import OpenQuoteContext
 from futu.quote.quote_response_handler import *
 from futu.trade.trade_response_handler import *
+from futu.quote.quote_get_warrant import Request as WarrantRequest
 
 #import HK and US trade context
 from futu.trade.open_trade_context import OpenHKTradeContext

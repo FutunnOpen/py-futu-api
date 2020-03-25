@@ -1,6 +1,7 @@
 syntax = "proto2";
 package Trd_GetHistoryOrderList;
 option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/trdgethistoryorderlist";
 
 import "Common.proto";
 import "Trd_Common.proto";

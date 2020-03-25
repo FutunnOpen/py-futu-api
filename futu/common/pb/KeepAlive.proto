@@ -1,6 +1,7 @@
 syntax = "proto2";
 package KeepAlive;
 option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/keepalive";
 
 import "Common.proto";
 

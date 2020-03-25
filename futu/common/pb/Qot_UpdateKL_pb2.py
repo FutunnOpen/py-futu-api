@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_UpdateKL.proto',
   package='Qot_UpdateKL',
   syntax='proto2',
-  serialized_pb=_b('\n\x12Qot_UpdateKL.proto\x12\x0cQot_UpdateKL\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"s\n\x03S2C\x12\x11\n\trehabType\x18\x01 \x02(\x05\x12\x0e\n\x06klType\x18\x02 \x02(\x05\x12&\n\x08security\x18\x03 \x02(\x0b\x32\x14.Qot_Common.Security\x12!\n\x06klList\x18\x04 \x03(\x0b\x32\x11.Qot_Common.KLine\"b\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1e\n\x03s2c\x18\x04 \x01(\x0b\x32\x11.Qot_UpdateKL.S2CB\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x12Qot_UpdateKL.proto\x12\x0cQot_UpdateKL\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"s\n\x03S2C\x12\x11\n\trehabType\x18\x01 \x02(\x05\x12\x0e\n\x06klType\x18\x02 \x02(\x05\x12&\n\x08security\x18\x03 \x02(\x0b\x32\x14.Qot_Common.Security\x12!\n\x06klList\x18\x04 \x03(\x0b\x32\x11.Qot_Common.KLine\"b\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1e\n\x03s2c\x18\x04 \x01(\x0b\x32\x11.Qot_UpdateKL.S2CBB\n\x13\x63om.futu.openapi.pbZ+github.com/futuopen/ftapi4go/pb/qotupdatekl')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -154,5 +154,5 @@ _sym_db.RegisterMessage(Response)
 
 
 DESCRIPTOR.has_options = True
-DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pbZ+github.com/futuopen/ftapi4go/pb/qotupdatekl'))
 # @@protoc_insertion_point(module_scope)

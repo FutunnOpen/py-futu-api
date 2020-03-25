@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_UpdatePriceReminder.proto',
   package='Qot_UpdatePriceReminder',
   syntax='proto2',
-  serialized_pb=_b('\n\x1dQot_UpdatePriceReminder.proto\x12\x17Qot_UpdatePriceReminder\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x85\x01\n\x03S2C\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\r\n\x05price\x18\x02 \x02(\x01\x12\x12\n\nchangeRate\x18\x03 \x02(\x01\x12\x14\n\x0cmarketStatus\x18\x04 \x02(\x05\x12\x0f\n\x07\x63ontent\x18\x05 \x02(\t\x12\x0c\n\x04note\x18\x06 \x02(\t\"m\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12)\n\x03s2c\x18\x04 \x01(\x0b\x32\x1c.Qot_UpdatePriceReminder.S2C*p\n\x0cMarketStatus\x12\x17\n\x13MarketStatus_Unknow\x10\x00\x12\x15\n\x11MarketStatus_Open\x10\x01\x12\x16\n\x12MarketStatus_USPre\x10\x02\x12\x18\n\x14MarketStatus_USAfter\x10\x03\x42\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x1dQot_UpdatePriceReminder.proto\x12\x17Qot_UpdatePriceReminder\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\xc4\x01\n\x03S2C\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\r\n\x05price\x18\x02 \x02(\x01\x12\x12\n\nchangeRate\x18\x03 \x02(\x01\x12\x14\n\x0cmarketStatus\x18\x04 \x02(\x05\x12\x0f\n\x07\x63ontent\x18\x05 \x02(\t\x12\x0c\n\x04note\x18\x06 \x02(\t\x12\x0b\n\x03key\x18\x07 \x01(\x03\x12\x0c\n\x04type\x18\x08 \x01(\x05\x12\x10\n\x08setValue\x18\t \x01(\x01\x12\x10\n\x08\x63urValue\x18\n \x01(\x01\"m\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12)\n\x03s2c\x18\x04 \x01(\x0b\x32\x1c.Qot_UpdatePriceReminder.S2C*p\n\x0cMarketStatus\x12\x17\n\x13MarketStatus_Unknow\x10\x00\x12\x15\n\x11MarketStatus_Open\x10\x01\x12\x16\n\x12MarketStatus_USPre\x10\x02\x12\x18\n\x14MarketStatus_USAfter\x10\x03\x42M\n\x13\x63om.futu.openapi.pbZ6github.com/futuopen/ftapi4go/pb/qotupdatepricereminder')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -51,8 +51,8 @@ _MARKETSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=337,
-  serialized_end=449,
+  serialized_start=400,
+  serialized_end=512,
 )
 _sym_db.RegisterEnumDescriptor(_MARKETSTATUS)
 
@@ -113,6 +113,34 @@ _S2C = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='key', full_name='Qot_UpdatePriceReminder.S2C.key', index=6,
+      number=7, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='type', full_name='Qot_UpdatePriceReminder.S2C.type', index=7,
+      number=8, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='setValue', full_name='Qot_UpdatePriceReminder.S2C.setValue', index=8,
+      number=9, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='curValue', full_name='Qot_UpdatePriceReminder.S2C.curValue', index=9,
+      number=10, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -126,7 +154,7 @@ _S2C = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=91,
-  serialized_end=224,
+  serialized_end=287,
 )
 
 
@@ -177,8 +205,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=226,
-  serialized_end=335,
+  serialized_start=289,
+  serialized_end=398,
 )
 
 _S2C.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY
@@ -204,5 +232,5 @@ _sym_db.RegisterMessage(Response)
 
 
 DESCRIPTOR.has_options = True
-DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pbZ6github.com/futuopen/ftapi4go/pb/qotupdatepricereminder'))
 # @@protoc_insertion_point(module_scope)

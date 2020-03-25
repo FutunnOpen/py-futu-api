@@ -1,6 +1,7 @@
 syntax = "proto2";
 package Qot_Common;
 option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/qotcommon";
 
 import "Common.proto";
 
@@ -413,15 +414,15 @@ enum QotRight
 enum PriceReminderType
 {
 	PriceReminderType_Unknown = 0; // 未知
-    PriceReminderType_PriceUp = 1; // 当前价涨价设置
-	PriceReminderType_PriceDown = 2; // 当前价跌价设置
-	PriceReminderType_ChangeRateUp = 3; // 当前涨幅设置
-	PriceReminderType_ChangeRateDown = 4; // 当前跌幅设置
-	PriceReminderType_5MinChangeRateUp = 5; // 5分钟涨幅设置
-	PriceReminderType_5MinChangeRateDown = 6; // 5分钟跌幅设置
-	PriceReminderType_VolumeUp = 7; // 成交量大于
-	PriceReminderType_TurnoverUp = 8; // 成交额大于
-	PriceReminderType_TurnoverRateUp = 9; // 换手率大于
+    PriceReminderType_PriceUp = 1; // 价格涨到
+	PriceReminderType_PriceDown = 2; // 价格跌到
+	PriceReminderType_ChangeRateUp = 3; // 日涨幅超
+	PriceReminderType_ChangeRateDown = 4; // 日跌幅超
+	PriceReminderType_5MinChangeRateUp = 5; // 5分钟涨幅超
+	PriceReminderType_5MinChangeRateDown = 6; // 5分钟跌幅超
+	PriceReminderType_VolumeUp = 7; // 成交量超过
+	PriceReminderType_TurnoverUp = 8; // 成交额超过
+	PriceReminderType_TurnoverRateUp = 9; // 换手率超过
 	PriceReminderType_BidPriceUp = 10; // 买一价高于
 	PriceReminderType_AskPriceDown = 11; // 卖一价低于
 	PriceReminderType_BidVolUp = 12; // 买一量高于	
