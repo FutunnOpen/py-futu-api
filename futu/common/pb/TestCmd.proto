@@ -1,6 +1,7 @@
 syntax = "proto2";
 package TestCmd;
 option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/testcmd";
 
 
 //内部使用
