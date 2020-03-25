@@ -1516,7 +1516,7 @@ class OpenQuoteContext(OpenContextBase):
                 =====================   ===========   ==============================================================
                 参数                      类型                        说明
                 =====================   ===========   ==============================================================
-                stock_code               str            股票代码
+                code                     str            股票代码
                 sequence                 int            逐笔序号
                 time                     str            成交时间（美股默认是美东时间，港股A股默认是北京时间）
                 price                    float          成交价格
@@ -1955,7 +1955,7 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, holding_change_list
 
-    def get_option_chain(self, code, index_option_type=IndexOptionType.NORMAL, start=None, end=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL):
+    def get_option_chain(self, code, index_option_type=IndexOptionType.NORMAL, start=None, end=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL, data_filter = None):
         """
         通过标的股查询期权
 
@@ -1974,6 +1974,30 @@ class OpenQuoteContext(OpenContextBase):
                 ==========    ==========    ========================================
         :param option_type: 期权类型,默认全部，全部/看涨/看跌，futu.common.constant.OptionType
         :param option_cond_type: 默认全部，全部/价内/价外，futu.common.constant.OptionCondType
+        :param data_filter: 数据筛选条件，默认不筛选，参考OptionDataFilter,
+                OptionDataFilter字段如下：
+                ============================    ==========    ========================================
+                 字段                            类型           说明
+                ============================    ==========    ========================================
+                 implied_volatility_min         float          隐含波动率过滤起点 %
+                 implied_volatility_max         float          隐含波动率过滤终点 %
+                 delta_min                      float          希腊值 Delta过滤起点
+                 delta_max                      float          希腊值 Delta过滤终点
+                 gamma_min                      float          希腊值 Gamma过滤起点
+                 gamma_max                      float          希腊值 Gamma过滤终点
+                 vega_min                       float          希腊值 Vega过滤起点
+                 vega_max                       float          希腊值 Vega过滤终点
+                 theta_min                      float          希腊值 Theta过滤起点
+                 theta_max                      float          希腊值 Theta过滤终点
+                 rho_min                        float          希腊值 Rho过滤起点
+                 rho_max                        float          希腊值 Rho过滤终点
+                 net_open_interest_min          float          净未平仓合约数过滤起点
+                 net_open_interest_max          float          净未平仓合约数过滤终点
+                 open_interest_min              float          未平仓合约数过滤起点
+                 open_interest_max              float          未平仓合约数过滤终点
+                 vol_min                        float          成交量过滤起点
+                 vol_max                        float          成交量过滤终点
+                ============================    ==========    ========================================
         :return: (ret, data)
 
                 ret == RET_OK 返回pd dataframe数据，数据列格式如下
@@ -2007,6 +2031,18 @@ class OpenQuoteContext(OpenContextBase):
             msg = ERROR_STR_PREFIX + "the type of index_option_type param is wrong"
             return RET_ERROR, msg
 
+        if data_filter is not None and not isinstance(data_filter, OptionDataFilter):
+            msg = ERROR_STR_PREFIX + "the type of data_filter param is wrong"
+            return RET_ERROR, msg
+
+        if option_type not in OPTION_TYPE_CLASS_MAP:
+            msg = ERROR_STR_PREFIX + "the type of option_type param is wrong"
+            return RET_ERROR, msg
+
+        if option_cond_type not in OPTION_COND_TYPE_CLASS_MAP:
+            msg = ERROR_STR_PREFIX + "the type of option_cond_type param is wrong"
+            return RET_ERROR, msg
+
         ret_code, msg, start, end = normalize_start_end_date(
             start, end, delta_days=29, default_time_end='00:00:00', prefer_end_now=False)
         if ret_code != RET_OK:
@@ -2021,7 +2057,8 @@ class OpenQuoteContext(OpenContextBase):
             "start_date": start,
             "end_date": end,
             "option_cond_type": option_cond_type,
-            "option_type": option_type
+            "option_type": option_type,
+            "data_filter": data_filter
         }
 
         ret_code, msg, option_chain_list = query_processor(**kargs)
@@ -2092,6 +2129,10 @@ class OpenQuoteContext(OpenContextBase):
 
         if stock_owner is not None:
             req.stock_owner = stock_owner
+
+        r, v = SortField.to_number(req.sort_field)
+        if not r:
+            return RET_ERROR, 'sort_field is wrong. must be SortField'
 
         query_processor = self._get_sync_query_processor(
             QuoteWarrant.pack_req, QuoteWarrant.unpack_rsp)
@@ -2626,3 +2667,127 @@ class OpenQuoteContext(OpenContextBase):
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)
             return RET_OK, ret_frame
+
+    def set_price_reminder(self, code, op, key=None, reminder_type=None, reminder_freq=None, value=None, note=None):
+        """
+         新增、删除、修改、启用、禁用 某只股票的到价提醒，每只股票每种类型最多可设置10个提醒
+         注意：
+            1. API 中成交量设置统一以股为单位。但是牛牛客户端中，A 股是以为手为单位展示
+            2. 到价提醒类型，存在最小精度，如下：
+                TURNOVER_UP：成交额最小精度为 10 元（人民币元，港元，美元）。传入的数值会自动向下取整到最小精度的整数倍。
+                    如果设置【00700成交额102元提醒】，设置后会得到【00700成交额100元提醒】；如果设置【00700 成交额 8 元提醒】，设置后会得到【00700 成交额 0 元提醒】
+                VOLUME_UP：A 股成交量最小精度为 1000 股，其他市场股票成交量最小精度为 10 股。传入的数值会自动向下取整到最小精度的整数倍。
+                BID_VOL_UP、ASK_VOL_UP：A 股的买一卖一量最小精度为 100 股。传入的数值会自动向下取整到最小精度的整数倍。
+                其余到价提醒类型精度支持到小数点后 3 位
+        :param code: 股票
+        :param op：SetPriceReminderOp，操作类型
+        :param key: int64，标识，新增的情况不需要填
+        :param reminder_type: PriceReminderType，到价提醒的频率，删除、启用、禁用的情况下会忽略该入参
+        :param reminder_freq: PriceReminderFreq，到价提醒的频率，删除、启用、禁用的情况下会忽略该入参
+        :param value: float，提醒值，删除、启用、禁用的情况下会忽略该入参
+        :param note: str，用户设置的备注，删除、启用、禁用的情况下会忽略该入参
+        :return: (ret, data)
+        ret != RET_OK 返回错误字符串
+        ret == RET_OK data为key
+        """
+        if code is None or is_str(code) is False:
+            error_str = ERROR_STR_PREFIX + 'the type of code param is wrong'
+            return RET_ERROR, error_str
+
+        r, v = SetPriceReminderOp.to_number(op)
+        if r is False:
+            error_str = ERROR_STR_PREFIX + "the type of param in op is wrong"
+            return RET_ERROR, error_str
+
+        if reminder_type is not None :
+            r, v = PriceReminderType.to_number(reminder_type)
+            if r is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in reminder_type is wrong"
+                return RET_ERROR, error_str
+
+        if reminder_freq is not None :
+            r, v = PriceReminderFreq.to_number(reminder_freq)
+            if r is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in reminder_freq is wrong"
+                return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            SetPriceReminderQuery.pack_req,
+            SetPriceReminderQuery.unpack,
+        )
+
+        kargs = {
+            "code": code,
+            "op": op,
+            "key": key,
+            "reminder_type": reminder_type,
+            "reminder_freq": reminder_freq,
+            "value": value,
+            "note": note,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, key = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        else:
+            return RET_OK, key
+
+    def get_price_reminder(self, code=None, market=None):
+        """
+         获取对某只股票(某个市场)设置的到价提醒列表
+        :param code: 获取该股票的到价提醒，code和market二选一，都存在的情况下code优先
+        :param market: 获取该市场的到价提醒，注意传入沪深都会认为是A股市场
+        :return: (ret, data)
+        ret != RET_OK 返回错误字符串
+        ret == RET_OK data为DataFrame类型，字段如下:
+        =========================   ==================   =========================
+        参数                         类型                 说明
+        =========================   ==================   =========================
+        code                        str                  股票代码
+        key                         int64                标识，用于修改到价提醒
+        reminder_type               PriceReminderType    到价提醒的类型
+        reminder_freq               PriceReminderFreq    到价提醒的频率
+        value                       float                提醒值
+        enable                      bool                 是否启用
+        note                        string               备注，最多10个字符
+        =========================   ==================   =========================
+        """
+        if code is not None and is_str(code) is False:
+            error_str = ERROR_STR_PREFIX + 'the type of code param is wrong'
+            return RET_ERROR, error_str
+
+        if code is None and market is not None and market not in MKT_MAP:
+            error_str = ERROR_STR_PREFIX + "the type of param in market is wrong"
+            return RET_ERROR, error_str
+
+        if code is None and market is None:
+            error_str = ERROR_STR_PREFIX + "must be use one of these params(code, market)"
+            return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            GetPriceReminderQuery.pack_req,
+            GetPriceReminderQuery.unpack,
+        )
+
+        kargs = {
+                "code": code,
+                "market": market,
+                "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+                'code',
+                'key',
+                'reminder_type',
+                'reminder_freq',
+                'value',
+                'enable',
+                'note',
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"

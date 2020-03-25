@@ -63,9 +63,6 @@ class Request(object):
         self.premium_min = None
         self.premium_max = None
         self.leverage_ratio_min = None
-        self.delta_max = None
-        self.delta_max = None
-        self.delta_max = None
         self.leverage_ratio_max = None
         self.delta_min = None
         self.delta_max = None
@@ -86,6 +83,9 @@ class Request(object):
         if not r:
             return RET_ERROR, 'sort_field is wrong. must be SortField'
         pb.c2s.sortField = v
+
+        if type(self.ascend) != bool:
+            return RET_ERROR, 'ascend is wrong. must be bool'
 
         pb.c2s.ascend = self.ascend
         if self.stock_owner is not None and len(self.stock_owner) != 0:

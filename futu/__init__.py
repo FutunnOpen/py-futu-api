@@ -46,10 +46,13 @@ def _check_module(mod_name, package_name=None, version=None, version_getter=None
         sys.exit(1)
 
     if version is not None:
-        mod_version = version_getter(mod)
-        if not _check_version_no_older(mod_version, version):
-            print("The current version of package {} is {}, not compatible. You need use {} or newer.".format(package_name, mod_version, version))
-            sys.exit(1)
+        try:
+            mod_version = version_getter(mod)
+            if not _check_version_no_older(mod_version, version):
+                print("The current version of package {} is {}, not compatible. You need use {} or newer.".format(package_name, mod_version, version))
+                sys.exit(1)
+        except Exception:
+            return   # 取版本号出了异常，一般是因为版本号中含有非数字的部分，这种无法处理，默认成功
 
 
 def _pip_get_package_version(package_name):
@@ -112,6 +115,7 @@ from futu.common.constant import *
 from futu.common.sys_config import SysConfig
 from futu.common.diag import print_sys_info
 from futu.common.err import Err
+from futu.quote.quote_get_warrant import Request as WarrantRequest
 
 with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'VERSION.txt'), 'rb') as f:
     __version__ = f.read().decode('ascii').strip()

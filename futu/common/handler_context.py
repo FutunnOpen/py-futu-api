@@ -50,6 +50,10 @@ class HandlerContext:
             3015: {
                 "type": BrokerHandlerBase,
                 "obj": BrokerHandlerBase()
+            },
+            3019: {
+                "type": PriceReminderHandlerBase,
+                "obj": PriceReminderHandlerBase()
             }
             # 3017: {
             #     "type": OrderDetailHandlerBase,

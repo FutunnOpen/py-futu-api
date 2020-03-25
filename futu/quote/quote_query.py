@@ -2071,6 +2071,26 @@ class HoldingChangeList:
 
         return RET_OK, "", data_list
 
+class OptionDataFilter:
+    def __init__(self):
+        self.implied_volatility_min = None  # 隐含波动率过滤起点 %
+        self.implied_volatility_max = None  # 隐含波动率过滤终点 %
+        self.delta_min = None  # 希腊值 Delta过滤起点
+        self.delta_max = None  # 希腊值 Delta过滤终点
+        self.gamma_min = None  # 希腊值 Gamma过滤起点
+        self.gamma_max = None  # 希腊值 Gamma过滤终点
+        self.vega_min = None # 希腊值 Vega过滤起点
+        self.vega_max = None  # 希腊值 Vega过滤终点
+        self.theta_min = None  # 希腊值 Theta过滤起点
+        self.theta_max = None  # 希腊值 Theta过滤终点
+        self.rho_min = None  # 希腊值 Rho过滤起点
+        self.rho_max = None  # 希腊值 Rho过滤终点
+        self.net_open_interest_min = None  # 净未平仓合约数过滤起点
+        self.net_open_interest_max = None  # 净未平仓合约数过滤终点
+        self.open_interest_min = None  # 未平仓合约数过滤起点
+        self.open_interest_max = None  # 未平仓合约数过滤终点
+        self.vol_min = None  # 成交量过滤起点
+        self.vol_max = None  # 成交量过滤终点
 
 class OptionChain:
     """
@@ -2081,7 +2101,7 @@ class OptionChain:
         pass
 
     @classmethod
-    def pack_req(cls, code, index_option_type, conn_id, start_date, end_date=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL):
+    def pack_req(cls, code, index_option_type, conn_id, start_date, end_date=None, option_type=OptionType.ALL, option_cond_type=OptionCondType.ALL, data_filter = None):
 
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
@@ -2127,6 +2147,52 @@ class OptionChain:
             req.c2s.type = option_type
         if option_cond_type is not None:
             req.c2s.condition = option_cond_type
+
+        if data_filter is not None:
+            if data_filter.implied_volatility_min is not None:
+                req.c2s.dataFilter.impliedVolatilityMin = data_filter.implied_volatility_min
+            if data_filter.implied_volatility_max is not None:
+                req.c2s.dataFilter.impliedVolatilityMax = data_filter.implied_volatility_max
+
+            if data_filter.delta_min is not None:
+                req.c2s.dataFilter.deltaMin = data_filter.delta_min
+            if data_filter.delta_max is not None:
+                req.c2s.dataFilter.deltaMax = data_filter.delta_max
+
+            if data_filter.gamma_min is not None:
+                req.c2s.dataFilter.gammaMin = data_filter.gamma_min
+            if data_filter.gamma_max is not None:
+                req.c2s.dataFilter.gammaMax = data_filter.gamma_max
+
+            if data_filter.vega_min is not None:
+                req.c2s.dataFilter.vegaMin = data_filter.vega_min
+            if data_filter.vega_max is not None:
+                req.c2s.dataFilter.vegaMax = data_filter.vega_max
+
+            if data_filter.theta_min is not None:
+                req.c2s.dataFilter.thetaMin = data_filter.theta_min
+            if data_filter.theta_max is not None:
+                req.c2s.dataFilter.thetaMax = data_filter.theta_max
+
+            if data_filter.rho_min is not None:
+                req.c2s.dataFilter.rhoMin = data_filter.rho_min
+            if data_filter.rho_max is not None:
+                req.c2s.dataFilter.rhoMax = data_filter.rho_max
+
+            if data_filter.net_open_interest_min is not None:
+                req.c2s.dataFilter.netOpenInterestMin = data_filter.net_open_interest_min
+            if data_filter.net_open_interest_max is not None:
+                req.c2s.dataFilter.netOpenInterestMax = data_filter.net_open_interest_max
+
+            if data_filter.open_interest_min is not None:
+                req.c2s.dataFilter.openInterestMin = data_filter.open_interest_min
+            if data_filter.open_interest_max is not None:
+                req.c2s.dataFilter.openInterestMax = data_filter.open_interest_max
+
+            if data_filter.vol_min is not None:
+                req.c2s.dataFilter.volMin = data_filter.vol_min
+            if data_filter.vol_max is not None:
+                req.c2s.dataFilter.volMax = data_filter.vol_max
 
         return pack_pb_req(req, ProtoId.Qot_GetOptionChain, conn_id)
 
@@ -3087,3 +3153,132 @@ class TestCmd:
             return RET_ERROR, "rsp_pb error", None
 
         return RET_OK, "", res
+
+
+class UpdatePriceReminder:
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        """Unpack the init connect response"""
+        ret_type = rsp_pb.retType
+        ret_msg = rsp_pb.retMsg
+
+        if ret_type != RET_OK:
+            return RET_ERROR, ret_msg, None
+
+        res = {}
+        if rsp_pb.HasField('s2c'):
+            res['code'] = merge_qot_mkt_stock_str(rsp_pb.s2c.security.market,
+                                                  rsp_pb.s2c.security.code)
+            res['price'] = rsp_pb.s2c.price
+            res['change_rate'] = rsp_pb.s2c.changeRate
+            res['market_status'] = PriceReminderMarketStatus.to_string2(rsp_pb.s2c.marketStatus)
+            res['content'] = rsp_pb.s2c.content
+            res['note'] = rsp_pb.s2c.note
+        else:
+            return RET_ERROR, "rsp_pb error", None
+
+        return RET_OK, "", res
+
+class SetPriceReminderQuery:
+    """
+    Query SetPriceReminder.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code, op, key, reminder_type, reminder_freq, value, note, conn_id):
+        """check stock_code 股票"""
+        ret, content = split_stock_str(code)
+        if ret == RET_ERROR:
+            error_str = content
+            return RET_ERROR, error_str, None
+        market_code, stock_code = content
+
+        # 开始组包
+        from futu.common.pb.Qot_SetPriceReminder_pb2 import Request
+        req = Request()
+        req.c2s.security.market = market_code
+        req.c2s.security.code = stock_code
+        r, req.c2s.op = SetPriceReminderOp.to_number(op)
+
+        if key is not None:
+            req.c2s.key = key
+        if reminder_type is not None:
+            r, req.c2s.type = PriceReminderType.to_number(reminder_type)
+        if reminder_freq is not None:
+            r, req.c2s.freq = PriceReminderFreq.to_number(reminder_freq)
+        if value is not None:
+            req.c2s.value = value
+        if note is not None:
+            req.c2s.note = note
+
+        return pack_pb_req(req, ProtoId.Qot_SetPriceReminder, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        key = rsp_pb.s2c.key
+        return RET_OK, "", key
+
+
+class GetPriceReminderQuery:
+    """
+    Query GetPriceReminder.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code, market, conn_id):
+        """check stock_code 查询股票下的到价提醒项"""
+        market_code = 0
+        stock_code = ''
+        if code is not None:
+            ret, content = split_stock_str(code)
+            if ret == RET_ERROR:
+                error_str = content
+                return RET_ERROR, error_str, None
+            market_code, stock_code = content
+
+        # 开始组包
+        from futu.common.pb.Qot_GetPriceReminder_pb2 import Request
+        req = Request()
+        if code is not None:
+            req.c2s.security.market = market_code
+            req.c2s.security.code = stock_code
+        elif market is not None and market is not Market.NONE:
+            req.c2s.market = MKT_MAP[market]
+        return pack_pb_req(req, ProtoId.Qot_GetPriceReminder, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        ret_list = list()
+        #  到价提醒 type = Qot_GetPriceReminder.PriceReminder
+        for item in rsp_pb.s2c.priceReminderList:
+            stock_code = merge_qot_mkt_stock_str(item.security.market, item.security.code)
+            #  提醒信息列表 type = Qot_GetPriceReminder.PriceReminderItem
+            for sub_item in item.itemList:
+                data = {}
+                data["code"] = stock_code
+                #  每个提醒的唯一标识 type = int64
+                data["key"] = sub_item.key
+                #  Qot_Common::PriceReminderType 提醒类型 type = int32
+                data["reminder_type"] = PriceReminderType.to_string2(sub_item.type)
+                #  Qot_Common::PriceReminderFreq 提醒频率类型 type = int32
+                data["reminder_freq"] = PriceReminderFreq.to_string2(sub_item.freq)
+                #  提醒参数值 type = double
+                data["value"] = sub_item.value
+                #  该提醒设置是否生效。false不生效，true生效 type = bool
+                data["enable"] = sub_item.isEnable
+                #  用户设置到价提醒时的标注 type = string
+                data["note"] = sub_item.note
+                ret_list.append(data)
+        return RET_OK, "", ret_list

@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetOptionChain.proto',
   package='Qot_GetOptionChain',
   syntax='proto2',
-  serialized_pb=_b('\n\x18Qot_GetOptionChain.proto\x12\x12Qot_GetOptionChain\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x88\x01\n\x03\x43\x32S\x12#\n\x05owner\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x17\n\x0findexOptionType\x18\x06 \x01(\x05\x12\x0c\n\x04type\x18\x02 \x01(\x05\x12\x11\n\tcondition\x18\x03 \x01(\x05\x12\x11\n\tbeginTime\x18\x04 \x02(\t\x12\x0f\n\x07\x65ndTime\x18\x05 \x02(\t\"g\n\nOptionItem\x12,\n\x04\x63\x61ll\x18\x01 \x01(\x0b\x32\x1e.Qot_Common.SecurityStaticInfo\x12+\n\x03put\x18\x02 \x01(\x0b\x32\x1e.Qot_Common.SecurityStaticInfo\"j\n\x0bOptionChain\x12\x12\n\nstrikeTime\x18\x01 \x02(\t\x12.\n\x06option\x18\x02 \x03(\x0b\x32\x1e.Qot_GetOptionChain.OptionItem\x12\x17\n\x0fstrikeTimestamp\x18\x03 \x01(\x01\";\n\x03S2C\x12\x34\n\x0boptionChain\x18\x01 \x03(\x0b\x32\x1f.Qot_GetOptionChain.OptionChain\"/\n\x07Request\x12$\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x17.Qot_GetOptionChain.C2S\"h\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12$\n\x03s2c\x18\x04 \x01(\x0b\x32\x17.Qot_GetOptionChain.S2C*b\n\x0eOptionCondType\x12\x19\n\x15OptionCondType_Unknow\x10\x00\x12\x19\n\x15OptionCondType_WithIn\x10\x01\x12\x1a\n\x16OptionCondType_Outside\x10\x02\x42\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x18Qot_GetOptionChain.proto\x12\x12Qot_GetOptionChain\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x80\x03\n\nDataFilter\x12\x1c\n\x14impliedVolatilityMin\x18\x01 \x01(\x01\x12\x1c\n\x14impliedVolatilityMax\x18\x02 \x01(\x01\x12\x10\n\x08\x64\x65ltaMin\x18\x03 \x01(\x01\x12\x10\n\x08\x64\x65ltaMax\x18\x04 \x01(\x01\x12\x10\n\x08gammaMin\x18\x05 \x01(\x01\x12\x10\n\x08gammaMax\x18\x06 \x01(\x01\x12\x0f\n\x07vegaMin\x18\x07 \x01(\x01\x12\x0f\n\x07vegaMax\x18\x08 \x01(\x01\x12\x10\n\x08thetaMin\x18\t \x01(\x01\x12\x10\n\x08thetaMax\x18\n \x01(\x01\x12\x0e\n\x06rhoMin\x18\x0b \x01(\x01\x12\x0e\n\x06rhoMax\x18\x0c \x01(\x01\x12\x1a\n\x12netOpenInterestMin\x18\r \x01(\x01\x12\x1a\n\x12netOpenInterestMax\x18\x0e \x01(\x01\x12\x17\n\x0fopenInterestMin\x18\x0f \x01(\x01\x12\x17\n\x0fopenInterestMax\x18\x10 \x01(\x01\x12\x0e\n\x06volMin\x18\x11 \x01(\x01\x12\x0e\n\x06volMax\x18\x12 \x01(\x01\"\xbc\x01\n\x03\x43\x32S\x12#\n\x05owner\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x17\n\x0findexOptionType\x18\x06 \x01(\x05\x12\x0c\n\x04type\x18\x02 \x01(\x05\x12\x11\n\tcondition\x18\x03 \x01(\x05\x12\x11\n\tbeginTime\x18\x04 \x02(\t\x12\x0f\n\x07\x65ndTime\x18\x05 \x02(\t\x12\x32\n\ndataFilter\x18\x07 \x01(\x0b\x32\x1e.Qot_GetOptionChain.DataFilter\"g\n\nOptionItem\x12,\n\x04\x63\x61ll\x18\x01 \x01(\x0b\x32\x1e.Qot_Common.SecurityStaticInfo\x12+\n\x03put\x18\x02 \x01(\x0b\x32\x1e.Qot_Common.SecurityStaticInfo\"j\n\x0bOptionChain\x12\x12\n\nstrikeTime\x18\x01 \x02(\t\x12.\n\x06option\x18\x02 \x03(\x0b\x32\x1e.Qot_GetOptionChain.OptionItem\x12\x17\n\x0fstrikeTimestamp\x18\x03 \x01(\x01\";\n\x03S2C\x12\x34\n\x0boptionChain\x18\x01 \x03(\x0b\x32\x1f.Qot_GetOptionChain.OptionChain\"/\n\x07Request\x12$\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x17.Qot_GetOptionChain.C2S\"h\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12$\n\x03s2c\x18\x04 \x01(\x0b\x32\x17.Qot_GetOptionChain.S2C*b\n\x0eOptionCondType\x12\x19\n\x15OptionCondType_Unknow\x10\x00\x12\x19\n\x15OptionCondType_WithIn\x10\x01\x12\x1a\n\x16OptionCondType_Outside\x10\x02\x42\x15\n\x13\x63om.futu.openapi.pb')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -47,8 +47,8 @@ _OPTIONCONDTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=648,
-  serialized_end=746,
+  serialized_start=1087,
+  serialized_end=1185,
 )
 _sym_db.RegisterEnumDescriptor(_OPTIONCONDTYPE)
 
@@ -57,6 +57,156 @@ OptionCondType_Unknow = 0
 OptionCondType_WithIn = 1
 OptionCondType_Outside = 2
 
+
+
+_DATAFILTER = _descriptor.Descriptor(
+  name='DataFilter',
+  full_name='Qot_GetOptionChain.DataFilter',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='impliedVolatilityMin', full_name='Qot_GetOptionChain.DataFilter.impliedVolatilityMin', index=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='impliedVolatilityMax', full_name='Qot_GetOptionChain.DataFilter.impliedVolatilityMax', index=1,
+      number=2, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='deltaMin', full_name='Qot_GetOptionChain.DataFilter.deltaMin', index=2,
+      number=3, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='deltaMax', full_name='Qot_GetOptionChain.DataFilter.deltaMax', index=3,
+      number=4, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='gammaMin', full_name='Qot_GetOptionChain.DataFilter.gammaMin', index=4,
+      number=5, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='gammaMax', full_name='Qot_GetOptionChain.DataFilter.gammaMax', index=5,
+      number=6, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='vegaMin', full_name='Qot_GetOptionChain.DataFilter.vegaMin', index=6,
+      number=7, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='vegaMax', full_name='Qot_GetOptionChain.DataFilter.vegaMax', index=7,
+      number=8, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='thetaMin', full_name='Qot_GetOptionChain.DataFilter.thetaMin', index=8,
+      number=9, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='thetaMax', full_name='Qot_GetOptionChain.DataFilter.thetaMax', index=9,
+      number=10, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='rhoMin', full_name='Qot_GetOptionChain.DataFilter.rhoMin', index=10,
+      number=11, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='rhoMax', full_name='Qot_GetOptionChain.DataFilter.rhoMax', index=11,
+      number=12, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='netOpenInterestMin', full_name='Qot_GetOptionChain.DataFilter.netOpenInterestMin', index=12,
+      number=13, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='netOpenInterestMax', full_name='Qot_GetOptionChain.DataFilter.netOpenInterestMax', index=13,
+      number=14, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='openInterestMin', full_name='Qot_GetOptionChain.DataFilter.openInterestMin', index=14,
+      number=15, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='openInterestMax', full_name='Qot_GetOptionChain.DataFilter.openInterestMax', index=15,
+      number=16, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='volMin', full_name='Qot_GetOptionChain.DataFilter.volMin', index=16,
+      number=17, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='volMax', full_name='Qot_GetOptionChain.DataFilter.volMax', index=17,
+      number=18, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=81,
+  serialized_end=465,
+)
 
 
 _C2S = _descriptor.Descriptor(
@@ -108,6 +258,13 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='dataFilter', full_name='Qot_GetOptionChain.C2S.dataFilter', index=6,
+      number=7, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -120,8 +277,8 @@ _C2S = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=81,
-  serialized_end=217,
+  serialized_start=468,
+  serialized_end=656,
 )
 
 
@@ -158,8 +315,8 @@ _OPTIONITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=219,
-  serialized_end=322,
+  serialized_start=658,
+  serialized_end=761,
 )
 
 
@@ -203,8 +360,8 @@ _OPTIONCHAIN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=324,
-  serialized_end=430,
+  serialized_start=763,
+  serialized_end=869,
 )
 
 
@@ -234,8 +391,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=432,
-  serialized_end=491,
+  serialized_start=871,
+  serialized_end=930,
 )
 
 
@@ -265,8 +422,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=493,
-  serialized_end=540,
+  serialized_start=932,
+  serialized_end=979,
 )
 
 
@@ -317,17 +474,19 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=542,
-  serialized_end=646,
+  serialized_start=981,
+  serialized_end=1085,
 )
 
 _C2S.fields_by_name['owner'].message_type = Qot__Common__pb2._SECURITY
+_C2S.fields_by_name['dataFilter'].message_type = _DATAFILTER
 _OPTIONITEM.fields_by_name['call'].message_type = Qot__Common__pb2._SECURITYSTATICINFO
 _OPTIONITEM.fields_by_name['put'].message_type = Qot__Common__pb2._SECURITYSTATICINFO
 _OPTIONCHAIN.fields_by_name['option'].message_type = _OPTIONITEM
 _S2C.fields_by_name['optionChain'].message_type = _OPTIONCHAIN
 _REQUEST.fields_by_name['c2s'].message_type = _C2S
 _RESPONSE.fields_by_name['s2c'].message_type = _S2C
+DESCRIPTOR.message_types_by_name['DataFilter'] = _DATAFILTER
 DESCRIPTOR.message_types_by_name['C2S'] = _C2S
 DESCRIPTOR.message_types_by_name['OptionItem'] = _OPTIONITEM
 DESCRIPTOR.message_types_by_name['OptionChain'] = _OPTIONCHAIN
@@ -336,6 +495,13 @@ DESCRIPTOR.message_types_by_name['Request'] = _REQUEST
 DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
 DESCRIPTOR.enum_types_by_name['OptionCondType'] = _OPTIONCONDTYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+DataFilter = _reflection.GeneratedProtocolMessageType('DataFilter', (_message.Message,), dict(
+  DESCRIPTOR = _DATAFILTER,
+  __module__ = 'Qot_GetOptionChain_pb2'
+  # @@protoc_insertion_point(class_scope:Qot_GetOptionChain.DataFilter)
+  ))
+_sym_db.RegisterMessage(DataFilter)
 
 C2S = _reflection.GeneratedProtocolMessageType('C2S', (_message.Message,), dict(
   DESCRIPTOR = _C2S,

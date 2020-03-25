@@ -12,6 +12,8 @@ from futu.common.pb import Verification_pb2
 from futu.common.pb import Qot_GetReference_pb2
 from futu.common.pb import Qot_Common_pb2
 from futu.common.pb import Trd_Common_pb2
+from futu.common.pb import Qot_SetPriceReminder_pb2
+from futu.common.pb import Qot_UpdatePriceReminder_pb2
 from copy import copy
 from abc import abstractmethod
 
@@ -797,7 +799,8 @@ class ProtoId(object):
     Qot_UpdateOrderBook = 3013  # 推送买卖盘
     Qot_GetBroker = 3014  # 获取经纪队列
     Qot_UpdateBroker = 3015  # 推送经纪队列
-
+    Qot_UpdatePriceReminder = 3019 #到价提醒通知
+	
     # 历史数据
     Qot_GetHistoryKL = 3100  # 获取历史K线
     Qot_GetHistoryKLPoints = 3101  # 获取多只股票历史单点K线
@@ -832,8 +835,11 @@ class ProtoId(object):
     Qot_GetIpoList = 3217  # 获取新股Ipo
     Qot_GetFutureInfo = 3218 #获取期货资料
     Qot_RequestTradeDate = 3219 #在线拉取交易日
+    Qot_SetPriceReminder = 3220  # 设置到价提醒
+    Qot_GetPriceReminder = 3221  # 获取到价提醒
+
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
-                  Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker]
+                  Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
     @classmethod
     def is_proto_id_push(cls, id):
@@ -2240,4 +2246,84 @@ class TradeDateMarket(FtEnum):
             self.CN: Qot_Common_pb2.TradeDateMarket_CN,
             self.NT: Qot_Common_pb2.TradeDateMarket_NT,
             self.ST: Qot_Common_pb2.TradeDateMarket_ST
+        }
+
+class SetPriceReminderOp(FtEnum):
+    NONE = "N/A"                                       # 未知
+    ADD = "ADD"                                        # 新增
+    DEL = "DEL"                                        # 删除
+    ENABLE = "ENABLE"                                  # 启用
+    DISABLE = "DISABLE"                                # 禁用
+    MODIFY = "MODIFY"                                  # 修改
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Unknown,
+            self.ADD: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Add,
+            self.DEL: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Del,
+            self.ENABLE: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Enable,
+            self.DISABLE: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Disable,
+            self.MODIFY: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Modify
+        }
+
+class PriceReminderFreq(FtEnum):
+    NONE = "N/A"                                       # 未知
+    ALWAYS = "ALWAYS"                                  # 持续提醒
+    ONCE_A_DAY = "ONCE_A_DAY"                          # 每日一次
+    ONCE = "ONCE"                                      # 仅提醒一次
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.PriceReminderFreq_Unknown,
+            self.ALWAYS: Qot_Common_pb2.PriceReminderFreq_Always,
+            self.ONCE_A_DAY: Qot_Common_pb2.PriceReminderFreq_OnceADay,
+            self.ONCE: Qot_Common_pb2.PriceReminderFreq_OnlyOnce,
+        }
+
+class PriceReminderType(FtEnum):
+    NONE = "N/A"
+    PRICE_UP = "PRICE_UP"  # 当前价涨到
+    PRICE_DOWN = "PRICE_DOWN"  # 当前价跌到
+    CHANGE_RATE_UP = "CHANGE_RATE_UP"  # 当前涨幅
+    CHANGE_RATE_DOWN = "CHANGE_RATE_DOWN"  # 当前跌幅
+    FIVE_MIN_CHANGE_RATE_UP = "FIVE_MIN_CHANGE_RATE_UP"  # 5分钟涨幅
+    FIVE_MIN_CHANGE_RATE_DOWN = "FIVE_MIN_CHANGE_RATE_DOWN"  # 5分钟跌幅
+    VOLUME_UP = "VOLUME_UP"  # 成交量大于
+    TURNOVER_UP = "TURNOVER_UP"  # 成交额大于
+    TURNOVER_RATE_UP = "TURNOVER_RATE_UP"  # 换手率大于
+    BID_PRICE_UP = "BID_PRICE_UP"  # 买一价高于
+    ASK_PRICE_DOWN = "ASK_PRICE_DOWN"  # 卖一价低于
+    BID_VOL_UP = "BID_VOL_UP"  # 买一量高于
+    ASK_VOL_UP = "ASK_VOL_UP"  # 卖一量高于
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.PriceReminderFreq_Unknown,
+            self.PRICE_UP: Qot_Common_pb2.PriceReminderType_PriceUp,
+            self.PRICE_DOWN: Qot_Common_pb2.PriceReminderType_PriceDown,
+            self.CHANGE_RATE_UP: Qot_Common_pb2.PriceReminderType_ChangeRateUp,
+            self.CHANGE_RATE_DOWN: Qot_Common_pb2.PriceReminderType_ChangeRateDown,
+            self.FIVE_MIN_CHANGE_RATE_UP: Qot_Common_pb2.PriceReminderType_5MinChangeRateUp,
+            self.FIVE_MIN_CHANGE_RATE_DOWN: Qot_Common_pb2.PriceReminderType_5MinChangeRateDown,
+            self.VOLUME_UP: Qot_Common_pb2.PriceReminderType_VolumeUp,
+            self.TURNOVER_UP: Qot_Common_pb2.PriceReminderType_TurnoverUp,
+            self.TURNOVER_RATE_UP: Qot_Common_pb2.PriceReminderType_TurnoverRateUp,
+            self.BID_PRICE_UP: Qot_Common_pb2.PriceReminderType_BidPriceUp,
+            self.ASK_PRICE_DOWN: Qot_Common_pb2.PriceReminderType_AskPriceDown,
+            self.BID_VOL_UP: Qot_Common_pb2.PriceReminderType_BidVolUp,
+            self.ASK_VOL_UP: Qot_Common_pb2.PriceReminderType_AskVolUp,
+        }
+
+class PriceReminderMarketStatus(FtEnum):
+    NONE = "N/A"
+    OPEN = "OPEN"
+    US_PRE = "US_PRE"
+    US_AFTER = "US_AFTER"
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_UpdatePriceReminder_pb2.MarketStatus_Unknow,
+            self.OPEN: Qot_UpdatePriceReminder_pb2.MarketStatus_Open,
+            self.US_PRE: Qot_UpdatePriceReminder_pb2.MarketStatus_USPre,
+            self.US_AFTER: Qot_UpdatePriceReminder_pb2.MarketStatus_USAfter,
         }

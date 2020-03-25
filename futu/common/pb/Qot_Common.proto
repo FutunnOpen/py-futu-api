@@ -409,6 +409,34 @@ enum QotRight
 	QotRight_Level2 = 3; //Level2
 }
 
+// 提醒类型
+enum PriceReminderType
+{
+	PriceReminderType_Unknown = 0; // 未知
+    PriceReminderType_PriceUp = 1; // 当前价涨价设置
+	PriceReminderType_PriceDown = 2; // 当前价跌价设置
+	PriceReminderType_ChangeRateUp = 3; // 当前涨幅设置
+	PriceReminderType_ChangeRateDown = 4; // 当前跌幅设置
+	PriceReminderType_5MinChangeRateUp = 5; // 5分钟涨幅设置
+	PriceReminderType_5MinChangeRateDown = 6; // 5分钟跌幅设置
+	PriceReminderType_VolumeUp = 7; // 成交量大于
+	PriceReminderType_TurnoverUp = 8; // 成交额大于
+	PriceReminderType_TurnoverRateUp = 9; // 换手率大于
+	PriceReminderType_BidPriceUp = 10; // 买一价高于
+	PriceReminderType_AskPriceDown = 11; // 卖一价低于
+	PriceReminderType_BidVolUp = 12; // 买一量高于	
+	PriceReminderType_AskVolUp = 13; // 卖一量高于
+}
+
+// 提醒频率
+enum PriceReminderFreq
+{
+	PriceReminderFreq_Unknown = 0; // 未知
+    PriceReminderFreq_Always = 1; // 持续提醒
+    PriceReminderFreq_OnceADay = 2; // 每日一次
+    PriceReminderFreq_OnlyOnce = 3; // 仅提醒一次
+}
+
  //两个字段确定一支股票
 message Security
 {
@@ -501,8 +529,6 @@ message BasicQot
 	optional PreAfterMarketData afterMarket = 20; //盘后数据
 	optional int32 secStatus = 21; //SecurityStatus, 股票状态
 	optional FutureBasicQotExData futureExData = 22; //期货特有字段
-	optional double askPrice = 23;//卖出价
-    optional double bidPrice = 24;//买入价
 }
 
 message TimeShare

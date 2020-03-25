@@ -1,0 +1,53 @@
+syntax = "proto2";
+package Qot_SetPriceReminder;
+option java_package = "com.futu.openapi.pb";
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+enum SetPriceReminderOp
+{
+	SetPriceReminderOp_Unknown = 0;
+	SetPriceReminderOp_Add = 1; //新增
+	SetPriceReminderOp_Del = 2; //删除
+	SetPriceReminderOp_Enable = 3; //启用
+	SetPriceReminderOp_Disable = 4; //禁用
+	SetPriceReminderOp_Modify = 5; //修改
+}
+
+message C2S
+{
+	required Qot_Common.Security security = 1; // 股票
+	required int32 op = 2; // SetPriceReminderOp, 操作类型
+	optional int64 key = 3; // 到价提醒的标识，GetPriceReminder协议可获得，用于指定要操作的到价提醒项，对于新增的情况不需要填
+	optional int32 type = 4; // Qot_Common::PriceReminderType，提醒类型，删除、启用、禁用的情况下会忽略该字段
+	optional int32 freq = 7; // Qot_Common::PriceReminderFreq，提醒频率类型，删除、启用、禁用的情况下会忽略该字段
+	optional double value = 5; // 提醒值，删除、启用、禁用的情况下会忽略该字段
+	optional string note = 6; // 用户设置到价提醒时的标注，最多10个字符，删除、启用、禁用的情况下会忽略该字段
+}
+//注意：
+//1. API 中成交量设置统一以股为单位。但是牛牛客户端中，A 股是以为手为单位展示
+//2. 到价提醒类型，存在最小精度，如下：
+// TURNOVER_UP：成交额最小精度为 10 元（人民币元，港元，美元）。传入的数值会自动向下取整到最小精度的整数倍。如果设置【00700成交额102元提醒】，设置后会得到【00700成交额100元提醒】；如果设置【00700 成交额 8 元提醒】，设置后会得到【00700 成交额 0 元提醒】
+// VOLUME_UP：A 股成交量最小精度为 1000 股，其他市场股票成交量最小精度为 10 股。传入的数值会自动向下取整到最小精度的整数倍。
+// BID_VOL_UP、ASK_VOL_UP：A 股的买一卖一量最小精度为 100 股。传入的数值会自动向下取整到最小精度的整数倍。
+// 其余到价提醒类型精度支持到小数点后 3 位
+
+message S2C
+{
+	required int64 key = 1; //设置成功的情况下返回对应的key，不成功返回0
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}
