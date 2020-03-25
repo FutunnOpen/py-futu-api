@@ -3174,6 +3174,14 @@ class UpdatePriceReminder:
             res['market_status'] = PriceReminderMarketStatus.to_string2(rsp_pb.s2c.marketStatus)
             res['content'] = rsp_pb.s2c.content
             res['note'] = rsp_pb.s2c.note
+            if rsp_pb.s2c.key is not None:
+                res['key'] = rsp_pb.s2c.key
+            if rsp_pb.s2c.type is not None:
+                res['reminder_type'] = PriceReminderType.to_string2(rsp_pb.s2c.type)
+            if rsp_pb.s2c.setValue is not None:
+                res['set_value'] = rsp_pb.s2c.setValue
+            if rsp_pb.s2c.curValue is not None:
+                res['cur_value'] = rsp_pb.s2c.curValue
         else:
             return RET_ERROR, "rsp_pb error", None
 

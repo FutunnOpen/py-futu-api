@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_GetPositionList.proto',
   package='Trd_GetPositionList',
   syntax='proto2',
-  serialized_pb=_b('\n\x19Trd_GetPositionList.proto\x12\x13Trd_GetPositionList\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\xb1\x01\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x39\n\x10\x66ilterConditions\x18\x02 \x01(\x0b\x32\x1f.Trd_Common.TrdFilterConditions\x12\x18\n\x10\x66ilterPLRatioMin\x18\x03 \x01(\x01\x12\x18\n\x10\x66ilterPLRatioMax\x18\x04 \x01(\x01\x12\x14\n\x0crefreshCache\x18\x05 \x01(\x08\"X\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12*\n\x0cpositionList\x18\x02 \x03(\x0b\x32\x14.Trd_Common.Position\"0\n\x07Request\x12%\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x18.Trd_GetPositionList.C2S\"i\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12%\n\x03s2c\x18\x04 \x01(\x0b\x32\x18.Trd_GetPositionList.S2CB\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x19Trd_GetPositionList.proto\x12\x13Trd_GetPositionList\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\xb1\x01\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x39\n\x10\x66ilterConditions\x18\x02 \x01(\x0b\x32\x1f.Trd_Common.TrdFilterConditions\x12\x18\n\x10\x66ilterPLRatioMin\x18\x03 \x01(\x01\x12\x18\n\x10\x66ilterPLRatioMax\x18\x04 \x01(\x01\x12\x14\n\x0crefreshCache\x18\x05 \x01(\x08\"X\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12*\n\x0cpositionList\x18\x02 \x03(\x0b\x32\x14.Trd_Common.Position\"0\n\x07Request\x12%\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x18.Trd_GetPositionList.C2S\"i\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12%\n\x03s2c\x18\x04 \x01(\x0b\x32\x18.Trd_GetPositionList.S2CBI\n\x13\x63om.futu.openapi.pbZ2github.com/futuopen/ftapi4go/pb/trdgetpositionlist')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Trd__Common__pb2.DESCRIPTOR,])
 
@@ -249,5 +249,5 @@ _sym_db.RegisterMessage(Response)
 
 
 DESCRIPTOR.has_options = True
-DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pbZ2github.com/futuopen/ftapi4go/pb/trdgetpositionlist'))
 # @@protoc_insertion_point(module_scope)
