@@ -1080,11 +1080,12 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, plate_stock_table
 
-    def get_broker_queue(self, code):
+    def get_broker_queue(self, code, num = 40):
         """
         获取股票的经纪队列
 
         :param code: 股票代码
+        :param num: 请求经纪队列档数，LV2 行情用户最多可以获取 40 档，SF 行情用户可以获取全部档位
         :return: (ret, bid_frame_table, ask_frame_table)或(ret, err_message)
 
                 ret == RET_OK 返回pd dataframe数据，数据列格式如下
@@ -1100,6 +1101,8 @@ class OpenQuoteContext(OpenContextBase):
                 bid_broker_id           int             经纪买盘id
                 bid_broker_name         str             经纪买盘名称
                 bid_broker_pos          int             经纪档位
+                order_id                int64           交易所订单id，与交易接口返回的订单id并不一样
+                order_volume            int64           订单股数
                 =====================   ===========   ==============================================================
 
                 ask_frame_table 经纪卖盘数据
@@ -1111,6 +1114,8 @@ class OpenQuoteContext(OpenContextBase):
                 ask_broker_id           int             经纪卖盘id
                 ask_broker_name         str             经纪卖盘名称
                 ask_broker_pos          int             经纪档位
+                order_id                int64           交易所订单id，与交易接口返回的订单id并不一样
+                order_volume            int64           订单股数
                 =====================   ===========   ==============================================================
         """
         if code is None or is_str(code) is False:
@@ -1121,6 +1126,7 @@ class OpenQuoteContext(OpenContextBase):
             BrokerQueueQuery.pack_req, BrokerQueueQuery.unpack_rsp)
         kargs = {
             "code": code,
+            "num": num,
             "conn_id": self.get_sync_conn_id()
         }
 
@@ -1130,10 +1136,10 @@ class OpenQuoteContext(OpenContextBase):
 
         (_, bid_list, ask_list) = content
         col_bid_list = [
-            'code', 'bid_broker_id', 'bid_broker_name', 'bid_broker_pos'
+            'code', 'bid_broker_id', 'bid_broker_name', 'bid_broker_pos', 'order_id', 'order_volume'
         ]
         col_ask_list = [
-            'code', 'ask_broker_id', 'ask_broker_name', 'ask_broker_pos'
+            'code', 'ask_broker_id', 'ask_broker_name', 'ask_broker_pos', 'order_id', 'order_volume'
         ]
 
         bid_frame_table = pd.DataFrame(bid_list, columns=col_bid_list)
@@ -1624,11 +1630,12 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, kline_frame_table
 
-    def get_order_book(self, code):
+    def get_order_book(self, code, num = 10):
         """
         获取实时摆盘数据
 
         :param code: 股票代码
+        :param num: 请求摆盘档数，LV2 行情用户最多可以获取 10 档，SF 行情用户可以获取全部摆盘信息
         :return: (ret, data)
 
                 ret == RET_OK 返回字典，数据格式如下
@@ -1653,6 +1660,7 @@ class OpenQuoteContext(OpenContextBase):
 
         kargs = {
             "code": code,
+            "num": num,
             "conn_id": self.get_sync_conn_id()
         }
         ret_code, msg, orderbook = query_processor(**kargs)

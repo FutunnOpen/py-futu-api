@@ -801,7 +801,7 @@ class BrokerQueueQuery:
         pass
 
     @classmethod
-    def pack_req(cls, code, conn_id):
+    def pack_req(cls, code, num, conn_id):
 
         ret_code, content = split_stock_str(code)
         if ret_code == RET_ERROR:
@@ -813,7 +813,7 @@ class BrokerQueueQuery:
         req = Request()
         req.c2s.security.market = market
         req.c2s.security.code = code
-
+        req.c2s.num = num
         return pack_pb_req(req, ProtoId.Qot_GetBroker, conn_id)
 
     @classmethod
@@ -832,7 +832,9 @@ class BrokerQueueQuery:
                 "bid_broker_id": record.id,
                 "bid_broker_name": record.name,
                 "bid_broker_pos": record.pos,
-                "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code)
+                "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code),
+                "order_id": record.orderID if not None else 'N/A',
+                "order_volume": record.volume if not None else 'N/A'
             } for record in raw_broker_bid]
 
         raw_broker_ask = rsp_pb.s2c.brokerAskList
@@ -842,7 +844,9 @@ class BrokerQueueQuery:
                 "ask_broker_id": record.id,
                 "ask_broker_name": record.name,
                 "ask_broker_pos": record.pos,
-                "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code)
+                "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code),
+                "order_id": record.orderID if not None else 'N/A',
+                "order_volume": record.volume if not None else 'N/A',
             } for record in raw_broker_ask]
 
         return RET_OK, "", (stock_code, bid_list, ask_list)
@@ -1563,7 +1567,7 @@ class OrderBookQuery:
         pass
 
     @classmethod
-    def pack_req(cls, code, conn_id):
+    def pack_req(cls, code, num, conn_id):
 
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
@@ -1575,7 +1579,7 @@ class OrderBookQuery:
         req = Request()
         req.c2s.security.market = market_code
         req.c2s.security.code = stock_code
-        req.c2s.num = 10
+        req.c2s.num = num
 
         return pack_pb_req(req, ProtoId.Qot_GetOrderBook, conn_id)
 
