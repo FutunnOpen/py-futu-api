@@ -9,7 +9,6 @@ import "Qot_Common.proto";
 message C2S
 {
 	required Qot_Common.Security security = 1; //股票
-	optional int32 num = 2; //请求的经纪个数
 }
 
 message S2C

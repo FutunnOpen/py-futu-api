@@ -813,7 +813,6 @@ class BrokerQueueQuery:
         req = Request()
         req.c2s.security.market = market
         req.c2s.security.code = code
-        req.c2s.num = num
         return pack_pb_req(req, ProtoId.Qot_GetBroker, conn_id)
 
     @classmethod
