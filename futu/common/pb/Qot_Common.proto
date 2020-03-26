@@ -409,7 +409,7 @@ enum QotRight
 	QotRight_Bmp = 1; //Bmp，无法订阅
 	QotRight_Level1 = 2; //Level1
 	QotRight_Level2 = 3; //Level2
-	QotRight_SF = 4; //Level2
+	QotRight_SF = 4; //SF高级行情
 }
 
 // 提醒类型
