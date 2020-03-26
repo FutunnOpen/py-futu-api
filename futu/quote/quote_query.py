@@ -833,8 +833,8 @@ class BrokerQueueQuery:
                 "bid_broker_name": record.name,
                 "bid_broker_pos": record.pos,
                 "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code),
-                "order_id": record.orderID if not None else 'N/A',
-                "order_volume": record.volume if not None else 'N/A'
+                "order_id": record.orderID if record.HasField('orderID') else 'N/A',
+                "order_volume": record.volume if record.HasField('volume') else 'N/A'
             } for record in raw_broker_bid]
 
         raw_broker_ask = rsp_pb.s2c.brokerAskList
@@ -845,8 +845,8 @@ class BrokerQueueQuery:
                 "ask_broker_name": record.name,
                 "ask_broker_pos": record.pos,
                 "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code),
-                "order_id": record.orderID if not None else 'N/A',
-                "order_volume": record.volume if not None else 'N/A',
+                "order_id": record.orderID if record.HasField('orderID') else 'N/A',
+                "order_volume": record.volume if record.HasField('volume') else 'N/A'
             } for record in raw_broker_ask]
 
         return RET_OK, "", (stock_code, bid_list, ask_list)
