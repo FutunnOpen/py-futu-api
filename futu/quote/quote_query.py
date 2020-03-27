@@ -801,7 +801,7 @@ class BrokerQueueQuery:
         pass
 
     @classmethod
-    def pack_req(cls, code, num, conn_id):
+    def pack_req(cls, code, conn_id):
 
         ret_code, content = split_stock_str(code)
         if ret_code == RET_ERROR:
