@@ -1628,7 +1628,7 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, kline_frame_table
 
-    def get_order_book(self, code, num = 10):
+    def get_order_book(self, code, num = 40):
         """
         获取实时摆盘数据
 
