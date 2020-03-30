@@ -302,6 +302,8 @@ class SecurityType(object):
     BOND = "BOND"
     DRVT = "DRVT"
     FUTURE = "FUTURE"
+    PLATE = "PLATE"
+    PLATESET = "PLATESET"
     NONE = "N/A"
 
 
@@ -313,6 +315,8 @@ SEC_TYPE_MAP = {
     SecurityType.BOND: 1,
     SecurityType.DRVT: 8,
     SecurityType.FUTURE: 10,
+	SecurityType.PLATE: 7,
+	SecurityType.PLATESET: 9,
     SecurityType.NONE: 0
 }
 
