@@ -891,6 +891,7 @@ class OpenQuoteContext(OpenContextBase):
             'lowest52weeks_price',
             'highest_history_price',
             'lowest_history_price',
+            'close_price_5min',
             'after_volume',
             'after_turnover',
             'sec_status',

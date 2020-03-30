@@ -515,6 +515,8 @@ class MarketSnapshotQuery:
             snapshot_tmp["after_turnover"] = record.basic.afterMarket.turnover   
             #  股票状态 type=str
             snapshot_tmp["sec_status"] = SecurityStatus.to_string2(record.basic.secStatus)
+            #  5分组收盘价 type=double
+            snapshot_tmp["close_price_5min"] = record.basic.closePrice5Minute
 
             if record.basic.HasField('preMarket'):
                 set_item_from_pb(snapshot_tmp, record.basic.preMarket, pb_field_map_PreAfterMarketData_pre)
