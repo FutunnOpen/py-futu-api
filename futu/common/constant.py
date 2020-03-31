@@ -302,6 +302,8 @@ class SecurityType(object):
     BOND = "BOND"
     DRVT = "DRVT"
     FUTURE = "FUTURE"
+    PLATE = "PLATE"
+    PLATESET = "PLATESET"
     NONE = "N/A"
 
 
@@ -313,6 +315,8 @@ SEC_TYPE_MAP = {
     SecurityType.BOND: 1,
     SecurityType.DRVT: 8,
     SecurityType.FUTURE: 10,
+	SecurityType.PLATE: 7,
+	SecurityType.PLATESET: 9,
     SecurityType.NONE: 0
 }
 
@@ -908,6 +912,7 @@ class TickerType:
     REOPENINGP_RICED = 'REOPENINGP_RICED'
     CLOSING_PRICED = 'CLOSING_PRICED'
     COMPREHENSIVE_DELAY_PRICE = 'COMPREHENSIVE_DELAY_PRICE'
+    OVERSEAS = 'OVERSEAS'
 
 
 TICKER_TYPE_MAP = {
@@ -941,7 +946,8 @@ TICKER_TYPE_MAP = {
     TickerType.DERIVATIVELY_PRICED: Qot_Common_pb2.TickerType_DerivativelyPriced,
     TickerType.REOPENINGP_RICED: Qot_Common_pb2.TickerType_ReOpeningPriced,
     TickerType.CLOSING_PRICED: Qot_Common_pb2.TickerType_ClosingPriced,
-    TickerType.COMPREHENSIVE_DELAY_PRICE: Qot_Common_pb2.TickerType_ComprehensiveDelayPrice
+    TickerType.COMPREHENSIVE_DELAY_PRICE: Qot_Common_pb2.TickerType_ComprehensiveDelayPrice,
+    TickerType.OVERSEAS: Qot_Common_pb2.TickerType_Overseas
 }
 
 
@@ -2340,8 +2346,8 @@ class UserSecurityGroupType(FtEnum):
 
     def load_dic(self):
         return {
-            self.NONE: GetUserSecurityGroup_pb2.GroupType_Unknown,
-            self.CUSTOM: GetUserSecurityGroup_pb2.GroupType_Custom,
-            self.SYSTEM: GetUserSecurityGroup_pb2.GroupType_System,
-            self.ALL: GetUserSecurityGroup_pb2.GroupType_All
+            self.NONE: Qot_GetUserSecurityGroup_pb2.GroupType_Unknown,
+            self.CUSTOM: Qot_GetUserSecurityGroup_pb2.GroupType_Custom,
+            self.SYSTEM: Qot_GetUserSecurityGroup_pb2.GroupType_System,
+            self.ALL: Qot_GetUserSecurityGroup_pb2.GroupType_All
         }

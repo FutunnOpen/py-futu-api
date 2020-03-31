@@ -515,6 +515,8 @@ class MarketSnapshotQuery:
             snapshot_tmp["after_turnover"] = record.basic.afterMarket.turnover   
             #  股票状态 type=str
             snapshot_tmp["sec_status"] = SecurityStatus.to_string2(record.basic.secStatus)
+            #  5分组收盘价 type=double
+            snapshot_tmp["close_price_5min"] = record.basic.closePrice5Minute
 
             if record.basic.HasField('preMarket'):
                 set_item_from_pb(snapshot_tmp, record.basic.preMarket, pb_field_map_PreAfterMarketData_pre)
@@ -813,7 +815,6 @@ class BrokerQueueQuery:
         req = Request()
         req.c2s.security.market = market
         req.c2s.security.code = code
-
         return pack_pb_req(req, ProtoId.Qot_GetBroker, conn_id)
 
     @classmethod
@@ -832,7 +833,9 @@ class BrokerQueueQuery:
                 "bid_broker_id": record.id,
                 "bid_broker_name": record.name,
                 "bid_broker_pos": record.pos,
-                "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code)
+                "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code),
+                "order_id": record.orderID if record.HasField('orderID') else 'N/A',
+                "order_volume": record.volume if record.HasField('volume') else 'N/A'
             } for record in raw_broker_bid]
 
         raw_broker_ask = rsp_pb.s2c.brokerAskList
@@ -842,7 +845,9 @@ class BrokerQueueQuery:
                 "ask_broker_id": record.id,
                 "ask_broker_name": record.name,
                 "ask_broker_pos": record.pos,
-                "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code)
+                "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code),
+                "order_id": record.orderID if record.HasField('orderID') else 'N/A',
+                "order_volume": record.volume if record.HasField('volume') else 'N/A'
             } for record in raw_broker_ask]
 
         return RET_OK, "", (stock_code, bid_list, ask_list)
@@ -1563,7 +1568,7 @@ class OrderBookQuery:
         pass
 
     @classmethod
-    def pack_req(cls, code, conn_id):
+    def pack_req(cls, code, num, conn_id):
 
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
@@ -1575,7 +1580,7 @@ class OrderBookQuery:
         req = Request()
         req.c2s.security.market = market_code
         req.c2s.security.code = stock_code
-        req.c2s.num = 10
+        req.c2s.num = num
 
         return pack_pb_req(req, ProtoId.Qot_GetOrderBook, conn_id)
 
