@@ -2346,8 +2346,8 @@ class UserSecurityGroupType(FtEnum):
 
     def load_dic(self):
         return {
-            self.NONE: GetUserSecurityGroup_pb2.GroupType_Unknown,
-            self.CUSTOM: GetUserSecurityGroup_pb2.GroupType_Custom,
-            self.SYSTEM: GetUserSecurityGroup_pb2.GroupType_System,
-            self.ALL: GetUserSecurityGroup_pb2.GroupType_All
+            self.NONE: Qot_GetUserSecurityGroup_pb2.GroupType_Unknown,
+            self.CUSTOM: Qot_GetUserSecurityGroup_pb2.GroupType_Custom,
+            self.SYSTEM: Qot_GetUserSecurityGroup_pb2.GroupType_System,
+            self.ALL: Qot_GetUserSecurityGroup_pb2.GroupType_All
         }
