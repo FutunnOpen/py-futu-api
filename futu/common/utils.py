@@ -441,7 +441,7 @@ class ProtobufMap(dict):
 
         """ Trd_GetMaxTrdQtys = 2111 查询最大买卖数量 """
         from futu.common.pb.Trd_GetMaxTrdQtys_pb2 import Response
-        ProtobufMap.created_protobuf_map[ProtoId.Trd_GetAccTradingInfo] = Response()
+        ProtobufMap.created_protobuf_map[ProtoId.Trd_GetMaxTrdQtys] = Response()
 
         """ Qot_GetReference = 3206  获取正股相关股票，暂时只有窝轮"""
         from futu.common.pb.Qot_GetReference_pb2 import Response
@@ -471,7 +471,7 @@ class ProtobufMap(dict):
 
         """ Qot_GetWarrantData = 3210 获取涡轮 """
         from futu.common.pb.Qot_GetWarrant_pb2 import Response as GetWarrantPBResponse
-        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetWarrantData] = GetWarrantPBResponse()
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetWarrant] = GetWarrantPBResponse()
 
         """ Qot_GetOrderDetail = 3104 已使用过的额度 """
         from futu.common.pb.Qot_RequestHistoryKLQuota_pb2 import Response
