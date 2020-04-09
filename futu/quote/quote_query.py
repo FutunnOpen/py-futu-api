@@ -2308,7 +2308,7 @@ class QuoteWarrant:
             req = WarrantRequest()
         ret, context = req.fill_request_pb()
         if ret == RET_OK:
-            return pack_pb_req(context, ProtoId.Qot_GetWarrantData, conn_id)
+            return pack_pb_req(context, ProtoId.Qot_GetWarrant, conn_id)
         else:
             return ret, context, None
 

@@ -620,7 +620,7 @@ class AccTradingInfoQuery:
                                                                  Trd_Common_pb2.TrdSecMarket_Unknown)
         req.c2s.secMarket = proto_trd_sec_mkt
 
-        return pack_pb_req(req, ProtoId.Trd_GetAccTradingInfo, conn_id)
+        return pack_pb_req(req, ProtoId.Trd_GetMaxTrdQtys, conn_id)
 
     @classmethod
     def unpack_rsp(cls, rsp_pb):

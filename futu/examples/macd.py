@@ -64,7 +64,7 @@ class MACD(object):
             trade_ctx = ft.OpenUSTradeContext(
                 host=self.api_svr_ip, port=self.api_svr_port)
         else:
-            raise Exception("stock输入错误 stock: {}".format(self.stock))
+            raise Exception("不支持的stock: {}".format(self.stock))
 
         return quote_ctx, trade_ctx
 

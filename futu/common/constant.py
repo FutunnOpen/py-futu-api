@@ -786,7 +786,7 @@ class ProtoId(object):
 
     Trd_GetHistoryOrderList = 2221  # 获取历史订单列表
     Trd_GetHistoryOrderFillList = 2222  # 获取历史成交列表
-    Trd_GetAccTradingInfo = 2111    # 查询最大买卖数量
+    Trd_GetMaxTrdQtys = 2111    # 查询最大买卖数量
 
     # 订阅数据
     Qot_Sub = 3001  # 订阅或者反订阅
@@ -829,7 +829,7 @@ class ProtoId(object):
     Qot_GetOrderDetail = 3016           # 获取委托明细
     Qot_UpdateOrderDetail = 3017        # 推送委托明细
 
-    Qot_GetWarrantData = 3210          # 拉取涡轮信息
+    Qot_GetWarrant = 3210          # 拉取涡轮信息
     Qot_GetCapitalFlow = 3211          # 获取资金流向
     Qot_GetCapitalDistribution = 3212  # 获取资金分布
 
