@@ -1629,12 +1629,12 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, kline_frame_table
 
-    def get_order_book(self, code, num = 40):
+    def get_order_book(self, code, num = 10):
         """
         获取实时摆盘数据
 
         :param code: 股票代码
-        :param num: 请求摆盘档数，LV2 行情用户最多可以获取 10 档，SF 行情用户可以获取全部摆盘信息
+        :param num: 请求摆盘档数，LV2行情用户最多可以获取10档，SF行情用户最多可以获取40档
         :return: (ret, data)
 
                 ret == RET_OK 返回字典，数据格式如下
