@@ -290,10 +290,10 @@ class BrokerHandlerBase(RspHandlerBase):
             self.on_recv_log(content)
             stock_code, bid_content, ask_content = content
             bid_list = [
-                'code', 'bid_broker_id', 'bid_broker_name', 'bid_broker_pos'
+                'code', 'bid_broker_id', 'bid_broker_name', 'bid_broker_pos', 'order_id', 'order_volume'
             ]
             ask_list = [
-                'code', 'ask_broker_id', 'ask_broker_name', 'ask_broker_pos'
+                'code', 'ask_broker_id', 'ask_broker_name', 'ask_broker_pos', 'order_id', 'order_volume'
             ]
             bid_frame_table = pd.DataFrame(bid_content, columns=bid_list)
             ask_frame_table = pd.DataFrame(ask_content, columns=ask_list)

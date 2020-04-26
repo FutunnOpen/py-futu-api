@@ -475,11 +475,13 @@ class OpenContextBase(object):
                                                                                  self.__port))
             net_mgr = self._net_mgr
             conn_id = self._conn_id
+
             self._status = ContextStatus.CONNECTING
             self._sync_conn_id = 0
             self._conn_id = 0
             self._keep_alive_fail_count = 0
             self._reconnect_timer = Timer(wait_reconnect_interval, self._reconnect)
+            self._sync_req_ret = None
             self._reconnect_timer.start()
 
         net_mgr.close(conn_id)

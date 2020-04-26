@@ -1,6 +1,7 @@
 syntax = "proto2";
 package Qot_GetRehab;
 option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/qotgetrehab";
 
 import "Common.proto";
 import "Qot_Common.proto";

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_GetHistoryOrderList.proto',
   package='Trd_GetHistoryOrderList',
   syntax='proto2',
-  serialized_pb=_b('\n\x1dTrd_GetHistoryOrderList.proto\x12\x17Trd_GetHistoryOrderList\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\x81\x01\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x39\n\x10\x66ilterConditions\x18\x02 \x02(\x0b\x32\x1f.Trd_Common.TrdFilterConditions\x12\x18\n\x10\x66ilterStatusList\x18\x03 \x03(\x05\"R\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12$\n\torderList\x18\x02 \x03(\x0b\x32\x11.Trd_Common.Order\"4\n\x07Request\x12)\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x1c.Trd_GetHistoryOrderList.C2S\"m\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12)\n\x03s2c\x18\x04 \x01(\x0b\x32\x1c.Trd_GetHistoryOrderList.S2CB\x15\n\x13\x63om.futu.openapi.pb')
+  serialized_pb=_b('\n\x1dTrd_GetHistoryOrderList.proto\x12\x17Trd_GetHistoryOrderList\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\x81\x01\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x39\n\x10\x66ilterConditions\x18\x02 \x02(\x0b\x32\x1f.Trd_Common.TrdFilterConditions\x12\x18\n\x10\x66ilterStatusList\x18\x03 \x03(\x05\"R\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12$\n\torderList\x18\x02 \x03(\x0b\x32\x11.Trd_Common.Order\"4\n\x07Request\x12)\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x1c.Trd_GetHistoryOrderList.C2S\"m\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12)\n\x03s2c\x18\x04 \x01(\x0b\x32\x1c.Trd_GetHistoryOrderList.S2CBM\n\x13\x63om.futu.openapi.pbZ6github.com/futuopen/ftapi4go/pb/trdgethistoryorderlist')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Trd__Common__pb2.DESCRIPTOR,])
 
@@ -235,5 +235,5 @@ _sym_db.RegisterMessage(Response)
 
 
 DESCRIPTOR.has_options = True
-DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pb'))
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023com.futu.openapi.pbZ6github.com/futuopen/ftapi4go/pb/trdgethistoryorderlist'))
 # @@protoc_insertion_point(module_scope)

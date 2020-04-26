@@ -1,6 +1,7 @@
 syntax = "proto2";
 package Qot_GetSecuritySnapshot;
 option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/qotgetsecuritysnapshot";
 
 import "Common.proto";
 import "Qot_Common.proto";
@@ -157,6 +158,7 @@ message SnapshotBasicData
 	optional Qot_Common.PreAfterMarketData preMarket = 37; //Qot_Common::PreAfterMarketData 盘前数据
 	optional Qot_Common.PreAfterMarketData afterMarket = 38; //Qot_Common::PreAfterMarketData 盘后数据
 	optional int32 secStatus = 39; //Qot_Common::SecurityStatus 股票状态
+	optional double closePrice5Minute = 40; //5分钟收盘价
 }
 
 message Snapshot

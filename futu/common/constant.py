@@ -14,6 +14,7 @@ from futu.common.pb import Qot_Common_pb2
 from futu.common.pb import Trd_Common_pb2
 from futu.common.pb import Qot_SetPriceReminder_pb2
 from futu.common.pb import Qot_UpdatePriceReminder_pb2
+from futu.common.pb import Qot_GetUserSecurityGroup_pb2
 from copy import copy
 from abc import abstractmethod
 
@@ -301,6 +302,8 @@ class SecurityType(object):
     BOND = "BOND"
     DRVT = "DRVT"
     FUTURE = "FUTURE"
+    PLATE = "PLATE"
+    PLATESET = "PLATESET"
     NONE = "N/A"
 
 
@@ -312,6 +315,8 @@ SEC_TYPE_MAP = {
     SecurityType.BOND: 1,
     SecurityType.DRVT: 8,
     SecurityType.FUTURE: 10,
+	SecurityType.PLATE: 7,
+	SecurityType.PLATESET: 9,
     SecurityType.NONE: 0
 }
 
@@ -781,7 +786,7 @@ class ProtoId(object):
 
     Trd_GetHistoryOrderList = 2221  # 获取历史订单列表
     Trd_GetHistoryOrderFillList = 2222  # 获取历史成交列表
-    Trd_GetAccTradingInfo = 2111    # 查询最大买卖数量
+    Trd_GetMaxTrdQtys = 2111    # 查询最大买卖数量
 
     # 订阅数据
     Qot_Sub = 3001  # 订阅或者反订阅
@@ -824,7 +829,7 @@ class ProtoId(object):
     Qot_GetOrderDetail = 3016           # 获取委托明细
     Qot_UpdateOrderDetail = 3017        # 推送委托明细
 
-    Qot_GetWarrantData = 3210          # 拉取涡轮信息
+    Qot_GetWarrant = 3210          # 拉取涡轮信息
     Qot_GetCapitalFlow = 3211          # 获取资金流向
     Qot_GetCapitalDistribution = 3212  # 获取资金分布
 
@@ -833,11 +838,12 @@ class ProtoId(object):
     Qot_StockFilter = 3215   # 条件选股
     Qot_GetCodeChange = 3216   # 代码变换
     Qot_GetIpoList = 3217  # 获取新股Ipo
-    Qot_GetFutureInfo = 3218 #获取期货资料
-    Qot_RequestTradeDate = 3219 #在线拉取交易日
+    Qot_GetFutureInfo = 3218  # 获取期货资料
+    Qot_RequestTradeDate = 3219  # 在线拉取交易日
     Qot_SetPriceReminder = 3220  # 设置到价提醒
     Qot_GetPriceReminder = 3221  # 获取到价提醒
 
+    Qot_GetUserSecurityGroup = 3222 # 获取自选股分组
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
@@ -906,6 +912,7 @@ class TickerType:
     REOPENINGP_RICED = 'REOPENINGP_RICED'
     CLOSING_PRICED = 'CLOSING_PRICED'
     COMPREHENSIVE_DELAY_PRICE = 'COMPREHENSIVE_DELAY_PRICE'
+    OVERSEAS = 'OVERSEAS'
 
 
 TICKER_TYPE_MAP = {
@@ -939,7 +946,8 @@ TICKER_TYPE_MAP = {
     TickerType.DERIVATIVELY_PRICED: Qot_Common_pb2.TickerType_DerivativelyPriced,
     TickerType.REOPENINGP_RICED: Qot_Common_pb2.TickerType_ReOpeningPriced,
     TickerType.CLOSING_PRICED: Qot_Common_pb2.TickerType_ClosingPriced,
-    TickerType.COMPREHENSIVE_DELAY_PRICE: Qot_Common_pb2.TickerType_ComprehensiveDelayPrice
+    TickerType.COMPREHENSIVE_DELAY_PRICE: Qot_Common_pb2.TickerType_ComprehensiveDelayPrice,
+    TickerType.OVERSEAS: Qot_Common_pb2.TickerType_Overseas
 }
 
 
@@ -2326,4 +2334,20 @@ class PriceReminderMarketStatus(FtEnum):
             self.OPEN: Qot_UpdatePriceReminder_pb2.MarketStatus_Open,
             self.US_PRE: Qot_UpdatePriceReminder_pb2.MarketStatus_USPre,
             self.US_AFTER: Qot_UpdatePriceReminder_pb2.MarketStatus_USAfter,
+        }
+
+
+# 自选股的类型
+class UserSecurityGroupType(FtEnum):
+    NONE = "N/A"                                       # 未知
+    CUSTOM = "CUSTOM"                                  # 自定义分组
+    SYSTEM = "SYSTEM"                                  # 系统分组
+    ALL = "ALL"                                        # 全部分组
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_GetUserSecurityGroup_pb2.GroupType_Unknown,
+            self.CUSTOM: Qot_GetUserSecurityGroup_pb2.GroupType_Custom,
+            self.SYSTEM: Qot_GetUserSecurityGroup_pb2.GroupType_System,
+            self.ALL: Qot_GetUserSecurityGroup_pb2.GroupType_All
         }

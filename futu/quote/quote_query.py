@@ -515,6 +515,8 @@ class MarketSnapshotQuery:
             snapshot_tmp["after_turnover"] = record.basic.afterMarket.turnover   
             #  股票状态 type=str
             snapshot_tmp["sec_status"] = SecurityStatus.to_string2(record.basic.secStatus)
+            #  5分组收盘价 type=double
+            snapshot_tmp["close_price_5min"] = record.basic.closePrice5Minute
 
             if record.basic.HasField('preMarket'):
                 set_item_from_pb(snapshot_tmp, record.basic.preMarket, pb_field_map_PreAfterMarketData_pre)
@@ -813,7 +815,6 @@ class BrokerQueueQuery:
         req = Request()
         req.c2s.security.market = market
         req.c2s.security.code = code
-
         return pack_pb_req(req, ProtoId.Qot_GetBroker, conn_id)
 
     @classmethod
@@ -832,7 +833,9 @@ class BrokerQueueQuery:
                 "bid_broker_id": record.id,
                 "bid_broker_name": record.name,
                 "bid_broker_pos": record.pos,
-                "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code)
+                "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code),
+                "order_id": record.orderID if record.HasField('orderID') else 'N/A',
+                "order_volume": record.volume if record.HasField('volume') else 'N/A'
             } for record in raw_broker_bid]
 
         raw_broker_ask = rsp_pb.s2c.brokerAskList
@@ -842,7 +845,9 @@ class BrokerQueueQuery:
                 "ask_broker_id": record.id,
                 "ask_broker_name": record.name,
                 "ask_broker_pos": record.pos,
-                "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code)
+                "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code),
+                "order_id": record.orderID if record.HasField('orderID') else 'N/A',
+                "order_volume": record.volume if record.HasField('volume') else 'N/A'
             } for record in raw_broker_ask]
 
         return RET_OK, "", (stock_code, bid_list, ask_list)
@@ -1563,7 +1568,7 @@ class OrderBookQuery:
         pass
 
     @classmethod
-    def pack_req(cls, code, conn_id):
+    def pack_req(cls, code, num, conn_id):
 
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
@@ -1575,7 +1580,7 @@ class OrderBookQuery:
         req = Request()
         req.c2s.security.market = market_code
         req.c2s.security.code = stock_code
-        req.c2s.num = 10
+        req.c2s.num = num
 
         return pack_pb_req(req, ProtoId.Qot_GetOrderBook, conn_id)
 
@@ -2303,7 +2308,7 @@ class QuoteWarrant:
             req = WarrantRequest()
         ret, context = req.fill_request_pb()
         if ret == RET_OK:
-            return pack_pb_req(context, ProtoId.Qot_GetWarrantData, conn_id)
+            return pack_pb_req(context, ProtoId.Qot_GetWarrant, conn_id)
         else:
             return ret, context, None
 
@@ -3174,6 +3179,14 @@ class UpdatePriceReminder:
             res['market_status'] = PriceReminderMarketStatus.to_string2(rsp_pb.s2c.marketStatus)
             res['content'] = rsp_pb.s2c.content
             res['note'] = rsp_pb.s2c.note
+            if rsp_pb.s2c.key is not None:
+                res['key'] = rsp_pb.s2c.key
+            if rsp_pb.s2c.type is not None:
+                res['reminder_type'] = PriceReminderType.to_string2(rsp_pb.s2c.type)
+            if rsp_pb.s2c.setValue is not None:
+                res['set_value'] = rsp_pb.s2c.setValue
+            if rsp_pb.s2c.curValue is not None:
+                res['cur_value'] = rsp_pb.s2c.curValue
         else:
             return RET_ERROR, "rsp_pb error", None
 
@@ -3281,4 +3294,41 @@ class GetPriceReminderQuery:
                 #  用户设置到价提醒时的标注 type = string
                 data["note"] = sub_item.note
                 ret_list.append(data)
+        return RET_OK, "", ret_list
+
+class GetUserSecurityGroupQuery:
+    """
+    Query GetUserSecurityGroup.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, group_type, conn_id):
+        """check group_type GroupType,自选股分组类型。"""
+
+        # 开始组包
+        from futu.common.pb.Qot_GetUserSecurityGroup_pb2 import Request
+        req = Request()
+        r, req.c2s.groupType = UserSecurityGroupType.to_number(group_type)
+        return pack_pb_req(req, ProtoId.Qot_GetUserSecurityGroup, conn_id)
+
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        ret_list = list()
+        #  自选股分组列表 type = Qot_GetUserSecurityGroup.GroupData
+        group_list = rsp_pb.s2c.groupList
+        for item in group_list:
+            data = {}
+            #  自选股分组名字 type = string
+            data["group_name"] = item.groupName
+            #  GroupType,自选股分组类型。 type = int32
+            data["group_type"] = UserSecurityGroupType.to_string2(item.groupType)
+            ret_list.append(data)
+
         return RET_OK, "", ret_list

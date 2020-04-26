@@ -1,6 +1,7 @@
 syntax = "proto2";
 package Trd_GetFunds;
 option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/trdgetfunds";
 
 import "Common.proto";
 import "Trd_Common.proto";
@@ -11,7 +12,7 @@ message C2S
 	optional bool refreshCache = 2; //立即刷新OpenD缓存的此数据，默认不填。true向服务器获取最新数据更新缓存并返回；flase或没填则返回OpenD缓存的数据，不会向服务器请求。
 	//正常情况下，服务器有更新就会立即推送到OpenD，OpenD缓存着数据，API请求过来，返回同步的缓存数据，一般不需要指定刷新缓存，保证快速返回且减少对服务器的压力
 	//如果遇到丢包等情况，可能出现缓存数据与服务器不一致，用户如果发现数据更新有异样，可指定刷新缓存，解决数据同步的问题。
-	optional int32 currency = 3;	//货币种类，参见Trd_Common.Currency。期货账户必填
+	optional int32 currency = 3;	//货币种类，参见Trd_Common.Currency。期货账户必填，其它账户忽略 
 }
 
 message S2C

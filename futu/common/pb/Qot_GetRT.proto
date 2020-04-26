@@ -1,6 +1,7 @@
 syntax = "proto2";
 package Qot_GetRT;
 option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/qotgetrt";
 
 import "Common.proto";
 import "Qot_Common.proto";
