@@ -403,17 +403,6 @@ class ProtobufMap(dict):
         from futu.common.pb.Qot_UpdatePriceReminder_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdatePriceReminder] = Response()
 
-        """ Qot_GetHistoryKL = 3100  # 获取历史K线 """
-        from futu.common.pb.Qot_GetHistoryKL_pb2 import Response
-        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetHistoryKL] = Response()
-
-        """ Qot_GetHistoryKLPoints = 3101  # 获取多只股票历史单点K线 """
-        from futu.common.pb.Qot_GetHistoryKLPoints_pb2 import Response
-        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetHistoryKLPoints] = Response()
-
-        """ Qot_GetRehab = 3102  # 获取复权信息 """
-        from futu.common.pb.Qot_GetRehab_pb2 import Response
-        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetRehab] = Response()
 
         """ Qot_GetTradeDate = 3200  # 获取市场交易日 """
         from futu.common.pb.Qot_GetTradeDate_pb2 import Response
