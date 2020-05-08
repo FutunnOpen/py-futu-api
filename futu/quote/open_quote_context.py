@@ -1172,7 +1172,7 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, "", code_list, subtype_list
 
-    def subscribe(self, code_list, subtype_list, is_first_push=True, subscribe_push=True):
+    def subscribe(self, code_list, subtype_list, is_first_push=True, subscribe_push=True, is_detailed_orderbook=False):
         """
         订阅注册需要的实时信息，指定股票和订阅的数据类型即可
 
@@ -1182,6 +1182,7 @@ class OpenQuoteContext(OpenContextBase):
         :param subtype_list: 需要订阅的数据类型列表，参见SubType
         :param is_first_push: 订阅成功后是否马上推送一次数据
         :param subscribe_push: 订阅后推送
+        :param is_detailed_orderbook 是否订阅详细的摆盘订单明细，仅用于 SF 行情权限下订阅 ORDER_BOOK 类型
         :return: (ret, err_message)
 
                 ret == RET_OK err_message为None
@@ -1196,9 +1197,9 @@ class OpenQuoteContext(OpenContextBase):
         print(quote_ctx.subscribe(['HK.00700'], [SubType.QUOTE)])
         quote_ctx.close()
         """
-        return self._subscribe_impl(code_list, subtype_list, is_first_push, subscribe_push)
+        return self._subscribe_impl(code_list, subtype_list, is_first_push, subscribe_push, is_detailed_orderbook)
 
-    def _subscribe_impl(self, code_list, subtype_list, is_first_push, subscribe_push=True):
+    def _subscribe_impl(self, code_list, subtype_list, is_first_push, subscribe_push=True, is_detailed_orderbook=False):
 
         ret, msg, code_list, subtype_list = self._check_subscribe_param(
             code_list, subtype_list)
@@ -1221,7 +1222,8 @@ class OpenQuoteContext(OpenContextBase):
             'subtype_list': subtype_list,
             'conn_id': self.get_sync_conn_id(),
             'is_first_push': is_first_push,
-            'subscribe_push': subscribe_push
+            'subscribe_push': subscribe_push,
+            'is_detailed_orderbook': is_detailed_orderbook
         }
         ret_code, msg, _ = query_processor(**kargs)
 
@@ -1642,8 +1644,8 @@ class OpenQuoteContext(OpenContextBase):
                 ret != RET_OK 返回错误字符串
 
                 {‘code’: 股票代码
-                ‘Ask’:[ (ask_price1, ask_volume1，order_num), (ask_price2, ask_volume2, order_num),…]
-                ‘Bid’: [ (bid_price1, bid_volume1, order_num), (bid_price2, bid_volume2, order_num),…]
+                ‘Ask’:[ (ask_price1, ask_volume1, order_num, {order_id1:order_volume1,…}), (ask_price2, ask_volume2, order_num, {order_id1:order_volume1,…}),…]
+                ‘Bid’: [ (bid_price1, bid_volume1, order_num, {order_id1:order_volume1,…}), (bid_price2, bid_volume2, order_num, {order_id1:order_volume1,…}),…]
                 }
 
                 'Ask'：卖盘， 'Bid'买盘。每个元组的含义是(委托价格，委托数量，委托订单数)

@@ -1151,6 +1151,7 @@ class SubscriptionQuery:
                               is_sub,
                               conn_id,
                               is_first_push,
+                              is_detailed_orderbook,
                               reg_or_unreg_push,
                               unsub_all=False):
 
@@ -1180,16 +1181,18 @@ class SubscriptionQuery:
             req.c2s.isSubOrUnSub = is_sub
             req.c2s.isFirstPush = is_first_push
             req.c2s.isRegOrUnRegPush = reg_or_unreg_push
+            req.c2s.isSubOrderBookDetail = is_detailed_orderbook
 
         return pack_pb_req(req, ProtoId.Qot_Sub, conn_id)
 
     @classmethod
-    def pack_subscribe_req(cls, code_list, subtype_list, conn_id, is_first_push, subscribe_push):
+    def pack_subscribe_req(cls, code_list, subtype_list, conn_id, is_first_push, subscribe_push, is_detailed_orderbook):
         return SubscriptionQuery.pack_sub_or_unsub_req(code_list,
                                                        subtype_list,
                                                        True,
                                                        conn_id,
                                                        is_first_push,
+                                                       is_detailed_orderbook,
                                                        subscribe_push)  # True
 
     @classmethod
@@ -1207,6 +1210,7 @@ class SubscriptionQuery:
                                                        subtype_list,
                                                        False,
                                                        conn_id,
+                                                       False,
                                                        False,
                                                        False,
                                                        unsubscribe_all)
@@ -1602,12 +1606,17 @@ class OrderBookQuery:
         order_book['Ask'] = []
 
         for record in raw_order_book_bid:
+            detail = {}
+            for info in record.detailList:
+                detail[info.orderID] = info.volume
             order_book['Bid'].append((record.price, record.volume,
-                                      record.orederCount))
+                                      record.orederCount, detail))
         for record in raw_order_book_ask:
+            detail = {}
+            for info in record.detailList:
+                detail[info.orderID] = info.volume
             order_book['Ask'].append((record.price, record.volume,
-                                      record.orederCount))
-
+                                      record.orederCount, detail))
         return RET_OK, "", order_book
 
 
