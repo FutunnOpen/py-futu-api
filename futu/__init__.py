@@ -57,7 +57,10 @@ def _check_module(mod_name, package_name=None, version=None, version_getter=None
 
 def _pip_get_package_version(package_name):
     import subprocess
-    proc = subprocess.Popen([sys.executable, '-m', 'pip', 'show', package_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if sys.executable.endswith("python"):
+        proc = subprocess.Popen([sys.executable, '-m', 'pip', 'show', package_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    else:
+        proc = subprocess.Popen(['pip', 'show', package_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     outdata, errdata = proc.communicate()
 
     eol = b'\n'
