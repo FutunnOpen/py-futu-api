@@ -805,11 +805,11 @@ class ProtoId(object):
     Qot_GetBroker = 3014  # 获取经纪队列
     Qot_UpdateBroker = 3015  # 推送经纪队列
     Qot_UpdatePriceReminder = 3019 #到价提醒通知
-	
+
     # 历史数据
-    Qot_GetHistoryKL = 3100  # 获取历史K线
-    Qot_GetHistoryKLPoints = 3101  # 获取多只股票历史单点K线
-    Qot_GetRehab = 3102  # 获取复权信息
+    # Qot_GetHistoryKL = 3100  # 获取历史K线
+    # Qot_GetHistoryKLPoints = 3101  # 获取多只股票历史单点K线
+    # Qot_GetRehab = 3102  # 获取复权信息
     Qot_RequestHistoryKL = 3103  # 拉取历史K线
     Qot_RequestHistoryKLQuota = 3104  # 拉取历史K线已经用掉的额度
     Qot_RequestRehab = 3105  # 获取除权信息

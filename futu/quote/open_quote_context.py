@@ -11,6 +11,89 @@ from futu.common.open_context_base import OpenContextBase, ContextStatus
 from futu.quote.quote_query import *
 from futu.quote.quote_stockfilter_info import *
 
+class SubRecord:
+    def __init__(self):
+        self.subMap = {}  # (subkey, is_orderbook_detail) => code set
+
+    def sub(self, code_list, subtype_list, is_orderbook_detail):
+        not_is_orderbook_detail = not is_orderbook_detail
+        for subtype in subtype_list:
+            old_subkey = (subtype, not_is_orderbook_detail)
+            old_code_set = self.subMap.get(old_subkey, set())
+            new_subkey = (subtype, is_orderbook_detail)
+            new_code_set = self.subMap.get(new_subkey, set())
+            for code in code_list:
+                if code in old_code_set:
+                    old_code_set.remove(code)
+                new_code_set.add(code)
+            if len(old_code_set) == 0 and old_subkey in self.subMap:
+                del self.subMap[old_subkey]
+            self.subMap[new_subkey] = new_code_set
+
+    def unsub(self, code_list, subtype_list):
+        for subtype in subtype_list:
+            subkey1 = (subtype, True)
+            code_set1 = self.subMap.get(subkey1, set())
+            subkey2 = (subtype, False)
+            code_set2 = self.subMap.get(subkey2, set())
+            for code in code_list:
+                code_set1.discard(code)
+                code_set2.discard(code)
+            if len(code_set1) == 0 and subkey1 in self.subMap:
+                del self.subMap[subkey1]
+            if len(code_set2) == 0 and subkey2 in self.subMap:
+                del self.subMap[subkey2]
+
+    def unsub_all(self):
+        self.subMap = {}
+
+    def get_sub_list(self):
+        """
+
+        :return: [(code_list, subtype_list, is_orderbook_detail)]
+        """
+        sublist_orderbook_true = []
+        sublist_orderbook_false = []
+        for subkey, code_set in self.subMap.items():
+            if subkey[1]:
+                sublist_orderbook_true.append((subkey, code_set))
+            else:
+                sublist_orderbook_false.append((subkey, code_set))
+        result = self._merge_sub_list(sublist_orderbook_true)
+        result.extend(self._merge_sub_list(sublist_orderbook_false))
+        return result
+
+    def _merge_sub_list(self, orig_sub_list):
+        """
+        将原始的订阅列表合并为适合调用subscribe函数的参数的形式，并尽量合并code列表
+        :param orig_sub_list: [(subkey, code_set)]
+        :return: [(code_list, subtype_list, is_orderbook_detail)]
+        """
+        if len(orig_sub_list) <= 1:
+            return self._conv_sub_list(orig_sub_list)
+
+        all_code_set_same = True
+        _, first_code_set = orig_sub_list[0]
+        for idx in range(1, len(orig_sub_list)):
+            _, cur_code_set = orig_sub_list[idx]
+            if first_code_set != cur_code_set:
+                all_code_set_same = False
+                break
+        if all_code_set_same:
+            code_list = list(first_code_set)
+            subtype_list = [item[0][0] for item in orig_sub_list]
+            is_orderbook_detail = orig_sub_list[0][0][1]
+            return [(code_list, subtype_list, is_orderbook_detail)]
+        else:
+            return self._conv_sub_list(orig_sub_list)
+
+    def _conv_sub_list(self, orig_sub_list):
+        sub_list = []
+        for subkey, code_set in orig_sub_list:
+            sub_list.append((list(code_set), [subkey[0]], subkey[1]))
+        return sub_list
+
+
 class OpenQuoteContext(OpenContextBase):
     """行情上下文对象类"""
 
@@ -21,6 +104,7 @@ class OpenQuoteContext(OpenContextBase):
         :param port: 端口
         """
         self._ctx_subscribe = {}
+        self._sub_record = SubRecord()
         super(OpenQuoteContext, self).__init__(
             host, port, is_async_connect, is_encrypt)
 
@@ -39,58 +123,18 @@ class OpenQuoteContext(OpenContextBase):
     def on_api_socket_reconnected(self):
         """for API socket reconnected"""
         # auto subscriber
-        resub_count = 0
-        subtype_list = []
-        code_list = []
-
-        resub_dict = copy(self._ctx_subscribe)
-        subtype_all_cnt = len(resub_dict.keys())
-        subtype_cur_cnt = 0
+        with self._lock:
+            sub_list = self._sub_record.get_sub_list()
 
         ret_code = RET_OK
         ret_msg = ''
-
-        for subtype in resub_dict.keys():
-            subtype_cur_cnt += 1
-            code_set = resub_dict[subtype]
-            code_list_new = [code for code in code_set]
-            if len(code_list_new) == 0:
-                continue
-
-            if len(code_list) == 0:
-                code_list = code_list_new
-                subtype_list = [subtype]
-
-            is_need_sub = False
-            if code_list == code_list_new:
-                if subtype not in subtype_list:
-                    subtype_list.append(subtype)   # 合并subtype请求
-            else:
-                ret_code, ret_msg = self._reconnect_subscribe(
-                    code_list, subtype_list)
-                logger.debug("reconnect subscribe code_count={} ret_code={} ret_msg={} subtype_list={} code_list={}".format(
-                    len(code_list), ret_code, ret_msg, subtype_list, code_list))
-                if ret_code != RET_OK:
-                    break
-
-                resub_count += len(code_list)
-                code_list = code_list_new
-                subtype_list = [subtype]
-
-            # 循环即将结束
-            if subtype_cur_cnt == subtype_all_cnt and len(code_list):
-                ret_code, ret_msg = self._reconnect_subscribe(
-                    code_list, subtype_list)
-                logger.debug("reconnect subscribe code_count={} ret_code={} ret_msg={} subtype_list={} code_list={}".format(
-                    len(code_list), ret_code, ret_msg, subtype_list, code_list))
-                if ret_code != RET_OK:
-                    break
-                resub_count += len(code_list)
-                code_list = []
-                subtype_list = []
-
-        logger.debug("reconnect subscribe all code_count={} ret_code={} ret_msg={}".format(
-            resub_count, ret_code, ret_msg))
+        for code_list, subtype_list, is_detailed_orderbook in sub_list:
+            ret_code, ret_msg = self._reconnect_subscribe(
+                code_list, subtype_list)
+            logger.debug("reconnect subscribe code_count={} ret_code={} ret_msg={} subtype_list={} code_list={} is_detailed_orderbook={}".format(
+                len(code_list), ret_code, ret_msg, subtype_list, code_list, is_detailed_orderbook))
+            if ret_code != RET_OK:
+                break
 
         # 重定阅失败，重连
         if ret_code != RET_OK:
@@ -382,65 +426,6 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, kline_frame_table
 
-    def get_history_kline(self,
-                          code,
-                          start=None,
-                          end=None,
-                          ktype=KLType.K_DAY,
-                          autype=AuType.QFQ,
-                          fields=[KL_FIELD.ALL]):
-        """
-            得到本地历史k线，需先参照帮助文档下载k线
-
-            :param code: 股票代码
-            :param start: 开始时间，例如'2017-06-20'
-            :param end:  结束时间，例如'2017-06-30'
-                    start和end的组合如下：
-                    ==========    ==========    ========================================
-                     start类型      end类型       说明
-                    ==========    ==========    ========================================
-                     str            str           start和end分别为指定的日期
-                     None           str           start为end往前365天
-                     str            None          end为start往后365天
-                     None           None          end为当前日期，start为end往前365天
-                    ==========    ==========    ========================================
-            :param ktype: k线类型， 参见 KLType 定义
-            :param autype: 复权类型, 参见 AuType 定义
-            :param fields: 需返回的字段列表，参见 KL_FIELD 定义 KL_FIELD.ALL  KL_FIELD.OPEN ....
-            :return: (ret, data)
-
-                    ret == RET_OK 返回pd dataframe数据，data.DataFrame数据, 数据列格式如下
-
-                    ret != RET_OK 返回错误字符串
-
-                =================   ===========   ==============================================================================
-                参数                  类型                        说明
-                =================   ===========   ==============================================================================
-                code                str            股票代码
-                time_key            str            k线时间
-                open                float          开盘价
-                close               float          收盘价
-                high                float          最高价
-                low                 float          最低价
-                pe_ratio            float          市盈率（该字段为比例字段，默认不展示%）
-                turnover_rate       float          换手率
-                volume              int            成交量
-                turnover            float          成交额
-                change_rate         float          涨跌幅
-                last_close          float          昨收价
-                =================   ===========   ==============================================================================
-
-            :example:
-
-            .. code:: python
-
-                from futu import *
-                quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
-                print(quote_ctx.get_history_kline('HK.00700', start='2017-06-20', end='2017-06-22'))
-                quote_ctx.close()
-        """
-        return self._get_history_kline_impl(GetHistoryKlineQuery, code, start=start, end=end,
-                                            ktype=ktype, autype=autype, fields=fields)
 
     def request_history_kline(self,
                               code,
@@ -577,68 +562,6 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, kline_frame_table, next_page_req_key
 
-    def get_autype_list(self, code_list):
-        """
-        获取给定股票列表的复权因子
-
-        :param code_list: 股票列表，例如['HK.00700']
-        :return: (ret, data)
-
-                ret == RET_OK 返回pd dataframe数据，data.DataFrame数据, 数据列格式如下
-
-                ret != RET_OK 返回错误字符串
-
-                =====================   ===========   =================================================================================
-                参数                      类型                        说明
-                =====================   ===========   =================================================================================
-                code                    str            股票代码
-                ex_div_date             str            除权除息日
-                split_ratio             float          拆合股比例（该字段为比例字段，默认不展示%），例如，对于5股合1股为1/5，对于1股拆5股为5/1
-                per_cash_div            float          每股派现
-                per_share_div_ratio     float          每股送股比例（该字段为比例字段，默认不展示%）
-                per_share_trans_ratio   float          每股转增股比例（该字段为比例字段，默认不展示%）
-                allotment_ratio         float          每股配股比例（该字段为比例字段，默认不展示%）
-                allotment_price         float          配股价
-                stk_spo_ratio           float          增发比例（该字段为比例字段，默认不展示%）
-                stk_spo_price           float          增发价格
-                forward_adj_factorA     float          前复权因子A
-                forward_adj_factorB     float          前复权因子B
-                backward_adj_factorA    float          后复权因子A
-                backward_adj_factorB    float          后复权因子B
-                =====================   ===========   =================================================================================
-
-        """
-        code_list = unique_and_normalize_list(code_list)
-        if not code_list:
-            error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
-            return RET_ERROR, error_str
-
-        for code in code_list:
-            if code is None or is_str(code) is False:
-                error_str = ERROR_STR_PREFIX + "the type of param in code_list is wrong"
-                return RET_ERROR, error_str
-
-        query_processor = self._get_sync_query_processor(
-            ExrightQuery.pack_req, ExrightQuery.unpack_rsp)
-        kargs = {
-            "stock_list": code_list,
-            "conn_id": self.get_sync_conn_id()
-        }
-        ret_code, msg, exr_record = query_processor(**kargs)
-        if ret_code == RET_ERROR:
-            return ret_code, msg
-
-        col_list = [
-            'code', 'ex_div_date', 'split_ratio', 'per_cash_div',
-            'per_share_div_ratio', 'per_share_trans_ratio', 'allotment_ratio',
-            'allotment_price', 'stk_spo_ratio', 'stk_spo_price',
-            'forward_adj_factorA', 'forward_adj_factorB',
-            'backward_adj_factorA', 'backward_adj_factorB'
-        ]
-
-        exr_frame_table = pd.DataFrame(exr_record, columns=col_list)
-
-        return RET_OK, exr_frame_table
 
     def get_market_snapshot(self, code_list):
         """
@@ -1230,11 +1153,8 @@ class OpenQuoteContext(OpenContextBase):
         if ret_code != RET_OK:
             return RET_ERROR, msg
 
-        for subtype in subtype_list:
-            if subtype not in self._ctx_subscribe:
-                self._ctx_subscribe[subtype] = set()
-            code_set = self._ctx_subscribe[subtype]
-            code_set.update(code_list)
+        with self._lock:
+            self._sub_record.sub(code_list, subtype_list, is_detailed_orderbook)
         #
         # ret_code, msg, push_req_str = SubscriptionQuery.pack_push_req(
         #     code_list, subtype_list, self.get_async_conn_id(), is_first_push)
@@ -1319,15 +1239,11 @@ class OpenQuoteContext(OpenContextBase):
             "conn_id": self.get_sync_conn_id()
         }
 
-        if not unsubscribe_all:
-            for subtype in subtype_list:
-                if subtype not in self._ctx_subscribe:
-                    continue
-                code_set = self._ctx_subscribe[subtype]
-                for code in code_list:
-                    if code not in code_set:
-                        continue
-                    code_set.remove(code)
+        with self._lock:
+            if unsubscribe_all:
+                self._sub_record.unsub_all()
+            else:
+                self._sub_record.unsub(code_list, subtype_list)
 
         ret_code, msg, _ = query_processor(**kargs)
 
@@ -1669,114 +1585,6 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
 
         return RET_OK, orderbook
-
-    def get_multi_points_history_kline(self,
-                                       code_list,
-                                       dates,
-                                       fields,
-                                       ktype=KLType.K_DAY,
-                                       autype=AuType.QFQ,
-                                       no_data_mode=KLNoDataMode.FORWARD):
-        '''
-        从本地历史K线中获取多支股票多个时间点的指定数据列
-
-        :param code_list: 单个或多个股票 'HK.00700'  or  ['HK.00700', 'HK.00001']
-        :param dates: 单个或多个日期 '2017-01-01' or ['2017-01-01', '2017-01-02']
-        :param fields: 单个或多个数据列 KL_FIELD.ALL or [KL_FIELD.DATE_TIME, KL_FIELD.OPEN]
-        :param ktype: K线类型
-        :param autype: 复权类型
-        :param no_data_mode: 指定时间为非交易日时，对应的k线数据取值模式，参见KLNoDataMode
-        :return: (ret, data)
-
-                ret == RET_OK 返回pd dataframe数据，固定表头包括'code'(代码) 'time_point'(指定的日期) 'data_status' (KLDataStatus)。数据列格式如下
-
-                ret != RET_OK 返回错误字符串
-
-            =================   ===========   ==============================================================================
-            参数                  类型                        说明
-            =================   ===========   ==============================================================================
-            code                str            股票代码
-            time_point          str            请求的时间
-            data_status         str            数据点是否有效，参见KLDataStatus
-            time_key            str            k线时间（美股默认是美东时间，港股A股默认是北京时间）
-            open                float          开盘价
-            close               float          收盘价
-            high                float          最高价
-            low                 float          最低价
-            pe_ratio            float          市盈率（该字段为比例字段，默认不展示%）
-            turnover_rate       float          换手率
-            volume              int            成交量
-            turnover            float          成交额
-            change_rate         float          涨跌幅
-            last_close          float          昨收价
-            =================   ===========   ==============================================================================
-        '''
-        req_codes = unique_and_normalize_list(code_list)
-        if not code_list:
-            error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
-            return RET_ERROR, error_str
-
-        req_dates = unique_and_normalize_list(dates)
-        if not dates:
-            error_str = ERROR_STR_PREFIX + "the type of dates param is wrong"
-            return RET_ERROR, error_str
-
-        req_fields = unique_and_normalize_list(fields)
-        if not fields:
-            req_fields = copy(KL_FIELD.ALL_REAL)
-        req_fields = KL_FIELD.normalize_field_list(req_fields)
-        if not req_fields:
-            error_str = ERROR_STR_PREFIX + "the type of fields param is wrong"
-            return RET_ERROR, error_str
-
-        query_processor = self._get_sync_query_processor(
-            MultiPointsHisKLine.pack_req, MultiPointsHisKLine.unpack_rsp)
-
-        # 一次性最多取100支股票的数据
-        max_req_code_num = 50
-
-        data_finish = False
-        list_ret = []
-        # 循环请求数据，避免一次性取太多超时
-        while not data_finish:
-            logger.debug(
-                'get_multi_points_history_kline - wait ... %s' % datetime.now())
-            kargs = {
-                "code_list": req_codes,
-                "dates": req_dates,
-                "fields": copy(req_fields),
-                "ktype": ktype,
-                "autype": autype,
-                "max_req": max_req_code_num,
-                "no_data_mode": int(no_data_mode),
-                "conn_id": self.get_sync_conn_id()
-            }
-            ret_code, msg, content = query_processor(**kargs)
-            if ret_code == RET_ERROR:
-                return ret_code, msg
-
-            list_kline, has_next = content
-            data_finish = (not has_next)
-
-            for dict_item in list_kline:
-                item_code = dict_item['code']
-                list_ret.append(dict_item)
-                if item_code in req_codes:
-                    req_codes.remove(item_code)
-
-            if 0 == len(req_codes):
-                data_finish = True
-
-        # 表头列
-        col_list = ['code', 'time_point', 'data_status']
-        for field in req_fields:
-            str_field = KL_FIELD.DICT_KL_FIELD_STR[field]
-            if str_field not in col_list:
-                col_list.append(str_field)
-
-        pd_frame = pd.DataFrame(list_ret, columns=col_list)
-
-        return RET_OK, pd_frame
 
     def get_referencestock_list(self, code, reference_type):
         """
