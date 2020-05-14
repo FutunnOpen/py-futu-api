@@ -1205,7 +1205,7 @@ class OpenQuoteContext(OpenContextBase):
                 start_idx += sub_count
 
                 ret_code, ret_data = self._subscribe_impl(
-                    sub_codes, sub_list, is_detailed_orderbook)
+                    sub_codes, sub_list, True, True, is_detailed_orderbook)
                 if ret_code != RET_OK:
                     break
             if ret_code != RET_OK:
