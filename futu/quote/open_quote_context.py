@@ -11,6 +11,89 @@ from futu.common.open_context_base import OpenContextBase, ContextStatus
 from futu.quote.quote_query import *
 from futu.quote.quote_stockfilter_info import *
 
+class SubRecord:
+    def __init__(self):
+        self.subMap = {}  # (subkey, is_orderbook_detail) => code set
+
+    def sub(self, code_list, subtype_list, is_orderbook_detail):
+        not_is_orderbook_detail = not is_orderbook_detail
+        for subtype in subtype_list:
+            old_subkey = (subtype, not_is_orderbook_detail)
+            old_code_set = self.subMap.get(old_subkey, set())
+            new_subkey = (subtype, is_orderbook_detail)
+            new_code_set = self.subMap.get(new_subkey, set())
+            for code in code_list:
+                if code in old_code_set:
+                    old_code_set.remove(code)
+                new_code_set.add(code)
+            if len(old_code_set) == 0 and old_subkey in self.subMap:
+                del self.subMap[old_subkey]
+            self.subMap[new_subkey] = new_code_set
+
+    def unsub(self, code_list, subtype_list):
+        for subtype in subtype_list:
+            subkey1 = (subtype, True)
+            code_set1 = self.subMap.get(subkey1, set())
+            subkey2 = (subtype, False)
+            code_set2 = self.subMap.get(subkey2, set())
+            for code in code_list:
+                code_set1.discard(code)
+                code_set2.discard(code)
+            if len(code_set1) == 0 and subkey1 in self.subMap:
+                del self.subMap[subkey1]
+            if len(code_set2) == 0 and subkey2 in self.subMap:
+                del self.subMap[subkey2]
+
+    def unsub_all(self):
+        self.subMap = {}
+
+    def get_sub_list(self):
+        """
+
+        :return: [(code_list, subtype_list, is_orderbook_detail)]
+        """
+        sublist_orderbook_true = []
+        sublist_orderbook_false = []
+        for subkey, code_set in self.subMap.items():
+            if subkey[1]:
+                sublist_orderbook_true.append((subkey, code_set))
+            else:
+                sublist_orderbook_false.append((subkey, code_set))
+        result = self._merge_sub_list(sublist_orderbook_true)
+        result.extend(self._merge_sub_list(sublist_orderbook_false))
+        return result
+
+    def _merge_sub_list(self, orig_sub_list):
+        """
+        将原始的订阅列表合并为适合调用subscribe函数的参数的形式，并尽量合并code列表
+        :param orig_sub_list: [(subkey, code_set)]
+        :return: [(code_list, subtype_list, is_orderbook_detail)]
+        """
+        if len(orig_sub_list) <= 1:
+            return self._conv_sub_list(orig_sub_list)
+
+        all_code_set_same = True
+        _, first_code_set = orig_sub_list[0]
+        for idx in range(1, len(orig_sub_list)):
+            _, cur_code_set = orig_sub_list[idx]
+            if first_code_set != cur_code_set:
+                all_code_set_same = False
+                break
+        if all_code_set_same:
+            code_list = list(first_code_set)
+            subtype_list = [item[0][0] for item in orig_sub_list]
+            is_orderbook_detail = orig_sub_list[0][0][1]
+            return [(code_list, subtype_list, is_orderbook_detail)]
+        else:
+            return self._conv_sub_list(orig_sub_list)
+
+    def _conv_sub_list(self, orig_sub_list):
+        sub_list = []
+        for subkey, code_set in orig_sub_list:
+            sub_list.append((list(code_set), [subkey[0]], subkey[1]))
+        return sub_list
+
+
 class OpenQuoteContext(OpenContextBase):
     """行情上下文对象类"""
 
@@ -21,6 +104,7 @@ class OpenQuoteContext(OpenContextBase):
         :param port: 端口
         """
         self._ctx_subscribe = {}
+        self._sub_record = SubRecord()
         super(OpenQuoteContext, self).__init__(
             host, port, is_async_connect, is_encrypt)
 
@@ -39,58 +123,18 @@ class OpenQuoteContext(OpenContextBase):
     def on_api_socket_reconnected(self):
         """for API socket reconnected"""
         # auto subscriber
-        resub_count = 0
-        subtype_list = []
-        code_list = []
-
-        resub_dict = copy(self._ctx_subscribe)
-        subtype_all_cnt = len(resub_dict.keys())
-        subtype_cur_cnt = 0
+        with self._lock:
+            sub_list = self._sub_record.get_sub_list()
 
         ret_code = RET_OK
         ret_msg = ''
-
-        for subtype in resub_dict.keys():
-            subtype_cur_cnt += 1
-            code_set = resub_dict[subtype]
-            code_list_new = [code for code in code_set]
-            if len(code_list_new) == 0:
-                continue
-
-            if len(code_list) == 0:
-                code_list = code_list_new
-                subtype_list = [subtype]
-
-            is_need_sub = False
-            if code_list == code_list_new:
-                if subtype not in subtype_list:
-                    subtype_list.append(subtype)   # 合并subtype请求
-            else:
-                ret_code, ret_msg = self._reconnect_subscribe(
-                    code_list, subtype_list)
-                logger.debug("reconnect subscribe code_count={} ret_code={} ret_msg={} subtype_list={} code_list={}".format(
-                    len(code_list), ret_code, ret_msg, subtype_list, code_list))
-                if ret_code != RET_OK:
-                    break
-
-                resub_count += len(code_list)
-                code_list = code_list_new
-                subtype_list = [subtype]
-
-            # 循环即将结束
-            if subtype_cur_cnt == subtype_all_cnt and len(code_list):
-                ret_code, ret_msg = self._reconnect_subscribe(
-                    code_list, subtype_list)
-                logger.debug("reconnect subscribe code_count={} ret_code={} ret_msg={} subtype_list={} code_list={}".format(
-                    len(code_list), ret_code, ret_msg, subtype_list, code_list))
-                if ret_code != RET_OK:
-                    break
-                resub_count += len(code_list)
-                code_list = []
-                subtype_list = []
-
-        logger.debug("reconnect subscribe all code_count={} ret_code={} ret_msg={}".format(
-            resub_count, ret_code, ret_msg))
+        for code_list, subtype_list, is_detailed_orderbook in sub_list:
+            ret_code, ret_msg = self._reconnect_subscribe(
+                code_list, subtype_list)
+            logger.debug("reconnect subscribe code_count={} ret_code={} ret_msg={} subtype_list={} code_list={} is_detailed_orderbook={}".format(
+                len(code_list), ret_code, ret_msg, subtype_list, code_list, is_detailed_orderbook))
+            if ret_code != RET_OK:
+                break
 
         # 重定阅失败，重连
         if ret_code != RET_OK:
@@ -1109,11 +1153,8 @@ class OpenQuoteContext(OpenContextBase):
         if ret_code != RET_OK:
             return RET_ERROR, msg
 
-        for subtype in subtype_list:
-            if subtype not in self._ctx_subscribe:
-                self._ctx_subscribe[subtype] = set()
-            code_set = self._ctx_subscribe[subtype]
-            code_set.update(code_list)
+        with self._lock:
+            self._sub_record.sub(code_list, subtype_list, is_detailed_orderbook)
         #
         # ret_code, msg, push_req_str = SubscriptionQuery.pack_push_req(
         #     code_list, subtype_list, self.get_async_conn_id(), is_first_push)
@@ -1198,15 +1239,11 @@ class OpenQuoteContext(OpenContextBase):
             "conn_id": self.get_sync_conn_id()
         }
 
-        if not unsubscribe_all:
-            for subtype in subtype_list:
-                if subtype not in self._ctx_subscribe:
-                    continue
-                code_set = self._ctx_subscribe[subtype]
-                for code in code_list:
-                    if code not in code_set:
-                        continue
-                    code_set.remove(code)
+        with self._lock:
+            if unsubscribe_all:
+                self._sub_record.unsub_all()
+            else:
+                self._sub_record.unsub(code_list, subtype_list)
 
         ret_code, msg, _ = query_processor(**kargs)
 
