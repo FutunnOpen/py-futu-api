@@ -130,7 +130,7 @@ class OpenQuoteContext(OpenContextBase):
         ret_msg = ''
         for code_list, subtype_list, is_detailed_orderbook in sub_list:
             ret_code, ret_msg = self._reconnect_subscribe(
-                code_list, subtype_list)
+                code_list, subtype_list, is_detailed_orderbook)
             logger.debug("reconnect subscribe code_count={} ret_code={} ret_msg={} subtype_list={} code_list={} is_detailed_orderbook={}".format(
                 len(code_list), ret_code, ret_msg, subtype_list, code_list, is_detailed_orderbook))
             if ret_code != RET_OK:
@@ -1168,7 +1168,7 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, None
 
-    def _reconnect_subscribe(self, code_list, subtype_list):
+    def _reconnect_subscribe(self, code_list, subtype_list, is_detailed_orderbook):
 
         # 将k线定阅和其它定阅区分开来
         kline_sub_list = []
@@ -1205,7 +1205,7 @@ class OpenQuoteContext(OpenContextBase):
                 start_idx += sub_count
 
                 ret_code, ret_data = self._subscribe_impl(
-                    sub_codes, sub_list, False)
+                    sub_codes, sub_list, is_detailed_orderbook)
                 if ret_code != RET_OK:
                     break
             if ret_code != RET_OK:
