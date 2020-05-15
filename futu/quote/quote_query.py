@@ -591,6 +591,7 @@ class MarketSnapshotQuery:
                 #  界内界外，仅界内证支持该字段 type=double
                 snapshot_tmp["wrt_inline_price_status"] = PriceType.to_string2(
                     record.warrantExData.inLinePriceStatus)
+                snapshot_tmp["wrt_issuer_code"] = record.warrantExData.issuerCode
 
             snapshot_tmp['option_valid'] = False
             if record.basic.type == SEC_TYPE_MAP[SecurityType.DRVT]:
@@ -1522,6 +1523,8 @@ class GlobalStateQuery:
             if state.marketHK in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
             'market_hkfuture': QUOTE.REV_MARKET_STATE_MAP[state.marketHKFuture]
             if state.marketHKFuture in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
+            'market_usfuture': QUOTE.REV_MARKET_STATE_MAP[state.marketUSFuture]
+            if state.marketUSFuture in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
 
             'server_ver': str(state.serverVer),
             'trd_logined': state.trdLogined,

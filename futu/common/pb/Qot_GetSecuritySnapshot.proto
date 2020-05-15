@@ -59,6 +59,7 @@ message WarrantSnapshotExData
 	optional double upperStrikePrice = 22; //上限价，仅界内证支持该字段
 	optional double lowerStrikePrice = 23; //下限价，仅界内证支持该字段
 	optional int32 inLinePriceStatus = 24; //Qot_Common.PriceType, 界内界外，仅界内证支持该字段
+	optional string issuerCode = 25; //发行人代码
 }
 
  // 期权类型额外数据

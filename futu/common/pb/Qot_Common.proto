@@ -86,11 +86,19 @@ enum QotMarketState
 	QotMarketState_AfterHoursEnd = 11; // 盘后结束 
 	QotMarketState_NightOpen = 13; // 夜市开盘 
 	QotMarketState_NightEnd = 14; // 夜市收盘 
-	QotMarketState_FutureDayOpen = 15; // 期指日市开盘 
-	QotMarketState_FutureDayBreak = 16; // 期指日市休市 
-	QotMarketState_FutureDayClose = 17; // 期指日市收盘 
-	QotMarketState_FutureDayWaitForOpen = 18; // 期指日市等待开盘 
-	QotMarketState_HkCas = 19; // 盘后竞价,港股市场增加CAS机制对应的市场状态
+	QotMarketState_FutureDayOpen = 15; // 期货日市开盘 
+	QotMarketState_FutureDayBreak = 16; // 期货日市休市 
+	QotMarketState_FutureDayClose = 17; // 期货日市收盘 
+	QotMarketState_FutureDayWaitForOpen = 18; // 期货日市等待开盘 
+	QotMarketState_HkCas = 19; // 盘后竞价,港股市场增加CAS机制对应的市场状态	
+	QotMarketState_FutureNightWait = 20; // 夜市等待开盘
+	QotMarketState_FutureAfternoon = 21; // 期货下午开盘
+	//美国期货新增加状态
+	QotMarketState_FutureSwitchDate = 22; // 期货切交易日
+	QotMarketState_FutureOpen = 23; // 期货开盘
+	QotMarketState_FutureBreak = 24; // 期货中盘休息
+	QotMarketState_FutureBreakOver = 25; // 期货休息后开盘
+	QotMarketState_FutureClose = 26; // 期货收盘
 }
 
 //交易日查询市场

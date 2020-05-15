@@ -741,6 +741,7 @@ class OpenQuoteContext(OpenContextBase):
                         'wrt_upper_strike_price',
                         'wrt_lowe_strike_price',
                         'wrt_inline_price_status',
+                        'wrt_issuer_code'
                         ]
         option_col_list = ['option_type',
                            'strike_time',
