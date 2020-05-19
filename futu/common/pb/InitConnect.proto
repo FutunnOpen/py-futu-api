@@ -14,6 +14,7 @@ message C2S
 	//如果配置了RSA密钥且指定的加密算法不为PacketEncAlgo_None则加密(即便这里不设置，配置了RSA密钥，也会采用默认加密方式)，默认采用FTAES_ECB算法
 	optional int32 packetEncAlgo = 4; //指定包加密算法，参见Common.PacketEncAlgo的枚举定义
 	optional int32 pushProtoFmt = 5; //指定这条连接上的推送协议格式，若不指定则使用push_proto_type配置项
+	optional string programmingLanguage = 6; //接口编程语言，用于统计语言偏好
 }
 
 message S2C
