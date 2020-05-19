@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='InitConnect.proto',
   package='InitConnect',
   syntax='proto2',
-  serialized_pb=_b('\n\x11InitConnect.proto\x12\x0bInitConnect\x1a\x0c\x43ommon.proto\"k\n\x03\x43\x32S\x12\x11\n\tclientVer\x18\x01 \x02(\x05\x12\x10\n\x08\x63lientID\x18\x02 \x02(\t\x12\x12\n\nrecvNotify\x18\x03 \x01(\x08\x12\x15\n\rpacketEncAlgo\x18\x04 \x01(\x05\x12\x14\n\x0cpushProtoFmt\x18\x05 \x01(\x05\"~\n\x03S2C\x12\x11\n\tserverVer\x18\x01 \x02(\x05\x12\x13\n\x0bloginUserID\x18\x02 \x02(\x04\x12\x0e\n\x06\x63onnID\x18\x03 \x02(\x04\x12\x12\n\nconnAESKey\x18\x04 \x02(\t\x12\x19\n\x11keepAliveInterval\x18\x05 \x02(\x05\x12\x10\n\x08\x61\x65sCBCiv\x18\x06 \x01(\t\"(\n\x07Request\x12\x1d\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x10.InitConnect.C2S\"a\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1d\n\x03s2c\x18\x04 \x01(\x0b\x32\x10.InitConnect.S2CBB\n\x13\x63om.futu.openapi.pbZ+github.com/futuopen/ftapi4go/pb/initconnect')
+  serialized_pb=_b('\n\x11InitConnect.proto\x12\x0bInitConnect\x1a\x0c\x43ommon.proto\"\x88\x01\n\x03\x43\x32S\x12\x11\n\tclientVer\x18\x01 \x02(\x05\x12\x10\n\x08\x63lientID\x18\x02 \x02(\t\x12\x12\n\nrecvNotify\x18\x03 \x01(\x08\x12\x15\n\rpacketEncAlgo\x18\x04 \x01(\x05\x12\x14\n\x0cpushProtoFmt\x18\x05 \x01(\x05\x12\x1b\n\x13programmingLanguage\x18\x06 \x01(\t\"~\n\x03S2C\x12\x11\n\tserverVer\x18\x01 \x02(\x05\x12\x13\n\x0bloginUserID\x18\x02 \x02(\x04\x12\x0e\n\x06\x63onnID\x18\x03 \x02(\x04\x12\x12\n\nconnAESKey\x18\x04 \x02(\t\x12\x19\n\x11keepAliveInterval\x18\x05 \x02(\x05\x12\x10\n\x08\x61\x65sCBCiv\x18\x06 \x01(\t\"(\n\x07Request\x12\x1d\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x10.InitConnect.C2S\"a\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1d\n\x03s2c\x18\x04 \x01(\x0b\x32\x10.InitConnect.S2CBB\n\x13\x63om.futu.openapi.pbZ+github.com/futuopen/ftapi4go/pb/initconnect')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,])
 
@@ -69,6 +69,13 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='programmingLanguage', full_name='InitConnect.C2S.programmingLanguage', index=5,
+      number=6, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -81,8 +88,8 @@ _C2S = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=48,
-  serialized_end=155,
+  serialized_start=49,
+  serialized_end=185,
 )
 
 
@@ -147,8 +154,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=157,
-  serialized_end=283,
+  serialized_start=187,
+  serialized_end=313,
 )
 
 
@@ -178,8 +185,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=285,
-  serialized_end=325,
+  serialized_start=315,
+  serialized_end=355,
 )
 
 
@@ -230,8 +237,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=327,
-  serialized_end=424,
+  serialized_start=357,
+  serialized_end=454,
 )
 
 _REQUEST.fields_by_name['c2s'].message_type = _C2S

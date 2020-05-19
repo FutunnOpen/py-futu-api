@@ -166,6 +166,7 @@ class InitConnect:
         req.c2s.clientID = client_id
         req.c2s.recvNotify = recv_notify
         req.c2s.pushProtoFmt = push_proto_fmt
+        req.c2s.programmingLanguage = 'Python'
 
         if is_encrypt:
             req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_AES_CBC
