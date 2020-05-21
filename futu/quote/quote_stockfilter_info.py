@@ -194,7 +194,7 @@ class PatternFilter(object):
 class FilterStockData(object):
     stock_code = None
     stock_name = None
-	 # 以下是简单数据过滤所支持的字段
+    # 以下是简单数据过滤所支持的字段
     # cur_price = None  # 最新价
     # cur_price_to_highest_52weeks_ratio = None  # (现价 - 52周最高) / 52周最高，对应pc端离52周高点百分比
     # cur_price_to_lowest_52weeks_ratio = None  # (现价 - 52周最低) / 52周最低，对应pc端离52周低点百分比
@@ -311,14 +311,14 @@ class FilterStockData(object):
             if ret:
                 self.__dict__[field.lower()] = sub_item.value
                 
-        #  筛选后的简单属性数据 type = Qot_StockFilter.AccumulateData
+        #  筛选后的累计属性数据 type = Qot_StockFilter.AccumulateData
         base_data_list = rsp_item.accumulateDataList
         for sub_item in base_data_list:
             ret, field = StockField.to_string(sub_item.fieldName + StockField.acc_enum_begin)
             if ret:
                 self.__dict__[(field.lower(), sub_item.days)] = sub_item.value
                 
-        #  筛选后的简单属性数据 type = Qot_StockFilter.FinancialData
+        #  筛选后的财务属性数据 type = Qot_StockFilter.FinancialData
         base_data_list = rsp_item.financialDataList
         for sub_item in base_data_list:
             ret1, field = StockField.to_string(sub_item.fieldName + StockField.financial_enum_begin)
@@ -326,12 +326,12 @@ class FilterStockData(object):
             if ret1 and ret2:
                 self.__dict__[(field.lower(), quarter.lower())] = sub_item.value
 
-        #  筛选后的简单属性数据 type = Qot_StockFilter.CustomIndicatorData
-        base_data_list = rsp_item.financialDataList
+        #  筛选后的指标属性数据 type = Qot_StockFilter.CustomIndicatorData
+        base_data_list = rsp_item.customIndicatorDataList
         for sub_item in base_data_list:
             ret1, field = StockField.to_string(sub_item.fieldName + StockField.indicator_enum_begin)
             ret2 = sub_item.klType in QUOTE.REV_KTYPE_MAP
-            klType = QUOTE.REV_KTYPE_MAP(sub_item.klType)
+            klType = QUOTE.REV_KTYPE_MAP[sub_item.klType] if ret2 else None
             if ret1 and ret2:
                 self.__dict__[(field.lower(), klType.lower())] = sub_item.value
 
