@@ -86,11 +86,19 @@ enum QotMarketState
 	QotMarketState_AfterHoursEnd = 11; // 盘后结束 
 	QotMarketState_NightOpen = 13; // 夜市开盘 
 	QotMarketState_NightEnd = 14; // 夜市收盘 
-	QotMarketState_FutureDayOpen = 15; // 期指日市开盘 
-	QotMarketState_FutureDayBreak = 16; // 期指日市休市 
-	QotMarketState_FutureDayClose = 17; // 期指日市收盘 
-	QotMarketState_FutureDayWaitForOpen = 18; // 期指日市等待开盘 
-	QotMarketState_HkCas = 19; // 盘后竞价,港股市场增加CAS机制对应的市场状态
+	QotMarketState_FutureDayOpen = 15; // 期货日市开盘 
+	QotMarketState_FutureDayBreak = 16; // 期货日市休市 
+	QotMarketState_FutureDayClose = 17; // 期货日市收盘 
+	QotMarketState_FutureDayWaitForOpen = 18; // 期货日市等待开盘 
+	QotMarketState_HkCas = 19; // 盘后竞价,港股市场增加CAS机制对应的市场状态	
+	QotMarketState_FutureNightWait = 20; // 夜市等待开盘
+	QotMarketState_FutureAfternoon = 21; // 期货下午开盘
+	//美国期货新增加状态
+	QotMarketState_FutureSwitchDate = 22; // 期货切交易日
+	QotMarketState_FutureOpen = 23; // 期货开盘
+	QotMarketState_FutureBreak = 24; // 期货中盘休息
+	QotMarketState_FutureBreakOver = 25; // 期货休息后开盘
+	QotMarketState_FutureClose = 26; // 期货收盘
 }
 
 //交易日查询市场
@@ -418,13 +426,13 @@ enum PriceReminderType
 	PriceReminderType_Unknown = 0; // 未知
     PriceReminderType_PriceUp = 1; // 价格涨到
 	PriceReminderType_PriceDown = 2; // 价格跌到
-	PriceReminderType_ChangeRateUp = 3; // 日涨幅超
-	PriceReminderType_ChangeRateDown = 4; // 日跌幅超
-	PriceReminderType_5MinChangeRateUp = 5; // 5分钟涨幅超
-	PriceReminderType_5MinChangeRateDown = 6; // 5分钟跌幅超
+	PriceReminderType_ChangeRateUp = 3; // 日涨幅超，该字段为百分比字段，设置时填20表示20%
+	PriceReminderType_ChangeRateDown = 4; // 日跌幅超，该字段为百分比字段，设置时填20表示20%
+	PriceReminderType_5MinChangeRateUp = 5; // 5分钟涨幅超，该字段为百分比字段，设置时填20表示20%
+	PriceReminderType_5MinChangeRateDown = 6; // 5分钟跌幅超，该字段为百分比字段，设置时填20表示20%
 	PriceReminderType_VolumeUp = 7; // 成交量超过
 	PriceReminderType_TurnoverUp = 8; // 成交额超过
-	PriceReminderType_TurnoverRateUp = 9; // 换手率超过
+	PriceReminderType_TurnoverRateUp = 9; // 换手率超过，该字段为百分比字段，设置时填20表示20%
 	PriceReminderType_BidPriceUp = 10; // 买一价高于
 	PriceReminderType_AskPriceDown = 11; // 卖一价低于
 	PriceReminderType_BidVolUp = 12; // 买一量高于	
@@ -618,11 +626,18 @@ message Ticker
 	optional double timestamp = 11; //时间戳
 }
 
+message OrderBookDetail
+{
+	required int64 orderID = 1; //交易所订单ID，与交易接口返回的订单ID并不一样
+	required int64 volume = 2; //订单股数
+}
+
 message OrderBook
 {
 	required double price = 1; //委托价格
 	required int64 volume = 2; //委托数量
 	required int32 orederCount = 3; //委托订单个数
+	repeated OrderBookDetail detailList = 4; //订单信息，SF行情特有
 }
 
 message OrderDetail

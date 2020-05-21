@@ -249,7 +249,13 @@ class MarketState:
     FUTURE_DAY_CLOSE = "FUTURE_DAY_CLOSE"           # 期指日市收盘
     FUTURE_DAY_WAIT_OPEN = "FUTURE_DAY_WAIT_OPEN"   # 期指日市等待开盘
     HK_CAS = "HK_CAS"                               # 盘后竞价, 港股市场增加CAS机制对应的市场状态
-
+    FUTURE_NIGHT_WAIT = "FUTURE_NIGHT_WAIT"         # 夜市等待开盘
+    FUTURE_AFTERNOON = "FUTURE_AFTERNOON"           # 期货下午开盘
+    FUTURE_SWITCH_DATE = "FUTURE_SWITCH_DATE"       # 期货切交易日
+    FUTURE_OPEN = "FUTURE_OPEN"                     # 期货开盘
+    FUTURE_BREAK = "FUTURE_BREAK"                   # 期货中盘休息
+    FUTURE_BREAK_OVER = "FUTURE_BREAK_OVER"         # 期货休息后开盘
+    FUTURE_CLOSE = "FUTURE_CLOSE"                   # 期货收盘
 
 MARKET_STATE_MAP = {
     MarketState.NONE: 0,
@@ -270,6 +276,13 @@ MARKET_STATE_MAP = {
     MarketState.FUTURE_DAY_CLOSE: 17,
     MarketState.FUTURE_DAY_WAIT_OPEN: 18,
     MarketState.HK_CAS: 19,
+    MarketState.FUTURE_NIGHT_WAIT: 20,
+    MarketState.FUTURE_AFTERNOON: 21,
+    MarketState.FUTURE_SWITCH_DATE: 22,
+    MarketState.FUTURE_OPEN: 23,
+    MarketState.FUTURE_BREAK: 24,
+    MarketState.FUTURE_BREAK_OVER: 25,
+    MarketState.FUTURE_CLOSE: 26,
 }
 
 
@@ -805,11 +818,11 @@ class ProtoId(object):
     Qot_GetBroker = 3014  # 获取经纪队列
     Qot_UpdateBroker = 3015  # 推送经纪队列
     Qot_UpdatePriceReminder = 3019 #到价提醒通知
-	
+
     # 历史数据
-    Qot_GetHistoryKL = 3100  # 获取历史K线
-    Qot_GetHistoryKLPoints = 3101  # 获取多只股票历史单点K线
-    Qot_GetRehab = 3102  # 获取复权信息
+    # Qot_GetHistoryKL = 3100  # 获取历史K线
+    # Qot_GetHistoryKLPoints = 3101  # 获取多只股票历史单点K线
+    # Qot_GetRehab = 3102  # 获取复权信息
     Qot_RequestHistoryKL = 3103  # 拉取历史K线
     Qot_RequestHistoryKLQuota = 3104  # 拉取历史K线已经用掉的额度
     Qot_RequestRehab = 3105  # 获取除权信息

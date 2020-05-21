@@ -166,6 +166,7 @@ class InitConnect:
         req.c2s.clientID = client_id
         req.c2s.recvNotify = recv_notify
         req.c2s.pushProtoFmt = push_proto_fmt
+        req.c2s.programmingLanguage = 'Python'
 
         if is_encrypt:
             req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_AES_CBC
@@ -591,6 +592,7 @@ class MarketSnapshotQuery:
                 #  界内界外，仅界内证支持该字段 type=double
                 snapshot_tmp["wrt_inline_price_status"] = PriceType.to_string2(
                     record.warrantExData.inLinePriceStatus)
+                snapshot_tmp["wrt_issuer_code"] = record.warrantExData.issuerCode
 
             snapshot_tmp['option_valid'] = False
             if record.basic.type == SEC_TYPE_MAP[SecurityType.DRVT]:
@@ -853,99 +855,6 @@ class BrokerQueueQuery:
         return RET_OK, "", (stock_code, bid_list, ask_list)
 
 
-class GetHistoryKlineQuery:
-    """
-    Query Conversion for getting historic Kline data.
-    """
-
-    def __init__(self):
-        pass
-
-    @classmethod
-    def pack_req(cls, code, start_date, end_date, ktype, autype, fields,
-                 max_num, conn_id):
-
-        ret, content = split_stock_str(code)
-        if ret == RET_ERROR:
-            error_str = content
-            return RET_ERROR, error_str, None
-
-        market_code, stock_code = content
-
-        # check k line type
-        if ktype not in KTYPE_MAP:
-            error_str = ERROR_STR_PREFIX + "ktype is %s, which is not valid. (%s)" \
-                                           % (ktype, ", ".join([x for x in KTYPE_MAP]))
-            return RET_ERROR, error_str, None
-
-        if autype not in AUTYPE_MAP:
-            error_str = ERROR_STR_PREFIX + "autype is %s, which is not valid. (%s)" \
-                                           % (autype, ", ".join([str(x) for x in AUTYPE_MAP]))
-            return RET_ERROR, error_str, None
-
-        from futu.common.pb.Qot_GetHistoryKL_pb2 import Request
-
-        req = Request()
-        req.c2s.rehabType = AUTYPE_MAP[autype]
-        req.c2s.klType = KTYPE_MAP[ktype]
-        req.c2s.security.market = market_code
-        req.c2s.security.code = stock_code
-        if start_date:
-            req.c2s.beginTime = start_date
-        if end_date:
-            req.c2s.endTime = end_date
-        req.c2s.maxAckKLNum = max_num
-        req.c2s.needKLFieldsFlag = KL_FIELD.kl_fields_to_flag_val(fields)
-
-        return pack_pb_req(req, ProtoId.Qot_GetHistoryKL, conn_id)
-
-    @classmethod
-    def unpack_rsp(cls, rsp_pb):
-
-        if rsp_pb.retType != RET_OK:
-            return RET_ERROR, rsp_pb.retMsg, None
-
-        has_next = False
-        next_time = ""
-        if rsp_pb.s2c.HasField('nextKLTime'):
-            has_next = True
-            next_time = rsp_pb.s2c.nextKLTime
-
-        stock_code = merge_qot_mkt_stock_str(rsp_pb.s2c.security.market,
-                                             rsp_pb.s2c.security.code)
-
-        list_ret = []
-        dict_data = {}
-        raw_kline_list = rsp_pb.s2c.klList
-        for record in raw_kline_list:
-            dict_data['code'] = stock_code
-            dict_data['time_key'] = record.time
-            if record.isBlank:
-                continue
-            if record.HasField('openPrice'):
-                dict_data['open'] = record.openPrice
-            if record.HasField('highPrice'):
-                dict_data['high'] = record.highPrice
-            if record.HasField('lowPrice'):
-                dict_data['low'] = record.lowPrice
-            if record.HasField('closePrice'):
-                dict_data['close'] = record.closePrice
-            if record.HasField('volume'):
-                dict_data['volume'] = record.volume
-            if record.HasField('turnover'):
-                dict_data['turnover'] = record.turnover
-            if record.HasField('pe'):
-                dict_data['pe_ratio'] = record.pe
-            if record.HasField('turnoverRate'):
-                dict_data['turnover_rate'] = record.turnoverRate
-            if record.HasField('changeRate'):
-                dict_data['change_rate'] = record.changeRate
-            if record.HasField('lastClosePrice'):
-                dict_data['last_close'] = record.lastClosePrice
-            list_ret.append(dict_data.copy())
-
-        return RET_OK, "", (list_ret, has_next, next_time)
-
 
 class RequestHistoryKlineQuery:
     def __init__(self):
@@ -1037,104 +946,6 @@ class RequestHistoryKlineQuery:
         return RET_OK, "", (list_ret, has_next, next_req_key)
 
 
-class ExrightQuery:
-    """
-    Query Conversion for getting exclude-right information of stock.
-    """
-
-    def __init__(self):
-        pass
-
-    @classmethod
-    def pack_req(cls, stock_list, conn_id):
-
-        stock_tuple_list = []
-        failure_tuple_list = []
-        for stock_str in stock_list:
-            ret_code, content = split_stock_str(stock_str)
-            if ret_code != RET_OK:
-                msg = content
-                error_str = ERROR_STR_PREFIX + msg
-                failure_tuple_list.append((ret_code, error_str))
-                continue
-
-            market_code, stock_code = content
-            stock_tuple_list.append((market_code, stock_code))
-
-        if len(failure_tuple_list) > 0:
-            error_str = '\n'.join([x[1] for x in failure_tuple_list])
-            return RET_ERROR, error_str, None
-        from futu.common.pb.Qot_GetRehab_pb2 import Request
-        req = Request()
-        for market_code, stock_code in stock_tuple_list:
-            stock_inst = req.c2s.securityList.add()
-            stock_inst.market = market_code
-            stock_inst.code = stock_code
-
-        return pack_pb_req(req, ProtoId.Qot_GetRehab, conn_id)
-
-    @classmethod
-    def unpack_rsp(cls, rsp_pb):
-
-        if rsp_pb.retType != RET_OK:
-            return RET_ERROR, rsp_pb.retMsg, None
-
-        class KLRehabFlag(object):
-            SPLIT = 1
-            JOIN = 2
-            BONUS = 4
-            TRANSFER = 8
-            ALLOT = 16
-            ADD = 32
-            DIVIDED = 64
-            SP_DIVIDED = 128
-
-        raw_exr_list = rsp_pb.s2c.securityRehabList
-        exr_list = []
-        for stock_rehab in raw_exr_list:
-            code = merge_qot_mkt_stock_str(stock_rehab.security.market,
-                                           stock_rehab.security.code)
-            for rehab in stock_rehab.rehabList:
-                stock_rehab_tmp = {}
-                stock_rehab_tmp['code'] = code
-                stock_rehab_tmp['ex_div_date'] = rehab.time.split()[0]
-                stock_rehab_tmp['forward_adj_factorA'] = rehab.fwdFactorA
-                stock_rehab_tmp['forward_adj_factorB'] = rehab.fwdFactorB
-                stock_rehab_tmp['backward_adj_factorA'] = rehab.bwdFactorA
-                stock_rehab_tmp['backward_adj_factorB'] = rehab.bwdFactorB
-
-                act_flag = rehab.companyActFlag
-                if act_flag == 0:
-                    continue
-
-                if act_flag & KLRehabFlag.SP_DIVIDED:
-                    stock_rehab_tmp['special_dividend'] = rehab.spDividend
-                if act_flag & KLRehabFlag.DIVIDED:
-                    stock_rehab_tmp['per_cash_div'] = rehab.dividend
-                if act_flag & KLRehabFlag.ADD:
-                    stock_rehab_tmp[
-                        'stk_spo_ratio'] = rehab.addBase / rehab.addErt
-                    stock_rehab_tmp['stk_spo_price'] = rehab.addPrice
-                if act_flag & KLRehabFlag.ALLOT:
-                    stock_rehab_tmp[
-                        'allotment_ratio'] = rehab.allotBase / rehab.allotErt
-                    stock_rehab_tmp['allotment_price'] = rehab.allotPrice
-                if act_flag & KLRehabFlag.TRANSFER:
-                    stock_rehab_tmp[
-                        'per_share_trans_ratio'] = rehab.transferBase / rehab.transferErt
-                if act_flag & KLRehabFlag.BONUS:
-                    stock_rehab_tmp[
-                        'per_share_div_ratio'] = rehab.bonusBase / rehab.bonusErt
-                if act_flag & KLRehabFlag.JOIN:
-                    stock_rehab_tmp[
-                        'join_ratio'] = rehab.joinBase / rehab.joinErt
-                if act_flag & KLRehabFlag.SPLIT:
-                    stock_rehab_tmp[
-                        'split_ratio'] = rehab.splitBase / rehab.splitErt
-                exr_list.append(stock_rehab_tmp)
-
-        return RET_OK, "", exr_list
-
 
 class SubscriptionQuery:
     """
@@ -1151,6 +962,7 @@ class SubscriptionQuery:
                               is_sub,
                               conn_id,
                               is_first_push,
+                              is_detailed_orderbook,
                               reg_or_unreg_push,
                               unsub_all=False):
 
@@ -1180,16 +992,18 @@ class SubscriptionQuery:
             req.c2s.isSubOrUnSub = is_sub
             req.c2s.isFirstPush = is_first_push
             req.c2s.isRegOrUnRegPush = reg_or_unreg_push
+            req.c2s.isSubOrderBookDetail = is_detailed_orderbook
 
         return pack_pb_req(req, ProtoId.Qot_Sub, conn_id)
 
     @classmethod
-    def pack_subscribe_req(cls, code_list, subtype_list, conn_id, is_first_push, subscribe_push):
+    def pack_subscribe_req(cls, code_list, subtype_list, conn_id, is_first_push, subscribe_push, is_detailed_orderbook):
         return SubscriptionQuery.pack_sub_or_unsub_req(code_list,
                                                        subtype_list,
                                                        True,
                                                        conn_id,
                                                        is_first_push,
+                                                       is_detailed_orderbook,
                                                        subscribe_push)  # True
 
     @classmethod
@@ -1207,6 +1021,7 @@ class SubscriptionQuery:
                                                        subtype_list,
                                                        False,
                                                        conn_id,
+                                                       False,
                                                        False,
                                                        False,
                                                        unsubscribe_all)
@@ -1602,12 +1417,17 @@ class OrderBookQuery:
         order_book['Ask'] = []
 
         for record in raw_order_book_bid:
+            detail = {}
+            for info in record.detailList:
+                detail[info.orderID] = info.volume
             order_book['Bid'].append((record.price, record.volume,
-                                      record.orederCount))
+                                      record.orederCount, detail))
         for record in raw_order_book_ask:
+            detail = {}
+            for info in record.detailList:
+                detail[info.orderID] = info.volume
             order_book['Ask'].append((record.price, record.volume,
-                                      record.orederCount))
-
+                                      record.orederCount, detail))
         return RET_OK, "", order_book
 
 
@@ -1704,6 +1524,8 @@ class GlobalStateQuery:
             if state.marketHK in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
             'market_hkfuture': QUOTE.REV_MARKET_STATE_MAP[state.marketHKFuture]
             if state.marketHKFuture in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
+            'market_usfuture': QUOTE.REV_MARKET_STATE_MAP[state.marketUSFuture]
+            if state.marketUSFuture in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
 
             'server_ver': str(state.serverVer),
             'trd_logined': state.trdLogined,
@@ -1791,109 +1613,6 @@ class SysNotifyPush:
 
         return RET_OK, (notify_type, sub_type, data)
 
-
-class MultiPointsHisKLine:
-    """
-    Query MultiPointsHisKLine
-    """
-
-    def __init__(self):
-        pass
-
-    @classmethod
-    def pack_req(cls, code_list, dates, fields, ktype, autype, max_req,
-                 no_data_mode, conn_id):
-
-        list_req_stock = []
-        for code in code_list:
-            ret, content = split_stock_str(code)
-            if ret == RET_ERROR:
-                return RET_ERROR, content, None
-            else:
-                list_req_stock.append(content)
-
-        for x in dates:
-            ret, msg = check_date_str_format(x)
-            if ret != RET_OK:
-                return ret, msg, None
-
-        if ktype not in KTYPE_MAP:
-            error_str = ERROR_STR_PREFIX + "ktype is %s, which is not valid. (%s)" \
-                                           % (ktype, ", ".join([x for x in KTYPE_MAP]))
-            return RET_ERROR, error_str, None
-
-        if autype not in AUTYPE_MAP:
-            error_str = ERROR_STR_PREFIX + "autype is %s, which is not valid. (%s)" \
-                                           % (autype, ", ".join([str(x) for x in AUTYPE_MAP]))
-            return RET_ERROR, error_str, None
-
-        from futu.common.pb.Qot_GetHistoryKLPoints_pb2 import Request
-        req = Request()
-        req.c2s.needKLFieldsFlag = KL_FIELD.kl_fields_to_flag_val(fields)
-        req.c2s.rehabType = AUTYPE_MAP[autype]
-        req.c2s.klType = KTYPE_MAP[ktype]
-        req.c2s.noDataMode = no_data_mode
-        req.c2s.maxReqSecurityNum = max_req
-        for market_code, code in list_req_stock:
-            stock_inst = req.c2s.securityList.add()
-            stock_inst.market = market_code
-            stock_inst.code = code
-        for date_ in dates:
-            req.c2s.timeList.append(date_)
-
-        return pack_pb_req(req, ProtoId.Qot_GetHistoryKLPoints, conn_id)
-
-    @classmethod
-    def unpack_rsp(cls, rsp_pb):
-
-        if rsp_pb.retType != RET_OK:
-            return RET_ERROR, rsp_pb.retMsg, None
-
-        has_next = rsp_pb.s2c.hasNext if rsp_pb.s2c.HasField(
-            'hasNext') else False
-
-        list_ret = []
-        dict_data = {}
-        raw_kline_points = rsp_pb.s2c.klPointList
-
-        for raw_kline in raw_kline_points:
-            code = merge_qot_mkt_stock_str(raw_kline.security.market,
-                                           raw_kline.security.code)
-            for raw_kl in raw_kline.klList:
-                dict_data['code'] = code
-                dict_data['time_point'] = raw_kl.reqTime
-                dict_data['data_status'] = QUOTE.REV_KLDATA_STATUS_MAP[raw_kl.status] if raw_kl.status in QUOTE.REV_KLDATA_STATUS_MAP else KLDataStatus.NONE
-                dict_data['time_key'] = raw_kl.kl.time
-
-                dict_data['open'] = raw_kl.kl.openPrice if raw_kl.kl.HasField(
-                    'openPrice') else 0
-                dict_data['high'] = raw_kl.kl.highPrice if raw_kl.kl.HasField(
-                    'highPrice') else 0
-                dict_data['low'] = raw_kl.kl.lowPrice if raw_kl.kl.HasField(
-                    'lowPrice') else 0
-                dict_data[
-                    'close'] = raw_kl.kl.closePrice if raw_kl.kl.HasField(
-                        'closePrice') else 0
-                dict_data['volume'] = raw_kl.kl.volume if raw_kl.kl.HasField(
-                    'volume') else 0
-                dict_data[
-                    'turnover'] = raw_kl.kl.turnover if raw_kl.kl.HasField(
-                        'turnover') else 0
-                dict_data['pe_ratio'] = raw_kl.kl.pe if raw_kl.kl.HasField(
-                    'pe') else 0
-                dict_data[
-                    'turnover_rate'] = raw_kl.kl.turnoverRate if raw_kl.kl.HasField(
-                        'turnoverRate') else 0
-                dict_data[
-                    'change_rate'] = raw_kl.kl.changeRate if raw_kl.kl.HasField(
-                        'changeRate') else 0
-                dict_data[
-                    'last_close'] = raw_kl.kl.lastClosePrice if raw_kl.kl.HasField(
-                        'lastClosePrice') else 0
-
-                list_ret.append(dict_data.copy())
-
-        return RET_OK, "", (list_ret, has_next)
 
 
 class StockReferenceList:

@@ -15,6 +15,7 @@ message C2S
 	repeated int32 regPushRehabTypeList = 5; //Qot_Common.RehabType,复权类型,注册推送并且是K线类型才生效,其他订阅类型忽略该参数,注册K线推送时该参数不指定默认前复权
 	optional bool isFirstPush = 6; //注册后如果本地已有数据是否首推一次已存在数据,该参数不指定则默认true
 	optional bool isUnsubAll = 7; //当被设置为True时忽略其他参数，取消当前连接的所有订阅，并且反注册推送。
+	optional bool isSubOrderBookDetail = 8; //订阅摆盘可用,是否订阅摆盘明细,仅支持SF行情,该参数不指定则默认false
 }
 
 message S2C
