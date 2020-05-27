@@ -237,7 +237,7 @@ message PatternFilter
 message CustomIndicatorFilter
 {
 	required int32 firstFieldName = 1; // CustomIndicatorField 自定义技术指标属性
-	optional int32 secondFieldName = 2; // CustomIndicatorField 自定义技术指标属性
+	required int32 secondFieldName = 2; // CustomIndicatorField 自定义技术指标属性
 	required int32 relativePosition = 3; // RelativePosition 相对位置,主要用于MA，EMA，RSI指标做比较
 	optional double fieldValue = 4; // 自定义数值，用于与RSI进行比较
 	required int32 klType = 5; // Qot_Common.KLType，K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期	
