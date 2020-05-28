@@ -306,7 +306,8 @@ class OpenContextBase(object):
                 market_us               str            美国市场状态，参见MarketState
                 market_sh               str            上海市场状态，参见MarketState
                 market_hk               str            香港市场状态，参见MarketState
-                market_future           str            香港期货市场状态，参见MarketState
+                market_hkfuture         str            香港期货市场状态，参见MarketState
+                market_usfuture         str            美国期货市场状态，参见MarketState
                 server_ver              str            FutuOpenD版本号
                 trd_logined             str            '1'：已登录交易服务器，'0': 未登录交易服务器
                 qot_logined             str            '1'：已登录行情服务器，'0': 未登录行情服务器

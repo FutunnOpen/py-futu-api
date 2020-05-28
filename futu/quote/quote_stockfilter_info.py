@@ -42,7 +42,7 @@ class SimpleFilter(object):
         return RET_OK, ""
 
 class AccumulateFilter(object):
-    stock_field = StockField.NONE  # StockField 简单属性
+    stock_field = StockField.NONE  # StockField 累计属性
     filter_min = None  # 区间下限，闭区间
     filter_max = None  # 区间上限，闭区间
     sort = None  # SortDir 排序方向 SortDir
@@ -79,13 +79,13 @@ class AccumulateFilter(object):
         return RET_OK, ""
             
 class FinancialFilter(object):
-    stock_field = StockField.NONE  # StockField 简单属性
+    stock_field = StockField.NONE  # StockField 财务属性
     filter_min = None  # 区间下限，闭区间
     filter_max = None  # 区间上限，闭区间
     sort = None  # SortDir 排序方向 SortDir
     is_no_filter = None  # 如果这个字段不需要筛选，但是需要返回这个字段的数据，指定该字段为ture。当该字段为true时，以上三个字段无效。
     quarter = FinancialQuarter.ANNUAL #财报累积时间
-    
+
     def __init__(self):
         self.stock_field = StockField.NONE
         self.filter_min = None
@@ -99,12 +99,12 @@ class FinancialFilter(object):
         if not r:
             return RET_ERROR, 'stock_field is wrong. must be StockField'
         filter_req.fieldName = v - StockField.financial_enum_begin
-        
+
         r, v = FinancialQuarter.to_number(self.quarter)
         if not r:
-            return RET_ERROR, 'quarter is wrong. must be FinancialQuarter'    
+            return RET_ERROR, 'quarter is wrong. must be FinancialQuarter'
         filter_req.quarter = v
-        
+
         """有了这个字段，别的字段都可以不要了"""
         if self.is_no_filter is False:
             filter_req.isNoFilter = False
@@ -121,10 +121,80 @@ class FinancialFilter(object):
 
         return RET_OK, ""
 
+class CustomIndicatorFilter(object):
+    stock_field1 = StockField.NONE  # StockField 指标属性
+    stock_field2 = StockField.NONE  # StockField 指标属性
+    relative_position = None # RelativePosition 相对位置,主要用于MA，EMA，RSI指标做比较
+    value = None # 自定义数值，用于与RSI进行比较
+    ktype = None  # KLType, K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
+    is_no_filter = None  # 如果这个字段不需要筛选
+
+    def __init__(self):
+        self.stock_field = StockField.NONE
+        self.klType = None
+        self.is_no_filter = None
+
+    def fill_request_pb(self, filter_req):
+        r, v = StockField.to_number(self.stock_field1)
+        if not r:
+            return RET_ERROR, 'stock_field1 is wrong. must be StockField'
+        filter_req.firstFieldName = v - StockField.indicator_enum_begin
+
+        if self.stock_field2 is not StockField.NONE:
+            r, v = StockField.to_number(self.stock_field2)
+            if not r:
+                return RET_ERROR, 'stock_field2 is wrong. must be StockField'
+            filter_req.secondFieldName = v - StockField.indicator_enum_begin
+
+        r, v = RelativePosition.to_number(self.relative_position)
+        if not r:
+            return RET_ERROR, 'relative_position is wrong. must be RelativePosition'
+        filter_req.relativePosition = v
+
+        if self.value is not None:
+            filter_req.fieldValue = self.value
+
+        if self.ktype not in KTYPE_MAP:
+            return RET_ERROR, 'ktype is wrong. must be KLType'
+        else:
+            filter_req.klType = KTYPE_MAP[self.ktype]
+
+        if self.is_no_filter is False:
+            filter_req.isNoFilter = False
+
+        return RET_OK, ""
+
+
+class PatternFilter(object):
+    stock_field = StockField.NONE  # StockField 指标形态属性
+    ktype = None  # KLType, K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
+    is_no_filter = None  # 如果这个字段不需要筛选
+
+    def __init__(self):
+        self.stock_field = StockField.NONE
+        self.klType = None
+        self.is_no_filter = None
+
+    def fill_request_pb(self, filter_req):
+        r, v = StockField.to_number(self.stock_field)
+        if not r:
+            return RET_ERROR, 'stock_field is wrong. must be StockField'
+        filter_req.fieldName = v - StockField.pattern_enum_begin
+
+        if self.ktype not in KTYPE_MAP:
+            return RET_ERROR, 'ktype is wrong. must be KLType'
+        else:
+            filter_req.klType = KTYPE_MAP[self.ktype]
+
+        if self.is_no_filter is False:
+            filter_req.isNoFilter = False
+
+        return RET_OK, ""
+
 class FilterStockData(object):
     stock_code = None
     stock_name = None
-	 # 以下是简单数据过滤所支持的字段
+    # 以下是简单数据过滤所支持的字段
     # cur_price = None  # 最新价
     # cur_price_to_highest_52weeks_ratio = None  # (现价 - 52周最高) / 52周最高，对应pc端离52周高点百分比
     # cur_price_to_lowest_52weeks_ratio = None  # (现价 - 52周最低) / 52周最低，对应pc端离52周低点百分比
@@ -139,6 +209,11 @@ class FilterStockData(object):
     # pb_rate = None  # 市净率   
     # change_rate_5min = None # 五分钟价格涨跌幅
     # change_rate_begin_year = None  # 年初至今价格涨跌幅
+    # ps_ttm  # 市销率(ttm) 例如填写 [100, 500] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    # pcf_ttm  # 市现率(ttm) 例如填写 [100, 1000] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # total_share  # 总股数 例如填写 [1000000000,1000000000] 值区间 (单位：股)
+    # float_share  # 流通股数 例如填写 [1000000000,1000000000] 值区间 (单位：股)
+    # float_market_val  # 流通市值 例如填写 [1000000000,1000000000] 值区间 (单位：元)
 
     # 以下是累积数据过滤所支持的字段
     # change_rate = None # 涨跌幅
@@ -156,7 +231,63 @@ class FilterStockData(object):
     # gross_profit_rate = None # 毛利率
     # debt_asset_rate = None # 资产负债率
     # return_on_equity_rate = None # 净资产收益率
-    
+    #roic # 盈利能力属性投入资本回报率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    # roa_ttm  # 资产回报率(ttm) 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
+    # ebit_ttm # 息税前利润(ttm) 例如填写 [1000000000,1000000000] 值区间（单位：元。仅适用于年报。）
+    # ebitda  # 税息折旧及摊销前利润 例如填写 [1000000000,1000000000] 值区间（单位：元）
+    # operating_margin_ttm  # 营业利润率(ttm) 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
+    # ebit_margin  # ebit利润率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    # ebitda_margin  # ebitda利润率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    # financial_cost_rate  # 财务成本率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    # operating_profit_ttm  # 营业利润(ttm) 例如填写 [1000000000,1000000000] 值区间 （单位：元。仅适用于年报。）
+    # shareholder_net_profit_ttm  # 归属于母公司的净利润 例如填写 [1000000000,1000000000] 值区间 （单位：元。仅适用于年报。）
+    # net_profit_cash_cover  # 盈利中的现金收入比例 例如填写 [1.0,60.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
+    # current_ratio  # 偿债能力属性流动比率 例如填写 [100,250] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    # quick_ratio  # 速动比率 例如填写 [100,250] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    # current_asset_ratio  # 清债能力属性流动资产率 例如填写 [10,100] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    # current_debt_ratio  # 流动负债率 例如填写 [10,100] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    # equity_multiplier  # 权益乘数 例如填写 [100,180] 值区间
+    # property_ratio  # 产权比率 例如填写 [50,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # cash_and_cash_equivalents  # 现金和现金等价 例如填写 [1000000000,1000000000] 值区间（单位：元）
+    # total_asset_turnover  # 运营能力属性总资产周转率 例如填写 [50,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # fixed_asset_turnover  # 固定资产周转率 例如填写 [50,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # inventory_turnover  # 存货周转率 例如填写 [50,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # operating_cash_flow_ttm  # 经营活动现金流(ttm) 例如填写 [1000000000,1000000000] 值区间（单位：元。仅适用于年报。）
+    # accounts_receivable  # 应收帐款净额 例如填写 [1000000000,1000000000] 值区间 例如填写 [1000000000,1000000000] 值区间 （单位：元）
+    # ebit_growth_rate  # 成长能力属性ebit同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # operating_profit_growth_rate  # 营业利润同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # total_assets_growth_rate  # 总资产同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # profit_to_shareholders_growth_rate  # 归母净利润同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # profit_before_tax_growth_rate  # 总利润同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # eps_growth_rate  # eps同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # roe_growth_rate  # roe同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # roic_growth_rate  # roic同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # nocf_growth_rate  # 经营现金流同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # nocf_per_share_growth_rate  # 每股经营现金流同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # operating_revenue_cash_cover  # 现金流属性经营现金收入比 例如填写 [10,100] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    # operating_profit_to_total_profit  # 营业利润占比 例如填写 [10,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    # basic_eps  # 市场表现属性基本每股收益 例如填写 [0.1,10] 值区间 (单位：元)
+    # diluted_eps  # 稀释每股收益 例如填写 [0.1,10] 值区间 (单位：元)
+    # nocf_per_share  # 每股经营现金净流量 例如填写 [0.1,10] 值区间 (单位：元)
+
+    # 以下是技术指标过滤所支持的枚举
+    # price  # 最新价格
+    # ma5  # 5日简单均线
+    # ma10  # 10日简单均线
+    # ma20  # 20日简单均线
+    # ma30  # 30日简单均线
+    # ma60  # 60日简单均线
+    # ma120  # 120日简单均线
+    # ma250  # 250日简单均线
+    # rsi  # 动态rsi
+    # ema5  # 5日指数移动均线
+    # ema10  # 10日指数移动均线
+    # ema20  # 20日指数移动均线
+    # ema30  # 30日指数移动均线
+    # ema60  # 60日指数移动均线
+    # ema120  # 120日指数移动均线
+    # ema250  # 250日指数移动均线
+
     def __init__(self, rsp_item):
         from futu.common.pb.Qot_StockFilter_pb2 import StockData
         if not isinstance(rsp_item, StockData):
@@ -180,20 +311,29 @@ class FilterStockData(object):
             if ret:
                 self.__dict__[field.lower()] = sub_item.value
                 
-        #  筛选后的简单属性数据 type = Qot_StockFilter.AccumulateData
+        #  筛选后的累计属性数据 type = Qot_StockFilter.AccumulateData
         base_data_list = rsp_item.accumulateDataList
         for sub_item in base_data_list:
             ret, field = StockField.to_string(sub_item.fieldName + StockField.acc_enum_begin)
             if ret:
                 self.__dict__[(field.lower(), sub_item.days)] = sub_item.value
                 
-        #  筛选后的简单属性数据 type = Qot_StockFilter.FinancialData
+        #  筛选后的财务属性数据 type = Qot_StockFilter.FinancialData
         base_data_list = rsp_item.financialDataList
         for sub_item in base_data_list:
             ret1, field = StockField.to_string(sub_item.fieldName + StockField.financial_enum_begin)
             ret2, quarter = FinancialQuarter.to_string(sub_item.quarter)
             if ret1 and ret2:
                 self.__dict__[(field.lower(), quarter.lower())] = sub_item.value
+
+        #  筛选后的指标属性数据 type = Qot_StockFilter.CustomIndicatorData
+        base_data_list = rsp_item.customIndicatorDataList
+        for sub_item in base_data_list:
+            ret1, field = StockField.to_string(sub_item.fieldName + StockField.indicator_enum_begin)
+            ret2 = sub_item.klType in QUOTE.REV_KTYPE_MAP
+            klType = QUOTE.REV_KTYPE_MAP[sub_item.klType] if ret2 else None
+            if ret1 and ret2:
+                self.__dict__[(field.lower(), klType.lower())] = sub_item.value
 
     def __repr__(self):
         ls = StockField.get_all_key_list()

@@ -166,6 +166,7 @@ class InitConnect:
         req.c2s.clientID = client_id
         req.c2s.recvNotify = recv_notify
         req.c2s.pushProtoFmt = push_proto_fmt
+        req.c2s.programmingLanguage = 'Python'
 
         if is_encrypt:
             req.c2s.packetEncAlgo = Common_pb2.PacketEncAlgo_AES_CBC
@@ -591,6 +592,7 @@ class MarketSnapshotQuery:
                 #  界内界外，仅界内证支持该字段 type=double
                 snapshot_tmp["wrt_inline_price_status"] = PriceType.to_string2(
                     record.warrantExData.inLinePriceStatus)
+                snapshot_tmp["wrt_issuer_code"] = record.warrantExData.issuerCode
 
             snapshot_tmp['option_valid'] = False
             if record.basic.type == SEC_TYPE_MAP[SecurityType.DRVT]:
@@ -1522,6 +1524,8 @@ class GlobalStateQuery:
             if state.marketHK in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
             'market_hkfuture': QUOTE.REV_MARKET_STATE_MAP[state.marketHKFuture]
             if state.marketHKFuture in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
+            'market_usfuture': QUOTE.REV_MARKET_STATE_MAP[state.marketUSFuture]
+            if state.marketUSFuture in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
 
             'server_ver': str(state.serverVer),
             'trd_logined': state.trdLogined,
@@ -2605,6 +2609,12 @@ class StockFilterQuery:
                     ret, error_str = filter_item.fill_request_pb(filter_req)
                 elif isinstance(filter_item, FinancialFilter):
                     filter_req = req.c2s.financialFilterList.add()
+                    ret, error_str = filter_item.fill_request_pb(filter_req)
+                elif isinstance(filter_item, PatternFilter):
+                    filter_req = req.c2s.patternFilterList.add()
+                    ret, error_str = filter_item.fill_request_pb(filter_req)
+                elif isinstance(filter_item, CustomIndicatorFilter):
+                    filter_req = req.c2s.customIndicatorFilterList.add()
                     ret, error_str = filter_item.fill_request_pb(filter_req)
                 else :
                     ret = RET_ERROR

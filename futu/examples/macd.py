@@ -45,26 +45,21 @@ class MACD(object):
             host=self.api_svr_ip, port=self.api_svr_port)
 
         if 'HK.' in self.stock:
-            trade_ctx = ft.OpenHKTradeContext(
-                host=self.api_svr_ip, port=self.api_svr_port)
-
-            if self.trade_env == ft.TrdEnv.REAL:
-                ret_code, ret_data = trade_ctx.unlock_trade(
-                    self.unlock_password)
-                if ret_code == ft.RET_OK:
-                    print('解锁交易成功!')
-                else:
-                    raise Exception("请求交易解锁失败: {}".format(ret_data))
-            else:
-                print('解锁交易成功!')
+            trade_ctx = ft.OpenHKTradeContext(host=self.api_svr_ip, port=self.api_svr_port)
         elif 'US.' in self.stock:
-            if self.trade_env != 0:
-                raise Exception("美股交易接口不支持仿真环境 trade_env: {}".format(
-                    self.trade_env))
-            trade_ctx = ft.OpenUSTradeContext(
-                host=self.api_svr_ip, port=self.api_svr_port)
+            trade_ctx = ft.OpenUSTradeContext(host=self.api_svr_ip, port=self.api_svr_port)
         else:
             raise Exception("不支持的stock: {}".format(self.stock))
+
+        if self.trade_env == ft.TrdEnv.REAL:
+            ret_code, ret_data = trade_ctx.unlock_trade(
+                self.unlock_password)
+            if ret_code == ft.RET_OK:
+                print('解锁交易成功!')
+            else:
+                raise Exception("请求交易解锁失败: {}".format(ret_data))
+        else:
+            print('解锁交易成功!')
 
         return quote_ctx, trade_ctx
 

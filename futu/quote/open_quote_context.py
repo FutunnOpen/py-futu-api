@@ -741,6 +741,7 @@ class OpenQuoteContext(OpenContextBase):
                         'wrt_upper_strike_price',
                         'wrt_lowe_strike_price',
                         'wrt_inline_price_status',
+                        'wrt_issuer_code'
                         ]
         option_col_list = ['option_type',
                            'strike_time',
@@ -2267,14 +2268,14 @@ class OpenQuoteContext(OpenContextBase):
         if filter_list is None:
             filter_list = []
 
-        if filter_list is not None and (isinstance(filter_list, SimpleFilter) or isinstance(filter_list, AccumulateFilter) or isinstance(filter_list, FinancialFilter)):
+        if filter_list is not None and (isinstance(filter_list, SimpleFilter) or isinstance(filter_list, AccumulateFilter) or isinstance(filter_list, FinancialFilter) or isinstance(filter_list, PatternFilter) or isinstance(filter_list, CustomIndicatorFilter)):
             filter_list = [filter_list]
         if filter_list is not None and not isinstance(filter_list, list):
             error_str = ERROR_STR_PREFIX + "the type of filter_list is wrong"
             return RET_ERROR, error_str
 
         for filter in filter_list:
-            if not (isinstance(filter, SimpleFilter) or isinstance(filter, AccumulateFilter) or isinstance(filter, FinancialFilter)):
+            if not (isinstance(filter, SimpleFilter) or isinstance(filter, AccumulateFilter) or isinstance(filter, FinancialFilter) or isinstance(filter, PatternFilter) or isinstance(filter, CustomIndicatorFilter)):
                 error_str = ERROR_STR_PREFIX + "the item of filter_list is wrong"
                 return RET_ERROR, error_str
 
