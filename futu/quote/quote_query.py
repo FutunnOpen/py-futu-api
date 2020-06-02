@@ -2610,6 +2610,12 @@ class StockFilterQuery:
                 elif isinstance(filter_item, FinancialFilter):
                     filter_req = req.c2s.financialFilterList.add()
                     ret, error_str = filter_item.fill_request_pb(filter_req)
+                elif isinstance(filter_item, PatternFilter):
+                    filter_req = req.c2s.patternFilterList.add()
+                    ret, error_str = filter_item.fill_request_pb(filter_req)
+                elif isinstance(filter_item, CustomIndicatorFilter):
+                    filter_req = req.c2s.customIndicatorFilterList.add()
+                    ret, error_str = filter_item.fill_request_pb(filter_req)
                 else :
                     ret = RET_ERROR
                     error_str = ERROR_STR_PREFIX + "the item in filter_list is wrong"

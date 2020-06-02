@@ -2075,6 +2075,49 @@ class StockField(FtEnum):
     DILUTED_EPS = "DILUTED_EPS"                        # 稀释每股收益 例如填写 [0.1,10] 值区间 (单位：元)
     NOCF_PER_SHARE = "NOCF_PER_SHARE"                  # 每股经营现金净流量 例如填写 [0.1,10] 值区间 (单位：元)
 
+    # 以下是技术指标形态过滤所支持的枚举
+    pattern_enum_begin = 300
+    MA_ALIGNMENT_LONG = "MA_ALIGNMENT_LONG"            # MA多头排列（连续两天MA5>MA10>MA20>MA30>MA60，且当日收盘价大于前一天收盘价）
+    MA_ALIGNMENT_SHORT = "MA_ALIGNMENT_SHORT"          # MA空头排列（连续两天MA5 <MA10 <MA20 <MA30 <MA60，且当日收盘价小于前一天收盘价）
+    EMA_ALIGNMENT_LONG = "EMA_ALIGNMENT_LONG"          # EMA多头排列（连续两天EMA5>EMA10>EMA20>EMA30>EMA60，且当日收盘价大于前一天收盘价）
+    EMA_ALIGNMENT_SHORT = "EMA_ALIGNMENT_SHORT"        # EMA空头排列（连续两天EMA5 <EMA10 <EMA20 <EMA30 <EMA60，且当日收盘价小于前一天收盘价）
+    RSI_GOLD_CROSS_LOW = "RSI_GOLD_CROSS_LOW"          # RSI低位金叉（50以下，短线RSI上穿长线RSI（前一日短线RSI小于长线RSI，当日短线RSI大于长线RSI））
+    RSI_DEATH_CROSS_HIGH = "RSI_DEATH_CROSS_HIGH"      # RSI高位死叉（50以上，短线RSI下穿长线RSI（前一日短线RSI大于长线RSI，当日短线RSI小于长线RSI））
+    RSI_TOP_DIVERGENCE = "RSI_TOP_DIVERGENCE"          # RSI顶背离（相邻的两个K线波峰，后面的波峰对应的CLOSE>前面的波峰对应的CLOSE，后面波峰的RSI12值 <前面波峰的RSI12值）
+    RSI_BOTTOM_DIVERGENCE = "RSI_BOTTOM_DIVERGENCE"    # RSI底背离（相邻的两个K线波谷，后面的波谷对应的CLOSE <前面的波谷对应的CLOSE，后面波谷的RSI12值>前面波谷的RSI12值）
+    KDJ_GOLD_CROSS_LOW = "KDJ_GOLD_CROSS_LOW"          # KDJ低位金叉（KDJ的值都小于或等于30，且前一日K,J值分别小于D值，当日K,J值分别大于D值）
+    KDJ_DEATH_CROSS_HIGH = "KDJ_DEATH_CROSS_HIGH"      # KDJ高位死叉（KDJ的值都大于或等于70，且前一日K,J值分别大于D值，当日K,J值分别小于D值）
+    KDJ_TOP_DIVERGENCE = "KDJ_TOP_DIVERGENCE"          # KDJ顶背离（相邻的两个K线波峰，后面的波峰对应的CLOSE>前面的波峰对应的CLOSE，后面波峰的J值 <前面波峰的J值）
+    KDJ_BOTTOM_DIVERGENCE = "KDJ_BOTTOM_DIVERGENCE"    # KDJ底背离（相邻的两个K线波谷，后面的波谷对应的CLOSE <前面的波谷对应的CLOSE，后面波谷的J值>前面波谷的J值）
+    MACD_GOLD_CROSS_LOW = "MACD_GOLD_CROSS_LOW"        # MACD低位金叉（DIFF上穿DEA（前一日DIFF小于DEA，当日DIFF大于DEA））
+    MACD_DEATH_CROSS_HIGH = "MACD_DEATH_CROSS_HIGH"    # MACD高位死叉（DIFF下穿DEA（前一日DIFF大于DEA，当日DIFF小于DEA））
+    MACD_TOP_DIVERGENCE = "MACD_TOP_DIVERGENCE"        # MACD顶背离（相邻的两个K线波峰，后面的波峰对应的CLOSE>前面的波峰对应的CLOSE，后面波峰的macd值 <前面波峰的macd值）
+    MACD_BOTTOM_DIVERGENCE = "MACD_BOTTOM_DIVERGENCE"  # MACD底背离（相邻的两个K线波谷，后面的波谷对应的CLOSE <前面的波谷对应的CLOSE，后面波谷的macd值>前面波谷的macd值）
+    BOLL_BREAK_UPPER = "BOLL_BREAK_UPPER"              # BOLL突破上轨（前一日股价低于上轨值，当日股价大于上轨值）
+    BOLL_LOWER = "BOLL_LOWER"                          # BOLL突破下轨（前一日股价高于下轨值，当日股价小于下轨值）
+    BOLL_CROSS_MIDDLE_UP = "BOLL_CROSS_MIDDLE_UP"      # BOLL向上破中轨（前一日股价低于中轨值，当日股价大于中轨值）
+    BOLL_CROSS_MIDDLE_DOWN = "BOLL_CROSS_MIDDLE_DOWN"  # BOLL向下破中轨（前一日股价大于中轨值，当日股价小于中轨值）
+
+    # 以下是技术指标过滤所支持的枚举
+    indicator_enum_begin = 400
+    PRICE = "PRICE"                                    # 最新价格
+    MA5 = "MA5"                                        # 5日简单均线
+    MA10 = "MA10"                                      # 10日简单均线
+    MA20 = "MA20"                                      # 20日简单均线
+    MA30 = "MA30"                                      # 30日简单均线
+    MA60 = "MA60"                                      # 60日简单均线
+    MA120 = "MA120"                                    # 120日简单均线
+    MA250 = "MA250"                                    # 250日简单均线
+    RSI = "RSI"                                        # 动态RSI
+    EMA5 = "EMA5"                                      # 5日指数移动均线
+    EMA10 = "EMA10"                                    # 10日指数移动均线
+    EMA20 = "EMA20"                                    # 20日指数移动均线
+    EMA30 = "EMA30"                                    # 30日指数移动均线
+    EMA60 = "EMA60"                                    # 60日指数移动均线
+    EMA120 = "EMA120"                                  # 120日指数移动均线
+    EMA250 = "EMA250"                                  # 250日指数移动均线
+    VALUE = "VALUE"                                    # 自定义数值，用于与 RSI 进行比较（stock_field1 不支持此字段）
+
     def load_dic(self):
         return {
             # 简单
@@ -2155,6 +2198,47 @@ class StockField(FtEnum):
             self.BASIC_EPS: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_BasicEPS,
             self.DILUTED_EPS: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_DilutedEPS,
             self.NOCF_PER_SHARE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NOCFPerShare,
+
+            # 指标形态
+            self.MA_ALIGNMENT_LONG: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_MAAlignmentLong,
+            self.MA_ALIGNMENT_SHORT: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_MAAlignmentShort,
+            self.EMA_ALIGNMENT_LONG: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_EMAAlignmentLong,
+            self.EMA_ALIGNMENT_SHORT: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_EMAAlignmentShort,
+            self.RSI_GOLD_CROSS_LOW: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_RSIGoldCrossLow,
+            self.RSI_DEATH_CROSS_HIGH: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_RSIDeathCrossHigh,
+            self.RSI_TOP_DIVERGENCE: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_RSITopDivergence,
+            self.RSI_BOTTOM_DIVERGENCE: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_RSIBottomDivergence,
+            self.KDJ_GOLD_CROSS_LOW: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_KDJGoldCrossLow,
+            self.KDJ_DEATH_CROSS_HIGH: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_KDJDeathCrossHigh,
+            self.KDJ_TOP_DIVERGENCE: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_KDJTopDivergence,
+            self.KDJ_BOTTOM_DIVERGENCE: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_KDJBottomDivergence,
+            self.MACD_GOLD_CROSS_LOW: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_MACDGoldCrossLow,
+            self.MACD_DEATH_CROSS_HIGH: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_MACDDeathCrossHigh,
+            self.MACD_TOP_DIVERGENCE: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_MACDTopDivergence,
+            self.MACD_BOTTOM_DIVERGENCE: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_MACDBottomDivergence,
+            self.BOLL_BREAK_UPPER: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_BOLLBreakUpper,
+            self.BOLL_LOWER: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_BOLLLower,
+            self.BOLL_CROSS_MIDDLE_UP: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_BOLLCrossMiddleUp,
+            self.BOLL_CROSS_MIDDLE_DOWN: self.pattern_enum_begin + Qot_StockFilter_pb2.PatternField_BOLLCrossMiddleDown,
+
+            # 指标
+            self.PRICE: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_Price,
+            self.MA5: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_MA5,
+            self.MA10: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_MA10,
+            self.MA20: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_MA20,
+            self.MA30: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_MA30,
+            self.MA60: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_MA60,
+            self.MA120: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_MA120,
+            self.MA250: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_MA250,
+            self.RSI: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_RSI,
+            self.EMA5: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_EMA5,
+            self.EMA10: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_EMA10,
+            self.EMA20: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_EMA20,
+            self.EMA30: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_EMA30,
+            self.EMA60: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_EMA60,
+            self.EMA120: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_EMA120,
+            self.EMA250: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_EMA250,
+            self.VALUE: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_Value,
         }
 
 
@@ -2175,6 +2259,23 @@ class FinancialQuarter(FtEnum):
             self.INTERIM: Qot_StockFilter_pb2.FinancialQuarter_Interim,
             self.THIRD_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_ThirdQuarter,
             self.MOST_RECENT_QUARTER: Qot_StockFilter_pb2.FinancialQuarter_MostRecentQuarter,
+        }
+
+# 相对位置比较
+class RelativePosition(FtEnum):
+    NONE = "N/A"                # 未知
+    MORE = "MORE"               # 大于，first位于second的上方
+    LESS = "LESS"               # 小于，first位于second的下方
+    CROSS_UP = "CROSS_UP"       # 升穿，first从下往上穿second
+    CROSS_DOWN = "CROSS_DOWN"   # 跌穿，first从上往下穿second
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_StockFilter_pb2.RelativePosition_Unknown,
+            self.MORE: Qot_StockFilter_pb2.RelativePosition_More,
+            self.LESS: Qot_StockFilter_pb2.RelativePosition_Less,
+            self.CROSS_UP: Qot_StockFilter_pb2.RelativePosition_CrossUp,
+            self.CROSS_DOWN: Qot_StockFilter_pb2.RelativePosition_CrossDown
         }
 
 #

@@ -121,6 +121,76 @@ class FinancialFilter(object):
 
         return RET_OK, ""
 
+class CustomIndicatorFilter(object):
+    stock_field1 = StockField.NONE  # StockField 指标属性
+    stock_field2 = StockField.NONE  # StockField 指标属性
+    relative_position = None # RelativePosition 相对位置,主要用于MA，EMA，RSI指标做比较
+    value = None # 自定义数值，用于与RSI进行比较
+    ktype = None  # KLType, K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
+    is_no_filter = None  # 如果这个字段不需要筛选
+
+    def __init__(self):
+        self.stock_field = StockField.NONE
+        self.klType = None
+        self.is_no_filter = None
+
+    def fill_request_pb(self, filter_req):
+        r, v = StockField.to_number(self.stock_field1)
+        if not r:
+            return RET_ERROR, 'stock_field1 is wrong. must be StockField'
+        filter_req.firstFieldName = v - StockField.indicator_enum_begin
+
+        if self.stock_field2 is not StockField.NONE:
+            r, v = StockField.to_number(self.stock_field2)
+            if not r:
+                return RET_ERROR, 'stock_field2 is wrong. must be StockField'
+            filter_req.secondFieldName = v - StockField.indicator_enum_begin
+
+        r, v = RelativePosition.to_number(self.relative_position)
+        if not r:
+            return RET_ERROR, 'relative_position is wrong. must be RelativePosition'
+        filter_req.relativePosition = v
+
+        if self.value is not None:
+            filter_req.fieldValue = self.value
+
+        if self.ktype not in KTYPE_MAP:
+            return RET_ERROR, 'ktype is wrong. must be KLType'
+        else:
+            filter_req.klType = KTYPE_MAP[self.ktype]
+
+        if self.is_no_filter is False:
+            filter_req.isNoFilter = False
+
+        return RET_OK, ""
+
+
+class PatternFilter(object):
+    stock_field = StockField.NONE  # StockField 指标形态属性
+    ktype = None  # KLType, K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
+    is_no_filter = None  # 如果这个字段不需要筛选
+
+    def __init__(self):
+        self.stock_field = StockField.NONE
+        self.klType = None
+        self.is_no_filter = None
+
+    def fill_request_pb(self, filter_req):
+        r, v = StockField.to_number(self.stock_field)
+        if not r:
+            return RET_ERROR, 'stock_field is wrong. must be StockField'
+        filter_req.fieldName = v - StockField.pattern_enum_begin
+
+        if self.ktype not in KTYPE_MAP:
+            return RET_ERROR, 'ktype is wrong. must be KLType'
+        else:
+            filter_req.klType = KTYPE_MAP[self.ktype]
+
+        if self.is_no_filter is False:
+            filter_req.isNoFilter = False
+
+        return RET_OK, ""
+
 class FilterStockData(object):
     stock_code = None
     stock_name = None
@@ -200,6 +270,24 @@ class FilterStockData(object):
     # diluted_eps  # 稀释每股收益 例如填写 [0.1,10] 值区间 (单位：元)
     # nocf_per_share  # 每股经营现金净流量 例如填写 [0.1,10] 值区间 (单位：元)
 
+    # 以下是技术指标过滤所支持的枚举
+    # price  # 最新价格
+    # ma5  # 5日简单均线
+    # ma10  # 10日简单均线
+    # ma20  # 20日简单均线
+    # ma30  # 30日简单均线
+    # ma60  # 60日简单均线
+    # ma120  # 120日简单均线
+    # ma250  # 250日简单均线
+    # rsi  # 动态rsi
+    # ema5  # 5日指数移动均线
+    # ema10  # 10日指数移动均线
+    # ema20  # 20日指数移动均线
+    # ema30  # 30日指数移动均线
+    # ema60  # 60日指数移动均线
+    # ema120  # 120日指数移动均线
+    # ema250  # 250日指数移动均线
+
     def __init__(self, rsp_item):
         from futu.common.pb.Qot_StockFilter_pb2 import StockData
         if not isinstance(rsp_item, StockData):
@@ -237,6 +325,15 @@ class FilterStockData(object):
             ret2, quarter = FinancialQuarter.to_string(sub_item.quarter)
             if ret1 and ret2:
                 self.__dict__[(field.lower(), quarter.lower())] = sub_item.value
+
+        #  筛选后的指标属性数据 type = Qot_StockFilter.CustomIndicatorData
+        base_data_list = rsp_item.customIndicatorDataList
+        for sub_item in base_data_list:
+            ret1, field = StockField.to_string(sub_item.fieldName + StockField.indicator_enum_begin)
+            ret2 = sub_item.klType in QUOTE.REV_KTYPE_MAP
+            klType = QUOTE.REV_KTYPE_MAP[sub_item.klType] if ret2 else None
+            if ret1 and ret2:
+                self.__dict__[(field.lower(), klType.lower())] = sub_item.value
 
     def __repr__(self):
         ls = StockField.get_all_key_list()
