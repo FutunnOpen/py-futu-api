@@ -8,7 +8,7 @@ import "Qot_Common.proto";
 
 // 使用到以下 6 个结构体（BaseFilter，AccumulateFilter，FinancialFilter，BaseData， AccumulateData，FinancialData）的用户请注意，由于属性字段名“field”与 C # 的 protobuf 保留函数名产生冲突，Futu API 将从 3.18 版本开始将这一字段统一更名为“fieldName”，请注意修改使用到对应接口的字段名。
 
-// 简单指标属性
+// 简单属性
 enum StockField  
 {
 	StockField_Unknown = 0; // 未知
@@ -37,7 +37,7 @@ enum StockField
 	StockField_FloatMarketVal = 21; // 流通市值 例如填写 [1000000000,1000000000] 值区间 (单位：元)
 }
 
-// 累积指标属性
+// 累积属性
 enum AccumulateField
 {
 	AccumulateField_Unknown = 0; // 未知
@@ -48,10 +48,10 @@ enum AccumulateField
     AccumulateField_TurnoverRate = 5; // 换手率 例如填写[2,30]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
 }
 
-// 财务指标属性
+// 财务属性
 enum FinancialField
 {
-	// 基础财务指标属性
+	// 基础财务属性
 	FinancialField_Unknown = 0; // 未知
 	FinancialField_NetProfit = 1; // 净利润 例如填写[100000000,2500000000]值区间
 	FinancialField_NetProfitGrowth = 2; // 净利润增长率 例如填写[-10,300]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
@@ -73,7 +73,7 @@ enum FinancialField
 	FinancialField_FinancialCostRate = 16; // 财务成本率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
 	FinancialField_OperatingProfitTTM  = 17; // 营业利润(TTM) 例如填写 [1000000000,1000000000] 值区间 （单位：元。仅适用于年报。）
 	FinancialField_ShareholderNetProfitTTM = 18; // 归属于母公司的净利润 例如填写 [1000000000,1000000000] 值区间 （单位：元。仅适用于年报。）
-	FinancialField_NetProfitCashCover = 19; // 盈利中的现金收入比例 例如填写 [1.0,60.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
+	FinancialField_NetProfitCashCoverTTM = 19; // 盈利中的现金收入比例 例如填写 [1.0,60.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
 	
 	// 偿债能力属性
 	FinancialField_CurrentRatio = 20; // 流动比率 例如填写 [100,250] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
@@ -91,7 +91,7 @@ enum FinancialField
 	FinancialField_FixedAssetTurnover = 28; // 固定资产周转率 例如填写 [50,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
 	FinancialField_InventoryTurnover = 29; // 存货周转率 例如填写 [50,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
 	FinancialField_OperatingCashFlowTTM = 30; // 经营活动现金流(TTM) 例如填写 [1000000000,1000000000] 值区间（单位：元。仅适用于年报。）
-	FinancialField_AccountsReceivable = 31; // 应收帐款净额 例如填写 [1000000000,1000000000] 值区间 例如填写 [1000000000,1000000000] 值区间 （单位：元）	
+	FinancialField_AccountsReceivable = 31; // 应收账款净额 例如填写 [1000000000,1000000000] 值区间 例如填写 [1000000000,1000000000] 值区间 （单位：元）	
 	
 	// 成长能力属性
 	FinancialField_EBITGrowthRate = 32 ; // EBIT同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
@@ -127,7 +127,7 @@ enum CustomIndicatorField
     CustomIndicatorField_MA60 = 6; // 60日简单均线 
 	CustomIndicatorField_MA120 = 7; // 120日简单均线
     CustomIndicatorField_MA250 = 8; // 250日简单均线
-	CustomIndicatorField_RSI = 9; // 动态RSI
+	CustomIndicatorField_RSI = 9; // RSI(12)
     CustomIndicatorField_EMA5 = 10; // 5日指数移动均线 
     CustomIndicatorField_EMA10 = 11; // 10日指数移动均线 
     CustomIndicatorField_EMA20 = 12; // 20日指数移动均线 
@@ -135,7 +135,7 @@ enum CustomIndicatorField
     CustomIndicatorField_EMA60 = 14; // 60日指数移动均线 
     CustomIndicatorField_EMA120 = 15; // 120日指数移动均线
     CustomIndicatorField_EMA250 = 16; // 250日指数移动均线
-	CustomIndicatorField_Value = 17; // 自定义数值，用于与 RSI 进行比较（stock_field1 不支持此字段）
+	CustomIndicatorField_Value = 17; // 自定义数值，用于与 RSI 进行比较（stock_field1不支持此字段）
 }
 
 // 形态技术指标属性
@@ -193,7 +193,7 @@ enum SortDir
 	SortDir_Descend = 2; // 降序
 }
 
-// 简单指标属性筛选
+// 简单属性筛选
 message BaseFilter 
 { 
 	required int32 fieldName = 1; // StockField 简单属性
@@ -203,7 +203,7 @@ message BaseFilter
 	optional int32 sortDir = 5; // SortDir 排序方向，默认不排序。
 }
 
-// 累积指标属性筛选
+// 累积属性筛选
 message AccumulateFilter
 {
 	required int32 fieldName = 1; // AccumulateField 累积属性
@@ -214,7 +214,7 @@ message AccumulateFilter
 	required int32 days = 6; // 近几日，累积时间
 }
 
-// 财务指标属性筛选
+// 财务属性筛选
 message FinancialFilter
 {
 	required int32 fieldName = 1; // FinancialField 财务属性
@@ -244,14 +244,14 @@ message CustomIndicatorFilter
 	optional bool isNoFilter = 6; // 该字段是否不需要筛选，True代表不筛选，False代表筛选。不传默认为不筛选
 }
 
-// 简单指标属性数据
+// 简单属性数据
 message BaseData 
 { 
 	required int32 fieldName = 1; // StockField 简单属性
     required double value = 2;
 }
 
-// 累积指标属性数据
+// 累积属性数据
 message AccumulateData
 {
 	required int32 fieldName = 1; // AccumulateField 累积属性
@@ -259,7 +259,7 @@ message AccumulateData
 	required int32 days = 3; // 近几日，累积时间
 }
 
-// 财务指标属性数据
+// 财务属性数据
 message FinancialData
 {
 	required int32 fieldName = 1; // FinancialField 财务属性
@@ -280,9 +280,9 @@ message StockData
 {
     required Qot_Common.Security security = 1; // 股票
 	required string name = 2; // 股票名称
-    repeated BaseData baseDataList = 3; // 筛选后的简单指标属性数据
-	repeated AccumulateData accumulateDataList = 4; // 筛选后的累积指标属性数据
-	repeated FinancialData financialDataList = 5; // 筛选后的财务指标属性数据
+    repeated BaseData baseDataList = 3; // 筛选后的简单属性数据
+	repeated AccumulateData accumulateDataList = 4; // 筛选后的累积属性数据
+	repeated FinancialData financialDataList = 5; // 筛选后的财务属性数据
 	repeated CustomIndicatorData customIndicatorDataList = 6; // 筛选后的自定义技术指标属性数据
 }
 
@@ -293,9 +293,9 @@ message C2S
 	required int32 market= 3; // Qot_Common::QotMarket股票市场，支持沪股和深股，且沪股和深股不做区分都代表A股市场。
 	// 以下为筛选条件，可选字段，不填表示不过滤
 	optional Qot_Common.Security plate = 4; // 板块
-	repeated BaseFilter baseFilterList = 5; // 简单指标过滤器
-	repeated AccumulateFilter accumulateFilterList = 6; // 累积指标过滤器
-	repeated FinancialFilter financialFilterList = 7; // 财务指标过滤器
+	repeated BaseFilter baseFilterList = 5; // 简单属性过滤器
+	repeated AccumulateFilter accumulateFilterList = 6; // 累积属性过滤器
+	repeated FinancialFilter financialFilterList = 7; // 财务属性过滤器
 	repeated PatternFilter patternFilterList = 8; // 形态技术指标过滤器
 	repeated CustomIndicatorFilter customIndicatorFilterList = 9; // 自定义技术指标过滤器	
 }

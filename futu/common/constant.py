@@ -2046,7 +2046,7 @@ class StockField(FtEnum):
     FINANCIAL_COST_RATE = "FINANCIAL_COST_RATE"        # 财务成本率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
     OPERATING_PROFIT_TTM = "OPERATING_PROFIT_TTM"      # 营业利润(TTM) 例如填写 [1000000000,1000000000] 值区间 （单位：元。仅适用于年报。）
     SHAREHOLDER_NET_PROFIT_TTM = "SHAREHOLDER_NET_PROFIT_TTM"  # 归属于母公司的净利润 例如填写 [1000000000,1000000000] 值区间 （单位：元。仅适用于年报。）
-    NET_PROFIT_CASH_COVER = "NET_PROFIT_CASH_COVER"    # 盈利中的现金收入比例 例如填写 [1.0,60.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
+    NET_PROFIT_CASH_COVER_TTM = "NET_PROFIT_CASH_COVER_TTM" # 盈利中的现金收入比例 例如填写 [1.0,60.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
     CURRENT_RATIO = "CURRENT_RATIO"                    # 偿债能力属性流动比率 例如填写 [100,250] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
     QUICK_RATIO = "QUICK_RATIO"                        # 速动比率 例如填写 [100,250] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
     CURRENT_ASSET_RATIO = "CURRENT_ASSET_RATIO"        # 清债能力属性流动资产率 例如填写 [10,100] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
@@ -2170,7 +2170,7 @@ class StockField(FtEnum):
             self.FINANCIAL_COST_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_FinancialCostRate,
             self.OPERATING_PROFIT_TTM: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_OperatingProfitTTM,
             self.SHAREHOLDER_NET_PROFIT_TTM: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_ShareholderNetProfitTTM,
-            self.NET_PROFIT_CASH_COVER: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfitCashCover,
+            self.NET_PROFIT_CASH_COVER_TTM: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfitCashCoverTTM,
             self.CURRENT_RATIO: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_CurrentRatio,
             self.QUICK_RATIO: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_QuickRatio,
             self.CURRENT_ASSET_RATIO: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_CurrentAssetRatio,
