@@ -130,7 +130,10 @@ class CustomIndicatorFilter(object):
     is_no_filter = None  # 如果这个字段不需要筛选
 
     def __init__(self):
-        self.stock_field = StockField.NONE
+        self.stock_field1 = StockField.NONE
+        self.stock_field2 = StockField.NONE
+        self.relative_position = None
+        self.value = None
         self.klType = None
         self.is_no_filter = None
 
