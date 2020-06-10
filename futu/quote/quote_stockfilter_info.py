@@ -143,11 +143,10 @@ class CustomIndicatorFilter(object):
             return RET_ERROR, 'stock_field1 is wrong. must be StockField'
         filter_req.firstFieldName = v - StockField.indicator_enum_begin
 
-        if self.stock_field2 is not StockField.NONE:
-            r, v = StockField.to_number(self.stock_field2)
-            if not r:
-                return RET_ERROR, 'stock_field2 is wrong. must be StockField'
-            filter_req.secondFieldName = v - StockField.indicator_enum_begin
+        r, v = StockField.to_number(self.stock_field2)
+        if not r:
+            return RET_ERROR, 'stock_field2 is wrong. must be StockField'
+        filter_req.secondFieldName = v - StockField.indicator_enum_begin
 
         r, v = RelativePosition.to_number(self.relative_position)
         if not r:
