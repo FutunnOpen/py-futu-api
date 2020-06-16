@@ -12,7 +12,7 @@ class SimpleFilter(object):
     filter_min = None  # 区间下限，闭区间
     filter_max = None  # 区间上限，闭区间
     sort = None  # SortDir 排序方向 SortDir
-    is_no_filter = None  # 如果这个字段不需要筛选，但是需要返回这个字段的数据，指定该字段为ture。当该字段为true时，以上三个字段无效。
+    is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
 
     def __init__(self):
         self.stock_field = StockField.NONE
@@ -46,7 +46,7 @@ class AccumulateFilter(object):
     filter_min = None  # 区间下限，闭区间
     filter_max = None  # 区间上限，闭区间
     sort = None  # SortDir 排序方向 SortDir
-    is_no_filter = None  # 如果这个字段不需要筛选，但是需要返回这个字段的数据，指定该字段为ture。当该字段为true时，以上三个字段无效。
+    is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
     days = 1 #所筛选的数据的累计天数
     
     def __init__(self):
@@ -83,7 +83,7 @@ class FinancialFilter(object):
     filter_min = None  # 区间下限，闭区间
     filter_max = None  # 区间上限，闭区间
     sort = None  # SortDir 排序方向 SortDir
-    is_no_filter = None  # 如果这个字段不需要筛选，但是需要返回这个字段的数据，指定该字段为ture。当该字段为true时，以上三个字段无效。
+    is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
     quarter = FinancialQuarter.ANNUAL #财报累积时间
 
     def __init__(self):
