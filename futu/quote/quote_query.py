@@ -1113,8 +1113,8 @@ class SubscriptionQuery:
 def parse_pb_BasicQot(pb):
     item = {
         'code': merge_qot_mkt_stock_str(int(pb.security.market), pb.security.code),
-        'data_date': pb.updateTime.split()[0],
-        'data_time': pb.updateTime.split()[1],
+        'data_date':pb.updateTime.split()[0] if len(pb.updateTime) > 0 else '',
+        'data_time': pb.updateTime.split()[1] if len(pb.updateTime) > 0 else '',
         'last_price': pb.curPrice,
         'open_price': pb.openPrice,
         'high_price': pb.highPrice,
