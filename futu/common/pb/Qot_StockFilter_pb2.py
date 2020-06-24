@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_StockFilter.proto',
   package='Qot_StockFilter',
   syntax='proto2',
-  serialized_pb=_b('\n\x15Qot_StockFilter.proto\x12\x0fQot_StockFilter\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"j\n\nBaseFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\"~\n\x10\x41\x63\x63umulateFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\x12\x0c\n\x04\x64\x61ys\x18\x06 \x02(\x05\"\x80\x01\n\x0f\x46inancialFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\x12\x0f\n\x07quarter\x18\x06 \x02(\x05\",\n\x08\x42\x61seData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\"@\n\x0e\x41\x63\x63umulateData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0c\n\x04\x64\x61ys\x18\x03 \x02(\x05\"B\n\rFinancialData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0f\n\x07quarter\x18\x03 \x02(\x05\"\xea\x01\n\tStockData\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x02 \x02(\t\x12/\n\x0c\x62\x61seDataList\x18\x03 \x03(\x0b\x32\x19.Qot_StockFilter.BaseData\x12;\n\x12\x61\x63\x63umulateDataList\x18\x04 \x03(\x0b\x32\x1f.Qot_StockFilter.AccumulateData\x12\x39\n\x11\x66inancialDataList\x18\x05 \x03(\x0b\x32\x1e.Qot_StockFilter.FinancialData\"\x8b\x02\n\x03\x43\x32S\x12\r\n\x05\x62\x65gin\x18\x01 \x02(\x05\x12\x0b\n\x03num\x18\x02 \x02(\x05\x12\x0e\n\x06market\x18\x03 \x02(\x05\x12#\n\x05plate\x18\x04 \x01(\x0b\x32\x14.Qot_Common.Security\x12\x33\n\x0e\x62\x61seFilterList\x18\x05 \x03(\x0b\x32\x1b.Qot_StockFilter.BaseFilter\x12?\n\x14\x61\x63\x63umulateFilterList\x18\x06 \x03(\x0b\x32!.Qot_StockFilter.AccumulateFilter\x12=\n\x13\x66inancialFilterList\x18\x07 \x03(\x0b\x32 .Qot_StockFilter.FinancialFilter\"W\n\x03S2C\x12\x10\n\x08lastPage\x18\x01 \x02(\x08\x12\x10\n\x08\x61llCount\x18\x02 \x02(\x05\x12,\n\x08\x64\x61taList\x18\x03 \x03(\x0b\x32\x1a.Qot_StockFilter.StockData\",\n\x07Request\x12!\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x14.Qot_StockFilter.C2S\"e\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12!\n\x03s2c\x18\x04 \x01(\x0b\x32\x14.Qot_StockFilter.S2C*\x9c\x04\n\nStockField\x12\x16\n\x12StockField_Unknown\x10\x00\x12\x18\n\x14StockField_StockCode\x10\x01\x12\x18\n\x14StockField_StockName\x10\x02\x12\x17\n\x13StockField_CurPrice\x10\x03\x12,\n(StockField_CurPriceToHighest52WeeksRatio\x10\x04\x12+\n\'StockField_CurPriceToLowest52WeeksRatio\x10\x05\x12-\n)StockField_HighPriceToHighest52WeeksRatio\x10\x06\x12+\n\'StockField_LowPriceToLowest52WeeksRatio\x10\x07\x12\x1a\n\x16StockField_VolumeRatio\x10\x08\x12\x1a\n\x16StockField_BidAskRatio\x10\t\x12\x17\n\x13StockField_LotPrice\x10\n\x12\x18\n\x14StockField_MarketVal\x10\x0b\x12\x17\n\x13StockField_PeAnnual\x10\x0c\x12\x14\n\x10StockField_PeTTM\x10\r\x12\x15\n\x11StockField_PbRate\x10\x0e\x12\x1d\n\x19StockField_ChangeRate5min\x10\x0f\x12\"\n\x1eStockField_ChangeRateBeginYear\x10\x10*\xc9\x01\n\x0f\x41\x63\x63umulateField\x12\x1b\n\x17\x41\x63\x63umulateField_Unknown\x10\x00\x12\x1e\n\x1a\x41\x63\x63umulateField_ChangeRate\x10\x01\x12\x1d\n\x19\x41\x63\x63umulateField_Amplitude\x10\x02\x12\x1a\n\x16\x41\x63\x63umulateField_Volume\x10\x03\x12\x1c\n\x18\x41\x63\x63umulateField_Turnover\x10\x04\x12 \n\x1c\x41\x63\x63umulateField_TurnoverRate\x10\x05*\xc7\x02\n\x0e\x46inancialField\x12\x1a\n\x16\x46inancialField_Unknown\x10\x00\x12\x1c\n\x18\x46inancialField_NetProfit\x10\x01\x12\"\n\x1e\x46inancialField_NetProfitGrowth\x10\x02\x12 \n\x1c\x46inancialField_SumOfBusiness\x10\x03\x12&\n\"FinancialField_SumOfBusinessGrowth\x10\x04\x12 \n\x1c\x46inancialField_NetProfitRate\x10\x05\x12\"\n\x1e\x46inancialField_GrossProfitRate\x10\x06\x12 \n\x1c\x46inancialField_DebtAssetRate\x10\x07\x12%\n!FinancialField_ReturnOnEquityRate\x10\x08*\xd9\x01\n\x10\x46inancialQuarter\x12\x1c\n\x18\x46inancialQuarter_Unknown\x10\x00\x12\x1b\n\x17\x46inancialQuarter_Annual\x10\x01\x12!\n\x1d\x46inancialQuarter_FirstQuarter\x10\x02\x12\x1c\n\x18\x46inancialQuarter_Interim\x10\x03\x12!\n\x1d\x46inancialQuarter_ThirdQuarter\x10\x04\x12&\n\"FinancialQuarter_MostRecentQuarter\x10\x05*B\n\x07SortDir\x12\x0e\n\nSortDir_No\x10\x00\x12\x12\n\x0eSortDir_Ascend\x10\x01\x12\x13\n\x0fSortDir_Descend\x10\x02\x42\x45\n\x13\x63om.futu.openapi.pbZ.github.com/futuopen/ftapi4go/pb/qotstockfilter')
+  serialized_pb=_b('\n\x15Qot_StockFilter.proto\x12\x0fQot_StockFilter\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"j\n\nBaseFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\"~\n\x10\x41\x63\x63umulateFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\x12\x0c\n\x04\x64\x61ys\x18\x06 \x02(\x05\"\x80\x01\n\x0f\x46inancialFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\x12\x0f\n\x07quarter\x18\x06 \x02(\x05\",\n\x08\x42\x61seData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\"@\n\x0e\x41\x63\x63umulateData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0c\n\x04\x64\x61ys\x18\x03 \x02(\x05\"B\n\rFinancialData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0f\n\x07quarter\x18\x03 \x02(\x05\"\xea\x01\n\tStockData\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x02 \x02(\t\x12/\n\x0c\x62\x61seDataList\x18\x03 \x03(\x0b\x32\x19.Qot_StockFilter.BaseData\x12;\n\x12\x61\x63\x63umulateDataList\x18\x04 \x03(\x0b\x32\x1f.Qot_StockFilter.AccumulateData\x12\x39\n\x11\x66inancialDataList\x18\x05 \x03(\x0b\x32\x1e.Qot_StockFilter.FinancialData\"\x8b\x02\n\x03\x43\x32S\x12\r\n\x05\x62\x65gin\x18\x01 \x02(\x05\x12\x0b\n\x03num\x18\x02 \x02(\x05\x12\x0e\n\x06market\x18\x03 \x02(\x05\x12#\n\x05plate\x18\x04 \x01(\x0b\x32\x14.Qot_Common.Security\x12\x33\n\x0e\x62\x61seFilterList\x18\x05 \x03(\x0b\x32\x1b.Qot_StockFilter.BaseFilter\x12?\n\x14\x61\x63\x63umulateFilterList\x18\x06 \x03(\x0b\x32!.Qot_StockFilter.AccumulateFilter\x12=\n\x13\x66inancialFilterList\x18\x07 \x03(\x0b\x32 .Qot_StockFilter.FinancialFilter\"W\n\x03S2C\x12\x10\n\x08lastPage\x18\x01 \x02(\x08\x12\x10\n\x08\x61llCount\x18\x02 \x02(\x05\x12,\n\x08\x64\x61taList\x18\x03 \x03(\x0b\x32\x1a.Qot_StockFilter.StockData\",\n\x07Request\x12!\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x14.Qot_StockFilter.C2S\"e\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12!\n\x03s2c\x18\x04 \x01(\x0b\x32\x14.Qot_StockFilter.S2C*\x9e\x05\n\nStockField\x12\x16\n\x12StockField_Unknown\x10\x00\x12\x18\n\x14StockField_StockCode\x10\x01\x12\x18\n\x14StockField_StockName\x10\x02\x12\x17\n\x13StockField_CurPrice\x10\x03\x12,\n(StockField_CurPriceToHighest52WeeksRatio\x10\x04\x12+\n\'StockField_CurPriceToLowest52WeeksRatio\x10\x05\x12-\n)StockField_HighPriceToHighest52WeeksRatio\x10\x06\x12+\n\'StockField_LowPriceToLowest52WeeksRatio\x10\x07\x12\x1a\n\x16StockField_VolumeRatio\x10\x08\x12\x1a\n\x16StockField_BidAskRatio\x10\t\x12\x17\n\x13StockField_LotPrice\x10\n\x12\x18\n\x14StockField_MarketVal\x10\x0b\x12\x17\n\x13StockField_PeAnnual\x10\x0c\x12\x14\n\x10StockField_PeTTM\x10\r\x12\x15\n\x11StockField_PbRate\x10\x0e\x12\x1d\n\x19StockField_ChangeRate5min\x10\x0f\x12\"\n\x1eStockField_ChangeRateBeginYear\x10\x10\x12\x14\n\x10StockField_PSTTM\x10\x11\x12\x15\n\x11StockField_PCFTTM\x10\x12\x12\x19\n\x15StockField_TotalShare\x10\x13\x12\x19\n\x15StockField_FloatShare\x10\x14\x12\x1d\n\x19StockField_FloatMarketVal\x10\x15*\xc9\x01\n\x0f\x41\x63\x63umulateField\x12\x1b\n\x17\x41\x63\x63umulateField_Unknown\x10\x00\x12\x1e\n\x1a\x41\x63\x63umulateField_ChangeRate\x10\x01\x12\x1d\n\x19\x41\x63\x63umulateField_Amplitude\x10\x02\x12\x1a\n\x16\x41\x63\x63umulateField_Volume\x10\x03\x12\x1c\n\x18\x41\x63\x63umulateField_Turnover\x10\x04\x12 \n\x1c\x41\x63\x63umulateField_TurnoverRate\x10\x05*\xcb\r\n\x0e\x46inancialField\x12\x1a\n\x16\x46inancialField_Unknown\x10\x00\x12\x1c\n\x18\x46inancialField_NetProfit\x10\x01\x12\"\n\x1e\x46inancialField_NetProfitGrowth\x10\x02\x12 \n\x1c\x46inancialField_SumOfBusiness\x10\x03\x12&\n\"FinancialField_SumOfBusinessGrowth\x10\x04\x12 \n\x1c\x46inancialField_NetProfitRate\x10\x05\x12\"\n\x1e\x46inancialField_GrossProfitRate\x10\x06\x12!\n\x1d\x46inancialField_DebtAssetsRate\x10\x07\x12%\n!FinancialField_ReturnOnEquityRate\x10\x08\x12\x17\n\x13\x46inancialField_ROIC\x10\t\x12\x19\n\x15\x46inancialField_ROATTM\x10\n\x12\x1a\n\x16\x46inancialField_EBITTTM\x10\x0b\x12\x19\n\x15\x46inancialField_EBITDA\x10\x0c\x12%\n!FinancialField_OperatingMarginTTM\x10\r\x12\x1d\n\x19\x46inancialField_EBITMargin\x10\x0e\x12\x1f\n\x1b\x46inancialField_EBITDAMargin\x10\x0f\x12$\n FinancialField_FinancialCostRate\x10\x10\x12%\n!FinancialField_OperatingProfitTTM\x10\x11\x12*\n&FinancialField_ShareholderNetProfitTTM\x10\x12\x12(\n$FinancialField_NetProfitCashCoverTTM\x10\x13\x12\x1f\n\x1b\x46inancialField_CurrentRatio\x10\x14\x12\x1d\n\x19\x46inancialField_QuickRatio\x10\x15\x12$\n FinancialField_CurrentAssetRatio\x10\x16\x12#\n\x1f\x46inancialField_CurrentDebtRatio\x10\x17\x12#\n\x1f\x46inancialField_EquityMultiplier\x10\x18\x12 \n\x1c\x46inancialField_PropertyRatio\x10\x19\x12)\n%FinancialField_CashAndCashEquivalents\x10\x1a\x12%\n!FinancialField_TotalAssetTurnover\x10\x1b\x12%\n!FinancialField_FixedAssetTurnover\x10\x1c\x12$\n FinancialField_InventoryTurnover\x10\x1d\x12\'\n#FinancialField_OperatingCashFlowTTM\x10\x1e\x12%\n!FinancialField_AccountsReceivable\x10\x1f\x12!\n\x1d\x46inancialField_EBITGrowthRate\x10 \x12,\n(FinancialField_OperatingProfitGrowthRate\x10!\x12(\n$FinancialField_TotalAssetsGrowthRate\x10\"\x12\x31\n-FinancialField_ProfitToShareholdersGrowthRate\x10#\x12,\n(FinancialField_ProfitBeforeTaxGrowthRate\x10$\x12 \n\x1c\x46inancialField_EPSGrowthRate\x10%\x12 \n\x1c\x46inancialField_ROEGrowthRate\x10&\x12!\n\x1d\x46inancialField_ROICGrowthRate\x10\'\x12!\n\x1d\x46inancialField_NOCFGrowthRate\x10(\x12)\n%FinancialField_NOCFPerShareGrowthRate\x10)\x12,\n(FinancialField_OperatingRevenueCashCover\x10*\x12/\n+FinancialField_OperatingProfitToTotalProfit\x10+\x12\x1b\n\x17\x46inancialField_BasicEPS\x10,\x12\x1d\n\x19\x46inancialField_DilutedEPS\x10-\x12\x1f\n\x1b\x46inancialField_NOCFPerShare\x10.*\xd9\x01\n\x10\x46inancialQuarter\x12\x1c\n\x18\x46inancialQuarter_Unknown\x10\x00\x12\x1b\n\x17\x46inancialQuarter_Annual\x10\x01\x12!\n\x1d\x46inancialQuarter_FirstQuarter\x10\x02\x12\x1c\n\x18\x46inancialQuarter_Interim\x10\x03\x12!\n\x1d\x46inancialQuarter_ThirdQuarter\x10\x04\x12&\n\"FinancialQuarter_MostRecentQuarter\x10\x05*B\n\x07SortDir\x12\x0e\n\nSortDir_No\x10\x00\x12\x12\n\x0eSortDir_Ascend\x10\x01\x12\x13\n\x0fSortDir_Descend\x10\x02\x42\x45\n\x13\x63om.futu.openapi.pbZ.github.com/futuopen/ftapi4go/pb/qotstockfilter')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -100,11 +100,31 @@ _STOCKFIELD = _descriptor.EnumDescriptor(
       name='StockField_ChangeRateBeginYear', index=16, number=16,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='StockField_PSTTM', index=17, number=17,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='StockField_PCFTTM', index=18, number=18,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='StockField_TotalShare', index=19, number=19,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='StockField_FloatShare', index=20, number=20,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='StockField_FloatMarketVal', index=21, number=21,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=1367,
-  serialized_end=1907,
+  serialized_end=2037,
 )
 _sym_db.RegisterEnumDescriptor(_STOCKFIELD)
 
@@ -142,8 +162,8 @@ _ACCUMULATEFIELD = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1910,
-  serialized_end=2111,
+  serialized_start=2040,
+  serialized_end=2241,
 )
 _sym_db.RegisterEnumDescriptor(_ACCUMULATEFIELD)
 
@@ -183,18 +203,170 @@ _FINANCIALFIELD = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='FinancialField_DebtAssetRate', index=7, number=7,
+      name='FinancialField_DebtAssetsRate', index=7, number=7,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
       name='FinancialField_ReturnOnEquityRate', index=8, number=8,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_ROIC', index=9, number=9,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_ROATTM', index=10, number=10,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_EBITTTM', index=11, number=11,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_EBITDA', index=12, number=12,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_OperatingMarginTTM', index=13, number=13,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_EBITMargin', index=14, number=14,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_EBITDAMargin', index=15, number=15,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_FinancialCostRate', index=16, number=16,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_OperatingProfitTTM', index=17, number=17,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_ShareholderNetProfitTTM', index=18, number=18,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_NetProfitCashCoverTTM', index=19, number=19,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_CurrentRatio', index=20, number=20,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_QuickRatio', index=21, number=21,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_CurrentAssetRatio', index=22, number=22,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_CurrentDebtRatio', index=23, number=23,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_EquityMultiplier', index=24, number=24,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_PropertyRatio', index=25, number=25,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_CashAndCashEquivalents', index=26, number=26,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_TotalAssetTurnover', index=27, number=27,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_FixedAssetTurnover', index=28, number=28,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_InventoryTurnover', index=29, number=29,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_OperatingCashFlowTTM', index=30, number=30,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_AccountsReceivable', index=31, number=31,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_EBITGrowthRate', index=32, number=32,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_OperatingProfitGrowthRate', index=33, number=33,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_TotalAssetsGrowthRate', index=34, number=34,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_ProfitToShareholdersGrowthRate', index=35, number=35,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_ProfitBeforeTaxGrowthRate', index=36, number=36,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_EPSGrowthRate', index=37, number=37,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_ROEGrowthRate', index=38, number=38,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_ROICGrowthRate', index=39, number=39,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_NOCFGrowthRate', index=40, number=40,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_NOCFPerShareGrowthRate', index=41, number=41,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_OperatingRevenueCashCover', index=42, number=42,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_OperatingProfitToTotalProfit', index=43, number=43,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_BasicEPS', index=44, number=44,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_DilutedEPS', index=45, number=45,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FinancialField_NOCFPerShare', index=46, number=46,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=2114,
-  serialized_end=2441,
+  serialized_start=2244,
+  serialized_end=3983,
 )
 _sym_db.RegisterEnumDescriptor(_FINANCIALFIELD)
 
@@ -232,8 +404,8 @@ _FINANCIALQUARTER = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2444,
-  serialized_end=2661,
+  serialized_start=3986,
+  serialized_end=4203,
 )
 _sym_db.RegisterEnumDescriptor(_FINANCIALQUARTER)
 
@@ -259,8 +431,8 @@ _SORTDIR = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2663,
-  serialized_end=2729,
+  serialized_start=4205,
+  serialized_end=4271,
 )
 _sym_db.RegisterEnumDescriptor(_SORTDIR)
 
@@ -282,6 +454,11 @@ StockField_PeTTM = 13
 StockField_PbRate = 14
 StockField_ChangeRate5min = 15
 StockField_ChangeRateBeginYear = 16
+StockField_PSTTM = 17
+StockField_PCFTTM = 18
+StockField_TotalShare = 19
+StockField_FloatShare = 20
+StockField_FloatMarketVal = 21
 AccumulateField_Unknown = 0
 AccumulateField_ChangeRate = 1
 AccumulateField_Amplitude = 2
@@ -295,8 +472,46 @@ FinancialField_SumOfBusiness = 3
 FinancialField_SumOfBusinessGrowth = 4
 FinancialField_NetProfitRate = 5
 FinancialField_GrossProfitRate = 6
-FinancialField_DebtAssetRate = 7
+FinancialField_DebtAssetsRate = 7
 FinancialField_ReturnOnEquityRate = 8
+FinancialField_ROIC = 9
+FinancialField_ROATTM = 10
+FinancialField_EBITTTM = 11
+FinancialField_EBITDA = 12
+FinancialField_OperatingMarginTTM = 13
+FinancialField_EBITMargin = 14
+FinancialField_EBITDAMargin = 15
+FinancialField_FinancialCostRate = 16
+FinancialField_OperatingProfitTTM = 17
+FinancialField_ShareholderNetProfitTTM = 18
+FinancialField_NetProfitCashCoverTTM = 19
+FinancialField_CurrentRatio = 20
+FinancialField_QuickRatio = 21
+FinancialField_CurrentAssetRatio = 22
+FinancialField_CurrentDebtRatio = 23
+FinancialField_EquityMultiplier = 24
+FinancialField_PropertyRatio = 25
+FinancialField_CashAndCashEquivalents = 26
+FinancialField_TotalAssetTurnover = 27
+FinancialField_FixedAssetTurnover = 28
+FinancialField_InventoryTurnover = 29
+FinancialField_OperatingCashFlowTTM = 30
+FinancialField_AccountsReceivable = 31
+FinancialField_EBITGrowthRate = 32
+FinancialField_OperatingProfitGrowthRate = 33
+FinancialField_TotalAssetsGrowthRate = 34
+FinancialField_ProfitToShareholdersGrowthRate = 35
+FinancialField_ProfitBeforeTaxGrowthRate = 36
+FinancialField_EPSGrowthRate = 37
+FinancialField_ROEGrowthRate = 38
+FinancialField_ROICGrowthRate = 39
+FinancialField_NOCFGrowthRate = 40
+FinancialField_NOCFPerShareGrowthRate = 41
+FinancialField_OperatingRevenueCashCover = 42
+FinancialField_OperatingProfitToTotalProfit = 43
+FinancialField_BasicEPS = 44
+FinancialField_DilutedEPS = 45
+FinancialField_NOCFPerShare = 46
 FinancialQuarter_Unknown = 0
 FinancialQuarter_Annual = 1
 FinancialQuarter_FirstQuarter = 2

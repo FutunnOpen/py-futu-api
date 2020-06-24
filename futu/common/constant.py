@@ -2012,6 +2012,11 @@ class StockField(FtEnum):
     PB_RATE = "PB_RATE"                                # 市净率 例如填写[0.5,20]值区间
     CHANGE_RATE_5MIN = "CHANGE_RATE_5MIN"              # 五分钟价格涨跌幅 例如填写[-5,6.3]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
     CHANGE_RATE_BEGIN_YEAR = "CHANGE_RATE_BEGIN_YEAR"  # 年初至今价格涨跌幅 例如填写[-50.1,400.7]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
+    PS_TTM = "PS_TTM"                                  # 市销率(TTM) 例如填写 [100, 500] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    PCF_TTM = "PCF_TTM"                                # 市现率(TTM) 例如填写 [100, 1000] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    TOTAL_SHARE = "TOTAL_SHARE"                        # 总股数 例如填写 [1000000000,1000000000] 值区间 (单位：股)
+    FLOAT_SHARE = "FLOAT_SHARE"                        # 流通股数 例如填写 [1000000000,1000000000] 值区间 (单位：股)
+    FLOAT_MARKET_VAL = "FLOAT_MARKET_VAL"              # 流通市值 例如填写 [1000000000,1000000000] 值区间 (单位：元)
 
     # 以下是累积数据过滤所支持的枚举
     acc_enum_begin = 100
@@ -2031,9 +2036,48 @@ class StockField(FtEnum):
     GROSS_PROFIT_RATE = "GROSS_PROFIT_RATE"            # 毛利率 例如填写[4,65]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
     DEBT_ASSET_RATE = "DEBT_ASSET_RATE"                # 资产负债率 例如填写[5,470]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
     RETURN_ON_EQUITY_RATE = "RETURN_ON_EQUITY_RATE"    # 净资产收益率 例如填写[20,230]值区间（该字段为百分比字段，默认不展示%，如20实际对应20%）
+    ROIC = "ROIC"                                      # 盈利能力属性投入资本回报率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    ROA_TTM = "ROA_TTM"                                # 资产回报率(TTM) 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
+    EBIT_TTM = "EBIT_TTM"                              # 息税前利润(TTM) 例如填写 [1000000000,1000000000] 值区间（单位：元。仅适用于年报。）
+    EBITDA = "EBITDA"                                  # 税息折旧及摊销前利润 例如填写 [1000000000,1000000000] 值区间（单位：元）
+    OPERATING_MARGIN_TTM = "OPERATING_MARGIN_TTM"      # 营业利润率(TTM) 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
+    EBIT_MARGIN = "EBIT_MARGIN"                        # EBIT利润率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    EBITDA_MARGIN = "EBITDA_MARGIN"                    # EBITDA利润率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    FINANCIAL_COST_RATE = "FINANCIAL_COST_RATE"        # 财务成本率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    OPERATING_PROFIT_TTM = "OPERATING_PROFIT_TTM"      # 营业利润(TTM) 例如填写 [1000000000,1000000000] 值区间 （单位：元。仅适用于年报。）
+    SHAREHOLDER_NET_PROFIT_TTM = "SHAREHOLDER_NET_PROFIT_TTM"  # 归属于母公司的净利润 例如填写 [1000000000,1000000000] 值区间 （单位：元。仅适用于年报。）
+    NET_PROFIT_CASH_COVER_TTM = "NET_PROFIT_CASH_COVER_TTM" # 盈利中的现金收入比例 例如填写 [1.0,60.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
+    CURRENT_RATIO = "CURRENT_RATIO"                    # 偿债能力属性流动比率 例如填写 [100,250] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    QUICK_RATIO = "QUICK_RATIO"                        # 速动比率 例如填写 [100,250] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    CURRENT_ASSET_RATIO = "CURRENT_ASSET_RATIO"        # 清债能力属性流动资产率 例如填写 [10,100] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    CURRENT_DEBT_RATIO = "CURRENT_DEBT_RATIO"          # 流动负债率 例如填写 [10,100] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    EQUITY_MULTIPLIER = "EQUITY_MULTIPLIER"            # 权益乘数 例如填写 [100,180] 值区间
+    PROPERTY_RATIO = "PROPERTY_RATIO"                  # 产权比率 例如填写 [50,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    CASH_AND_CASH_EQUIVALENTS = "CASH_AND_CASH_EQUIVALENTS"  # 现金和现金等价 例如填写 [1000000000,1000000000] 值区间（单位：元）
+    TOTAL_ASSET_TURNOVER = "TOTAL_ASSET_TURNOVER"      # 运营能力属性总资产周转率 例如填写 [50,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    FIXED_ASSET_TURNOVER = "FIXED_ASSET_TURNOVER"      # 固定资产周转率 例如填写 [50,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    INVENTORY_TURNOVER = "INVENTORY_TURNOVER"          # 存货周转率 例如填写 [50,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    OPERATING_CASH_FLOW_TTM = "OPERATING_CASH_FLOW_TTM"  # 经营活动现金流(TTM) 例如填写 [1000000000,1000000000] 值区间（单位：元。仅适用于年报。）
+    ACCOUNTS_RECEIVABLE = "ACCOUNTS_RECEIVABLE"        # 应收帐款净额 例如填写 [1000000000,1000000000] 值区间 例如填写 [1000000000,1000000000] 值区间 （单位：元）
+    EBIT_GROWTH_RATE = "EBIT_GROWTH_RATE"              # 成长能力属性EBIT同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    OPERATING_PROFIT_GROWTH_RATE = "OPERATING_PROFIT_GROWTH_RATE"  # 营业利润同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    TOTAL_ASSETS_GROWTH_RATE = "TOTAL_ASSETS_GROWTH_RATE"  # 总资产同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    PROFIT_TO_SHAREHOLDERS_GROWTH_RATE = "PROFIT_TO_SHAREHOLDERS_GROWTH_RATE"  # 归母净利润同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    PROFIT_BEFORE_TAX_GROWTH_RATE = "PROFIT_BEFORE_TAX_GROWTH_RATE"  # 总利润同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    EPS_GROWTH_RATE = "EPS_GROWTH_RATE"                # EPS同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    ROE_GROWTH_RATE = "ROE_GROWTH_RATE"                # ROE同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    ROIC_GROWTH_RATE = "ROIC_GROWTH_RATE"              # ROIC同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    NOCF_GROWTH_RATE = "NOCF_GROWTH_RATE"              # 经营现金流同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    NOCF_PER_SHARE_GROWTH_RATE = "NOCF_PER_SHARE_GROWTH_RATE"  # 每股经营现金流同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    OPERATING_REVENUE_CASH_COVER = "OPERATING_REVENUE_CASH_COVER"  # 现金流属性经营现金收入比 例如填写 [10,100] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    OPERATING_PROFIT_TO_TOTAL_PROFIT = "OPERATING_PROFIT_TO_TOTAL_PROFIT"  # 营业利润占比 例如填写 [10,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
+    BASIC_EPS = "BASIC_EPS"                            # 市场表现属性基本每股收益 例如填写 [0.1,10] 值区间 (单位：元)
+    DILUTED_EPS = "DILUTED_EPS"                        # 稀释每股收益 例如填写 [0.1,10] 值区间 (单位：元)
+    NOCF_PER_SHARE = "NOCF_PER_SHARE"                  # 每股经营现金净流量 例如填写 [0.1,10] 值区间 (单位：元)
 
     def load_dic(self):
         return {
+            # 简单
             self.NONE: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_Unknown,
             self.STOCK_CODE: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_StockCode,
             self.STOCK_NAME: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_StockName,
@@ -2051,21 +2095,66 @@ class StockField(FtEnum):
             self.PB_RATE: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_PbRate,
             self.CHANGE_RATE_5MIN: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_ChangeRate5min,
             self.CHANGE_RATE_BEGIN_YEAR: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_ChangeRateBeginYear,
+            self.PS_TTM: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_PSTTM,
+            self.PCF_TTM: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_PCFTTM,
+            self.TOTAL_SHARE: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_TotalShare,
+            self.FLOAT_SHARE: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_FloatShare,
+            self.FLOAT_MARKET_VAL: self.simple_enum_begin + Qot_StockFilter_pb2.StockField_FloatMarketVal,
 
+            # 累积
             self.CHANGE_RATE: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_ChangeRate,
             self.AMPLITUDE: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_Amplitude,
             self.VOLUME: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_Volume,
             self.TURNOVER: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_Turnover,
             self.TURNOVER_RATE: self.acc_enum_begin + Qot_StockFilter_pb2.AccumulateField_TurnoverRate,
 
+            # 财务
             self.NET_PROFIT: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfit,
             self.NET_PROFIX_GROWTH: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfitGrowth,
             self.SUM_OF_BUSINESS: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_SumOfBusiness,
             self.SUM_OF_BUSINESS_GROWTH: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_SumOfBusinessGrowth,
             self.NET_PROFIT_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfitRate,
             self.GROSS_PROFIT_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_GrossProfitRate,
-            self.DEBT_ASSET_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_DebtAssetRate,
+            self.DEBT_ASSET_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_DebtAssetsRate,
             self.RETURN_ON_EQUITY_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_ReturnOnEquityRate,
+            self.ROIC: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_ROIC,
+            self.ROA_TTM: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_ROATTM,
+            self.EBIT_TTM: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_EBITTTM,
+            self.EBITDA: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_EBITDA,
+            self.OPERATING_MARGIN_TTM: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_OperatingMarginTTM,
+            self.EBIT_MARGIN: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_EBITMargin,
+            self.EBITDA_MARGIN: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_EBITDAMargin,
+            self.FINANCIAL_COST_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_FinancialCostRate,
+            self.OPERATING_PROFIT_TTM: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_OperatingProfitTTM,
+            self.SHAREHOLDER_NET_PROFIT_TTM: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_ShareholderNetProfitTTM,
+            self.NET_PROFIT_CASH_COVER_TTM: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NetProfitCashCoverTTM,
+            self.CURRENT_RATIO: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_CurrentRatio,
+            self.QUICK_RATIO: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_QuickRatio,
+            self.CURRENT_ASSET_RATIO: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_CurrentAssetRatio,
+            self.CURRENT_DEBT_RATIO: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_CurrentDebtRatio,
+            self.EQUITY_MULTIPLIER: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_EquityMultiplier,
+            self.PROPERTY_RATIO: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_PropertyRatio,
+            self.CASH_AND_CASH_EQUIVALENTS: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_CashAndCashEquivalents,
+            self.TOTAL_ASSET_TURNOVER: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_TotalAssetTurnover,
+            self.FIXED_ASSET_TURNOVER: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_FixedAssetTurnover,
+            self.INVENTORY_TURNOVER: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_InventoryTurnover,
+            self.OPERATING_CASH_FLOW_TTM: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_OperatingCashFlowTTM,
+            self.ACCOUNTS_RECEIVABLE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_AccountsReceivable,
+            self.EBIT_GROWTH_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_EBITGrowthRate,
+            self.OPERATING_PROFIT_GROWTH_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_OperatingProfitGrowthRate,
+            self.TOTAL_ASSETS_GROWTH_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_TotalAssetsGrowthRate,
+            self.PROFIT_TO_SHAREHOLDERS_GROWTH_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_ProfitToShareholdersGrowthRate,
+            self.PROFIT_BEFORE_TAX_GROWTH_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_ProfitBeforeTaxGrowthRate,
+            self.EPS_GROWTH_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_EPSGrowthRate,
+            self.ROE_GROWTH_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_ROEGrowthRate,
+            self.ROIC_GROWTH_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_ROICGrowthRate,
+            self.NOCF_GROWTH_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NOCFGrowthRate,
+            self.NOCF_PER_SHARE_GROWTH_RATE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NOCFPerShareGrowthRate,
+            self.OPERATING_REVENUE_CASH_COVER: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_OperatingRevenueCashCover,
+            self.OPERATING_PROFIT_TO_TOTAL_PROFIT: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_OperatingProfitToTotalProfit,
+            self.BASIC_EPS: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_BasicEPS,
+            self.DILUTED_EPS: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_DilutedEPS,
+            self.NOCF_PER_SHARE: self.financial_enum_begin + Qot_StockFilter_pb2.FinancialField_NOCFPerShare,
         }
 
 
@@ -2074,9 +2163,9 @@ class FinancialQuarter(FtEnum):
     NONE = "N/A"
     ANNUAL = "ANNUAL"                            # 年报
     FIRST_QUARTER = "FIRST_QUARTER"              # Q1一季报
-    INTERIM = "INTERIM"                           # Q6中期报
+    INTERIM = "INTERIM"                          # Q6中期报
     THIRD_QUARTER = "THIRD_QUARTER"              # Q9三季报
-    MOST_RECENT_QUARTER = "MOST_RECENT_QUARTER" # 最近季报
+    MOST_RECENT_QUARTER = "MOST_RECENT_QUARTER"  # 最近季报
     
     def load_dic(self):
         return {

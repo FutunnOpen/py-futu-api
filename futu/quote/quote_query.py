@@ -1111,49 +1111,47 @@ class SubscriptionQuery:
 
 
 def parse_pb_BasicQot(pb):
-    item = None
-    if pb.updateTime is not None and len(pb.updateTime) != 0:
-        item = {
-            'code': merge_qot_mkt_stock_str(int(pb.security.market), pb.security.code),
-            'data_date': pb.updateTime.split()[0],
-            'data_time': pb.updateTime.split()[1],
-            'last_price': pb.curPrice,
-            'open_price': pb.openPrice,
-            'high_price': pb.highPrice,
-            'low_price': pb.lowPrice,
-            'prev_close_price': pb.lastClosePrice,
-            'volume': int(pb.volume),
-            'turnover': pb.turnover,
-            'turnover_rate': pb.turnoverRate,
-            'amplitude': pb.amplitude,
-            'suspension': pb.isSuspended,
-            'listing_date': "N/A" if pb.HasField('optionExData') else  pb.listTime,
-            'price_spread': pb.priceSpread,
-            'dark_status': QUOTE.REV_DARK_STATUS_MAP[pb.darkStatus] if pb.HasField(
-                'darkStatus') else DarkStatus.NONE,
-            'sec_status': SecurityStatus.to_string2(pb.secStatus) if pb.HasField(
-                'secStatus') else SecurityStatus.NONE,
-        }
-        
-        if pb.HasField('optionExData'):
-            set_item_from_pb(item, pb.optionExData, pb_field_map_OptionBasicQotExData)
-        else:
-            set_item_none(item, pb_field_map_OptionBasicQotExData)
+    item = {
+        'code': merge_qot_mkt_stock_str(int(pb.security.market), pb.security.code),
+        'data_date':pb.updateTime.split()[0] if len(pb.updateTime) > 0 else '',
+        'data_time': pb.updateTime.split()[1] if len(pb.updateTime) > 0 else '',
+        'last_price': pb.curPrice,
+        'open_price': pb.openPrice,
+        'high_price': pb.highPrice,
+        'low_price': pb.lowPrice,
+        'prev_close_price': pb.lastClosePrice,
+        'volume': int(pb.volume),
+        'turnover': pb.turnover,
+        'turnover_rate': pb.turnoverRate,
+        'amplitude': pb.amplitude,
+        'suspension': pb.isSuspended,
+        'listing_date': "N/A" if pb.HasField('optionExData') else  pb.listTime,
+        'price_spread': pb.priceSpread,
+        'dark_status': QUOTE.REV_DARK_STATUS_MAP[pb.darkStatus] if pb.HasField(
+            'darkStatus') else DarkStatus.NONE,
+        'sec_status': SecurityStatus.to_string2(pb.secStatus) if pb.HasField(
+            'secStatus') else SecurityStatus.NONE,
+    }
 
-        if pb.HasField('futureExData'):
-            set_item_from_pb(item, pb.futureExData, pb_field_map_FutureBasicQotExData)
-        else:
-            set_item_none(item, pb_field_map_FutureBasicQotExData)
+    if pb.HasField('optionExData'):
+        set_item_from_pb(item, pb.optionExData, pb_field_map_OptionBasicQotExData)
+    else:
+        set_item_none(item, pb_field_map_OptionBasicQotExData)
 
-        if pb.HasField('preMarket'):
-            set_item_from_pb(item, pb.preMarket, pb_field_map_PreAfterMarketData_pre)
-        else:
-            set_item_none(item, pb_field_map_PreAfterMarketData_pre)
+    if pb.HasField('futureExData'):
+        set_item_from_pb(item, pb.futureExData, pb_field_map_FutureBasicQotExData)
+    else:
+        set_item_none(item, pb_field_map_FutureBasicQotExData)
 
-        if pb.HasField('afterMarket'):
-            set_item_from_pb(item, pb.afterMarket, pb_field_map_PreAfterMarketData_after)
-        else:
-            set_item_none(item, pb_field_map_PreAfterMarketData_after)
+    if pb.HasField('preMarket'):
+        set_item_from_pb(item, pb.preMarket, pb_field_map_PreAfterMarketData_pre)
+    else:
+        set_item_none(item, pb_field_map_PreAfterMarketData_pre)
+
+    if pb.HasField('afterMarket'):
+        set_item_from_pb(item, pb.afterMarket, pb_field_map_PreAfterMarketData_after)
+    else:
+        set_item_none(item, pb_field_map_PreAfterMarketData_after)
 
     return item
 
