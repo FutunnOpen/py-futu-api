@@ -475,10 +475,10 @@ class MarketSnapshotQuery:
                 'optionExData') else record.basic.listTime
             snapshot_tmp['price_spread'] = record.basic.priceSpread
             snapshot_tmp['lot_size'] = record.basic.lotSize
-            snapshot_tmp['ask_price'] = record.basic.askPrice
-            snapshot_tmp['bid_price'] = record.basic.bidPrice
-            snapshot_tmp['ask_vol'] = record.basic.askVol
-            snapshot_tmp['bid_vol'] = record.basic.bidVol
+            snapshot_tmp['ask_price'] = record.basic.askPrice if record.basic.HasField('askPrice') else 'N/A'
+            snapshot_tmp['bid_price'] = record.basic.bidPrice if record.basic.HasField('bidPrice') else 'N/A'
+            snapshot_tmp['ask_vol'] = record.basic.askVol if record.basic.HasField('askVol') else 'N/A'
+            snapshot_tmp['bid_vol'] = record.basic.bidVol if record.basic.HasField('bidVol') else 'N/A'
             # 2019.02.25 增加一批数据
             if record.basic.HasField("enableMargin"):
                 # 是否可融资，如果为true，后两个字段才有意
