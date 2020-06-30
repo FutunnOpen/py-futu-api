@@ -73,6 +73,12 @@ class OpenContextBase(object):
 
     def __del__(self):
         self._close()
+        
+    def __enter__(self):
+        pass
+
+    def __exit__(self, t, v, tb):
+        self._close()
 
     @property
     def status(self):
