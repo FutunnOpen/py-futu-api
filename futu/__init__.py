@@ -94,7 +94,6 @@ _check_module('simplejson')
 _check_module('Crypto', 'pycryptodome')
 _check_module('google.protobuf', package_name='protobuf', version='3.5.1', version_getter=lambda mod: mod.__version__)
 _check_module('selectors2', py_version=2)
-_check_package('pycryptodome')
 
 
 #import data querying APIs and response handle base class
