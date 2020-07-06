@@ -185,13 +185,6 @@ class OpenContextBase(object):
                 return self._handler_ctx.set_handler(handler)
         return RET_ERROR
 
-    def set_pre_handler(self, handler):
-        '''set pre handler'''
-        with self._lock:
-            if self._handler_ctx is not None:
-                return self._handler_ctx.set_pre_handler(handler)
-        return RET_ERROR
-
     def _is_proc_run(self):
         with self._lock:
             return self._proc_run

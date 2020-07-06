@@ -334,24 +334,6 @@ class SysNotifyHandlerBase(RspHandlerBase):
 
         return ret_code, content
 
-
-class AsyncHandler_InitConnect(RspHandlerBase):
-    """ AsyncHandler_TrdSubAccPush"""
-
-    def __init__(self, notify_obj=None):
-        self._notify_obj = notify_obj
-        super(AsyncHandler_InitConnect, self).__init__()
-
-    def on_recv_rsp(self, rsp_pb):
-        """receive response callback function"""
-        ret_code, msg, conn_info_map = InitConnect.unpack_rsp(rsp_pb)
-
-        if self._notify_obj is not None:
-            self._notify_obj.on_async_init_connect(
-                ret_code, msg, conn_info_map)
-
-        return ret_code, msg
-
 #
 # class OrderDetailHandlerBase(RspHandlerBase):
 #     def __init__(self):

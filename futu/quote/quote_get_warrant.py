@@ -7,71 +7,42 @@ from futu.common.conn_mng import *
 
 
 class Request(object):
-    begin = 0  # 数据起始点
-    num = 200  # 请求数据个数，最大200
-    sort_field = SortField.CODE  # 根据哪个字段排序
-    ascend = True  # 升序ture, 降序false
-    """以下为筛选条件，可选字段，不填表示不过滤"""
-    stock_owner = None  # 所属正股
-    type_list = list()  # Qot_Common.WarrantType, 窝轮类型过滤列表 WrtType
-    issuer_list = list()  # Qot_Common.Issuer, 发行人过滤列表
-    maturity_time_min = ""  # 到期日, 到期日范围的开始时间戳
-    maturity_time_max = ""  # 到期日范围的结束时间戳
-    ipo_period = IpoPeriod.NONE   # 上市日
-    price_type = PriceType.NONE  # Qot_Common.PriceType, 价内 / 价外
-    status = WarrantStatus.NONE  # Qot_Common.WarrantStatus, 窝轮状态
-    cur_price_min = None  # 最新价过滤起点
-    cur_price_max = None  # 最新价过滤终点
-    strike_price_min = None  # 行使价过滤起点
-    strike_price_max = None  # 行使价过滤终点
-    street_min = None  # 街货占比 % 过滤起点
-    street_max = None   # 街货占比 % 过滤终点
-    conversion_min = None  # 换股比率过滤起点
-    conversion_max = None  # 换股比率过滤终点
-    vol_min = -1  # 成交量过滤起点
-    vol_max = -1  # 成交量过滤终点
-    premium_min = None  # 溢价 % 过滤起点
-    premium_max = None  # 溢价 % 过滤终点
-    leverage_ratio_min = None  # 杠杆比率过滤起点
-    leverage_ratio_max = None  # 杠杆比率过滤终点
-    delta_min = None   # 对冲值过滤起点, 仅认购认沽支持该字段过滤
-    delta_max = None  # 对冲值过滤终点, 仅认购认沽支持该字段过滤
-    implied_min = None  # 引伸波幅过滤起点, 仅认购认沽支持该字段过滤
-    implied_max = None  # 引伸波幅过滤终点, 仅认购认沽支持该字段过滤
-    recovery_price_min = None  # 回收价过滤起点, 仅牛熊证支持该字段过滤
-    recovery_price_max = None  # 回收价过滤终点, 仅牛熊证支持该字段过滤
-    price_recovery_ratio_min = None  # 正股距回收价 % 过滤起点, 仅牛熊证支持该字段过滤
-    price_recovery_ratio_max = None  # 正股距回收价 % 过滤终点, 仅牛熊证支持该字段过滤
 
     def __init__(self):
-        self.stock_owner = None
-        self.maturity_time_min = None
-        self.maturity_time_max = None
-        self.ipo_period = None
-        self.price_type = None
-        self.status = None
-        self.cur_price_min = None
-        self.cur_price_max = None
-        self.strike_price_min = None
-        self.strike_price_max = None
-        self.street_min = None
-        self.street_max = None
-        self.conversion_min = None
-        self.conversion_max = None
-        self.vol_min = None
-        self.vol_max = None
-        self.premium_min = None
-        self.premium_max = None
-        self.leverage_ratio_min = None
-        self.leverage_ratio_max = None
-        self.delta_min = None
-        self.delta_max = None
-        self.implied_min = None
-        self.implied_max = None
-        self.recovery_price_min = None
-        self.recovery_price_max = None
-        self.price_recovery_ratio_min = None
-        self.price_recovery_ratio_max = None
+        self.begin = 0  # 数据起始点
+        self.num = 200  # 请求数据个数，最大200
+        self.sort_field = SortField.CODE  # 根据哪个字段排序
+        self.ascend = True  # 升序ture, 降序false
+        self.stock_owner = None  # 所属正股
+        self.type_list = list()   # Qot_Common.WarrantType, 窝轮类型过滤列表 WrtType
+        self.issuer_list = list()  # Qot_Common.Issuer, 发行人过滤列表
+        self.maturity_time_min = None # 到期日, 到期日范围的开始时间戳
+        self.maturity_time_max = None # 到期日范围的结束时间戳
+        self.ipo_period = None  # 上市日
+        self.price_type = None  # Qot_Common.PriceType, 价内 / 价外
+        self.status = None  # Qot_Common.WarrantStatus, 窝轮状态
+        self.cur_price_min = None  # 最新价过滤起点
+        self.cur_price_max = None  # 最新价过滤终点
+        self.strike_price_min = None  # 行使价过滤起点
+        self.strike_price_max = None  # 行使价过滤终点
+        self.street_min = None  # 街货占比 % 过滤起点
+        self.street_max = None  # 街货占比 % 过滤终点
+        self.conversion_min = None  # 换股比率过滤起点
+        self.conversion_max = None  # 换股比率过滤终点
+        self.vol_min = None  # 成交量过滤起点
+        self.vol_max = None  # 成交量过滤终点
+        self.premium_min = None  # 溢价 % 过滤起点
+        self.premium_max = None  # 溢价 % 过滤终点
+        self.leverage_ratio_min = None  # 杠杆比率过滤起点
+        self.leverage_ratio_max = None  # 杠杆比率过滤终点
+        self.delta_min = None   # 对冲值过滤起点, 仅认购认沽支持该字段过滤
+        self.delta_max = None  # 对冲值过滤终点, 仅认购认沽支持该字段过滤
+        self.implied_min = None  # 引伸波幅过滤起点, 仅认购认沽支持该字段过滤
+        self.implied_max = None  # 引伸波幅过滤终点, 仅认购认沽支持该字段过滤
+        self.recovery_price_min = None  # 回收价过滤起点, 仅牛熊证支持该字段过滤
+        self.recovery_price_max = None  # 回收价过滤终点, 仅牛熊证支持该字段过滤
+        self.price_recovery_ratio_min = None  # 正股距回收价 % 过滤起点, 仅牛熊证支持该字段过滤
+        self.price_recovery_ratio_max = None  # 正股距回收价 % 过滤终点, 仅牛熊证支持该字段过滤
 
     def fill_request_pb(self):
         from futu.common.pb.Qot_GetWarrant_pb2 import Request as GetWarrantPBRequest
