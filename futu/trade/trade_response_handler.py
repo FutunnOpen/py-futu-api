@@ -42,18 +42,3 @@ class TradeDealHandlerBase(RspHandlerBase):
             return RET_OK, trade_frame_table
 
 
-class AsyncHandler_TrdSubAccPush(RspHandlerBase):
-    """ AsyncHandler_TrdSubAccPush"""
-    def __init__(self, notify_obj=None):
-        self._notify_obj = notify_obj
-        super(AsyncHandler_TrdSubAccPush, self).__init__()
-
-    def on_recv_rsp(self, rsp_pb):
-        """receive response callback function"""
-        ret_code, msg, _= SubAccPush.unpack_rsp(rsp_pb)
-
-        if self._notify_obj is not None:
-            self._notify_obj.on_async_sub_acc_push(ret_code, msg)
-
-        return ret_code, msg
-

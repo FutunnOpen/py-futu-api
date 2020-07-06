@@ -11,7 +11,6 @@ from threading import RLock, Thread
 from futu.common.utils import *
 from futu.common.handler_context import HandlerContext
 from futu.quote.quote_query import InitConnect, TestCmd
-from futu.quote.quote_response_handler import AsyncHandler_InitConnect
 from futu.quote.quote_query import GlobalStateQuery
 from futu.quote.quote_query import KeepAlive, parse_head
 from futu.common.conn_mng import FutuConnMng

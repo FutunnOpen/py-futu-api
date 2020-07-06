@@ -3,7 +3,6 @@
 import pandas as pd
 from futu.common.open_context_base import OpenContextBase
 from futu.trade.trade_query import *
-from futu.trade.trade_response_handler import AsyncHandler_TrdSubAccPush
 from futu.common.err import *
 
 class OpenTradeContextBase(OpenContextBase):
@@ -21,7 +20,6 @@ class OpenTradeContextBase(OpenContextBase):
         #     raise Exception('Non-local connections must be encrypted')
 
         super(OpenTradeContextBase, self).__init__(host, port, False, is_encrypt=is_encrypt)
-        self.set_pre_handler(AsyncHandler_TrdSubAccPush(self))
 
     def close(self):
         """
