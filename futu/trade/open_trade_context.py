@@ -304,8 +304,7 @@ class OpenTradeContextBase(OpenContextBase):
         '''do not use the built-in split function in python.
         The built-in function cannot handle some stock strings correctly.
         for instance, US..DJI, where the dot . itself is a part of original code'''
-        if 0 <= split_loc < len(
-                stock_str) - 1 and stock_str[0:split_loc] in MKT_MAP:
+        if 0 <= split_loc < len(stock_str) - 1 and Market.if_has_key(stock_str[0:split_loc]):
             market_str = stock_str[0:split_loc]
             partial_stock_str = stock_str[split_loc + 1:]
             return RET_OK, (market_str, partial_stock_str)

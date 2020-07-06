@@ -140,7 +140,7 @@ API_PROTO_VER = int(0)
 # 市场标识字符串
 
 
-class Market(object):
+class Market(FtEnum):
     """
     标识不同的行情市场，股票名称的前缀复用该字符串,如 **'HK.00700'**, **'HK_FUTURE.999010'**
     ..  py:class:: Market
@@ -157,23 +157,22 @@ class Market(object):
      ..  py:attribute:: NONE
       未知
     """
+    NONE = "N/A"
     HK = "HK"
     US = "US"
     SH = "SH"
     SZ = "SZ"
     HK_FUTURE = "HK_FUTURE"
-    NONE = "N/A"
 
-
-MKT_MAP = {
-    Market.NONE: 0,
-    Market.HK: 1,
-    Market.HK_FUTURE: 2,
-    Market.US: 11,
-    Market.SH: 21,
-    Market.SZ: 22
-}
-
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.QotMarket_Unknown,
+            self.HK: Qot_Common_pb2.QotMarket_HK_Security,
+            self.US: Qot_Common_pb2.QotMarket_US_Security,
+            self.SH: Qot_Common_pb2.QotMarket_CNSH_Security,
+            self.SZ: Qot_Common_pb2.QotMarket_CNSZ_Security,
+            self.HK_FUTURE: Qot_Common_pb2.QotMarket_HK_Future,
+        }
 
 QOT_MARKET_TO_TRD_SEC_MARKET_MAP = {
     Qot_Common_pb2.QotMarket_Unknown: Trd_Common_pb2.TrdSecMarket_Unknown,
@@ -185,10 +184,8 @@ QOT_MARKET_TO_TRD_SEC_MARKET_MAP = {
 }
 
 
-# print(type(Trd_Common_pb2.ModifyOrderOp_Delete))
-
 # 市场状态
-class MarketState:
+class MarketState(FtEnum):
     """
     行情市场状态定义
     ..  py:class:: MarketState
@@ -257,37 +254,37 @@ class MarketState:
     FUTURE_BREAK_OVER = "FUTURE_BREAK_OVER"         # 期货休息后开盘
     FUTURE_CLOSE = "FUTURE_CLOSE"                   # 期货收盘
 
-MARKET_STATE_MAP = {
-    MarketState.NONE: 0,
-    MarketState.AUCTION: 1,
-    MarketState.WAITING_OPEN: 2,
-    MarketState.MORNING: 3,
-    MarketState.REST: 4,
-    MarketState.AFTERNOON: 5,
-    MarketState.CLOSED: 6,
-    MarketState.PRE_MARKET_BEGIN: 8,
-    MarketState.PRE_MARKET_END: 9,
-    MarketState.AFTER_HOURS_BEGIN: 10,
-    MarketState.AFTER_HOURS_END: 11,
-    MarketState.NIGHT_OPEN: 13,
-    MarketState.NIGHT_END: 14,
-    MarketState.FUTURE_DAY_OPEN: 15,
-    MarketState.FUTURE_DAY_BREAK: 16,
-    MarketState.FUTURE_DAY_CLOSE: 17,
-    MarketState.FUTURE_DAY_WAIT_OPEN: 18,
-    MarketState.HK_CAS: 19,
-    MarketState.FUTURE_NIGHT_WAIT: 20,
-    MarketState.FUTURE_AFTERNOON: 21,
-    MarketState.FUTURE_SWITCH_DATE: 22,
-    MarketState.FUTURE_OPEN: 23,
-    MarketState.FUTURE_BREAK: 24,
-    MarketState.FUTURE_BREAK_OVER: 25,
-    MarketState.FUTURE_CLOSE: 26,
-}
-
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.QotMarketState_None,
+            self.AUCTION: Qot_Common_pb2.QotMarketState_Auction,
+            self.WAITING_OPEN: Qot_Common_pb2.QotMarketState_WaitingOpen,
+            self.MORNING: Qot_Common_pb2.QotMarketState_Morning,
+            self.REST: Qot_Common_pb2.QotMarketState_Rest,
+            self.AFTERNOON: Qot_Common_pb2.QotMarketState_Afternoon,
+            self.CLOSED: Qot_Common_pb2.QotMarketState_Closed,
+            self.PRE_MARKET_BEGIN: Qot_Common_pb2.QotMarketState_PreMarketBegin,
+            self.PRE_MARKET_END: Qot_Common_pb2.QotMarketState_PreMarketEnd,
+            self.AFTER_HOURS_BEGIN: Qot_Common_pb2.QotMarketState_AfterHoursBegin,
+            self.AFTER_HOURS_END: Qot_Common_pb2.QotMarketState_AfterHoursEnd,
+            self.NIGHT_OPEN: Qot_Common_pb2.QotMarketState_NightOpen,
+            self.NIGHT_END: Qot_Common_pb2.QotMarketState_NightEnd,
+            self.FUTURE_DAY_OPEN: Qot_Common_pb2.QotMarketState_FutureDayOpen,
+            self.FUTURE_DAY_BREAK: Qot_Common_pb2.QotMarketState_FutureDayBreak,
+            self.FUTURE_DAY_CLOSE: Qot_Common_pb2.QotMarketState_FutureDayClose,
+            self.FUTURE_DAY_WAIT_OPEN: Qot_Common_pb2.QotMarketState_FutureDayWaitForOpen,
+            self.HK_CAS: Qot_Common_pb2.QotMarketState_HkCas,
+            self.FUTURE_NIGHT_WAIT: Qot_Common_pb2.QotMarketState_FutureNightWait,
+            self.FUTURE_AFTERNOON: Qot_Common_pb2.QotMarketState_FutureAfternoon,
+            self.FUTURE_SWITCH_DATE: Qot_Common_pb2.QotMarketState_FutureSwitchDate,
+            self.FUTURE_OPEN: Qot_Common_pb2.QotMarketState_FutureOpen,
+            self.FUTURE_BREAK: Qot_Common_pb2.QotMarketState_FutureBreak,
+            self.FUTURE_BREAK_OVER: Qot_Common_pb2.QotMarketState_FutureBreakOver,
+            self.FUTURE_CLOSE: Qot_Common_pb2.QotMarketState_FutureClose,
+        }
 
 # 股票类型
-class SecurityType(object):
+class SecurityType(FtEnum):
     """
     证券类型定义
     ..  py:class:: SecurityType
@@ -308,34 +305,35 @@ class SecurityType(object):
      ..  py:attribute:: NONE
       未知
     """
+    NONE = "N/A"
+    BOND = "BOND"
+    BWRT = "BWRT"
     STOCK = "STOCK"
+    WARRANT = "WARRANT"
     IDX = "IDX"
     ETF = "ETF"
-    WARRANT = "WARRANT"
-    BOND = "BOND"
     DRVT = "DRVT"
     FUTURE = "FUTURE"
     PLATE = "PLATE"
     PLATESET = "PLATESET"
-    NONE = "N/A"
 
-
-SEC_TYPE_MAP = {
-    SecurityType.STOCK: 3,
-    SecurityType.IDX: 6,
-    SecurityType.ETF: 4,
-    SecurityType.WARRANT: 5,
-    SecurityType.BOND: 1,
-    SecurityType.DRVT: 8,
-    SecurityType.FUTURE: 10,
-	SecurityType.PLATE: 7,
-	SecurityType.PLATESET: 9,
-    SecurityType.NONE: 0
-}
-
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.SecurityType_Unknown,
+            self.BOND: Qot_Common_pb2.SecurityType_Bond,
+            self.BWRT: Qot_Common_pb2.SecurityType_Bwrt,
+            self.STOCK: Qot_Common_pb2.SecurityType_Eqty,
+            self.ETF: Qot_Common_pb2.SecurityType_Trust,
+            self.WARRANT: Qot_Common_pb2.SecurityType_Warrant,
+            self.IDX: Qot_Common_pb2.SecurityType_Index,
+            self.PLATE: Qot_Common_pb2.SecurityType_Plate,
+            self.DRVT: Qot_Common_pb2.SecurityType_Drvt,
+            self.PLATESET: Qot_Common_pb2.SecurityType_PlateSet,
+            self.FUTURE: Qot_Common_pb2.SecurityType_Future,
+        }
 
 # 实时数据定阅类型
-class SubType(object):
+class SubType(FtEnum):
     """
     实时数据定阅类型定义
     ..  py:class:: SubType
@@ -368,6 +366,7 @@ class SubType(object):
      ..  py:attribute:: ORDER_DETAIL
       委托明细
     """
+    NONE = "N/A"
     TICKER = "TICKER"
     QUOTE = "QUOTE"
     ORDER_BOOK = "ORDER_BOOK"
@@ -386,32 +385,32 @@ class SubType(object):
     RT_DATA = "RT_DATA"
     BROKER = "BROKER"
 
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.SubType_None,
+            self.QUOTE: Qot_Common_pb2.SubType_Basic,
+            self.ORDER_BOOK: Qot_Common_pb2.SubType_OrderBook,
+            self.TICKER: Qot_Common_pb2.SubType_Ticker,
+            self.BROKER: Qot_Common_pb2.SubType_Broker,
+            self.RT_DATA: Qot_Common_pb2.SubType_RT,
+            self.K_DAY: Qot_Common_pb2.SubType_KL_Day,
+            self.K_1M: Qot_Common_pb2.SubType_KL_1Min,
+            self.K_3M: Qot_Common_pb2.SubType_KL_3Min,
+            self.K_5M: Qot_Common_pb2.SubType_KL_5Min,
+            self.K_15M: Qot_Common_pb2.SubType_KL_15Min,
+            self.K_30M: Qot_Common_pb2.SubType_KL_30Min,
+            self.K_60M: Qot_Common_pb2.SubType_KL_60Min,
+            self.K_WEEK: Qot_Common_pb2.SubType_KL_Week,
+            self.K_MON: Qot_Common_pb2.SubType_KL_Month,
+            self.K_QUARTER: Qot_Common_pb2.SubType_KL_Qurater,
+            self.K_YEAR: Qot_Common_pb2.SubType_KL_Year,
+        }
+
 
 KLINE_SUBTYPE_LIST = [SubType.K_DAY, SubType.K_MON, SubType.K_WEEK,
                       SubType.K_1M, SubType.K_3M, SubType.K_5M, SubType.K_15M,
                       SubType.K_30M, SubType.K_60M, SubType.K_QUARTER, SubType.K_YEAR,
                       ]
-
-
-SUBTYPE_MAP = {
-    SubType.QUOTE: 1,
-    SubType.ORDER_BOOK: 2,
-    SubType.TICKER: 4,
-    SubType.RT_DATA: 5,
-    SubType.K_DAY: 6,
-    SubType.K_5M: 7,
-    SubType.K_15M: 8,
-    SubType.K_30M: 9,
-    SubType.K_60M: 10,
-    SubType.K_1M: 11,
-    SubType.K_WEEK: 12,
-    SubType.K_MON: 13,
-    SubType.BROKER: 14,
-    SubType.K_QUARTER: 15,
-    SubType.K_YEAR: 16,
-    SubType.K_3M: 17,
-    # SubType.ORDER_DETAIL: 18
-}
 
 # k线类型
 
@@ -966,16 +965,12 @@ TICKER_TYPE_MAP = {
 
 # noinspection PyPep8Naming
 class QUOTE(object):
-    REV_MKT_MAP = {MKT_MAP[x]: x for x in MKT_MAP}
     REV_PLATE_CLASS_MAP = {PLATE_CLASS_MAP[x]: x for x in PLATE_CLASS_MAP}
-    REV_SEC_TYPE_MAP = {SEC_TYPE_MAP[x]: x for x in SEC_TYPE_MAP}
-    REV_SUBTYPE_MAP = {SUBTYPE_MAP[x]: x for x in SUBTYPE_MAP}
     REV_KTYPE_MAP = {KTYPE_MAP[x]: x for x in KTYPE_MAP}
     REV_AUTYPE_MAP = {AUTYPE_MAP[x]: x for x in AUTYPE_MAP}
     REV_KLDATA_STATUS_MAP = {
         KLDATA_STATUS_MAP[x]: x for x in KLDATA_STATUS_MAP}
     REV_TICKER_DIRECTION = {TICKER_DIRECTION[x]: x for x in TICKER_DIRECTION}
-    REV_MARKET_STATE_MAP = {MARKET_STATE_MAP[x]: x for x in MARKET_STATE_MAP}
     REV_DARK_STATUS_MAP = {DARK_STATUS_MAP[x]: x for x in DARK_STATUS_MAP}
     REV_PUSH_DATA_TYPE_MAP = {
         PUSH_DATA_TYPE_MAP[x]: x for x in PUSH_DATA_TYPE_MAP}

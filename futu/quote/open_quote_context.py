@@ -250,9 +250,9 @@ class OpenQuoteContext(OpenContextBase):
             listing_date        str            上市时间
             stock_id            int            股票id
             delisting           bool           是否退市
-			index_option_type   str            指数期权类型（期权特有字段）
-			main_contract       bool           是否主连合约（期货特有字段）
-			last_trade_time     string         最后交易时间（期货特有字段，非主连期货合约才有值）
+            index_option_type   str            指数期权类型（期权特有字段）
+            main_contract       bool           是否主连合约（期货特有字段）
+            last_trade_time     string         最后交易时间（期货特有字段，非主连期货合约才有值）
             =================   ===========   ==========================================================================
 
         :example:
@@ -632,17 +632,17 @@ class OpenQuoteContext(OpenContextBase):
                 wrt_inline_price_status    str            界内界外，仅界内证支持该字段，参见PriceType
                 lot_size                   int            每手股数
                 price_spread               float          当前摆盘价差亦即摆盘数据的买档或卖档的相邻档位的报价差
-                ask_price	               float	      卖价
-                bid_price	               float	      买价
-                ask_vol	                   float	      卖量
-                bid_vol	                   float	      买量
-                enable_margin	           bool	          是否可融资，如果为true，后两个字段才有意义
-                mortgage_ratio	           float	      股票抵押率（该字段为百分比字段，默认不展示%）
-                long_margin_initial_ratio  float	      融资初始保证金率（该字段为百分比字段，默认不展示%）
-                enable_short_sell	       bool	          是否可卖空，如果为true，后三个字段才有意义
-                short_sell_rate	           float	      卖空参考利率（该字段为百分比字段，默认不展示%）
-                short_available_volume	   int	          剩余可卖空数量
-                short_margin_initial_ratio float	      卖空（融券）初始保证金率（该字段为百分比字段，默认不展示%
+                ask_price                   float          卖价
+                bid_price                   float          买价
+                ask_vol                       float          卖量
+                bid_vol                       float          买量
+                enable_margin               bool              是否可融资，如果为true，后两个字段才有意义
+                mortgage_ratio               float          股票抵押率（该字段为百分比字段，默认不展示%）
+                long_margin_initial_ratio  float          融资初始保证金率（该字段为百分比字段，默认不展示%）
+                enable_short_sell           bool              是否可卖空，如果为true，后三个字段才有意义
+                short_sell_rate               float          卖空参考利率（该字段为百分比字段，默认不展示%）
+                short_available_volume       int              剩余可卖空数量
+                short_margin_initial_ratio float          卖空（融券）初始保证金率（该字段为百分比字段，默认不展示%
                 amplitude                  float          振幅（该字段为百分比字段，默认不展示%）
                 avg_price                  float          平均价
                 bid_ask_ratio              float          委比（该字段为百分比字段，默认不展示%）
@@ -920,7 +920,7 @@ class OpenQuoteContext(OpenContextBase):
                 error_str = ERROR_STR_PREFIX + "the type of market param is wrong"
                 return RET_ERROR, error_str
 
-        if market not in MKT_MAP:
+        if not Market.if_has_key(market):
             error_str = ERROR_STR_PREFIX + "the value of market param is wrong "
             return RET_ERROR, error_str
 
@@ -971,7 +971,7 @@ class OpenQuoteContext(OpenContextBase):
                 list_time               str            上市时间（美股默认是美东时间，港股A股默认是北京时间）
                 stock_id                int            股票id
                 main_contract           bool           是否主连合约（期货特有字段）
-			    last_trade_time         string         最后交易时间（期货特有字段，非主连期货合约才有值）
+                last_trade_time         string         最后交易时间（期货特有字段，非主连期货合约才有值）
                 =====================   ===========   ==============================================================
         """
         if plate_code is None or is_str(plate_code) is False:
@@ -1083,10 +1083,9 @@ class OpenQuoteContext(OpenContextBase):
             return RET_ERROR, msg, code_list, subtype_list
 
         for subtype in subtype_list:
-            if subtype not in SUBTYPE_MAP:
-                subtype_str = ','.join([x for x in SUBTYPE_MAP])
+            if not SubType.if_has_key(subtype):
                 msg = ERROR_STR_PREFIX + 'subtype is %s , which is wrong. (%s)' % (
-                    subtype, subtype_str)
+                    subtype, SubType.get_all_keys())
                 return RET_ERROR, msg, code_list, subtype_list
 
         for code in code_list:
@@ -1366,7 +1365,7 @@ class OpenQuoteContext(OpenContextBase):
                 listing_date            str            上市日期 (yyyy-MM-dd)
                 price_spread            float          当前价差，亦即摆盘数据的买档或卖档的相邻档位的报价差
                 dark_status             str            暗盘交易状态，见DarkStatus
-				sec_status              str            股票状态，见SecurityStatus
+                sec_status              str            股票状态，见SecurityStatus
                 strike_price            float          行权价
                 contract_size           int            每份合约数
                 open_interest           int            未平仓合约数
@@ -1610,7 +1609,7 @@ class OpenQuoteContext(OpenContextBase):
                 wrt_code                    str           所属正股
                 future_valid                bool          是否是期货，如果为True，下面future开头的字段有效
                 future_main_contract        bool          是否主连合约（期货特有字段）
-			    future_last_trade_time      string        最后交易时间（期货特有字段，非主连期货合约才有值）
+                future_last_trade_time      string        最后交易时间（期货特有字段，非主连期货合约才有值）
                 =======================   ===========   ==============================================================================
 
         """
@@ -2256,7 +2255,7 @@ class OpenQuoteContext(OpenContextBase):
         Qot_StockFilter
         :param plate_code: 板块代码, string, 例如，”SH.BK0001”，”SH.BK0002”，先利用获取子版块列表函数获取子版块代码
         """
-        if market not in MKT_MAP:
+        if not Market.if_has_key(market):
             error_str = ERROR_STR_PREFIX + "the value of market param is wrong "
             return RET_ERROR, error_str
 
@@ -2388,6 +2387,10 @@ class OpenQuoteContext(OpenContextBase):
         :param market: str, see Market
         :return:
         """
+        if not Market.if_has_key(market):
+            error_str = ERROR_STR_PREFIX + "the value of market param is wrong "
+            return RET_ERROR, error_str
+
         query_processor = self._get_sync_query_processor(
             GetIpoListQuery.pack_req,
             GetIpoListQuery.unpack,
@@ -2574,7 +2577,7 @@ class OpenQuoteContext(OpenContextBase):
             error_str = ERROR_STR_PREFIX + 'the type of code param is wrong'
             return RET_ERROR, error_str
 
-        if code is None and market is not None and market not in MKT_MAP:
+        if code is None and market is not None and not Market.if_has_key(market):
             error_str = ERROR_STR_PREFIX + "the type of param in market is wrong"
             return RET_ERROR, error_str
 

@@ -210,9 +210,10 @@ class TradeDayQuery:
     def pack_req(cls, market, conn_id, start_date=None, end_date=None):
 
         # '''Parameter check'''
-        if market not in MKT_MAP:
+        r, mkt = Market.to_number(market)
+        if not r:
             error_str = ERROR_STR_PREFIX + " market is %s, which is not valid. (%s)" \
-                                           % (market, ",".join([x for x in MKT_MAP]))
+                                           % (market, Market.get_all_keys())
             return RET_ERROR, error_str, None
 
         if start_date is None:
@@ -236,7 +237,6 @@ class TradeDayQuery:
             end_date = msg
 
         # pack to json
-        mkt = MKT_MAP[market]
         from futu.common.pb.Qot_GetTradeDate_pb2 import Request
         req = Request()
         req.c2s.market = mkt
@@ -343,20 +343,21 @@ class StockBasicInfoQuery:
     @classmethod
     def pack_req(cls, market, conn_id, stock_type='STOCK', code_list=None):
 
-        if market not in MKT_MAP:
+        r, mkt = Market.to_number(market)
+        if not r:
             error_str = ERROR_STR_PREFIX + " market is %s, which is not valid. (%s)" \
-                                           % (market, ",".join([x for x in MKT_MAP]))
+                                           % (market, Market.get_all_keys())
             return RET_ERROR, error_str, None
 
-        if stock_type not in SEC_TYPE_MAP:
+        if not SecurityType.if_has_key(stock_type):
             error_str = ERROR_STR_PREFIX + " stock_type is %s, which is not valid. (%s)" \
-                                           % (stock_type, ",".join([x for x in SEC_TYPE_MAP]))
+                                           % (stock_type, SecurityType.get_all_keys())
             return RET_ERROR, error_str, None
 
         from futu.common.pb.Qot_GetStaticInfo_pb2 import Request
         req = Request()
-        req.c2s.market = MKT_MAP[market]
-        req.c2s.secType = SEC_TYPE_MAP[stock_type]
+        req.c2s.market = mkt
+        r, req.c2s.secType = SecurityType.to_number(stock_type)
         if code_list is not None:
             for code in code_list:
                 sec = req.c2s.securityList.add()
@@ -384,9 +385,7 @@ class StockBasicInfoQuery:
             "stock_id": record.basic.id,
             "name": record.basic.name,
             "lot_size": record.basic.lotSize,
-            "stock_type": QUOTE.REV_SEC_TYPE_MAP[record.basic.secType]
-            if record.basic.secType in QUOTE.REV_SEC_TYPE_MAP else SecurityType.NONE,
-
+            "stock_type": SecurityType.to_string2(record.basic.secType),
             "stock_child_type": WrtType.to_string2(record.warrantExData.type),
             "stock_owner":merge_qot_mkt_stock_str(
                 record.warrantExData.owner.market,
@@ -555,7 +554,7 @@ class MarketSnapshotQuery:
                 snapshot_tmp["dividend_lfy_ratio"] = record.equityExData.dividendLFYRatio
 
             snapshot_tmp['wrt_valid'] = False
-            if record.basic.type == SEC_TYPE_MAP[SecurityType.WARRANT]:
+            if SecurityType.to_string2(record.basic.type) == SecurityType.WARRANT:
                 snapshot_tmp['wrt_valid'] = True
                 snapshot_tmp['wrt_conversion_ratio'] = record.warrantExData.conversionRate
                 snapshot_tmp['wrt_type'] = WrtType.to_string2(
@@ -595,7 +594,7 @@ class MarketSnapshotQuery:
                 snapshot_tmp["wrt_issuer_code"] = record.warrantExData.issuerCode
 
             snapshot_tmp['option_valid'] = False
-            if record.basic.type == SEC_TYPE_MAP[SecurityType.DRVT]:
+            if SecurityType.to_string2(record.basic.type) == SecurityType.DRVT:
                 snapshot_tmp['option_valid'] = True
                 snapshot_tmp['option_type'] = QUOTE.REV_OPTION_TYPE_CLASS_MAP[record.optionExData.type]
                 snapshot_tmp['stock_owner'] = merge_qot_mkt_stock_str(
@@ -639,7 +638,7 @@ class MarketSnapshotQuery:
                 snapshot_tmp["plate_equal_count"] = record.plateExData.equalCount
 
             snapshot_tmp['future_valid'] = False
-            if record.basic.type == SEC_TYPE_MAP[SecurityType.FUTURE]:
+            if SecurityType.to_string2(record.basic.type) == SecurityType.FUTURE:
                 snapshot_tmp['future_valid'] = True
                 snapshot_tmp['future_last_settle_price'] = record.futureExData.lastSettlePrice
                 snapshot_tmp['future_position'] = record.futureExData.position
@@ -715,7 +714,7 @@ class SubplateQuery:
 
         from futu.common.pb.Qot_GetPlateSet_pb2 import Request
         req = Request()
-        req.c2s.market = MKT_MAP[market]
+        r, req.c2s.market = Market.to_number(market)
         req.c2s.plateSetType = PLATE_CLASS_MAP[plate_class]
 
         return pack_pb_req(req, ProtoId.Qot_GetPlateSet, conn_id)
@@ -757,11 +756,6 @@ class PlateStockQuery:
             return RET_ERROR, error_str, None
 
         market, code = content
-        if market not in QUOTE.REV_MKT_MAP:
-            error_str = ERROR_STR_PREFIX + "market is %s, which is not valid. (%s)" \
-                                           % (market, ",".join([x for x in MKT_MAP]))
-            return RET_ERROR, error_str, None
-
         r, v = SortField.to_number(sort_field)
         from futu.common.pb.Qot_GetPlateSecurity_pb2 import Request
         req = Request()
@@ -788,7 +782,7 @@ class PlateStockQuery:
                 record.basic.security.market, record.basic.security.code)
             stock_tmp['stock_name'] = record.basic.name
             stock_tmp['list_time'] = record.basic.listTime
-            stock_tmp['stock_type'] = QUOTE.REV_SEC_TYPE_MAP[record.basic.secType] if record.basic.secType in QUOTE.REV_SEC_TYPE_MAP else SecurityType.NONE
+            stock_tmp['stock_type'] = SecurityType.to_string2(record.basic.secType)
             stock_tmp['main_contract'] = record.futureExData.isMainContract
             stock_tmp['last_trade_time'] = record.futureExData.lastTradeTime
             stock_list.append(stock_tmp)
@@ -988,7 +982,8 @@ class SubscriptionQuery:
                 stock_inst.code = stock_code
                 stock_inst.market = market_code
             for subtype in subtype_list:
-                req.c2s.subTypeList.append(SUBTYPE_MAP[subtype])
+                r, v = SubType.to_number(subtype)
+                req.c2s.subTypeList.append(v)
             req.c2s.isSubOrUnSub = is_sub
             req.c2s.isFirstPush = is_first_push
             req.c2s.isRegOrUnRegPush = reg_or_unreg_push
@@ -1060,11 +1055,12 @@ class SubscriptionQuery:
             conn_sub_info_tmp['sub_list'] = []
             for sub_info in conn_sub_info.subInfoList:
                 sub_info_tmp = {}
-                if sub_info.subType not in QUOTE.REV_SUBTYPE_MAP:
+                r, str_sub_type = SubType.to_string(sub_info.subType)
+                if not r:
                     logger.error("error subtype:{}".format(sub_info.subType))
                     continue
 
-                sub_info_tmp['subtype'] = QUOTE.REV_SUBTYPE_MAP[sub_info.subType]
+                sub_info_tmp['subtype'] = str_sub_type
                 sub_info_tmp['code_list'] = []
                 for stock in sub_info.securityList:
                     sub_info_tmp['code_list'].append(
@@ -1093,7 +1089,8 @@ class SubscriptionQuery:
             stock_inst.code = stock_code
             stock_inst.market = market_code
         for subtype in subtype_list:
-            req.c2s.subTypeList.append(SUBTYPE_MAP[subtype])
+            r, v = SubType.to_number(subtype)
+            req.c2s.subTypeList.append(v)
         req.c2s.isRegOrUnReg = is_push
         req.c2s.isFirstPush = True if is_first_push else False
 
@@ -1512,19 +1509,12 @@ class GlobalStateQuery:
                 program_status_desc = state.programStatus.strExtDesc
 
         state_dict = {
-            'market_sz': QUOTE.REV_MARKET_STATE_MAP[state.marketSZ]
-            if state.marketSZ in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
-            'market_us': QUOTE.REV_MARKET_STATE_MAP[state.marketUS]
-            if state.marketUS in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
-            'market_sh': QUOTE.REV_MARKET_STATE_MAP[state.marketSH]
-            if state.marketSH in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
-            'market_hk': QUOTE.REV_MARKET_STATE_MAP[state.marketHK]
-            if state.marketHK in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
-            'market_hkfuture': QUOTE.REV_MARKET_STATE_MAP[state.marketHKFuture]
-            if state.marketHKFuture in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
-            'market_usfuture': QUOTE.REV_MARKET_STATE_MAP[state.marketUSFuture]
-            if state.marketUSFuture in QUOTE.REV_MARKET_STATE_MAP else MarketState.NONE,
-
+            'market_sz': MarketState.to_string2(state.marketSZ),
+            'market_us': MarketState.to_string2(state.marketUS),
+            'market_sh': MarketState.to_string2(state.marketSH),
+            'market_hk': MarketState.to_string2(state.marketHK),
+            'market_hkfuture': MarketState.to_string2(state.marketHKFuture),
+            'market_usfuture': MarketState.to_string2(state.marketUSFuture),
             'server_ver': str(state.serverVer),
             'trd_logined': state.trdLogined,
             'timestamp': str(state.time),
@@ -1647,7 +1637,7 @@ class StockReferenceList:
                 info.basic.security.market, info.basic.security.code)
             # item['stock_id'] = info.basic.id
             data['lot_size'] = info.basic.lotSize
-            data['stock_type'] = QUOTE.REV_SEC_TYPE_MAP[info.basic.secType] if info.basic.secType in QUOTE.REV_SEC_TYPE_MAP else SecurityType.NONE
+            data['stock_type'] = SecurityType.to_string2(record.basic.secType)
             data['stock_name'] = info.basic.name
             data['list_time'] = info.basic.listTime
             if info.HasField('warrantExData'):
@@ -1939,8 +1929,7 @@ class OptionChain:
                         "stock_id": record.basic.id,
                         "name": record.basic.name,
                         "lot_size": record.basic.lotSize,
-                        "stock_type": QUOTE.REV_SEC_TYPE_MAP[record.basic.secType]
-                        if record.basic.secType in QUOTE.REV_SEC_TYPE_MAP else SecurityType.NONE,
+                        "stock_type": SecurityType.to_string2(record.basic.secType),
                         "option_type": QUOTE.REV_OPTION_TYPE_CLASS_MAP[record.optionExData.type]
                         if record.HasField('optionExData') else "",
                         "stock_owner": merge_qot_mkt_stock_str(int(record.optionExData.owner.market), record.optionExData.owner.code)
@@ -2089,11 +2078,6 @@ class RequestRehab:
             error_str = ERROR_STR_PREFIX + msg
             return RET_ERROR, error_str, None
         market, code = content
-
-        if market not in QUOTE.REV_MKT_MAP:
-            error_str = ERROR_STR_PREFIX + "market is %s, which is not valid. (%s)" \
-                                           % (market, ",".join([x for x in MKT_MAP]))
-            return RET_ERROR, error_str, None
 
         from futu.common.pb.Qot_RequestRehab_pb2 import Request
         req = Request()
@@ -2539,9 +2523,7 @@ class GetUserSecurityQuery:
             "stock_id": record.basic.id,
             "name": record.basic.name,
             "lot_size": record.basic.lotSize,
-            "stock_type": QUOTE.REV_SEC_TYPE_MAP[record.basic.secType]
-            if record.basic.secType in QUOTE.REV_SEC_TYPE_MAP else SecurityType.NONE,
-
+            "stock_type": SecurityType.to_string2(record.basic.secType),
             "stock_child_type": WrtType.to_string2(record.warrantExData.type),
             "stock_owner": merge_qot_mkt_stock_str(
                 record.warrantExData.owner.market,
@@ -2582,7 +2564,7 @@ class StockFilterQuery:
         req.c2s.num = num
 
         """拆解market"""
-        req.c2s.market = MKT_MAP[market]
+        r, req.c2s.market = Market.to_number(market)
 
         """拆解plate_code"""
         if plate_code is not None:
@@ -2727,10 +2709,7 @@ class GetIpoListQuery:
         # 开始组包
         from futu.common.pb.Qot_GetIpoList_pb2 import Request
         req = Request()
-        try:
-            req.c2s.market = MKT_MAP[market]
-        except KeyError:
-            return RET_ERROR, 'Invalid value: market', None
+        r, req.c2s.market = Market.to_number(market)
 
         return pack_pb_req(req, ProtoId.Qot_GetIpoList, conn_id)
 
@@ -2988,7 +2967,7 @@ class GetPriceReminderQuery:
             req.c2s.security.market = market_code
             req.c2s.security.code = stock_code
         elif market is not None and market is not Market.NONE:
-            req.c2s.market = MKT_MAP[market]
+            r, req.c2s.market = Market.to_number(market)
         return pack_pb_req(req, ProtoId.Qot_GetPriceReminder, conn_id)
 
     @classmethod

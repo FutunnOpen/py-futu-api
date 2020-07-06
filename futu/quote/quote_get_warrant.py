@@ -173,7 +173,7 @@ class Request(object):
             """引伸波幅过滤起点,仅认购认沽支持该字段过滤"""
             pb.c2s.impliedMin = self.implied_min
         if self.implied_max is not None:
-            """引伸波幅过滤终点,仅认购认沽支持该字段过滤	"""
+            """引伸波幅过滤终点,仅认购认沽支持该字段过滤"""
             pb.c2s.impliedMax = self.implied_max
         if self.recovery_price_min is not None:
             """回收价过滤起点,仅牛熊证支持该字段过滤"""
@@ -285,7 +285,7 @@ class Response(object):
                 """杠杠比率"""
                 warrant["leverage"] = item.leverage
             if item.HasField("ipop"):
-                """价内/价外%	"""
+                """价内/价外%"""
                 warrant["ipop"] = item.ipop
             if item.HasField("priceRecoveryRatio"):
                 """正股距回收价%，仅牛熊证支持该字段"""
