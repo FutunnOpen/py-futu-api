@@ -191,7 +191,7 @@ class OpenTradeContextBase(OpenContextBase):
     def _check_order_status(self, status_filter_list):
         unique_and_normalize_list(status_filter_list)
         for status in status_filter_list:
-            if status not in ORDER_STATUS_MAP:
+            if not OrderStatus.if_has_key(status):
                 return RET_ERROR, ERROR_STR_PREFIX + "the type of status_filter_list param is wrong "
         return RET_OK, "",
 
@@ -525,7 +525,7 @@ class OpenTradeContextBase(OpenContextBase):
         if not order_id:
             return RET_ERROR, ERROR_STR_PREFIX + "the type of order_id param is wrong "
 
-        if modify_order_op not in MODIFY_ORDER_OP_MAP:
+        if not ModifyOrderOp.if_has_key(modify_order_op):
             return RET_ERROR, ERROR_STR_PREFIX + "the type of modify_order_op param is wrong "
 
         query_processor = self._get_sync_query_processor(

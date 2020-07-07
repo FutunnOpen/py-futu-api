@@ -342,23 +342,23 @@ class StockBasicInfoQuery:
 
     @classmethod
     def pack_req(cls, market, conn_id, stock_type='STOCK', code_list=None):
+        query_code = code_list is not None and len(code_list) > 0
+        if not query_code:
+            if not Market.if_has_key(market):
+                error_str = ERROR_STR_PREFIX + " market is %s, which is not valid. (%s)" \
+                                               % (market, Market.get_all_keys())
+                return RET_ERROR, error_str, None
 
-        r, mkt = Market.to_number(market)
-        if not r:
-            error_str = ERROR_STR_PREFIX + " market is %s, which is not valid. (%s)" \
-                                           % (market, Market.get_all_keys())
-            return RET_ERROR, error_str, None
-
-        if not SecurityType.if_has_key(stock_type):
-            error_str = ERROR_STR_PREFIX + " stock_type is %s, which is not valid. (%s)" \
-                                           % (stock_type, SecurityType.get_all_keys())
-            return RET_ERROR, error_str, None
+            if not SecurityType.if_has_key(stock_type) and code_list is None:
+                error_str = ERROR_STR_PREFIX + " stock_type is %s, which is not valid. (%s)" \
+                                               % (stock_type, SecurityType.get_all_keys())
+                return RET_ERROR, error_str, None
 
         from futu.common.pb.Qot_GetStaticInfo_pb2 import Request
         req = Request()
-        req.c2s.market = mkt
-        r, req.c2s.secType = SecurityType.to_number(stock_type)
-        if code_list is not None:
+        if query_code:
+            req.c2s.market = 0
+            req.c2s.secType = 0
             for code in code_list:
                 sec = req.c2s.securityList.add()
                 ret, data = split_stock_str(code)
@@ -366,6 +366,9 @@ class StockBasicInfoQuery:
                     sec.market, sec.code = data
                 else:
                     return RET_ERROR, data, None
+        else:
+            _, req.c2s.market = Market.to_number(market)
+            _, req.c2s.secType = SecurityType.to_number(stock_type)
 
         return pack_pb_req(req, ProtoId.Qot_GetStaticInfo, conn_id)
 
@@ -395,8 +398,7 @@ class StockBasicInfoQuery:
                     record.optionExData.owner.code) if record.HasField('optionExData')
                 else ""),
             "listing_date": "N/A" if record.HasField('optionExData') else record.basic.listTime,
-            "option_type": QUOTE.REV_OPTION_TYPE_CLASS_MAP[record.optionExData.type]
-            if record.HasField('optionExData') else "",
+            "option_type": OptionType.to_string2(record.optionExData.type) if record.HasField('optionExData') else "",
             "strike_time": record.optionExData.strikeTime,
             "strike_price": record.optionExData.strikePrice if record.HasField('optionExData') else NoneDataType,
             "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
@@ -596,7 +598,7 @@ class MarketSnapshotQuery:
             snapshot_tmp['option_valid'] = False
             if SecurityType.to_string2(record.basic.type) == SecurityType.DRVT:
                 snapshot_tmp['option_valid'] = True
-                snapshot_tmp['option_type'] = QUOTE.REV_OPTION_TYPE_CLASS_MAP[record.optionExData.type]
+                snapshot_tmp['option_type'] = OptionType.to_string2(record.optionExData.type)
                 snapshot_tmp['stock_owner'] = merge_qot_mkt_stock_str(
                     record.optionExData.owner.market, record.optionExData.owner.code)
                 snapshot_tmp['strike_time'] = record.optionExData.strikeTime
@@ -714,8 +716,8 @@ class SubplateQuery:
 
         from futu.common.pb.Qot_GetPlateSet_pb2 import Request
         req = Request()
-        r, req.c2s.market = Market.to_number(market)
-        req.c2s.plateSetType = PLATE_CLASS_MAP[plate_class]
+        _, req.c2s.market = Market.to_number(market)
+        _, req.c2s.plateSetType = Plate.to_number(plate_class)
 
         return pack_pb_req(req, ProtoId.Qot_GetPlateSet, conn_id)
 
@@ -865,21 +867,21 @@ class RequestHistoryKlineQuery:
         market_code, stock_code = content
 
         # check k line type
-        if ktype not in KTYPE_MAP:
+        if not KLType.if_has_key(ktype):
             error_str = ERROR_STR_PREFIX + "ktype is %s, which is not valid. (%s)" \
-                % (ktype, ", ".join([x for x in KTYPE_MAP]))
+                % (ktype, KLType.get_all_keys())
             return RET_ERROR, error_str, None
 
-        if autype not in AUTYPE_MAP:
+        if not AuType.if_has_key(autype):
             error_str = ERROR_STR_PREFIX + "autype is %s, which is not valid. (%s)" \
-                % (autype, ", ".join([str(x) for x in AUTYPE_MAP]))
+                % (autype, AuType.get_all_keys())
             return RET_ERROR, error_str, None
 
         from futu.common.pb.Qot_RequestHistoryKL_pb2 import Request
 
         req = Request()
-        req.c2s.rehabType = AUTYPE_MAP[autype]
-        req.c2s.klType = KTYPE_MAP[ktype]
+        _, req.c2s.rehabType = AuType.to_number(autype)
+        _, req.c2s.klType = KLType.to_number(ktype)
         req.c2s.security.market = market_code
         req.c2s.security.code = stock_code
         if start_date:
@@ -1089,7 +1091,7 @@ class SubscriptionQuery:
             stock_inst.code = stock_code
             stock_inst.market = market_code
         for subtype in subtype_list:
-            r, v = SubType.to_number(subtype)
+            _, v = SubType.to_number(subtype)
             req.c2s.subTypeList.append(v)
         req.c2s.isRegOrUnReg = is_push
         req.c2s.isFirstPush = True if is_first_push else False
@@ -1124,8 +1126,7 @@ def parse_pb_BasicQot(pb):
         'suspension': pb.isSuspended,
         'listing_date': "N/A" if pb.HasField('optionExData') else  pb.listTime,
         'price_spread': pb.priceSpread,
-        'dark_status': QUOTE.REV_DARK_STATUS_MAP[pb.darkStatus] if pb.HasField(
-            'darkStatus') else DarkStatus.NONE,
+        'dark_status': DarkStatus.to_string2(pb.darkStatus),
         'sec_status': SecurityStatus.to_string2(pb.secStatus) if pb.HasField(
             'secStatus') else SecurityStatus.NONE,
     }
@@ -1250,11 +1251,11 @@ class TickerQuery:
             "price": record.price,
             "volume": record.volume,
             "turnover": record.turnover,
-            "ticker_direction": str(QUOTE.REV_TICKER_DIRECTION[record.dir]) if record.dir in QUOTE.REV_TICKER_DIRECTION else "",
+            "ticker_direction": TickerDirect.to_string2(record.dir) if TickerDirect.if_has_key(record.dir) else "",
             "sequence": record.sequence,
             "recv_timestamp":record.recvTime,
-            "type": QUOTE.REV_TICKER_TYPE_MAP[record.type] if record.type in QUOTE.REV_TICKER_TYPE_MAP else TickerType.UNKNOWN,
-            "push_data_type":QUOTE.REV_PUSH_DATA_TYPE_MAP[record.pushDataType] if record.pushDataType in QUOTE.REV_PUSH_DATA_TYPE_MAP else PushDataType.NONE,
+            "type": TickerType.to_string2(record.type),
+            "push_data_type": PushDataType.to_string2(record.pushDataType),
         } for record in raw_ticker_list]
         return RET_OK, "", ticker_list
 
@@ -1275,14 +1276,14 @@ class CurKlineQuery:
 
         market_code, stock_code = content
 
-        if ktype not in KTYPE_MAP:
+        if not KLType.if_has_key(ktype):
             error_str = ERROR_STR_PREFIX + "ktype is %s, which is not valid. (%s)" \
-                                           % (ktype, ", ".join([x for x in KTYPE_MAP]))
+                                           % (ktype, KLType.get_all_keys())
             return RET_ERROR, error_str, None
 
-        if autype not in AUTYPE_MAP:
+        if not AuType.if_has_key(autype):
             error_str = ERROR_STR_PREFIX + "autype is %s, which is not valid. (%s)" \
-                                           % (autype, ", ".join([str(x) for x in AUTYPE_MAP]))
+                                           % (autype, AuType.get_all_keys())
             return RET_ERROR, error_str, None
 
         if isinstance(num, int) is False:
@@ -1297,9 +1298,9 @@ class CurKlineQuery:
         req = Request()
         req.c2s.security.market = market_code
         req.c2s.security.code = stock_code
-        req.c2s.rehabType = AUTYPE_MAP[autype]
+        _, req.c2s.rehabType = AuType.to_number(autype)
         req.c2s.reqNum = num
-        req.c2s.klType = KTYPE_MAP[ktype]
+        _, req.c2s.klType = KLType.to_number(ktype)
 
         return pack_pb_req(req, ProtoId.Qot_GetKL, conn_id)
 
@@ -1341,11 +1342,8 @@ class CurKlinePush:
         if rsp_pb.retType != RET_OK:
             return RET_ERROR, rsp_pb.retMsg, []
 
-        if rsp_pb.s2c.rehabType != AUTYPE_MAP[AuType.QFQ]:
-            return RET_ERROR, "kline push only support AuType.QFQ", None
-
-        kl_type = QUOTE.REV_KTYPE_MAP[rsp_pb.s2c.klType] if rsp_pb.s2c.klType in QUOTE.REV_KTYPE_MAP else None
-        if not kl_type:
+        r, kl_type = KLType.to_string(rsp_pb.s2c.klType);
+        if not r:
             return RET_ERROR, "kline push error kltype", None
 
         stock_code = merge_qot_mkt_stock_str(rsp_pb.s2c.security.market,
@@ -1562,13 +1560,10 @@ class SysNotifyPush:
         pb_type = rsp_pb.s2c.type
         sub_type = None
         data = None
-        notify_type = SysNoitfy.REV_SYS_EVENT_TYPE_MAP[
-            pb_type] if pb_type in SysNoitfy.REV_SYS_EVENT_TYPE_MAP else SysNotifyType.NONE
+        notify_type = SysNotifyType.to_string2(pb_type)
         if notify_type == SysNotifyType.GTW_EVENT:
             if rsp_pb.s2c.HasField('event'):
-                pb_event = rsp_pb.s2c.event.eventType
-                sub_type = SysNoitfy.REV_GTW_EVENT_MAP[
-                    pb_event] if pb_event in SysNoitfy.REV_GTW_EVENT_MAP else GtwEventType.NONE
+                sub_type = GtwEventType.to_string2(rsp_pb.s2c.event.eventType)
                 data = rsp_pb.s2c.event.desc
         elif notify_type == SysNotifyType.PROGRAM_STATUS:
             if rsp_pb.s2c.HasField('programStatus'):
@@ -1618,7 +1613,7 @@ class StockReferenceList:
         req = Request()
         req.c2s.security.market = content[0]
         req.c2s.security.code = content[1]
-        req.c2s.referenceType = STOCK_REFERENCE_TYPE_MAP[ref_type]
+        _, req.c2s.referenceType = SecurityReferenceType.to_number(ref_type)
 
         return pack_pb_req(req, ProtoId.Qot_GetReference, conn_id)
 
@@ -1637,7 +1632,7 @@ class StockReferenceList:
                 info.basic.security.market, info.basic.security.code)
             # item['stock_id'] = info.basic.id
             data['lot_size'] = info.basic.lotSize
-            data['stock_type'] = SecurityType.to_string2(record.basic.secType)
+            data['stock_type'] = SecurityType.to_string2(info.basic.secType)
             data['stock_name'] = info.basic.name
             data['list_time'] = info.basic.listTime
             if info.HasField('warrantExData'):
@@ -1709,7 +1704,7 @@ class OwnerPlateQuery:
                     'code': merge_qot_mkt_stock_str(record.security.market, record.security.code),
                     'plate_code': merge_qot_mkt_stock_str(plate_info.plate.market, plate_info.plate.code),
                     'plate_name': str(plate_info.name),
-                    'plate_type': PLATE_TYPE_ID_TO_NAME[plate_info.plateType]
+                    'plate_type': Plate.to_string2(plate_info.plateType)
                 }
                 data_list.append(quote_list)
 
@@ -1840,8 +1835,13 @@ class OptionChain:
                 return ret, msg, None
             end_date = msg
 
-        option_cond_type = OPTION_COND_TYPE_CLASS_MAP[option_cond_type]
-        option_type = OPTION_TYPE_CLASS_MAP[option_type]
+        r, option_cond_type = OptionCondType.to_number(option_cond_type)
+        if r is False:
+            option_cond_type = None
+
+        r, option_type = OptionType.to_number(option_type)
+        if r is False:
+            option_type = None
 
         r, index_option_type = IndexOptionType.to_number(index_option_type)
         if r is False:
@@ -1930,8 +1930,7 @@ class OptionChain:
                         "name": record.basic.name,
                         "lot_size": record.basic.lotSize,
                         "stock_type": SecurityType.to_string2(record.basic.secType),
-                        "option_type": QUOTE.REV_OPTION_TYPE_CLASS_MAP[record.optionExData.type]
-                        if record.HasField('optionExData') else "",
+                        "option_type": OptionType.to_string2(record.optionExData.type) if record.HasField('optionExData') else "",
                         "stock_owner": merge_qot_mkt_stock_str(int(record.optionExData.owner.market), record.optionExData.owner.code)
                         if record.HasField('optionExData') else "",
                         "strike_time": record.optionExData.strikeTime,
@@ -2533,8 +2532,7 @@ class GetUserSecurityQuery:
                     record.optionExData.owner.code) if record.HasField('optionExData')
                 else ""),
             "listing_date": "N/A" if record.HasField('optionExData') else record.basic.listTime,
-            "option_type": QUOTE.REV_OPTION_TYPE_CLASS_MAP[record.optionExData.type]
-            if record.HasField('optionExData') else "",
+            "option_type": OptionType.to_string2(record.optionExData.type) if record.HasField('optionExData') else "",
             "strike_time": record.optionExData.strikeTime,
             "strike_price": record.optionExData.strikePrice if record.HasField(
                 'optionExData') else NoneDataType,
@@ -2656,13 +2654,12 @@ class GetCodeChangeQuery:
             stock_inst.code = stock_code
 
         for type in type_list:
-            r, n = CodeChangeType.to_number(type)
+            _, n = CodeChangeType.to_number(type)
             req.c2s.typeList.append(n)
 
         for time_filter in time_filter_list:
-            r, n = TimeFilterType.to_number(time_filter.type)
             time_filter_inst = req.c2s.timeFilterList.add()
-            time_filter_inst.type = n
+            _, time_filter_inst.type = TimeFilterType.to_number(time_filter.type)
             time_filter_inst.beginTime = time_filter.begin_time
             time_filter_inst.endTime = time_filter.end_time
 
@@ -2709,7 +2706,7 @@ class GetIpoListQuery:
         # 开始组包
         from futu.common.pb.Qot_GetIpoList_pb2 import Request
         req = Request()
-        r, req.c2s.market = Market.to_number(market)
+        _, req.c2s.market = Market.to_number(market)
 
         return pack_pb_req(req, ProtoId.Qot_GetIpoList, conn_id)
 
@@ -2916,14 +2913,14 @@ class SetPriceReminderQuery:
         req = Request()
         req.c2s.security.market = market_code
         req.c2s.security.code = stock_code
-        r, req.c2s.op = SetPriceReminderOp.to_number(op)
+        _, req.c2s.op = SetPriceReminderOp.to_number(op)
 
         if key is not None:
             req.c2s.key = key
         if reminder_type is not None:
-            r, req.c2s.type = PriceReminderType.to_number(reminder_type)
+            _, req.c2s.type = PriceReminderType.to_number(reminder_type)
         if reminder_freq is not None:
-            r, req.c2s.freq = PriceReminderFreq.to_number(reminder_freq)
+            _, req.c2s.freq = PriceReminderFreq.to_number(reminder_freq)
         if value is not None:
             req.c2s.value = value
         if note is not None:
@@ -2967,7 +2964,7 @@ class GetPriceReminderQuery:
             req.c2s.security.market = market_code
             req.c2s.security.code = stock_code
         elif market is not None and market is not Market.NONE:
-            r, req.c2s.market = Market.to_number(market)
+            _, req.c2s.market = Market.to_number(market)
         return pack_pb_req(req, ProtoId.Qot_GetPriceReminder, conn_id)
 
     @classmethod
@@ -3013,7 +3010,7 @@ class GetUserSecurityGroupQuery:
         # 开始组包
         from futu.common.pb.Qot_GetUserSecurityGroup_pb2 import Request
         req = Request()
-        r, req.c2s.groupType = UserSecurityGroupType.to_number(group_type)
+        _, req.c2s.groupType = UserSecurityGroupType.to_number(group_type)
         return pack_pb_req(req, ProtoId.Qot_GetUserSecurityGroup, conn_id)
 
 

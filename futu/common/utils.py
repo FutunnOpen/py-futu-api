@@ -143,7 +143,7 @@ def split_stock_str(stock_str_param):
     for instance, US..DJI, where the dot . itself is a part of original code'''
     if 0 <= split_loc < len(stock_str) - 1 and Market.if_has_key(stock_str[0:split_loc]):
         market_str = stock_str[0:split_loc]
-        r, market_code = Market.to_number(market_str)
+        _, market_code = Market.to_number(market_str)
         partial_stock_str = stock_str[split_loc + 1:]
         return RET_OK, (market_code, partial_stock_str)
 
@@ -184,7 +184,7 @@ def merge_trd_mkt_stock_str(trd_sec_mkt, partial_stock_str):
         mkt_qot = Market.US
     else:
         raise Exception("merge_trd_mkt_stock_str: unknown trd_mkt.")
-    r, mkt = Market.to_number(mkt_qot)
+    _, mkt = Market.to_number(mkt_qot)
     return merge_qot_mkt_stock_str(mkt, partial_stock_str)
 
 

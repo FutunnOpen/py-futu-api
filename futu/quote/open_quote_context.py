@@ -265,14 +265,14 @@ class OpenQuoteContext(OpenContextBase):
             print(quote_ctx.get_stock_basicinfo(Market.US, SecurityType.DRVT, 'US.AAPL210115C185000'))
             quote_ctx.close()
         """
-        param_table = {'market': market, 'stock_type': stock_type}
-        for x in param_table:
-            param = param_table[x]
-            if param is None or is_str(param) is False:
-                error_str = ERROR_STR_PREFIX + "the type of %s param is wrong" % x
-                return RET_ERROR, error_str
-
-        if code_list is not None:
+        if code_list is None:
+            param_table = {'market': market, 'stock_type': stock_type}
+            for x in param_table:
+                param = param_table[x]
+                if param is None or is_str(param) is False:
+                    error_str = ERROR_STR_PREFIX + "the type of %s param is wrong" % x
+                    return RET_ERROR, error_str
+        else:
             if is_str(code_list):
                 code_list = code_list.split(',')
             elif isinstance(code_list, list):
@@ -305,127 +305,6 @@ class OpenQuoteContext(OpenContextBase):
         basic_info_table = pd.DataFrame(basic_info_list, columns=col_list)
 
         return RET_OK, basic_info_table
-
-    def get_multiple_history_kline(self,
-                                   codelist,
-                                   start=None,
-                                   end=None,
-                                   ktype=KLType.K_DAY,
-                                   autype=AuType.QFQ):
-        """
-        获取多只股票的本地历史k线数据
-
-        :param codelist: 股票代码列表，list或str。例如：['HK.00700', 'HK.00001']，'HK.00700,HK.00001'
-        :param start: 起始时间，例如'2017-06-20'
-        :param end: 结束时间, 例如'2017-07-20'，start与end组合关系参见 get_history_kline_
-        :param ktype: k线类型，参见KLType
-        :param autype: 复权类型，参见AuType
-        :return: 成功时返回(RET_OK, [data])，data是DataFrame数据, 数据列格式如下
-
-            =================   ===========   ==============================================================================
-            参数                  类型                        说明
-            =================   ===========   ==============================================================================
-            code                str            股票代码
-            time_key            str            k线时间
-            open                float          开盘价
-            close               float          收盘价
-            high                float          最高价
-            low                 float          最低价
-            pe_ratio            float          市盈率（该字段为比例字段，默认不展示%）
-            turnover_rate       float          换手率
-            volume              int            成交量
-            turnover            float          成交额
-            change_rate         float          涨跌幅
-            last_close          float          昨收价
-            =================   ===========   ==============================================================================
-
-            失败时返回(RET_ERROR, data)，其中data是错误描述字符串
-
-        """
-        if is_str(codelist):
-            codelist = codelist.split(',')
-        elif isinstance(codelist, list):
-            pass
-        else:
-            return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
-        result = []
-        for code in codelist:
-            ret, data = self.get_history_kline(code, start, end, ktype, autype)
-            if ret != RET_OK:
-                return RET_ERROR, 'get history kline error: {}, {},{},{},{}'.format(data, code, start, end, ktype)
-            result.append(data)
-        return 0, result
-
-    def _get_history_kline_impl(self,
-                                query_cls,
-                                code,
-                                start=None,
-                                end=None,
-                                ktype=KLType.K_DAY,
-                                autype=AuType.QFQ,
-                                fields=[KL_FIELD.ALL]
-                                ):
-
-        ret, msg, req_start, end = normalize_start_end_date(start, end, 365)
-        if ret != RET_OK:
-            return ret, msg
-
-        req_fields = unique_and_normalize_list(fields)
-        if not fields:
-            req_fields = copy(KL_FIELD.ALL_REAL)
-        req_fields = KL_FIELD.normalize_field_list(req_fields)
-        if not req_fields:
-            error_str = ERROR_STR_PREFIX + "the type of fields param is wrong"
-            return RET_ERROR, error_str
-
-        if autype is None:
-            autype = 'None'
-
-        param_table = {'code': code, 'ktype': ktype, 'autype': autype}
-        for x in param_table:
-            param = param_table[x]
-            if param is None or is_str(param) is False:
-                error_str = ERROR_STR_PREFIX + "the type of %s param is wrong" % x
-                return RET_ERROR, error_str
-
-        max_kl_num = 1000
-        data_finish = False
-        list_ret = []
-        # 循环请求数据，避免一次性取太多超时
-        while not data_finish:
-            kargs = {
-                "code": code,
-                "start_date": req_start,
-                "end_date": end,
-                "ktype": ktype,
-                "autype": autype,
-                "fields": copy(req_fields),
-                "max_num": max_kl_num,
-                "conn_id": self.get_sync_conn_id()
-            }
-            query_processor = self._get_sync_query_processor(
-                query_cls.pack_req, query_cls.unpack_rsp)
-            ret_code, msg, content = query_processor(**kargs)
-            if ret_code != RET_OK:
-                return ret_code, msg
-
-            list_kline, has_next, next_time = content
-            data_finish = (not has_next) or (not next_time)
-            req_start = next_time
-            for dict_item in list_kline:
-                list_ret.append(dict_item)
-
-        # 表头列
-        col_list = ['code']
-        for field in req_fields:
-            str_field = KL_FIELD.DICT_KL_FIELD_STR[field]
-            if str_field not in col_list:
-                col_list.append(str_field)
-
-        kline_frame_table = pd.DataFrame(list_ret, columns=col_list)
-
-        return RET_OK, kline_frame_table
-
 
     def request_history_kline(self,
                               code,
@@ -924,7 +803,7 @@ class OpenQuoteContext(OpenContextBase):
             error_str = ERROR_STR_PREFIX + "the value of market param is wrong "
             return RET_ERROR, error_str
 
-        if plate_class not in PLATE_CLASS_MAP:
+        if not Plate.if_has_key(plate_class):
             error_str = ERROR_STR_PREFIX + "the class of plate is wrong"
             return RET_ERROR, error_str
 
@@ -1618,7 +1497,7 @@ class OpenQuoteContext(OpenContextBase):
             return RET_ERROR, error_str
 
 
-        if reference_type is not None and not reference_type in STOCK_REFERENCE_TYPE_MAP:
+        if reference_type is not None and not SecurityReferenceType.if_has_key(reference_type):
             error_str = ERROR_STR_PREFIX + "the type of reference_type param is wrong"
             return RET_ERROR, error_str
 
@@ -1735,14 +1614,14 @@ class OpenQuoteContext(OpenContextBase):
                 time                    str            发布时间（美股的时间默认是美东）
                 =====================   ===========   ==============================================================
         """
-        holder_type = STOCK_HOLDER_CLASS_MAP[holder_type]
+        
         if code is None or is_str(code) is False:
             msg = ERROR_STR_PREFIX + "the type of code param is wrong"
             return RET_ERROR, msg
 
-        if holder_type < 1 or holder_type > len(STOCK_HOLDER_CLASS_MAP):
-            msg = ERROR_STR_PREFIX + "the type {0} is wrong, total number of types is {1}".format(
-                holder_type, len(STOCK_HOLDER_CLASS_MAP))
+        r, holder_type_number = StockHolder.to_number(holder_type)
+        if holder_type is None or not r:
+            msg = ERROR_STR_PREFIX + "the type {0} is wrong".format(holder_type)
             return RET_ERROR, msg
 
         ret_code, msg, start, end = normalize_start_end_date(
@@ -1754,7 +1633,7 @@ class OpenQuoteContext(OpenContextBase):
             HoldingChangeList.pack_req, HoldingChangeList.unpack_rsp)
         kargs = {
             "code": code,
-            "holder_type": holder_type,
+            "holder_type": holder_type_number,
             "conn_id": self.get_sync_conn_id(),
             "start_date": start,
             "end_date": end
@@ -1852,11 +1731,11 @@ class OpenQuoteContext(OpenContextBase):
             msg = ERROR_STR_PREFIX + "the type of data_filter param is wrong"
             return RET_ERROR, msg
 
-        if option_type not in OPTION_TYPE_CLASS_MAP:
+        if not OptionType.if_has_key(option_type):
             msg = ERROR_STR_PREFIX + "the type of option_type param is wrong"
             return RET_ERROR, msg
 
-        if option_cond_type not in OPTION_COND_TYPE_CLASS_MAP:
+        if not OptionCondType.if_has_key(option_cond_type):
             msg = ERROR_STR_PREFIX + "the type of option_cond_type param is wrong"
             return RET_ERROR, msg
 

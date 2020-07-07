@@ -128,10 +128,10 @@ class CustomIndicatorFilter(object):
         if self.value is not None:
             filter_req.fieldValue = self.value
 
-        if self.ktype not in KTYPE_MAP:
+        r, v = KLType.to_number(self.ktype)
+        if not r:
             return RET_ERROR, 'ktype is wrong. must be KLType'
-        else:
-            filter_req.klType = KTYPE_MAP[self.ktype]
+        filter_req.klType = v
 
         if self.is_no_filter is False:
             filter_req.isNoFilter = False
@@ -151,10 +151,10 @@ class PatternFilter(object):
             return RET_ERROR, 'stock_field is wrong. must be StockField'
         filter_req.fieldName = v - StockField.pattern_enum_begin
 
-        if self.ktype not in KTYPE_MAP:
+        r, v = KLType.to_number(self.ktype)
+        if not r:
             return RET_ERROR, 'ktype is wrong. must be KLType'
-        else:
-            filter_req.klType = KTYPE_MAP[self.ktype]
+        filter_req.klType = v
 
         if self.is_no_filter is False:
             filter_req.isNoFilter = False
@@ -301,8 +301,7 @@ class FilterStockData(object):
         base_data_list = rsp_item.customIndicatorDataList
         for sub_item in base_data_list:
             ret1, field = StockField.to_string(sub_item.fieldName + StockField.indicator_enum_begin)
-            ret2 = sub_item.klType in QUOTE.REV_KTYPE_MAP
-            klType = QUOTE.REV_KTYPE_MAP[sub_item.klType] if ret2 else None
+            ret2, klType = KLType.to_string(sub_item.klType)
             if ret1 and ret2:
                 self.__dict__[(field.lower(), klType.lower())] = sub_item.value
 
