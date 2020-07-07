@@ -30,7 +30,7 @@ class SimpleFilter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                raise Exception("sort is wrong. must be SortDir")
+                return RET_ERROR, 'sort is wrong. must be SortDir'
             filter_req.sortDir = v
         return RET_OK, ""
 
@@ -60,7 +60,7 @@ class AccumulateFilter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                raise Exception("sort is wrong. must be SortDir")
+                return RET_ERROR, 'sort is wrong. must be SortDir'
             filter_req.sortDir = v
         return RET_OK, ""
             
@@ -95,7 +95,7 @@ class FinancialFilter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                raise Exception("sort is wrong. must be SortDir")
+                return RET_ERROR, 'sort is wrong. must be SortDir'
             filter_req.sortDir = v
 
         return RET_OK, ""
@@ -261,9 +261,6 @@ class FilterStockData(object):
         self.stock_name = None
 
         from futu.common.pb.Qot_StockFilter_pb2 import StockData
-        if not isinstance(rsp_item, StockData):
-            raise Exception("Response item need Qot_StockFilter_pb2")
-
         self.stock_code = merge_qot_mkt_stock_str(rsp_item.security.market, rsp_item.security.code)
         #  名称 type = string
         self.stock_name = rsp_item.name

@@ -182,8 +182,6 @@ def merge_trd_mkt_stock_str(trd_sec_mkt, partial_stock_str):
         mkt_qot = Market.SZ
     elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_US:
         mkt_qot = Market.US
-    else:
-        raise Exception("merge_trd_mkt_stock_str: unknown trd_mkt.")
     _, mkt = Market.to_number(mkt_qot)
     return merge_qot_mkt_stock_str(mkt, partial_stock_str)
 
