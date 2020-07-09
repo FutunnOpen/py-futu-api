@@ -3,7 +3,6 @@
 import pandas as pd
 from futu.common.open_context_base import OpenContextBase
 from futu.trade.trade_query import *
-from futu.trade.trade_response_handler import AsyncHandler_TrdSubAccPush
 from futu.common.err import *
 
 class OpenTradeContextBase(OpenContextBase):
@@ -21,7 +20,6 @@ class OpenTradeContextBase(OpenContextBase):
         #     raise Exception('Non-local connections must be encrypted')
 
         super(OpenTradeContextBase, self).__init__(host, port, False, is_encrypt=is_encrypt)
-        self.set_pre_handler(AsyncHandler_TrdSubAccPush(self))
 
     def close(self):
         """
@@ -193,7 +191,7 @@ class OpenTradeContextBase(OpenContextBase):
     def _check_order_status(self, status_filter_list):
         unique_and_normalize_list(status_filter_list)
         for status in status_filter_list:
-            if status not in ORDER_STATUS_MAP:
+            if not OrderStatus.if_has_key(status):
                 return RET_ERROR, ERROR_STR_PREFIX + "the type of status_filter_list param is wrong "
         return RET_OK, "",
 
@@ -306,8 +304,7 @@ class OpenTradeContextBase(OpenContextBase):
         '''do not use the built-in split function in python.
         The built-in function cannot handle some stock strings correctly.
         for instance, US..DJI, where the dot . itself is a part of original code'''
-        if 0 <= split_loc < len(
-                stock_str) - 1 and stock_str[0:split_loc] in MKT_MAP:
+        if 0 <= split_loc < len(stock_str) - 1 and Market.if_has_key(stock_str[0:split_loc]):
             market_str = stock_str[0:split_loc]
             partial_stock_str = stock_str[split_loc + 1:]
             return RET_OK, (market_str, partial_stock_str)
@@ -528,7 +525,7 @@ class OpenTradeContextBase(OpenContextBase):
         if not order_id:
             return RET_ERROR, ERROR_STR_PREFIX + "the type of order_id param is wrong "
 
-        if modify_order_op not in MODIFY_ORDER_OP_MAP:
+        if not ModifyOrderOp.if_has_key(modify_order_op):
             return RET_ERROR, ERROR_STR_PREFIX + "the type of modify_order_op param is wrong "
 
         query_processor = self._get_sync_query_processor(

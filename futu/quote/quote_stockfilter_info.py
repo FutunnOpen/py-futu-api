@@ -7,19 +7,12 @@ from futu.common.constant import *
 from futu.common.utils import *
 
 class SimpleFilter(object):
-    """这里用simple替换掉协议里面的Base，以后有各种filter扩展"""
-    stock_field = StockField.NONE  # StockField 简单属性
-    filter_min = None  # 区间下限，闭区间
-    filter_max = None  # 区间上限，闭区间
-    sort = None  # SortDir 排序方向 SortDir
-    is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
-
     def __init__(self):
-        self.stock_field = StockField.NONE
-        self.filter_min = None
-        self.filter_max = None
-        self.sort = None
-        self.is_no_filter = None
+        self.stock_field = StockField.NONE # StockField 简单属性
+        self.filter_min = None  # 区间下限，闭区间
+        self.filter_max = None  # 区间上限，闭区间
+        self.sort = None   # SortDir 排序方向 SortDir
+        self.is_no_filter = None # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
 
     def fill_request_pb(self, filter_req):
         r, v = StockField.to_number(self.stock_field)
@@ -37,25 +30,18 @@ class SimpleFilter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                raise Exception("sort is wrong. must be SortDir")
+                return RET_ERROR, 'sort is wrong. must be SortDir'
             filter_req.sortDir = v
         return RET_OK, ""
 
 class AccumulateFilter(object):
-    stock_field = StockField.NONE  # StockField 累计属性
-    filter_min = None  # 区间下限，闭区间
-    filter_max = None  # 区间上限，闭区间
-    sort = None  # SortDir 排序方向 SortDir
-    is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
-    days = 1 #所筛选的数据的累计天数
-    
     def __init__(self):
-        self.stock_field = StockField.NONE
-        self.filter_min = None
-        self.filter_max = None
-        self.sort = None
-        self.is_no_filter = None
-        self.days = 1
+        self.stock_field = StockField.NONE   # StockField 累计属性
+        self.filter_min = None  # 区间下限，闭区间
+        self.filter_max = None  # 区间上限，闭区间
+        self.sort = None  # SortDir 排序方向 SortDir
+        self.is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
+        self.days = 1  #所筛选的数据的累计天数
 
     def fill_request_pb(self, filter_req):
         r, v = StockField.to_number(self.stock_field)
@@ -74,25 +60,18 @@ class AccumulateFilter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                raise Exception("sort is wrong. must be SortDir")
+                return RET_ERROR, 'sort is wrong. must be SortDir'
             filter_req.sortDir = v
         return RET_OK, ""
             
 class FinancialFilter(object):
-    stock_field = StockField.NONE  # StockField 财务属性
-    filter_min = None  # 区间下限，闭区间
-    filter_max = None  # 区间上限，闭区间
-    sort = None  # SortDir 排序方向 SortDir
-    is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
-    quarter = FinancialQuarter.ANNUAL #财报累积时间
-
     def __init__(self):
-        self.stock_field = StockField.NONE
-        self.filter_min = None
-        self.filter_max = None
-        self.sort = None
-        self.is_no_filter = None
-        self.quarter = FinancialQuarter.ANNUAL
+        self.stock_field = StockField.NONE  # StockField 财务属性
+        self.filter_min = None  # 区间下限，闭区间
+        self.filter_max = None  # 区间上限，闭区间
+        self.sort = None  # SortDir 排序方向 SortDir
+        self.is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
+        self.quarter = FinancialQuarter.ANNUAL #财报累积时间
 
     def fill_request_pb(self, filter_req):
         r, v = StockField.to_number(self.stock_field)
@@ -116,26 +95,19 @@ class FinancialFilter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                raise Exception("sort is wrong. must be SortDir")
+                return RET_ERROR, 'sort is wrong. must be SortDir'
             filter_req.sortDir = v
 
         return RET_OK, ""
 
 class CustomIndicatorFilter(object):
-    stock_field1 = StockField.NONE  # StockField 指标属性
-    stock_field2 = StockField.NONE  # StockField 指标属性
-    relative_position = None # RelativePosition 相对位置,主要用于MA，EMA，RSI指标做比较
-    value = None # 自定义数值，用于与RSI进行比较
-    ktype = None  # KLType, K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
-    is_no_filter = None  # 如果这个字段不需要筛选
-
     def __init__(self):
-        self.stock_field1 = StockField.NONE
-        self.stock_field2 = StockField.NONE
-        self.relative_position = None
-        self.value = None
-        self.klType = None
-        self.is_no_filter = None
+        self.stock_field1 = StockField.NONE  # StockField 指标属性
+        self.stock_field2 = StockField.NONE  # StockField 指标属性
+        self.relative_position = None # RelativePosition 相对位置,主要用于MA，EMA，RSI指标做比较
+        self.value = None  # 自定义数值，用于与RSI进行比较
+        self.klType = None   # KLType, K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
+        self.is_no_filter = None  # 如果这个字段不需要筛选
 
     def fill_request_pb(self, filter_req):
         r, v = StockField.to_number(self.stock_field1)
@@ -156,10 +128,10 @@ class CustomIndicatorFilter(object):
         if self.value is not None:
             filter_req.fieldValue = self.value
 
-        if self.ktype not in KTYPE_MAP:
+        r, v = KLType.to_number(self.ktype)
+        if not r:
             return RET_ERROR, 'ktype is wrong. must be KLType'
-        else:
-            filter_req.klType = KTYPE_MAP[self.ktype]
+        filter_req.klType = v
 
         if self.is_no_filter is False:
             filter_req.isNoFilter = False
@@ -168,14 +140,10 @@ class CustomIndicatorFilter(object):
 
 
 class PatternFilter(object):
-    stock_field = StockField.NONE  # StockField 指标形态属性
-    ktype = None  # KLType, K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
-    is_no_filter = None  # 如果这个字段不需要筛选
-
     def __init__(self):
-        self.stock_field = StockField.NONE
-        self.klType = None
-        self.is_no_filter = None
+        self.stock_field = StockField.NONE  # StockField 指标形态属性
+        self.klType = None  # KLType, K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
+        self.is_no_filter = None  # 如果这个字段不需要筛选
 
     def fill_request_pb(self, filter_req):
         r, v = StockField.to_number(self.stock_field)
@@ -183,10 +151,10 @@ class PatternFilter(object):
             return RET_ERROR, 'stock_field is wrong. must be StockField'
         filter_req.fieldName = v - StockField.pattern_enum_begin
 
-        if self.ktype not in KTYPE_MAP:
+        r, v = KLType.to_number(self.ktype)
+        if not r:
             return RET_ERROR, 'ktype is wrong. must be KLType'
-        else:
-            filter_req.klType = KTYPE_MAP[self.ktype]
+        filter_req.klType = v
 
         if self.is_no_filter is False:
             filter_req.isNoFilter = False
@@ -194,8 +162,6 @@ class PatternFilter(object):
         return RET_OK, ""
 
 class FilterStockData(object):
-    stock_code = None
-    stock_name = None
     # 以下是简单数据过滤所支持的字段
     # cur_price = None  # 最新价
     # cur_price_to_highest_52weeks_ratio = None  # (现价 - 52周最高) / 52周最高，对应pc端离52周高点百分比
@@ -291,10 +257,10 @@ class FilterStockData(object):
     # ema250  # 250日指数移动均线
 
     def __init__(self, rsp_item):
-        from futu.common.pb.Qot_StockFilter_pb2 import StockData
-        if not isinstance(rsp_item, StockData):
-            raise Exception("Response item need Qot_StockFilter_pb2")
+        self.stock_code = None
+        self.stock_name = None
 
+        from futu.common.pb.Qot_StockFilter_pb2 import StockData
         self.stock_code = merge_qot_mkt_stock_str(rsp_item.security.market, rsp_item.security.code)
         #  名称 type = string
         self.stock_name = rsp_item.name
@@ -332,8 +298,7 @@ class FilterStockData(object):
         base_data_list = rsp_item.customIndicatorDataList
         for sub_item in base_data_list:
             ret1, field = StockField.to_string(sub_item.fieldName + StockField.indicator_enum_begin)
-            ret2 = sub_item.klType in QUOTE.REV_KTYPE_MAP
-            klType = QUOTE.REV_KTYPE_MAP[sub_item.klType] if ret2 else None
+            ret2, klType = KLType.to_string(sub_item.klType)
             if ret1 and ret2:
                 self.__dict__[(field.lower(), klType.lower())] = sub_item.value
 

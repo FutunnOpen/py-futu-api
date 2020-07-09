@@ -141,10 +141,9 @@ def split_stock_str(stock_str_param):
     '''do not use the built-in split function in python.
     The built-in function cannot handle some stock strings correctly.
     for instance, US..DJI, where the dot . itself is a part of original code'''
-    if 0 <= split_loc < len(
-            stock_str) - 1 and stock_str[0:split_loc] in MKT_MAP:
+    if 0 <= split_loc < len(stock_str) - 1 and Market.if_has_key(stock_str[0:split_loc]):
         market_str = stock_str[0:split_loc]
-        market_code = MKT_MAP[market_str]
+        _, market_code = Market.to_number(market_str)
         partial_stock_str = stock_str[split_loc + 1:]
         return RET_OK, (market_code, partial_stock_str)
 
@@ -161,7 +160,7 @@ def merge_qot_mkt_stock_str(qot_mkt, partial_stock_str):
     :return: unified representation of a stock code. i.e. "US.AAPL", "HK.00700", "SZ.000001"
 
     """
-    market_str = QUOTE.REV_MKT_MAP[qot_mkt]
+    market_str = Market.to_string2(qot_mkt)
     stock_str = '.'.join([market_str, partial_stock_str])
     return stock_str
 
@@ -183,10 +182,8 @@ def merge_trd_mkt_stock_str(trd_sec_mkt, partial_stock_str):
         mkt_qot = Market.SZ
     elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_US:
         mkt_qot = Market.US
-    else:
-        raise Exception("merge_trd_mkt_stock_str: unknown trd_mkt.")
-
-    return merge_qot_mkt_stock_str(MKT_MAP[mkt_qot], partial_stock_str)
+    _, mkt = Market.to_number(mkt_qot)
+    return merge_qot_mkt_stock_str(mkt, partial_stock_str)
 
 
 def str2binary(s):
@@ -493,8 +490,7 @@ class ProtobufMap(dict):
         
         from futu.common.pb.Qot_GetFutureInfo_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetFutureInfo] = Response()
-		
-        from futu.common.pb.Qot_RequestTradeDate_pb2 import Response
+        from futu.common.pb.Qot_RequestTradeDate_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_RequestTradeDate] = Response()
 
         from futu.common.pb.Qot_SetPriceReminder_pb2 import Response
