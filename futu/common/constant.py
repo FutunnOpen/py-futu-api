@@ -1611,13 +1611,17 @@ class QotRight(FtEnum):
     BMP = "BMP"                                        # Bmp，无法订阅
     LEVEL1 = "LV1"                                  # Level1
     LEVEL2 = "LV2"                                  # Level2
+    SF = "SF"
+    NO = "NO"
 
     def load_dic(self):
         return {
             self.NONE: Qot_Common_pb2.QotRight_Unknow,
             self.BMP: Qot_Common_pb2.QotRight_Bmp,
             self.LEVEL1: Qot_Common_pb2.QotRight_Level1,
-            self.LEVEL2: Qot_Common_pb2.QotRight_Level2
+            self.LEVEL2: Qot_Common_pb2.QotRight_Level2,
+            self.SF: Qot_Common_pb2.QotRight_SF,
+            self.NO: Qot_Common_pb2.QotRight_No
         }
 
 
