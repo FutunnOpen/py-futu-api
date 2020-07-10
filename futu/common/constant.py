@@ -8,6 +8,7 @@ from futu.common.pb import Qot_ModifyUserSecurity_pb2
 from futu.common.pb import GetDelayStatistics_pb2
 from futu.common.pb import GetUserInfo_pb2
 from futu.common.pb import Common_pb2
+from futu.common.pb import Notify_pb2
 from futu.common.pb import Verification_pb2
 from futu.common.pb import Qot_GetReference_pb2
 from futu.common.pb import Qot_Common_pb2
@@ -928,13 +929,13 @@ class SysNotifyType(FtEnum):
 
     def load_dic(self):
         return {
-            self.NONE: Common_pb2.NotifyType_None,
-            self.GTW_EVENT: Common_pb2.NotifyType_GtwEvent,
-            self.PROGRAM_STATUS: Common_pb2.NotifyType_ProgramStatus,
-            self.CONN_STATUS: Common_pb2.NotifyType_ConnStatus,
-            self.QOT_RIGHT: Common_pb2.NotifyType_QotRight,
-            self.API_LEVEL: Common_pb2.NotifyType_APILevel,
-            self.API_QUOTA: Common_pb2.NotifyType_APIQuota,
+            self.NONE: Notify_pb2.NotifyType_None,
+            self.GTW_EVENT: Notify_pb2.NotifyType_GtwEvent,
+            self.PROGRAM_STATUS: Notify_pb2.NotifyType_ProgramStatus,
+            self.CONN_STATUS: Notify_pb2.NotifyType_ConnStatus,
+            self.QOT_RIGHT: Notify_pb2.NotifyType_QotRight,
+            self.API_LEVEL: Notify_pb2.NotifyType_APILevel,
+            self.API_QUOTA: Notify_pb2.NotifyType_APIQuota,
         }
 
 class GtwEventType(FtEnum):
@@ -991,22 +992,22 @@ class GtwEventType(FtEnum):
 
     def load_dic(self):
         return {
-            self.NONE: Common_pb2.GtwEventType_None,
-            self.LocalCfgLoadFailed: Common_pb2.GtwEventType_LocalCfgLoadFailed,
-            self.APISvrRunFailed: Common_pb2.GtwEventType_APISvrRunFailed,
-            self.ForceUpdate: Common_pb2.GtwEventType_ForceUpdate,
-            self.LoginFailed: Common_pb2.GtwEventType_LoginFailed,
-            self.UnAgreeDisclaimer: Common_pb2.GtwEventType_UnAgreeDisclaimer,
-            self.NetCfgMissing: Common_pb2.GtwEventType_NetCfgMissing,
-            self.KickedOut: Common_pb2.GtwEventType_KickedOut,
-            self.LoginPwdChanged: Common_pb2.GtwEventType_LoginPwdChanged,
-            self.BanLogin: Common_pb2.GtwEventType_BanLogin,
-            self.NeedPicVerifyCode: Common_pb2.GtwEventType_NeedPicVerifyCode,
-            self.NeedPhoneVerifyCode: Common_pb2.GtwEventType_NeedPhoneVerifyCode,
-            self.AppDataNotExist: Common_pb2.GtwEventType_AppDataNotExist,
-            self.NessaryDataMissing: Common_pb2.GtwEventType_NessaryDataMissing,
-            self.TradePwdChanged: Common_pb2.GtwEventType_TradePwdChanged,
-            self.EnableDeviceLock: Common_pb2.GtwEventType_EnableDeviceLock,
+            self.NONE: Notify_pb2.GtwEventType_None,
+            self.LocalCfgLoadFailed: Notify_pb2.GtwEventType_LocalCfgLoadFailed,
+            self.APISvrRunFailed: Notify_pb2.GtwEventType_APISvrRunFailed,
+            self.ForceUpdate: Notify_pb2.GtwEventType_ForceUpdate,
+            self.LoginFailed: Notify_pb2.GtwEventType_LoginFailed,
+            self.UnAgreeDisclaimer: Notify_pb2.GtwEventType_UnAgreeDisclaimer,
+            self.NetCfgMissing: Notify_pb2.GtwEventType_NetCfgMissing,
+            self.KickedOut: Notify_pb2.GtwEventType_KickedOut,
+            self.LoginPwdChanged: Notify_pb2.GtwEventType_LoginPwdChanged,
+            self.BanLogin: Notify_pb2.GtwEventType_BanLogin,
+            self.NeedPicVerifyCode: Notify_pb2.GtwEventType_NeedPicVerifyCode,
+            self.NeedPhoneVerifyCode: Notify_pb2.GtwEventType_NeedPhoneVerifyCode,
+            self.AppDataNotExist: Notify_pb2.GtwEventType_AppDataNotExist,
+            self.NessaryDataMissing: Notify_pb2.GtwEventType_NessaryDataMissing,
+            self.TradePwdChanged: Notify_pb2.GtwEventType_TradePwdChanged,
+            self.EnableDeviceLock: Notify_pb2.GtwEventType_EnableDeviceLock,
         }
 
 # 交易环境
