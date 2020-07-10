@@ -1251,7 +1251,7 @@ class TickerQuery:
             "price": record.price,
             "volume": record.volume,
             "turnover": record.turnover,
-            "ticker_direction": TickerDirect.to_string2(record.dir) if TickerDirect.if_has_key(record.dir) else "",
+            "ticker_direction": TickerDirect.to_string2(record.dir),
             "sequence": record.sequence,
             "recv_timestamp":record.recvTime,
             "type": TickerType.to_string2(record.type),
