@@ -2174,6 +2174,10 @@ class GetUserInfo:
             'apiLevel') else "N/A"
         hk_qot_right = rsp_pb.s2c.hkQotRight if rsp_pb.s2c.HasField(
             'hkQotRight') else "N/A"
+        hk_option_qot_right = rsp_pb.s2c.hkOptionQotRight if rsp_pb.s2c.HasField(
+            'hkOptionQotRight') else "N/A"
+        hk_future_qot_right = rsp_pb.s2c.hkFutureQotRight if rsp_pb.s2c.HasField(
+            'hkFutureQotRight') else "N/A"
         us_qot_right = rsp_pb.s2c.usQotRight if rsp_pb.s2c.HasField(
             'usQotRight') else "N/A"
         cn_qot_right = rsp_pb.s2c.cnQotRight if rsp_pb.s2c.HasField(
@@ -2189,6 +2193,8 @@ class GetUserInfo:
             "avatar_url": avatar_url,
             "api_level": api_level,
             "hk_qot_right": QotRight.to_string2(hk_qot_right),
+            "hk_option_qot_right": QotRight.to_string2(hk_option_qot_right),
+            "hk_future_qot_right": QotRight.to_string2(hk_future_qot_right),
             "us_qot_right": QotRight.to_string2(us_qot_right),
             "cn_qot_right": QotRight.to_string2(cn_qot_right),
             "is_need_agree_disclaimer": is_need_agree_disclaimer,
