@@ -115,55 +115,6 @@ enum FinancialField
 	FinancialField_NOCFPerShare = 46; // 每股经营现金净流量 例如填写 [0.1,10] 值区间 (单位：元)	
 }
 
-// 自定义技术指标属性
-enum CustomIndicatorField
-{
-	CustomIndicatorField_Unknown = 0; // 未知
-	CustomIndicatorField_Price = 1; // 最新价格 
-	CustomIndicatorField_MA5 = 2; // 5日简单均线 
-    CustomIndicatorField_MA10 = 3; // 10日简单均线 
-    CustomIndicatorField_MA20 = 4; // 20日简单均线 
-    CustomIndicatorField_MA30 = 5; // 30日简单均线 
-    CustomIndicatorField_MA60 = 6; // 60日简单均线 
-	CustomIndicatorField_MA120 = 7; // 120日简单均线
-    CustomIndicatorField_MA250 = 8; // 250日简单均线
-	CustomIndicatorField_RSI = 9; // RSI(12)
-    CustomIndicatorField_EMA5 = 10; // 5日指数移动均线 
-    CustomIndicatorField_EMA10 = 11; // 10日指数移动均线 
-    CustomIndicatorField_EMA20 = 12; // 20日指数移动均线 
-	CustomIndicatorField_EMA30 = 13; // 30日指数移动均线 
-    CustomIndicatorField_EMA60 = 14; // 60日指数移动均线 
-    CustomIndicatorField_EMA120 = 15; // 120日指数移动均线
-    CustomIndicatorField_EMA250 = 16; // 250日指数移动均线
-	CustomIndicatorField_Value = 17; // 自定义数值，用于与 RSI 进行比较（stock_field1不支持此字段）
-}
-
-// 形态技术指标属性
-enum PatternField
-{
-    PatternField_Unknown = 0 ; // 未知
-    PatternField_MAAlignmentLong = 1 ; // MA多头排列（连续两天MA5>MA10>MA20>MA30>MA60，且当日收盘价大于前一天收盘价）
-    PatternField_MAAlignmentShort = 2 ; // MA空头排列（连续两天MA5 <MA10 <MA20 <MA30 <MA60，且当日收盘价小于前一天收盘价）
-    PatternField_EMAAlignmentLong = 3 ; // EMA多头排列（连续两天EMA5>EMA10>EMA20>EMA30>EMA60，且当日收盘价大于前一天收盘价）
-    PatternField_EMAAlignmentShort = 4 ; // EMA空头排列（连续两天EMA5 <EMA10 <EMA20 <EMA30 <EMA60，且当日收盘价小于前一天收盘价）
-    PatternField_RSIGoldCrossLow = 5 ; // RSI低位金叉（50以下，短线RSI上穿长线RSI（前一日短线RSI小于长线RSI，当日短线RSI大于长线RSI）） 
-    PatternField_RSIDeathCrossHigh = 6 ; // RSI高位死叉（50以上，短线RSI下穿长线RSI（前一日短线RSI大于长线RSI，当日短线RSI小于长线RSI）） 
-    PatternField_RSITopDivergence = 7 ; // RSI顶背离（相邻的两个K线波峰，后面的波峰对应的CLOSE>前面的波峰对应的CLOSE，后面波峰的RSI12值 <前面波峰的RSI12值）
-    PatternField_RSIBottomDivergence = 8 ; // RSI底背离（相邻的两个K线波谷，后面的波谷对应的CLOSE <前面的波谷对应的CLOSE，后面波谷的RSI12值>前面波谷的RSI12值） 
-    PatternField_KDJGoldCrossLow = 9 ; // KDJ低位金叉（KDJ的值都小于或等于30，且前一日K,J值分别小于D值，当日K,J值分别大于D值）
-    PatternField_KDJDeathCrossHigh = 10 ; // KDJ高位死叉（KDJ的值都大于或等于70，且前一日K,J值分别大于D值，当日K,J值分别小于D值）
-    PatternField_KDJTopDivergence = 11 ; // KDJ顶背离（相邻的两个K线波峰，后面的波峰对应的CLOSE>前面的波峰对应的CLOSE，后面波峰的J值 <前面波峰的J值）
-    PatternField_KDJBottomDivergence = 12 ; // KDJ底背离（相邻的两个K线波谷，后面的波谷对应的CLOSE <前面的波谷对应的CLOSE，后面波谷的J值>前面波谷的J值）
-    PatternField_MACDGoldCrossLow = 13 ; // MACD低位金叉（DIFF上穿DEA（前一日DIFF小于DEA，当日DIFF大于DEA））
-    PatternField_MACDDeathCrossHigh = 14 ; // MACD高位死叉（DIFF下穿DEA（前一日DIFF大于DEA，当日DIFF小于DEA））
-    PatternField_MACDTopDivergence = 15 ; // MACD顶背离（相邻的两个K线波峰，后面的波峰对应的CLOSE>前面的波峰对应的CLOSE，后面波峰的macd值 <前面波峰的macd值）
-    PatternField_MACDBottomDivergence = 16 ; // MACD底背离（相邻的两个K线波谷，后面的波谷对应的CLOSE <前面的波谷对应的CLOSE，后面波谷的macd值>前面波谷的macd值）
-    PatternField_BOLLBreakUpper = 17 ; // BOLL突破上轨（前一日股价低于上轨值，当日股价大于上轨值） 
-    PatternField_BOLLLower = 18 ; // BOLL突破下轨（前一日股价高于下轨值，当日股价小于下轨值）
-    PatternField_BOLLCrossMiddleUp = 19 ; // BOLL向上破中轨（前一日股价低于中轨值，当日股价大于中轨值）
-    PatternField_BOLLCrossMiddleDown = 20 ; // BOLL向下破中轨（前一日股价大于中轨值，当日股价小于中轨值）
-}
-
 // 财务时间周期
 enum FinancialQuarter
 {
@@ -173,16 +124,6 @@ enum FinancialQuarter
 	FinancialQuarter_Interim = 3; // 中报
     FinancialQuarter_ThirdQuarter = 4; // 三季报
 	FinancialQuarter_MostRecentQuarter = 5; // 最近季报
-}
-
-// 相对位置比较
-enum RelativePosition
-{
-	RelativePosition_Unknown = 0; // 未知
-	RelativePosition_More = 1; // 大于，first位于second的上方
-	RelativePosition_Less = 2; // 小于，first位于second的下方
-	RelativePosition_CrossUp = 3; // 升穿，first从下往上穿second
-    RelativePosition_CrossDown = 4; // 跌穿，first从上往下穿second
 }
 
 // 排序方向
@@ -225,25 +166,6 @@ message FinancialFilter
 	required int32 quarter = 6; // FinancialQuarter 财报累积时间
 }
 
-// 形态技术指标属性筛选
-message PatternFilter
-{
-	required int32 fieldName = 1; // PatternField 形态技术指标属性
-	required int32 klType = 2; // Qot_Common.KLType，K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
-	optional bool isNoFilter = 3; // 该字段是否不需要筛选，True代表不筛选，False代表筛选。不传默认为不筛选
-}
-
-// 自定义技术指标属性筛选
-message CustomIndicatorFilter
-{
-	required int32 firstFieldName = 1; // CustomIndicatorField 自定义技术指标属性
-	required int32 secondFieldName = 2; // CustomIndicatorField 自定义技术指标属性
-	required int32 relativePosition = 3; // RelativePosition 相对位置,主要用于MA，EMA，RSI指标做比较
-	optional double fieldValue = 4; // 自定义数值，用于与RSI进行比较
-	required int32 klType = 5; // Qot_Common.KLType，K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期	
-	optional bool isNoFilter = 6; // 该字段是否不需要筛选，True代表不筛选，False代表筛选。不传默认为不筛选
-}
-
 // 简单属性数据
 message BaseData 
 { 
@@ -267,23 +189,14 @@ message FinancialData
 	required int32 quarter = 3; // FinancialQuarter 财报累积时间
 }
 
-// 自定义技术指标属性数据
-message CustomIndicatorData
-{
-	required int32 fieldName = 1; // CustomIndicatorField 自定义技术指标属性
-	required double value = 2; 
-	required int32 klType = 3; // Qot_Common.KLType，K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
-}
-
 // 返回的股票数据
 message StockData  
 {
     required Qot_Common.Security security = 1; // 股票
 	required string name = 2; // 股票名称
-    repeated BaseData baseDataList = 3; // 筛选后的简单属性数据
-	repeated AccumulateData accumulateDataList = 4; // 筛选后的累积属性数据
-	repeated FinancialData financialDataList = 5; // 筛选后的财务属性数据
-	repeated CustomIndicatorData customIndicatorDataList = 6; // 筛选后的自定义技术指标属性数据
+    repeated BaseData baseDataList = 3; // 筛选后的简单指标属性数据
+	repeated AccumulateData accumulateDataList = 4; // 筛选后的累积指标属性数据
+	repeated FinancialData financialDataList = 5; // 筛选后的财务指标属性数据
 }
 
 message C2S
@@ -293,11 +206,9 @@ message C2S
 	required int32 market= 3; // Qot_Common::QotMarket股票市场，支持沪股和深股，且沪股和深股不做区分都代表A股市场。
 	// 以下为筛选条件，可选字段，不填表示不过滤
 	optional Qot_Common.Security plate = 4; // 板块
-	repeated BaseFilter baseFilterList = 5; // 简单属性过滤器
-	repeated AccumulateFilter accumulateFilterList = 6; // 累积属性过滤器
-	repeated FinancialFilter financialFilterList = 7; // 财务属性过滤器
-	repeated PatternFilter patternFilterList = 8; // 形态技术指标过滤器
-	repeated CustomIndicatorFilter customIndicatorFilterList = 9; // 自定义技术指标过滤器	
+	repeated BaseFilter baseFilterList = 5; // 简单指标过滤器
+	repeated AccumulateFilter accumulateFilterList = 6; // 累积指标过滤器
+	repeated FinancialFilter financialFilterList = 7; // 财务指标过滤器
 }
 
 message S2C
