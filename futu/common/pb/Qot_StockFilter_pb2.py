@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_StockFilter.proto',
   package='Qot_StockFilter',
   syntax='proto2',
-  serialized_pb=_b('\n\x15Qot_StockFilter.proto\x12\x0fQot_StockFilter\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"j\n\nBaseFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\"~\n\x10\x41\x63\x63umulateFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\x12\x0c\n\x04\x64\x61ys\x18\x06 \x02(\x05\"\x80\x01\n\x0f\x46inancialFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\x12\x0f\n\x07quarter\x18\x06 \x02(\x05\"F\n\rPatternFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x0e\n\x06klType\x18\x02 \x02(\x05\x12\x12\n\nisNoFilter\x18\x03 \x01(\x08\"\x9a\x01\n\x15\x43ustomIndicatorFilter\x12\x16\n\x0e\x66irstFieldName\x18\x01 \x02(\x05\x12\x17\n\x0fsecondFieldName\x18\x02 \x02(\x05\x12\x18\n\x10relativePosition\x18\x03 \x02(\x05\x12\x12\n\nfieldValue\x18\x04 \x01(\x01\x12\x0e\n\x06klType\x18\x05 \x02(\x05\x12\x12\n\nisNoFilter\x18\x06 \x01(\x08\",\n\x08\x42\x61seData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\"@\n\x0e\x41\x63\x63umulateData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0c\n\x04\x64\x61ys\x18\x03 \x02(\x05\"B\n\rFinancialData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0f\n\x07quarter\x18\x03 \x02(\x05\"G\n\x13\x43ustomIndicatorData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0e\n\x06klType\x18\x03 \x02(\x05\"\xb1\x02\n\tStockData\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x02 \x02(\t\x12/\n\x0c\x62\x61seDataList\x18\x03 \x03(\x0b\x32\x19.Qot_StockFilter.BaseData\x12;\n\x12\x61\x63\x63umulateDataList\x18\x04 \x03(\x0b\x32\x1f.Qot_StockFilter.AccumulateData\x12\x39\n\x11\x66inancialDataList\x18\x05 \x03(\x0b\x32\x1e.Qot_StockFilter.FinancialData\x12\x45\n\x17\x63ustomIndicatorDataList\x18\x06 \x03(\x0b\x32$.Qot_StockFilter.CustomIndicatorData\"\x91\x03\n\x03\x43\x32S\x12\r\n\x05\x62\x65gin\x18\x01 \x02(\x05\x12\x0b\n\x03num\x18\x02 \x02(\x05\x12\x0e\n\x06market\x18\x03 \x02(\x05\x12#\n\x05plate\x18\x04 \x01(\x0b\x32\x14.Qot_Common.Security\x12\x33\n\x0e\x62\x61seFilterList\x18\x05 \x03(\x0b\x32\x1b.Qot_StockFilter.BaseFilter\x12?\n\x14\x61\x63\x63umulateFilterList\x18\x06 \x03(\x0b\x32!.Qot_StockFilter.AccumulateFilter\x12=\n\x13\x66inancialFilterList\x18\x07 \x03(\x0b\x32 .Qot_StockFilter.FinancialFilter\x12\x39\n\x11patternFilterList\x18\x08 \x03(\x0b\x32\x1e.Qot_StockFilter.PatternFilter\x12I\n\x19\x63ustomIndicatorFilterList\x18\t \x03(\x0b\x32&.Qot_StockFilter.CustomIndicatorFilter\"W\n\x03S2C\x12\x10\n\x08lastPage\x18\x01 \x02(\x08\x12\x10\n\x08\x61llCount\x18\x02 \x02(\x05\x12,\n\x08\x64\x61taList\x18\x03 \x03(\x0b\x32\x1a.Qot_StockFilter.StockData\",\n\x07Request\x12!\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x14.Qot_StockFilter.C2S\"e\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12!\n\x03s2c\x18\x04 \x01(\x0b\x32\x14.Qot_StockFilter.S2C*\x9e\x05\n\nStockField\x12\x16\n\x12StockField_Unknown\x10\x00\x12\x18\n\x14StockField_StockCode\x10\x01\x12\x18\n\x14StockField_StockName\x10\x02\x12\x17\n\x13StockField_CurPrice\x10\x03\x12,\n(StockField_CurPriceToHighest52WeeksRatio\x10\x04\x12+\n\'StockField_CurPriceToLowest52WeeksRatio\x10\x05\x12-\n)StockField_HighPriceToHighest52WeeksRatio\x10\x06\x12+\n\'StockField_LowPriceToLowest52WeeksRatio\x10\x07\x12\x1a\n\x16StockField_VolumeRatio\x10\x08\x12\x1a\n\x16StockField_BidAskRatio\x10\t\x12\x17\n\x13StockField_LotPrice\x10\n\x12\x18\n\x14StockField_MarketVal\x10\x0b\x12\x17\n\x13StockField_PeAnnual\x10\x0c\x12\x14\n\x10StockField_PeTTM\x10\r\x12\x15\n\x11StockField_PbRate\x10\x0e\x12\x1d\n\x19StockField_ChangeRate5min\x10\x0f\x12\"\n\x1eStockField_ChangeRateBeginYear\x10\x10\x12\x14\n\x10StockField_PSTTM\x10\x11\x12\x15\n\x11StockField_PCFTTM\x10\x12\x12\x19\n\x15StockField_TotalShare\x10\x13\x12\x19\n\x15StockField_FloatShare\x10\x14\x12\x1d\n\x19StockField_FloatMarketVal\x10\x15*\xc9\x01\n\x0f\x41\x63\x63umulateField\x12\x1b\n\x17\x41\x63\x63umulateField_Unknown\x10\x00\x12\x1e\n\x1a\x41\x63\x63umulateField_ChangeRate\x10\x01\x12\x1d\n\x19\x41\x63\x63umulateField_Amplitude\x10\x02\x12\x1a\n\x16\x41\x63\x63umulateField_Volume\x10\x03\x12\x1c\n\x18\x41\x63\x63umulateField_Turnover\x10\x04\x12 \n\x1c\x41\x63\x63umulateField_TurnoverRate\x10\x05*\xcb\r\n\x0e\x46inancialField\x12\x1a\n\x16\x46inancialField_Unknown\x10\x00\x12\x1c\n\x18\x46inancialField_NetProfit\x10\x01\x12\"\n\x1e\x46inancialField_NetProfitGrowth\x10\x02\x12 \n\x1c\x46inancialField_SumOfBusiness\x10\x03\x12&\n\"FinancialField_SumOfBusinessGrowth\x10\x04\x12 \n\x1c\x46inancialField_NetProfitRate\x10\x05\x12\"\n\x1e\x46inancialField_GrossProfitRate\x10\x06\x12!\n\x1d\x46inancialField_DebtAssetsRate\x10\x07\x12%\n!FinancialField_ReturnOnEquityRate\x10\x08\x12\x17\n\x13\x46inancialField_ROIC\x10\t\x12\x19\n\x15\x46inancialField_ROATTM\x10\n\x12\x1a\n\x16\x46inancialField_EBITTTM\x10\x0b\x12\x19\n\x15\x46inancialField_EBITDA\x10\x0c\x12%\n!FinancialField_OperatingMarginTTM\x10\r\x12\x1d\n\x19\x46inancialField_EBITMargin\x10\x0e\x12\x1f\n\x1b\x46inancialField_EBITDAMargin\x10\x0f\x12$\n FinancialField_FinancialCostRate\x10\x10\x12%\n!FinancialField_OperatingProfitTTM\x10\x11\x12*\n&FinancialField_ShareholderNetProfitTTM\x10\x12\x12(\n$FinancialField_NetProfitCashCoverTTM\x10\x13\x12\x1f\n\x1b\x46inancialField_CurrentRatio\x10\x14\x12\x1d\n\x19\x46inancialField_QuickRatio\x10\x15\x12$\n FinancialField_CurrentAssetRatio\x10\x16\x12#\n\x1f\x46inancialField_CurrentDebtRatio\x10\x17\x12#\n\x1f\x46inancialField_EquityMultiplier\x10\x18\x12 \n\x1c\x46inancialField_PropertyRatio\x10\x19\x12)\n%FinancialField_CashAndCashEquivalents\x10\x1a\x12%\n!FinancialField_TotalAssetTurnover\x10\x1b\x12%\n!FinancialField_FixedAssetTurnover\x10\x1c\x12$\n FinancialField_InventoryTurnover\x10\x1d\x12\'\n#FinancialField_OperatingCashFlowTTM\x10\x1e\x12%\n!FinancialField_AccountsReceivable\x10\x1f\x12!\n\x1d\x46inancialField_EBITGrowthRate\x10 \x12,\n(FinancialField_OperatingProfitGrowthRate\x10!\x12(\n$FinancialField_TotalAssetsGrowthRate\x10\"\x12\x31\n-FinancialField_ProfitToShareholdersGrowthRate\x10#\x12,\n(FinancialField_ProfitBeforeTaxGrowthRate\x10$\x12 \n\x1c\x46inancialField_EPSGrowthRate\x10%\x12 \n\x1c\x46inancialField_ROEGrowthRate\x10&\x12!\n\x1d\x46inancialField_ROICGrowthRate\x10\'\x12!\n\x1d\x46inancialField_NOCFGrowthRate\x10(\x12)\n%FinancialField_NOCFPerShareGrowthRate\x10)\x12,\n(FinancialField_OperatingRevenueCashCover\x10*\x12/\n+FinancialField_OperatingProfitToTotalProfit\x10+\x12\x1b\n\x17\x46inancialField_BasicEPS\x10,\x12\x1d\n\x19\x46inancialField_DilutedEPS\x10-\x12\x1f\n\x1b\x46inancialField_NOCFPerShare\x10.*\xd1\x04\n\x14\x43ustomIndicatorField\x12 \n\x1c\x43ustomIndicatorField_Unknown\x10\x00\x12\x1e\n\x1a\x43ustomIndicatorField_Price\x10\x01\x12\x1c\n\x18\x43ustomIndicatorField_MA5\x10\x02\x12\x1d\n\x19\x43ustomIndicatorField_MA10\x10\x03\x12\x1d\n\x19\x43ustomIndicatorField_MA20\x10\x04\x12\x1d\n\x19\x43ustomIndicatorField_MA30\x10\x05\x12\x1d\n\x19\x43ustomIndicatorField_MA60\x10\x06\x12\x1e\n\x1a\x43ustomIndicatorField_MA120\x10\x07\x12\x1e\n\x1a\x43ustomIndicatorField_MA250\x10\x08\x12\x1c\n\x18\x43ustomIndicatorField_RSI\x10\t\x12\x1d\n\x19\x43ustomIndicatorField_EMA5\x10\n\x12\x1e\n\x1a\x43ustomIndicatorField_EMA10\x10\x0b\x12\x1e\n\x1a\x43ustomIndicatorField_EMA20\x10\x0c\x12\x1e\n\x1a\x43ustomIndicatorField_EMA30\x10\r\x12\x1e\n\x1a\x43ustomIndicatorField_EMA60\x10\x0e\x12\x1f\n\x1b\x43ustomIndicatorField_EMA120\x10\x0f\x12\x1f\n\x1b\x43ustomIndicatorField_EMA250\x10\x10\x12\x1e\n\x1a\x43ustomIndicatorField_Value\x10\x11*\xec\x05\n\x0cPatternField\x12\x18\n\x14PatternField_Unknown\x10\x00\x12 \n\x1cPatternField_MAAlignmentLong\x10\x01\x12!\n\x1dPatternField_MAAlignmentShort\x10\x02\x12!\n\x1dPatternField_EMAAlignmentLong\x10\x03\x12\"\n\x1ePatternField_EMAAlignmentShort\x10\x04\x12 \n\x1cPatternField_RSIGoldCrossLow\x10\x05\x12\"\n\x1ePatternField_RSIDeathCrossHigh\x10\x06\x12!\n\x1dPatternField_RSITopDivergence\x10\x07\x12$\n PatternField_RSIBottomDivergence\x10\x08\x12 \n\x1cPatternField_KDJGoldCrossLow\x10\t\x12\"\n\x1ePatternField_KDJDeathCrossHigh\x10\n\x12!\n\x1dPatternField_KDJTopDivergence\x10\x0b\x12$\n PatternField_KDJBottomDivergence\x10\x0c\x12!\n\x1dPatternField_MACDGoldCrossLow\x10\r\x12#\n\x1fPatternField_MACDDeathCrossHigh\x10\x0e\x12\"\n\x1ePatternField_MACDTopDivergence\x10\x0f\x12%\n!PatternField_MACDBottomDivergence\x10\x10\x12\x1f\n\x1bPatternField_BOLLBreakUpper\x10\x11\x12\x1a\n\x16PatternField_BOLLLower\x10\x12\x12\"\n\x1ePatternField_BOLLCrossMiddleUp\x10\x13\x12$\n PatternField_BOLLCrossMiddleDown\x10\x14*\xd9\x01\n\x10\x46inancialQuarter\x12\x1c\n\x18\x46inancialQuarter_Unknown\x10\x00\x12\x1b\n\x17\x46inancialQuarter_Annual\x10\x01\x12!\n\x1d\x46inancialQuarter_FirstQuarter\x10\x02\x12\x1c\n\x18\x46inancialQuarter_Interim\x10\x03\x12!\n\x1d\x46inancialQuarter_ThirdQuarter\x10\x04\x12&\n\"FinancialQuarter_MostRecentQuarter\x10\x05*\xa4\x01\n\x10RelativePosition\x12\x1c\n\x18RelativePosition_Unknown\x10\x00\x12\x19\n\x15RelativePosition_More\x10\x01\x12\x19\n\x15RelativePosition_Less\x10\x02\x12\x1c\n\x18RelativePosition_CrossUp\x10\x03\x12\x1e\n\x1aRelativePosition_CrossDown\x10\x04*B\n\x07SortDir\x12\x0e\n\nSortDir_No\x10\x00\x12\x12\n\x0eSortDir_Ascend\x10\x01\x12\x13\n\x0fSortDir_Descend\x10\x02\x42\x45\n\x13\x63om.futu.openapi.pbZ.github.com/futuopen/ftapi4go/pb/qotstockfilter')
+  serialized_pb=_b('\n\x15Qot_StockFilter.proto\x12\x0fQot_StockFilter\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"j\n\nBaseFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\"~\n\x10\x41\x63\x63umulateFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\x12\x0c\n\x04\x64\x61ys\x18\x06 \x02(\x05\"\x80\x01\n\x0f\x46inancialFilter\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\x11\n\tfilterMin\x18\x02 \x01(\x01\x12\x11\n\tfilterMax\x18\x03 \x01(\x01\x12\x12\n\nisNoFilter\x18\x04 \x01(\x08\x12\x0f\n\x07sortDir\x18\x05 \x01(\x05\x12\x0f\n\x07quarter\x18\x06 \x02(\x05\",\n\x08\x42\x61seData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\"@\n\x0e\x41\x63\x63umulateData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0c\n\x04\x64\x61ys\x18\x03 \x02(\x05\"B\n\rFinancialData\x12\x11\n\tfieldName\x18\x01 \x02(\x05\x12\r\n\x05value\x18\x02 \x02(\x01\x12\x0f\n\x07quarter\x18\x03 \x02(\x05\"\xea\x01\n\tStockData\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x02 \x02(\t\x12/\n\x0c\x62\x61seDataList\x18\x03 \x03(\x0b\x32\x19.Qot_StockFilter.BaseData\x12;\n\x12\x61\x63\x63umulateDataList\x18\x04 \x03(\x0b\x32\x1f.Qot_StockFilter.AccumulateData\x12\x39\n\x11\x66inancialDataList\x18\x05 \x03(\x0b\x32\x1e.Qot_StockFilter.FinancialData\"\x8b\x02\n\x03\x43\x32S\x12\r\n\x05\x62\x65gin\x18\x01 \x02(\x05\x12\x0b\n\x03num\x18\x02 \x02(\x05\x12\x0e\n\x06market\x18\x03 \x02(\x05\x12#\n\x05plate\x18\x04 \x01(\x0b\x32\x14.Qot_Common.Security\x12\x33\n\x0e\x62\x61seFilterList\x18\x05 \x03(\x0b\x32\x1b.Qot_StockFilter.BaseFilter\x12?\n\x14\x61\x63\x63umulateFilterList\x18\x06 \x03(\x0b\x32!.Qot_StockFilter.AccumulateFilter\x12=\n\x13\x66inancialFilterList\x18\x07 \x03(\x0b\x32 .Qot_StockFilter.FinancialFilter\"W\n\x03S2C\x12\x10\n\x08lastPage\x18\x01 \x02(\x08\x12\x10\n\x08\x61llCount\x18\x02 \x02(\x05\x12,\n\x08\x64\x61taList\x18\x03 \x03(\x0b\x32\x1a.Qot_StockFilter.StockData\",\n\x07Request\x12!\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x14.Qot_StockFilter.C2S\"e\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12!\n\x03s2c\x18\x04 \x01(\x0b\x32\x14.Qot_StockFilter.S2C*\x9e\x05\n\nStockField\x12\x16\n\x12StockField_Unknown\x10\x00\x12\x18\n\x14StockField_StockCode\x10\x01\x12\x18\n\x14StockField_StockName\x10\x02\x12\x17\n\x13StockField_CurPrice\x10\x03\x12,\n(StockField_CurPriceToHighest52WeeksRatio\x10\x04\x12+\n\'StockField_CurPriceToLowest52WeeksRatio\x10\x05\x12-\n)StockField_HighPriceToHighest52WeeksRatio\x10\x06\x12+\n\'StockField_LowPriceToLowest52WeeksRatio\x10\x07\x12\x1a\n\x16StockField_VolumeRatio\x10\x08\x12\x1a\n\x16StockField_BidAskRatio\x10\t\x12\x17\n\x13StockField_LotPrice\x10\n\x12\x18\n\x14StockField_MarketVal\x10\x0b\x12\x17\n\x13StockField_PeAnnual\x10\x0c\x12\x14\n\x10StockField_PeTTM\x10\r\x12\x15\n\x11StockField_PbRate\x10\x0e\x12\x1d\n\x19StockField_ChangeRate5min\x10\x0f\x12\"\n\x1eStockField_ChangeRateBeginYear\x10\x10\x12\x14\n\x10StockField_PSTTM\x10\x11\x12\x15\n\x11StockField_PCFTTM\x10\x12\x12\x19\n\x15StockField_TotalShare\x10\x13\x12\x19\n\x15StockField_FloatShare\x10\x14\x12\x1d\n\x19StockField_FloatMarketVal\x10\x15*\xc9\x01\n\x0f\x41\x63\x63umulateField\x12\x1b\n\x17\x41\x63\x63umulateField_Unknown\x10\x00\x12\x1e\n\x1a\x41\x63\x63umulateField_ChangeRate\x10\x01\x12\x1d\n\x19\x41\x63\x63umulateField_Amplitude\x10\x02\x12\x1a\n\x16\x41\x63\x63umulateField_Volume\x10\x03\x12\x1c\n\x18\x41\x63\x63umulateField_Turnover\x10\x04\x12 \n\x1c\x41\x63\x63umulateField_TurnoverRate\x10\x05*\xcb\r\n\x0e\x46inancialField\x12\x1a\n\x16\x46inancialField_Unknown\x10\x00\x12\x1c\n\x18\x46inancialField_NetProfit\x10\x01\x12\"\n\x1e\x46inancialField_NetProfitGrowth\x10\x02\x12 \n\x1c\x46inancialField_SumOfBusiness\x10\x03\x12&\n\"FinancialField_SumOfBusinessGrowth\x10\x04\x12 \n\x1c\x46inancialField_NetProfitRate\x10\x05\x12\"\n\x1e\x46inancialField_GrossProfitRate\x10\x06\x12!\n\x1d\x46inancialField_DebtAssetsRate\x10\x07\x12%\n!FinancialField_ReturnOnEquityRate\x10\x08\x12\x17\n\x13\x46inancialField_ROIC\x10\t\x12\x19\n\x15\x46inancialField_ROATTM\x10\n\x12\x1a\n\x16\x46inancialField_EBITTTM\x10\x0b\x12\x19\n\x15\x46inancialField_EBITDA\x10\x0c\x12%\n!FinancialField_OperatingMarginTTM\x10\r\x12\x1d\n\x19\x46inancialField_EBITMargin\x10\x0e\x12\x1f\n\x1b\x46inancialField_EBITDAMargin\x10\x0f\x12$\n FinancialField_FinancialCostRate\x10\x10\x12%\n!FinancialField_OperatingProfitTTM\x10\x11\x12*\n&FinancialField_ShareholderNetProfitTTM\x10\x12\x12(\n$FinancialField_NetProfitCashCoverTTM\x10\x13\x12\x1f\n\x1b\x46inancialField_CurrentRatio\x10\x14\x12\x1d\n\x19\x46inancialField_QuickRatio\x10\x15\x12$\n FinancialField_CurrentAssetRatio\x10\x16\x12#\n\x1f\x46inancialField_CurrentDebtRatio\x10\x17\x12#\n\x1f\x46inancialField_EquityMultiplier\x10\x18\x12 \n\x1c\x46inancialField_PropertyRatio\x10\x19\x12)\n%FinancialField_CashAndCashEquivalents\x10\x1a\x12%\n!FinancialField_TotalAssetTurnover\x10\x1b\x12%\n!FinancialField_FixedAssetTurnover\x10\x1c\x12$\n FinancialField_InventoryTurnover\x10\x1d\x12\'\n#FinancialField_OperatingCashFlowTTM\x10\x1e\x12%\n!FinancialField_AccountsReceivable\x10\x1f\x12!\n\x1d\x46inancialField_EBITGrowthRate\x10 \x12,\n(FinancialField_OperatingProfitGrowthRate\x10!\x12(\n$FinancialField_TotalAssetsGrowthRate\x10\"\x12\x31\n-FinancialField_ProfitToShareholdersGrowthRate\x10#\x12,\n(FinancialField_ProfitBeforeTaxGrowthRate\x10$\x12 \n\x1c\x46inancialField_EPSGrowthRate\x10%\x12 \n\x1c\x46inancialField_ROEGrowthRate\x10&\x12!\n\x1d\x46inancialField_ROICGrowthRate\x10\'\x12!\n\x1d\x46inancialField_NOCFGrowthRate\x10(\x12)\n%FinancialField_NOCFPerShareGrowthRate\x10)\x12,\n(FinancialField_OperatingRevenueCashCover\x10*\x12/\n+FinancialField_OperatingProfitToTotalProfit\x10+\x12\x1b\n\x17\x46inancialField_BasicEPS\x10,\x12\x1d\n\x19\x46inancialField_DilutedEPS\x10-\x12\x1f\n\x1b\x46inancialField_NOCFPerShare\x10.*\xd9\x01\n\x10\x46inancialQuarter\x12\x1c\n\x18\x46inancialQuarter_Unknown\x10\x00\x12\x1b\n\x17\x46inancialQuarter_Annual\x10\x01\x12!\n\x1d\x46inancialQuarter_FirstQuarter\x10\x02\x12\x1c\n\x18\x46inancialQuarter_Interim\x10\x03\x12!\n\x1d\x46inancialQuarter_ThirdQuarter\x10\x04\x12&\n\"FinancialQuarter_MostRecentQuarter\x10\x05*B\n\x07SortDir\x12\x0e\n\nSortDir_No\x10\x00\x12\x12\n\x0eSortDir_Ascend\x10\x01\x12\x13\n\x0fSortDir_Descend\x10\x02\x42\x45\n\x13\x63om.futu.openapi.pbZ.github.com/futuopen/ftapi4go/pb/qotstockfilter')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -123,8 +123,8 @@ _STOCKFIELD = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1874,
-  serialized_end=2544,
+  serialized_start=1367,
+  serialized_end=2037,
 )
 _sym_db.RegisterEnumDescriptor(_STOCKFIELD)
 
@@ -162,8 +162,8 @@ _ACCUMULATEFIELD = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2547,
-  serialized_end=2748,
+  serialized_start=2040,
+  serialized_end=2241,
 )
 _sym_db.RegisterEnumDescriptor(_ACCUMULATEFIELD)
 
@@ -365,198 +365,12 @@ _FINANCIALFIELD = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2751,
-  serialized_end=4490,
+  serialized_start=2244,
+  serialized_end=3983,
 )
 _sym_db.RegisterEnumDescriptor(_FINANCIALFIELD)
 
 FinancialField = enum_type_wrapper.EnumTypeWrapper(_FINANCIALFIELD)
-_CUSTOMINDICATORFIELD = _descriptor.EnumDescriptor(
-  name='CustomIndicatorField',
-  full_name='Qot_StockFilter.CustomIndicatorField',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_Unknown', index=0, number=0,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_Price', index=1, number=1,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_MA5', index=2, number=2,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_MA10', index=3, number=3,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_MA20', index=4, number=4,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_MA30', index=5, number=5,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_MA60', index=6, number=6,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_MA120', index=7, number=7,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_MA250', index=8, number=8,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_RSI', index=9, number=9,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_EMA5', index=10, number=10,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_EMA10', index=11, number=11,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_EMA20', index=12, number=12,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_EMA30', index=13, number=13,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_EMA60', index=14, number=14,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_EMA120', index=15, number=15,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_EMA250', index=16, number=16,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='CustomIndicatorField_Value', index=17, number=17,
-      options=None,
-      type=None),
-  ],
-  containing_type=None,
-  options=None,
-  serialized_start=4493,
-  serialized_end=5086,
-)
-_sym_db.RegisterEnumDescriptor(_CUSTOMINDICATORFIELD)
-
-CustomIndicatorField = enum_type_wrapper.EnumTypeWrapper(_CUSTOMINDICATORFIELD)
-_PATTERNFIELD = _descriptor.EnumDescriptor(
-  name='PatternField',
-  full_name='Qot_StockFilter.PatternField',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_Unknown', index=0, number=0,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_MAAlignmentLong', index=1, number=1,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_MAAlignmentShort', index=2, number=2,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_EMAAlignmentLong', index=3, number=3,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_EMAAlignmentShort', index=4, number=4,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_RSIGoldCrossLow', index=5, number=5,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_RSIDeathCrossHigh', index=6, number=6,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_RSITopDivergence', index=7, number=7,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_RSIBottomDivergence', index=8, number=8,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_KDJGoldCrossLow', index=9, number=9,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_KDJDeathCrossHigh', index=10, number=10,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_KDJTopDivergence', index=11, number=11,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_KDJBottomDivergence', index=12, number=12,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_MACDGoldCrossLow', index=13, number=13,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_MACDDeathCrossHigh', index=14, number=14,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_MACDTopDivergence', index=15, number=15,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_MACDBottomDivergence', index=16, number=16,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_BOLLBreakUpper', index=17, number=17,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_BOLLLower', index=18, number=18,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_BOLLCrossMiddleUp', index=19, number=19,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PatternField_BOLLCrossMiddleDown', index=20, number=20,
-      options=None,
-      type=None),
-  ],
-  containing_type=None,
-  options=None,
-  serialized_start=5089,
-  serialized_end=5837,
-)
-_sym_db.RegisterEnumDescriptor(_PATTERNFIELD)
-
-PatternField = enum_type_wrapper.EnumTypeWrapper(_PATTERNFIELD)
 _FINANCIALQUARTER = _descriptor.EnumDescriptor(
   name='FinancialQuarter',
   full_name='Qot_StockFilter.FinancialQuarter',
@@ -590,47 +404,12 @@ _FINANCIALQUARTER = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=5840,
-  serialized_end=6057,
+  serialized_start=3986,
+  serialized_end=4203,
 )
 _sym_db.RegisterEnumDescriptor(_FINANCIALQUARTER)
 
 FinancialQuarter = enum_type_wrapper.EnumTypeWrapper(_FINANCIALQUARTER)
-_RELATIVEPOSITION = _descriptor.EnumDescriptor(
-  name='RelativePosition',
-  full_name='Qot_StockFilter.RelativePosition',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='RelativePosition_Unknown', index=0, number=0,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='RelativePosition_More', index=1, number=1,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='RelativePosition_Less', index=2, number=2,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='RelativePosition_CrossUp', index=3, number=3,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='RelativePosition_CrossDown', index=4, number=4,
-      options=None,
-      type=None),
-  ],
-  containing_type=None,
-  options=None,
-  serialized_start=6060,
-  serialized_end=6224,
-)
-_sym_db.RegisterEnumDescriptor(_RELATIVEPOSITION)
-
-RelativePosition = enum_type_wrapper.EnumTypeWrapper(_RELATIVEPOSITION)
 _SORTDIR = _descriptor.EnumDescriptor(
   name='SortDir',
   full_name='Qot_StockFilter.SortDir',
@@ -652,8 +431,8 @@ _SORTDIR = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=6226,
-  serialized_end=6292,
+  serialized_start=4205,
+  serialized_end=4271,
 )
 _sym_db.RegisterEnumDescriptor(_SORTDIR)
 
@@ -733,56 +512,12 @@ FinancialField_OperatingProfitToTotalProfit = 43
 FinancialField_BasicEPS = 44
 FinancialField_DilutedEPS = 45
 FinancialField_NOCFPerShare = 46
-CustomIndicatorField_Unknown = 0
-CustomIndicatorField_Price = 1
-CustomIndicatorField_MA5 = 2
-CustomIndicatorField_MA10 = 3
-CustomIndicatorField_MA20 = 4
-CustomIndicatorField_MA30 = 5
-CustomIndicatorField_MA60 = 6
-CustomIndicatorField_MA120 = 7
-CustomIndicatorField_MA250 = 8
-CustomIndicatorField_RSI = 9
-CustomIndicatorField_EMA5 = 10
-CustomIndicatorField_EMA10 = 11
-CustomIndicatorField_EMA20 = 12
-CustomIndicatorField_EMA30 = 13
-CustomIndicatorField_EMA60 = 14
-CustomIndicatorField_EMA120 = 15
-CustomIndicatorField_EMA250 = 16
-CustomIndicatorField_Value = 17
-PatternField_Unknown = 0
-PatternField_MAAlignmentLong = 1
-PatternField_MAAlignmentShort = 2
-PatternField_EMAAlignmentLong = 3
-PatternField_EMAAlignmentShort = 4
-PatternField_RSIGoldCrossLow = 5
-PatternField_RSIDeathCrossHigh = 6
-PatternField_RSITopDivergence = 7
-PatternField_RSIBottomDivergence = 8
-PatternField_KDJGoldCrossLow = 9
-PatternField_KDJDeathCrossHigh = 10
-PatternField_KDJTopDivergence = 11
-PatternField_KDJBottomDivergence = 12
-PatternField_MACDGoldCrossLow = 13
-PatternField_MACDDeathCrossHigh = 14
-PatternField_MACDTopDivergence = 15
-PatternField_MACDBottomDivergence = 16
-PatternField_BOLLBreakUpper = 17
-PatternField_BOLLLower = 18
-PatternField_BOLLCrossMiddleUp = 19
-PatternField_BOLLCrossMiddleDown = 20
 FinancialQuarter_Unknown = 0
 FinancialQuarter_Annual = 1
 FinancialQuarter_FirstQuarter = 2
 FinancialQuarter_Interim = 3
 FinancialQuarter_ThirdQuarter = 4
 FinancialQuarter_MostRecentQuarter = 5
-RelativePosition_Unknown = 0
-RelativePosition_More = 1
-RelativePosition_Less = 2
-RelativePosition_CrossUp = 3
-RelativePosition_CrossDown = 4
 SortDir_No = 0
 SortDir_Ascend = 1
 SortDir_Descend = 2
@@ -980,117 +715,6 @@ _FINANCIALFILTER = _descriptor.Descriptor(
 )
 
 
-_PATTERNFILTER = _descriptor.Descriptor(
-  name='PatternFilter',
-  full_name='Qot_StockFilter.PatternFilter',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='fieldName', full_name='Qot_StockFilter.PatternFilter.fieldName', index=0,
-      number=1, type=5, cpp_type=1, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='klType', full_name='Qot_StockFilter.PatternFilter.klType', index=1,
-      number=2, type=5, cpp_type=1, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='isNoFilter', full_name='Qot_StockFilter.PatternFilter.isNoFilter', index=2,
-      number=3, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=441,
-  serialized_end=511,
-)
-
-
-_CUSTOMINDICATORFILTER = _descriptor.Descriptor(
-  name='CustomIndicatorFilter',
-  full_name='Qot_StockFilter.CustomIndicatorFilter',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='firstFieldName', full_name='Qot_StockFilter.CustomIndicatorFilter.firstFieldName', index=0,
-      number=1, type=5, cpp_type=1, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='secondFieldName', full_name='Qot_StockFilter.CustomIndicatorFilter.secondFieldName', index=1,
-      number=2, type=5, cpp_type=1, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='relativePosition', full_name='Qot_StockFilter.CustomIndicatorFilter.relativePosition', index=2,
-      number=3, type=5, cpp_type=1, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='fieldValue', full_name='Qot_StockFilter.CustomIndicatorFilter.fieldValue', index=3,
-      number=4, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='klType', full_name='Qot_StockFilter.CustomIndicatorFilter.klType', index=4,
-      number=5, type=5, cpp_type=1, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='isNoFilter', full_name='Qot_StockFilter.CustomIndicatorFilter.isNoFilter', index=5,
-      number=6, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=514,
-  serialized_end=668,
-)
-
-
 _BASEDATA = _descriptor.Descriptor(
   name='BaseData',
   full_name='Qot_StockFilter.BaseData',
@@ -1124,8 +748,8 @@ _BASEDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=670,
-  serialized_end=714,
+  serialized_start=441,
+  serialized_end=485,
 )
 
 
@@ -1169,8 +793,8 @@ _ACCUMULATEDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=716,
-  serialized_end=780,
+  serialized_start=487,
+  serialized_end=551,
 )
 
 
@@ -1214,53 +838,8 @@ _FINANCIALDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=782,
-  serialized_end=848,
-)
-
-
-_CUSTOMINDICATORDATA = _descriptor.Descriptor(
-  name='CustomIndicatorData',
-  full_name='Qot_StockFilter.CustomIndicatorData',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='fieldName', full_name='Qot_StockFilter.CustomIndicatorData.fieldName', index=0,
-      number=1, type=5, cpp_type=1, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value', full_name='Qot_StockFilter.CustomIndicatorData.value', index=1,
-      number=2, type=1, cpp_type=5, label=2,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='klType', full_name='Qot_StockFilter.CustomIndicatorData.klType', index=2,
-      number=3, type=5, cpp_type=1, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=850,
-  serialized_end=921,
+  serialized_start=553,
+  serialized_end=619,
 )
 
 
@@ -1306,13 +885,6 @@ _STOCKDATA = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='customIndicatorDataList', full_name='Qot_StockFilter.StockData.customIndicatorDataList', index=5,
-      number=6, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -1325,8 +897,8 @@ _STOCKDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=924,
-  serialized_end=1229,
+  serialized_start=622,
+  serialized_end=856,
 )
 
 
@@ -1386,20 +958,6 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='patternFilterList', full_name='Qot_StockFilter.C2S.patternFilterList', index=7,
-      number=8, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='customIndicatorFilterList', full_name='Qot_StockFilter.C2S.customIndicatorFilterList', index=8,
-      number=9, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -1412,8 +970,8 @@ _C2S = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1232,
-  serialized_end=1633,
+  serialized_start=859,
+  serialized_end=1126,
 )
 
 
@@ -1457,8 +1015,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1635,
-  serialized_end=1722,
+  serialized_start=1128,
+  serialized_end=1215,
 )
 
 
@@ -1488,8 +1046,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1724,
-  serialized_end=1768,
+  serialized_start=1217,
+  serialized_end=1261,
 )
 
 
@@ -1540,33 +1098,27 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1770,
-  serialized_end=1871,
+  serialized_start=1263,
+  serialized_end=1364,
 )
 
 _STOCKDATA.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY
 _STOCKDATA.fields_by_name['baseDataList'].message_type = _BASEDATA
 _STOCKDATA.fields_by_name['accumulateDataList'].message_type = _ACCUMULATEDATA
 _STOCKDATA.fields_by_name['financialDataList'].message_type = _FINANCIALDATA
-_STOCKDATA.fields_by_name['customIndicatorDataList'].message_type = _CUSTOMINDICATORDATA
 _C2S.fields_by_name['plate'].message_type = Qot__Common__pb2._SECURITY
 _C2S.fields_by_name['baseFilterList'].message_type = _BASEFILTER
 _C2S.fields_by_name['accumulateFilterList'].message_type = _ACCUMULATEFILTER
 _C2S.fields_by_name['financialFilterList'].message_type = _FINANCIALFILTER
-_C2S.fields_by_name['patternFilterList'].message_type = _PATTERNFILTER
-_C2S.fields_by_name['customIndicatorFilterList'].message_type = _CUSTOMINDICATORFILTER
 _S2C.fields_by_name['dataList'].message_type = _STOCKDATA
 _REQUEST.fields_by_name['c2s'].message_type = _C2S
 _RESPONSE.fields_by_name['s2c'].message_type = _S2C
 DESCRIPTOR.message_types_by_name['BaseFilter'] = _BASEFILTER
 DESCRIPTOR.message_types_by_name['AccumulateFilter'] = _ACCUMULATEFILTER
 DESCRIPTOR.message_types_by_name['FinancialFilter'] = _FINANCIALFILTER
-DESCRIPTOR.message_types_by_name['PatternFilter'] = _PATTERNFILTER
-DESCRIPTOR.message_types_by_name['CustomIndicatorFilter'] = _CUSTOMINDICATORFILTER
 DESCRIPTOR.message_types_by_name['BaseData'] = _BASEDATA
 DESCRIPTOR.message_types_by_name['AccumulateData'] = _ACCUMULATEDATA
 DESCRIPTOR.message_types_by_name['FinancialData'] = _FINANCIALDATA
-DESCRIPTOR.message_types_by_name['CustomIndicatorData'] = _CUSTOMINDICATORDATA
 DESCRIPTOR.message_types_by_name['StockData'] = _STOCKDATA
 DESCRIPTOR.message_types_by_name['C2S'] = _C2S
 DESCRIPTOR.message_types_by_name['S2C'] = _S2C
@@ -1575,10 +1127,7 @@ DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
 DESCRIPTOR.enum_types_by_name['StockField'] = _STOCKFIELD
 DESCRIPTOR.enum_types_by_name['AccumulateField'] = _ACCUMULATEFIELD
 DESCRIPTOR.enum_types_by_name['FinancialField'] = _FINANCIALFIELD
-DESCRIPTOR.enum_types_by_name['CustomIndicatorField'] = _CUSTOMINDICATORFIELD
-DESCRIPTOR.enum_types_by_name['PatternField'] = _PATTERNFIELD
 DESCRIPTOR.enum_types_by_name['FinancialQuarter'] = _FINANCIALQUARTER
-DESCRIPTOR.enum_types_by_name['RelativePosition'] = _RELATIVEPOSITION
 DESCRIPTOR.enum_types_by_name['SortDir'] = _SORTDIR
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -1603,20 +1152,6 @@ FinancialFilter = _reflection.GeneratedProtocolMessageType('FinancialFilter', (_
   ))
 _sym_db.RegisterMessage(FinancialFilter)
 
-PatternFilter = _reflection.GeneratedProtocolMessageType('PatternFilter', (_message.Message,), dict(
-  DESCRIPTOR = _PATTERNFILTER,
-  __module__ = 'Qot_StockFilter_pb2'
-  # @@protoc_insertion_point(class_scope:Qot_StockFilter.PatternFilter)
-  ))
-_sym_db.RegisterMessage(PatternFilter)
-
-CustomIndicatorFilter = _reflection.GeneratedProtocolMessageType('CustomIndicatorFilter', (_message.Message,), dict(
-  DESCRIPTOR = _CUSTOMINDICATORFILTER,
-  __module__ = 'Qot_StockFilter_pb2'
-  # @@protoc_insertion_point(class_scope:Qot_StockFilter.CustomIndicatorFilter)
-  ))
-_sym_db.RegisterMessage(CustomIndicatorFilter)
-
 BaseData = _reflection.GeneratedProtocolMessageType('BaseData', (_message.Message,), dict(
   DESCRIPTOR = _BASEDATA,
   __module__ = 'Qot_StockFilter_pb2'
@@ -1637,13 +1172,6 @@ FinancialData = _reflection.GeneratedProtocolMessageType('FinancialData', (_mess
   # @@protoc_insertion_point(class_scope:Qot_StockFilter.FinancialData)
   ))
 _sym_db.RegisterMessage(FinancialData)
-
-CustomIndicatorData = _reflection.GeneratedProtocolMessageType('CustomIndicatorData', (_message.Message,), dict(
-  DESCRIPTOR = _CUSTOMINDICATORDATA,
-  __module__ = 'Qot_StockFilter_pb2'
-  # @@protoc_insertion_point(class_scope:Qot_StockFilter.CustomIndicatorData)
-  ))
-_sym_db.RegisterMessage(CustomIndicatorData)
 
 StockData = _reflection.GeneratedProtocolMessageType('StockData', (_message.Message,), dict(
   DESCRIPTOR = _STOCKDATA,
