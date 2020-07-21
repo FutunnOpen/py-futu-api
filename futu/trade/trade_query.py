@@ -45,8 +45,8 @@ class GetAccountList:
         raw_acc_list = rsp_pb.s2c.accList
         acc_list = [{
             'acc_id': record.accID,
-            'trd_env': TRADE.REV_TRD_ENV_MAP[record.trdEnv] if record.trdEnv in TRADE.REV_TRD_ENV_MAP else "",
-            'trdMarket_list': [(TRADE.REV_TRD_MKT_MAP[trdMkt] if trdMkt in TRADE.REV_TRD_MKT_MAP else TrdMarket.NONE) for trdMkt in record.trdMarketAuthList],
+            'trd_env': TrdEnv.to_string2(record.trdEnv),
+            'trdMarket_list': [ TrdMarket.to_string2(trdMkt) for trdMkt in record.trdMarketAuthList],
             'acc_type': TrdAccType.to_string2(record.accType) if record.HasField("accType") else TrdAccType.NONE,
             'card_num': record.cardNum if record.HasField("cardNum") else "N/A"
         } for record in raw_acc_list]
@@ -113,9 +113,9 @@ class AccInfoQuery:
     def pack_req(cls, acc_id, trd_market, trd_env, conn_id, refresh_cache, currency):
         from futu.common.pb.Trd_GetFunds_pb2 import Request
         req = Request()
-        req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
+        _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
-        req.c2s.header.trdMarket = TRD_MKT_MAP[trd_market]
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_market)
         if refresh_cache:
             req.c2s.refreshCache = refresh_cache
         req.c2s.currency = Currency.to_number(currency)[1]
@@ -169,9 +169,9 @@ class PositionListQuery:
         """Convert from user request for trading days to PLS request"""
         from futu.common.pb.Trd_GetPositionList_pb2 import Request
         req = Request()
-        req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
+        _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
-        req.c2s.header.trdMarket = TRD_MKT_MAP[trd_mkt]
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
         if code:
             req.c2s.filterConditions.codeList.append(code)
         if pl_ratio_min is not None:
@@ -209,8 +209,7 @@ class PositionListQuery:
                              "today_pl_val": position.td_plVal if position.HasField('td_plVal') else NoneDataValue,
                              "today_sell_qty": position.td_sellQty if position.HasField('td_sellQty') else NoneDataValue,
                              "today_sell_val": position.td_sellVal if position.HasField('td_sellVal') else NoneDataValue,
-                             "position_side": TRADE.REV_POSITION_SIDE_MAP[position.positionSide]
-                                if position.positionSide in TRADE.REV_POSITION_SIDE_MAP else PositionSide.NONE,
+                             "position_side": PositionSide.to_string2(position.positionSide),
                              "unrealized_pl": position.unrealizedPL if position.HasField('unrealizedPL') else NoneDataValue,
                              "realized_pl": position.realizedPL if position.HasField('realizedPL') else NoneDataValue
                          } for position in raw_position_list]
@@ -228,9 +227,9 @@ class OrderListQuery:
         """Convert from user request for trading days to PLS request"""
         from futu.common.pb.Trd_GetOrderList_pb2 import Request
         req = Request()
-        req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
+        _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
-        req.c2s.header.trdMarket = TRD_MKT_MAP[trd_mkt]
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
 
         if code:
             req.c2s.filterConditions.codeList.append(code)
@@ -246,7 +245,9 @@ class OrderListQuery:
 
         if len(status_filter_list):
             for order_status in status_filter_list:
-                req.c2s.filterStatusList.append(ORDER_STATUS_MAP[order_status])
+                r, v = OrderStatus.to_number(order_status)
+                if r:
+                    req.c2s.filterStatusList.append(v)
 
         return pack_pb_req(req, ProtoId.Trd_GetOrderList, conn_id)
 
@@ -255,9 +256,9 @@ class OrderListQuery:
         order_dict = {
             "code": merge_trd_mkt_stock_str(order.secMarket, order.code),
             "stock_name": order.name,
-            "trd_side": TRADE.REV_TRD_SIDE_MAP[order.trdSide] if order.trdSide in TRADE.REV_TRD_SIDE_MAP else TrdSide.NONE,
-            "order_type": TRADE.REV_ORDER_TYPE_MAP[order.orderType] if order.orderType in TRADE.REV_ORDER_TYPE_MAP else OrderType.NONE,
-            "order_status": TRADE.REV_ORDER_STATUS_MAP[order.orderStatus] if order.orderStatus in TRADE.REV_ORDER_STATUS_MAP else OrderStatus.NONE,
+            "trd_side": TrdSide.to_string2(order.trdSide),
+            "order_type": OrderType.to_string2(order.orderType),
+            "order_status": OrderStatus.to_string2(order.orderStatus),
             "order_id": str(order.orderID),
             "qty": order.qty,
             "price": order.price,
@@ -296,12 +297,12 @@ class PlaceOrder:
         req.c2s.packetID.serialNo = serial_no
         req.c2s.packetID.connID = conn_id
 
-        req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
+        _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
-        req.c2s.header.trdMarket = TRD_MKT_MAP[trd_mkt]
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
 
-        req.c2s.trdSide = TRD_SIDE_MAP[trd_side]
-        req.c2s.orderType = ORDER_TYPE_MAP[order_type]
+        _, req.c2s.trdSide = TrdSide.to_number(trd_side)
+        _, req.c2s.orderType = OrderType.to_number(order_type)
         req.c2s.code = code
         req.c2s.qty = qty
         req.c2s.price = price
@@ -309,9 +310,10 @@ class PlaceOrder:
         req.c2s.adjustSideAndLimit = adjust_limit
         if remark is not None:
             req.c2s.remark = remark
-        proto_qot_mkt = MKT_MAP.get(sec_mkt_str, Qot_Common_pb2.QotMarket_Unknown)
-        proto_trd_sec_mkt = QOT_MARKET_TO_TRD_SEC_MARKET_MAP.get(proto_qot_mkt,
-                                                                 Trd_Common_pb2.TrdSecMarket_Unknown)
+        r, proto_qot_mkt = Market.to_number(sec_mkt_str)
+        if not r:
+            proto_qot_mkt = Qot_Common_pb2.QotMarket_Unknown
+        proto_trd_sec_mkt = QOT_MARKET_TO_TRD_SEC_MARKET_MAP.get(proto_qot_mkt, Trd_Common_pb2.TrdSecMarket_Unknown)
         req.c2s.secMarket = proto_trd_sec_mkt
 
         return pack_pb_req(req, ProtoId.Trd_PlaceOrder, conn_id, serial_no)
@@ -342,12 +344,12 @@ class ModifyOrder:
         req.c2s.packetID.serialNo = serial_no
         req.c2s.packetID.connID = conn_id
 
-        req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
+        _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
-        req.c2s.header.trdMarket = TRD_MKT_MAP[trd_mkt]
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
 
         req.c2s.orderID = int(order_id)
-        req.c2s.modifyOrderOp = MODIFY_ORDER_OP_MAP[modify_order_op]
+        _, req.c2s.modifyOrderOp = ModifyOrderOp.to_number(modify_order_op)
         req.c2s.forAll = False
 
         if modify_order_op == ModifyOrderOp.NORMAL:
@@ -366,7 +368,7 @@ class ModifyOrder:
 
         order_id = str(rsp_pb.s2c.orderID)
         modify_order_list = [{
-            'trd_env': TRADE.REV_TRD_ENV_MAP[rsp_pb.s2c.header.trdEnv],
+            'trd_env': TrdEnv.to_string2(rsp_pb.s2c.header.trdEnv),
             'order_id': order_id
         }]
 
@@ -387,12 +389,12 @@ class CancelOrder:
         req.c2s.packetID.serialNo = serial_no
         req.c2s.packetID.connID = conn_id
 
-        req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
+        _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
-        req.c2s.header.trdMarket = TRD_MKT_MAP[trd_mkt]
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
 
         req.c2s.orderID = 0
-        req.c2s.modifyOrderOp = MODIFY_ORDER_OP_MAP[ModifyOrderOp.CANCEL]
+        req.c2s.modifyOrderOp = Trd_Common_pb2.ModifyOrderOp_Cancel
         req.c2s.forAll = True
         return pack_pb_req(req, ProtoId.Trd_ModifyOrder, conn_id, serial_no)
 
@@ -414,9 +416,9 @@ class DealListQuery:
         """Convert from user request for place order to PLS request"""
         from futu.common.pb.Trd_GetOrderFillList_pb2 import Request
         req = Request()
-        req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
+        _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
-        req.c2s.header.trdMarket = TRD_MKT_MAP[trd_mkt]
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
 
         if code:
             req.c2s.filterConditions.codeList.append(code)
@@ -435,7 +437,7 @@ class DealListQuery:
             "order_id": str(deal.orderID) if deal.HasField('orderID') else NoneDataValue,
             "qty": deal.qty,
             "price": deal.price,
-            "trd_side": TRADE.REV_TRD_SIDE_MAP[deal.trdSide] if deal.trdSide in TRADE.REV_TRD_SIDE_MAP else TrdSide.NONE,
+            "trd_side": TrdSide.to_string2(deal.trdSide),
             "create_time": deal.createTime,
             "counter_broker_id": deal.counterBrokerID if deal.HasField('counterBrokerID') else NoneDataValue,
             "counter_broker_name": deal.counterBrokerName if deal.HasField('counterBrokerName') else NoneDataValue,
@@ -467,9 +469,9 @@ class HistoryOrderListQuery:
 
         from futu.common.pb.Trd_GetHistoryOrderList_pb2 import Request
         req = Request()
-        req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
+        _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
-        req.c2s.header.trdMarket = TRD_MKT_MAP[trd_mkt]
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
 
         if code:
             req.c2s.filterConditions.codeList.append(code)
@@ -479,7 +481,9 @@ class HistoryOrderListQuery:
 
         if status_filter_list:
             for order_status in status_filter_list:
-                req.c2s.filterStatusList.append(ORDER_STATUS_MAP[order_status])
+                r, v = OrderStatus.to_number(order_status)
+                if r:
+                    req.c2s.filterStatusList.append(v)
 
         return pack_pb_req(req, ProtoId.Trd_GetHistoryOrderList, conn_id)
 
@@ -493,9 +497,9 @@ class HistoryOrderListQuery:
         order_list = [{
                       "code": merge_trd_mkt_stock_str(order.secMarket, order.code),
                       "stock_name": order.name,
-                      "trd_side": TRADE.REV_TRD_SIDE_MAP[order.trdSide] if order.trdSide in TRADE.REV_TRD_SIDE_MAP else TrdSide.NONE,
-                      "order_type": TRADE.REV_ORDER_TYPE_MAP[order.orderType] if order.orderType in TRADE.REV_ORDER_TYPE_MAP else OrderType.NONE,
-                      "order_status": TRADE.REV_ORDER_STATUS_MAP[order.orderStatus] if order.orderStatus in TRADE.REV_ORDER_STATUS_MAP else OrderStatus.NONE,
+                      "trd_side": TrdSide.to_string2(order.trdSide),
+                      "order_type": OrderType.to_string2(order.orderType),
+                      "order_status": OrderStatus.to_string2(order.orderStatus),
                       "order_id": str(order.orderID),
                       "qty": order.qty,
                       "price": order.price,
@@ -520,9 +524,9 @@ class HistoryDealListQuery:
 
         from futu.common.pb.Trd_GetHistoryOrderFillList_pb2 import Request
         req = Request()
-        req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
+        _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
-        req.c2s.header.trdMarket = TRD_MKT_MAP[trd_mkt]
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
 
         if code:
             req.c2s.filterConditions.codeList.append(code)
@@ -546,7 +550,7 @@ class HistoryDealListQuery:
                     "order_id": str(deal.orderID) if deal.HasField('orderID') else "",
                     "qty": deal.qty,
                     "price": deal.price,
-                    "trd_side": TRADE.REV_TRD_SIDE_MAP[deal.trdSide] if deal.trdSide in TRADE.REV_TRD_SIDE_MAP else TrdSide.NONE,
+                    "trd_side": TrdSide.to_string2(deal.trdSide),
                     "create_time": deal.createTime,
                     "counter_broker_id": deal.counterBrokerID if deal.HasField('counterBrokerID') else "",
                     "counter_broker_name": deal.counterBrokerName,
@@ -567,8 +571,8 @@ class UpdateOrderPush:
             return RET_ERROR, rsp_pb.retMsg
 
         order_dict = OrderListQuery.parse_order(rsp_pb, rsp_pb.s2c.order)
-        order_dict['trd_env'] = TRADE.REV_TRD_ENV_MAP[rsp_pb.s2c.header.trdEnv]
-        order_dict['trd_market'] = TRADE.REV_TRD_MKT_MAP[rsp_pb.s2c.header.trdMarket]
+        order_dict['trd_env'] = TrdEnv.to_string2(rsp_pb.s2c.header.trdEnv)
+        order_dict['trd_market'] = TrdMarket.to_string2(rsp_pb.s2c.header.trdEnv)
 
         return RET_OK, order_dict
 
@@ -585,8 +589,8 @@ class UpdateDealPush:
             return RET_ERROR, rsp_pb.retMsg
 
         deal_dict = DealListQuery.parse_deal(rsp_pb, rsp_pb.s2c.orderFill)
-        deal_dict['trd_env'] = TRADE.REV_TRD_ENV_MAP[rsp_pb.s2c.header.trdEnv]
-        deal_dict['trd_market'] = TRADE.REV_TRD_MKT_MAP[rsp_pb.s2c.header.trdMarket]
+        deal_dict['trd_env'] = TrdEnv.to_string2(rsp_pb.s2c.header.trdEnv)
+        deal_dict['trd_market'] = TrdMarket.to_string2(rsp_pb.s2c.header.trdMarket)
 
         return RET_OK, deal_dict
 
@@ -600,11 +604,11 @@ class AccTradingInfoQuery:
 
         from futu.common.pb.Trd_GetMaxTrdQtys_pb2 import Request
         req = Request()
-        req.c2s.header.trdEnv = TRD_ENV_MAP[trd_env]
+        _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
-        req.c2s.header.trdMarket = TRD_MKT_MAP[trd_mkt]
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
 
-        req.c2s.orderType = ORDER_TYPE_MAP[order_type]
+        _, req.c2s.orderType = OrderType.to_number(order_type)
         req.c2s.code = code
         req.c2s.price = price
         if order_id is not None:
@@ -615,9 +619,11 @@ class AccTradingInfoQuery:
             req.c2s.adjustPrice = True
             req.c2s.adjustSideAndLimit = adjust_limit
 
-        proto_qot_mkt = MKT_MAP.get(sec_mkt_str, Qot_Common_pb2.QotMarket_Unknown)
-        proto_trd_sec_mkt = QOT_MARKET_TO_TRD_SEC_MARKET_MAP.get(proto_qot_mkt,
-                                                                 Trd_Common_pb2.TrdSecMarket_Unknown)
+        r, proto_qot_mkt = Market.to_number(sec_mkt_str)
+        if not r:
+            proto_qot_mkt = Qot_Common_pb2.QotMarket_Unknown
+
+        proto_trd_sec_mkt = QOT_MARKET_TO_TRD_SEC_MARKET_MAP.get(proto_qot_mkt, Trd_Common_pb2.TrdSecMarket_Unknown)
         req.c2s.secMarket = proto_trd_sec_mkt
 
         return pack_pb_req(req, ProtoId.Trd_GetMaxTrdQtys, conn_id)

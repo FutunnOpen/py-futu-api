@@ -194,9 +194,9 @@ message StockData
 {
     required Qot_Common.Security security = 1; // 股票
 	required string name = 2; // 股票名称
-    repeated BaseData baseDataList = 3; // 筛选后的简单属性数据
-	repeated AccumulateData accumulateDataList = 4; // 筛选后的累积属性数据
-	repeated FinancialData financialDataList = 5; // 筛选后的财务属性数据
+    repeated BaseData baseDataList = 3; // 筛选后的简单指标属性数据
+	repeated AccumulateData accumulateDataList = 4; // 筛选后的累积指标属性数据
+	repeated FinancialData financialDataList = 5; // 筛选后的财务指标属性数据
 }
 
 message C2S
@@ -206,9 +206,9 @@ message C2S
 	required int32 market= 3; // Qot_Common::QotMarket股票市场，支持沪股和深股，且沪股和深股不做区分都代表A股市场。
 	// 以下为筛选条件，可选字段，不填表示不过滤
 	optional Qot_Common.Security plate = 4; // 板块
-	repeated BaseFilter baseFilterList = 5; // 简单属性过滤器
-	repeated AccumulateFilter accumulateFilterList = 6; // 累积属性过滤器
-	repeated FinancialFilter financialFilterList = 7; // 财务属性过滤器
+	repeated BaseFilter baseFilterList = 5; // 简单指标过滤器
+	repeated AccumulateFilter accumulateFilterList = 6; // 累积指标过滤器
+	repeated FinancialFilter financialFilterList = 7; // 财务指标过滤器
 }
 
 message S2C

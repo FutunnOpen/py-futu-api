@@ -7,19 +7,12 @@ from futu.common.constant import *
 from futu.common.utils import *
 
 class SimpleFilter(object):
-    """这里用simple替换掉协议里面的Base，以后有各种filter扩展"""
-    stock_field = StockField.NONE  # StockField 简单属性
-    filter_min = None  # 区间下限，闭区间
-    filter_max = None  # 区间上限，闭区间
-    sort = None  # SortDir 排序方向 SortDir
-    is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
-
     def __init__(self):
-        self.stock_field = StockField.NONE
-        self.filter_min = None
-        self.filter_max = None
-        self.sort = None
-        self.is_no_filter = None
+        self.stock_field = StockField.NONE # StockField 简单属性
+        self.filter_min = None  # 区间下限，闭区间
+        self.filter_max = None  # 区间上限，闭区间
+        self.sort = None   # SortDir 排序方向 SortDir
+        self.is_no_filter = None # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
 
     def fill_request_pb(self, filter_req):
         r, v = StockField.to_number(self.stock_field)
@@ -37,25 +30,18 @@ class SimpleFilter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                raise Exception("sort is wrong. must be SortDir")
+                return RET_ERROR, 'sort is wrong. must be SortDir'
             filter_req.sortDir = v
         return RET_OK, ""
 
 class AccumulateFilter(object):
-    stock_field = StockField.NONE  # StockField 累计属性
-    filter_min = None  # 区间下限，闭区间
-    filter_max = None  # 区间上限，闭区间
-    sort = None  # SortDir 排序方向 SortDir
-    is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
-    days = 1 #所筛选的数据的累计天数
-    
     def __init__(self):
-        self.stock_field = StockField.NONE
-        self.filter_min = None
-        self.filter_max = None
-        self.sort = None
-        self.is_no_filter = None
-        self.days = 1
+        self.stock_field = StockField.NONE   # StockField 累计属性
+        self.filter_min = None  # 区间下限，闭区间
+        self.filter_max = None  # 区间上限，闭区间
+        self.sort = None  # SortDir 排序方向 SortDir
+        self.is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
+        self.days = 1  #所筛选的数据的累计天数
 
     def fill_request_pb(self, filter_req):
         r, v = StockField.to_number(self.stock_field)
@@ -74,25 +60,18 @@ class AccumulateFilter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                raise Exception("sort is wrong. must be SortDir")
+                return RET_ERROR, 'sort is wrong. must be SortDir'
             filter_req.sortDir = v
         return RET_OK, ""
             
 class FinancialFilter(object):
-    stock_field = StockField.NONE  # StockField 财务属性
-    filter_min = None  # 区间下限，闭区间
-    filter_max = None  # 区间上限，闭区间
-    sort = None  # SortDir 排序方向 SortDir
-    is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
-    quarter = FinancialQuarter.ANNUAL #财报累积时间
-
     def __init__(self):
-        self.stock_field = StockField.NONE
-        self.filter_min = None
-        self.filter_max = None
-        self.sort = None
-        self.is_no_filter = None
-        self.quarter = FinancialQuarter.ANNUAL
+        self.stock_field = StockField.NONE  # StockField 财务属性
+        self.filter_min = None  # 区间下限，闭区间
+        self.filter_max = None  # 区间上限，闭区间
+        self.sort = None  # SortDir 排序方向 SortDir
+        self.is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
+        self.quarter = FinancialQuarter.ANNUAL #财报累积时间
 
     def fill_request_pb(self, filter_req):
         r, v = StockField.to_number(self.stock_field)
@@ -116,14 +95,12 @@ class FinancialFilter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                raise Exception("sort is wrong. must be SortDir")
+                return RET_ERROR, 'sort is wrong. must be SortDir'
             filter_req.sortDir = v
 
         return RET_OK, ""
 
 class FilterStockData(object):
-    stock_code = None
-    stock_name = None
     # 以下是简单数据过滤所支持的字段
     # cur_price = None  # 最新价
     # cur_price_to_highest_52weeks_ratio = None  # (现价 - 52周最高) / 52周最高，对应pc端离52周高点百分比
@@ -171,7 +148,7 @@ class FilterStockData(object):
     # financial_cost_rate  # 财务成本率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
     # operating_profit_ttm  # 营业利润(ttm) 例如填写 [1000000000,1000000000] 值区间 （单位：元。仅适用于年报。）
     # shareholder_net_profit_ttm  # 归属于母公司的净利润 例如填写 [1000000000,1000000000] 值区间 （单位：元。仅适用于年报。）
-    # net_profit_cash_cover  # 盈利中的现金收入比例 例如填写 [1.0,60.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
+    # net_profit_cash_cover_ttm  # 盈利中的现金收入比例 例如填写 [1.0,60.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
     # current_ratio  # 偿债能力属性流动比率 例如填写 [100,250] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
     # quick_ratio  # 速动比率 例如填写 [100,250] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
     # current_asset_ratio  # 清债能力属性流动资产率 例如填写 [10,100] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
@@ -183,7 +160,7 @@ class FilterStockData(object):
     # fixed_asset_turnover  # 固定资产周转率 例如填写 [50,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
     # inventory_turnover  # 存货周转率 例如填写 [50,100] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
     # operating_cash_flow_ttm  # 经营活动现金流(ttm) 例如填写 [1000000000,1000000000] 值区间（单位：元。仅适用于年报。）
-    # accounts_receivable  # 应收帐款净额 例如填写 [1000000000,1000000000] 值区间 例如填写 [1000000000,1000000000] 值区间 （单位：元）
+    # accounts_receivable  # 应收账款净额 例如填写 [1000000000,1000000000] 值区间 例如填写 [1000000000,1000000000] 值区间 （单位：元）
     # ebit_growth_rate  # 成长能力属性ebit同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
     # operating_profit_growth_rate  # 营业利润同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
     # total_assets_growth_rate  # 总资产同比增长率 例如填写 [1.0,10.0] 值区间 （该字段为百分比字段，默认省略%，如20实际对应20%）
@@ -201,10 +178,10 @@ class FilterStockData(object):
     # nocf_per_share  # 每股经营现金净流量 例如填写 [0.1,10] 值区间 (单位：元)
 
     def __init__(self, rsp_item):
-        from futu.common.pb.Qot_StockFilter_pb2 import StockData
-        if not isinstance(rsp_item, StockData):
-            raise Exception("Response item need Qot_StockFilter_pb2")
+        self.stock_code = None
+        self.stock_name = None
 
+        from futu.common.pb.Qot_StockFilter_pb2 import StockData
         self.stock_code = merge_qot_mkt_stock_str(rsp_item.security.market, rsp_item.security.code)
         #  名称 type = string
         self.stock_name = rsp_item.name
