@@ -1823,6 +1823,9 @@ class OpenQuoteContext(OpenContextBase):
         if (req is None) or (not isinstance(req, Request)):
             req = Request()
 
+        if stock_owner is Market.HK:
+            stock_owner = ''
+
         if stock_owner is not None:
             req.stock_owner = stock_owner
 
