@@ -314,7 +314,8 @@ class OpenQuoteContext(OpenContextBase):
                               autype=AuType.QFQ,
                               fields=[KL_FIELD.ALL],
                               max_count=1000,
-                              page_req_key=None):
+                              page_req_key=None,
+                              extended_time=False):
         """
         拉取历史k线，不需要先下载历史数据。
 
@@ -410,7 +411,8 @@ class OpenQuoteContext(OpenContextBase):
                 "fields": copy(req_fields),
                 "max_num": max_kl_num,
                 "conn_id": self.get_sync_conn_id(),
-                "next_req_key": page_req_key
+                "next_req_key": page_req_key,
+                "extended_time": extended_time
             }
             query_processor = self._get_sync_query_processor(RequestHistoryKlineQuery.pack_req,
                                                              RequestHistoryKlineQuery.unpack_rsp)

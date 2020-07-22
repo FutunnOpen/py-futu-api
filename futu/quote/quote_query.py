@@ -858,7 +858,7 @@ class RequestHistoryKlineQuery:
 
     @classmethod
     def pack_req(cls, code, start_date, end_date, ktype, autype, fields,
-                 max_num, conn_id, next_req_key):
+                 max_num, conn_id, next_req_key, extended_time):
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
@@ -892,6 +892,8 @@ class RequestHistoryKlineQuery:
         req.c2s.needKLFieldsFlag = KL_FIELD.kl_fields_to_flag_val(fields)
         if next_req_key is not None:
             req.c2s.nextReqKey = next_req_key
+        if extended_time:
+            req.c2s.extendedTime = True
 
         return pack_pb_req(req, ProtoId.Qot_RequestHistoryKL, conn_id)
 
