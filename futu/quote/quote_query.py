@@ -6,6 +6,7 @@
 from futu.common.utils import *
 from futu.common.pb import Common_pb2
 from futu.quote.quote_stockfilter_info import *
+from futu.quote.quote_get_warrant import *
 
 # 无数据时的值
 NoneDataType = 'N/A'

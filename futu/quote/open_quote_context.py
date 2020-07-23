@@ -10,6 +10,7 @@ import pandas as pd
 from futu.common.open_context_base import OpenContextBase, ContextStatus
 from futu.quote.quote_query import *
 from futu.quote.quote_stockfilter_info import *
+from futu.quote.quote_get_warrant import *
 
 class SubRecord:
     def __init__(self):
@@ -1820,7 +1821,7 @@ class OpenQuoteContext(OpenContextBase):
         :param stock_owner:所属正股
         :param req:futu.quote.quote_get_warrant.Request
         """
-        from futu.quote.quote_get_warrant import Request
+
 
         if (req is None) or (not isinstance(req, Request)):
             req = Request()
