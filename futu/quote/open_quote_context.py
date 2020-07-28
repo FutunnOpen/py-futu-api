@@ -567,6 +567,13 @@ class OpenQuoteContext(OpenContextBase):
                 future_position_change     float          日增仓
                 future_main_contract       bool           是否主连合约
                 future_last_trade_time     string         只有非主连期货合约才有该字段
+                trust_vaild                bool           是否基金
+                trust_dividend_yield       float          股息率
+                trust_aum                  float          资产规模
+                trust_outstanding_units    int            总发行量
+                trust_netAssetValue        float          单位净值
+                trust_premium              float          溢价
+                trust_assetClass           string         资产类别
                 =======================   =============   ==============================================================================
         """
         code_list = unique_and_normalize_list(code_list)
@@ -662,6 +669,14 @@ class OpenQuoteContext(OpenContextBase):
                            'future_last_trade_time',
                          ]
 
+        trust_col_list = ['trust_dividend_yield',
+                          'trust_aum',
+                          'trust_outstanding_units',
+                          'trust_netAssetValue',
+                          'trust_premium',
+                          'trust_assetClass',
+                        ]
+
         col_list = [
             'code',
             'update_time',
@@ -717,6 +732,8 @@ class OpenQuoteContext(OpenContextBase):
         col_dict.update((key, 1) for key in plate_col_list)
         col_dict['future_valid'] = 1
         col_dict.update((key, 1) for key in future_col_list)
+        col_dict['trust_vaild '] = 1
+        col_dict.update((key, 1) for key in trust_col_list)
 
         col_dict.update((row[0], 1) for row in pb_field_map_PreAfterMarketData_pre)
         col_dict.update((row[0], 1) for row in pb_field_map_PreAfterMarketData_after)

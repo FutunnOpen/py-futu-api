@@ -60,7 +60,7 @@ def merge_pb_cnipoexdata_winningnumdata(winningnumdata):
 # python_name, pb_name, is_required, conv_func
 pb_field_map_OptionBasicQotExData = [
     ('strike_price', 'strikePrice', True, None),
-    ('contract_size', 'contractSize', True, None),
+    ('contract_size', 'contractSizeFloat', True, None),
     ('open_interest', 'openInterest', True, None),
     ('implied_volatility', 'impliedVolatility', True, None),
     ('premium', 'premium', True, None),
@@ -604,7 +604,7 @@ class MarketSnapshotQuery:
                     record.optionExData.owner.market, record.optionExData.owner.code)
                 snapshot_tmp['strike_time'] = record.optionExData.strikeTime
                 snapshot_tmp['option_strike_price'] = record.optionExData.strikePrice
-                snapshot_tmp['option_contract_size'] = record.optionExData.contractSize
+                snapshot_tmp['option_contract_size'] = record.optionExData.contractSizeFloat
                 snapshot_tmp['option_open_interest'] = record.optionExData.openInterest
                 snapshot_tmp['option_implied_volatility'] = record.optionExData.impliedVolatility
                 snapshot_tmp['option_premium'] = record.optionExData.premium
@@ -649,6 +649,15 @@ class MarketSnapshotQuery:
                 snapshot_tmp['future_main_contract'] = record.futureExData.isMainContract
                 snapshot_tmp['future_last_trade_time'] = record.futureExData.lastTradeTime
 
+            snapshot_tmp['trust_vaild '] = False
+            if record.HasField('trustExData'):
+                snapshot_tmp['trust_vaild'] = True
+                snapshot_tmp['trust_dividend_yield'] = record.trustExData.dividendYield
+                snapshot_tmp['trust_aum'] = record.trustExData.aum
+                snapshot_tmp['trust_outstanding_units'] = record.trustExData.outstandingUnits
+                snapshot_tmp['trust_netAssetValue'] = record.trustExData.netAssetValue
+                snapshot_tmp['trust_premium'] = record.trustExData.premium
+                snapshot_tmp['trust_assetClass'] = AssetClass.to_string2(record.trustExData.assetClass)
             snapshot_list.append(snapshot_tmp)
 
         return RET_OK, "", snapshot_list
