@@ -2200,6 +2200,8 @@ class GetUserInfo:
         update_type = rsp_pb.s2c.updateType if rsp_pb.s2c.HasField(
             'updateType') else "N/A"
         web_key = rsp_pb.s2c.webKey if rsp_pb.s2c.HasField('webKey') else "N/A"
+        sub_quota = rsp_pb.s2c.subQuota if rsp_pb.s2c.HasField('subQuota') else "N/A"
+        history_kl_quota = rsp_pb.s2c.historyKLQuota if rsp_pb.s2c.HasField('historyKLQuota') else "N/A"
         data = {
             "nick_name": nick_name,
             "avatar_url": avatar_url,
@@ -2212,7 +2214,9 @@ class GetUserInfo:
             "is_need_agree_disclaimer": is_need_agree_disclaimer,
             "user_id": user_id,
             "update_type": UpdateType.to_string2(update_type),
-            "web_key": web_key
+            "web_key": web_key,
+            "sub_quota": sub_quota,
+            "history_kl_quota": history_kl_quota,
         }
         return RET_OK, "", data
 
