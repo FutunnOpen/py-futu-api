@@ -449,6 +449,18 @@ enum PriceReminderFreq
     PriceReminderFreq_OnlyOnce = 3; // 仅提醒一次
 }
 
+// 资产类别
+enum AssetClass
+{
+	AssetClass_Unknow = 0; //未知
+	AssetClass_Stock = 1; //股票
+	AssetClass_Bond = 2; //债券
+	AssetClass_Commodity = 3; //商品
+	AssetClass_CurrencyMarket = 4; //货币市场
+	AssetClass_Future = 5; //期货
+	AssetClass_Swap = 6; //掉期
+}
+
  //两个字段确定一支股票
 message Security
 {
@@ -476,7 +488,8 @@ message KLine
 message OptionBasicQotExData
 {
 	required double strikePrice = 1; //行权价
-	required int32 contractSize = 2; //每份合约数
+	required int32 contractSize = 2; //每份合约数(整型数据)
+	optional double contractSizeFloat = 17; //每份合约数（浮点型数据）
 	required int32 openInterest = 3; //未平仓合约数
 	required double impliedVolatility = 4; //隐含波动率（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	required double premium = 5; //溢价（该字段为百分比字段，默认不展示%，如20实际对应20%）

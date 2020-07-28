@@ -6,6 +6,7 @@
 from futu.common.utils import *
 from futu.common.pb import Common_pb2
 from futu.quote.quote_stockfilter_info import *
+from futu.quote.quote_get_warrant import *
 
 # 无数据时的值
 NoneDataType = 'N/A'
@@ -59,7 +60,7 @@ def merge_pb_cnipoexdata_winningnumdata(winningnumdata):
 # python_name, pb_name, is_required, conv_func
 pb_field_map_OptionBasicQotExData = [
     ('strike_price', 'strikePrice', True, None),
-    ('contract_size', 'contractSize', True, None),
+    ('contract_size', 'contractSizeFloat', True, None),
     ('open_interest', 'openInterest', True, None),
     ('implied_volatility', 'impliedVolatility', True, None),
     ('premium', 'premium', True, None),
@@ -603,7 +604,7 @@ class MarketSnapshotQuery:
                     record.optionExData.owner.market, record.optionExData.owner.code)
                 snapshot_tmp['strike_time'] = record.optionExData.strikeTime
                 snapshot_tmp['option_strike_price'] = record.optionExData.strikePrice
-                snapshot_tmp['option_contract_size'] = record.optionExData.contractSize
+                snapshot_tmp['option_contract_size'] = record.optionExData.contractSizeFloat
                 snapshot_tmp['option_open_interest'] = record.optionExData.openInterest
                 snapshot_tmp['option_implied_volatility'] = record.optionExData.impliedVolatility
                 snapshot_tmp['option_premium'] = record.optionExData.premium
@@ -648,6 +649,15 @@ class MarketSnapshotQuery:
                 snapshot_tmp['future_main_contract'] = record.futureExData.isMainContract
                 snapshot_tmp['future_last_trade_time'] = record.futureExData.lastTradeTime
 
+            snapshot_tmp['trust_vaild '] = False
+            if record.HasField('trustExData'):
+                snapshot_tmp['trust_vaild'] = True
+                snapshot_tmp['trust_dividend_yield'] = record.trustExData.dividendYield
+                snapshot_tmp['trust_aum'] = record.trustExData.aum
+                snapshot_tmp['trust_outstanding_units'] = record.trustExData.outstandingUnits
+                snapshot_tmp['trust_netAssetValue'] = record.trustExData.netAssetValue
+                snapshot_tmp['trust_premium'] = record.trustExData.premium
+                snapshot_tmp['trust_assetClass'] = AssetClass.to_string2(record.trustExData.assetClass)
             snapshot_list.append(snapshot_tmp)
 
         return RET_OK, "", snapshot_list
@@ -858,7 +868,7 @@ class RequestHistoryKlineQuery:
 
     @classmethod
     def pack_req(cls, code, start_date, end_date, ktype, autype, fields,
-                 max_num, conn_id, next_req_key):
+                 max_num, conn_id, next_req_key, extended_time):
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
@@ -892,6 +902,8 @@ class RequestHistoryKlineQuery:
         req.c2s.needKLFieldsFlag = KL_FIELD.kl_fields_to_flag_val(fields)
         if next_req_key is not None:
             req.c2s.nextReqKey = next_req_key
+        if extended_time:
+            req.c2s.extendedTime = True
 
         return pack_pb_req(req, ProtoId.Qot_RequestHistoryKL, conn_id)
 
@@ -2188,6 +2200,8 @@ class GetUserInfo:
         update_type = rsp_pb.s2c.updateType if rsp_pb.s2c.HasField(
             'updateType') else "N/A"
         web_key = rsp_pb.s2c.webKey if rsp_pb.s2c.HasField('webKey') else "N/A"
+        sub_quota = rsp_pb.s2c.subQuota if rsp_pb.s2c.HasField('subQuota') else "N/A"
+        history_kl_quota = rsp_pb.s2c.historyKLQuota if rsp_pb.s2c.HasField('historyKLQuota') else "N/A"
         data = {
             "nick_name": nick_name,
             "avatar_url": avatar_url,
@@ -2200,7 +2214,9 @@ class GetUserInfo:
             "is_need_agree_disclaimer": is_need_agree_disclaimer,
             "user_id": user_id,
             "update_type": UpdateType.to_string2(update_type),
-            "web_key": web_key
+            "web_key": web_key,
+            "sub_quota": sub_quota,
+            "history_kl_quota": history_kl_quota,
         }
         return RET_OK, "", data
 
