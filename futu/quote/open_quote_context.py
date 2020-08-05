@@ -567,7 +567,7 @@ class OpenQuoteContext(OpenContextBase):
                 future_position_change     float          日增仓
                 future_main_contract       bool           是否主连合约
                 future_last_trade_time     string         只有非主连期货合约才有该字段
-                trust_vaild                bool           是否基金
+                trust_valid                bool           是否基金
                 trust_dividend_yield       float          股息率
                 trust_aum                  float          资产规模
                 trust_outstanding_units    int            总发行量
@@ -732,7 +732,7 @@ class OpenQuoteContext(OpenContextBase):
         col_dict.update((key, 1) for key in plate_col_list)
         col_dict['future_valid'] = 1
         col_dict.update((key, 1) for key in future_col_list)
-        col_dict['trust_vaild '] = 1
+        col_dict['trust_valid'] = 1
         col_dict.update((key, 1) for key in trust_col_list)
 
         col_dict.update((row[0], 1) for row in pb_field_map_PreAfterMarketData_pre)

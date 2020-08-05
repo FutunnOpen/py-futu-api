@@ -649,9 +649,9 @@ class MarketSnapshotQuery:
                 snapshot_tmp['future_main_contract'] = record.futureExData.isMainContract
                 snapshot_tmp['future_last_trade_time'] = record.futureExData.lastTradeTime
 
-            snapshot_tmp['trust_vaild '] = False
+            snapshot_tmp['trust_valid'] = False
             if record.HasField('trustExData'):
-                snapshot_tmp['trust_vaild'] = True
+                snapshot_tmp['trust_valid'] = True
                 snapshot_tmp['trust_dividend_yield'] = record.trustExData.dividendYield
                 snapshot_tmp['trust_aum'] = record.trustExData.aum
                 snapshot_tmp['trust_outstanding_units'] = record.trustExData.outstandingUnits
