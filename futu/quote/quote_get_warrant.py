@@ -4,7 +4,7 @@
 """
 from futu import *
 from futu.common.conn_mng import *
-
+from futu.common.utils import *
 
 class Request(object):
 

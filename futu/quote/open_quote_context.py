@@ -10,6 +10,7 @@ import pandas as pd
 from futu.common.open_context_base import OpenContextBase, ContextStatus
 from futu.quote.quote_query import *
 from futu.quote.quote_stockfilter_info import *
+from futu.quote.quote_get_warrant import *
 
 class SubRecord:
     def __init__(self):
@@ -314,7 +315,8 @@ class OpenQuoteContext(OpenContextBase):
                               autype=AuType.QFQ,
                               fields=[KL_FIELD.ALL],
                               max_count=1000,
-                              page_req_key=None):
+                              page_req_key=None,
+                              extended_time=False):
         """
         拉取历史k线，不需要先下载历史数据。
 
@@ -410,7 +412,8 @@ class OpenQuoteContext(OpenContextBase):
                 "fields": copy(req_fields),
                 "max_num": max_kl_num,
                 "conn_id": self.get_sync_conn_id(),
-                "next_req_key": page_req_key
+                "next_req_key": page_req_key,
+                "extended_time": extended_time
             }
             query_processor = self._get_sync_query_processor(RequestHistoryKlineQuery.pack_req,
                                                              RequestHistoryKlineQuery.unpack_rsp)
@@ -564,6 +567,13 @@ class OpenQuoteContext(OpenContextBase):
                 future_position_change     float          日增仓
                 future_main_contract       bool           是否主连合约
                 future_last_trade_time     string         只有非主连期货合约才有该字段
+                trust_valid                bool           是否基金
+                trust_dividend_yield       float          股息率
+                trust_aum                  float          资产规模
+                trust_outstanding_units    int            总发行量
+                trust_netAssetValue        float          单位净值
+                trust_premium              float          溢价
+                trust_assetClass           string         资产类别
                 =======================   =============   ==============================================================================
         """
         code_list = unique_and_normalize_list(code_list)
@@ -659,6 +669,14 @@ class OpenQuoteContext(OpenContextBase):
                            'future_last_trade_time',
                          ]
 
+        trust_col_list = ['trust_dividend_yield',
+                          'trust_aum',
+                          'trust_outstanding_units',
+                          'trust_netAssetValue',
+                          'trust_premium',
+                          'trust_assetClass',
+                        ]
+
         col_list = [
             'code',
             'update_time',
@@ -714,6 +732,8 @@ class OpenQuoteContext(OpenContextBase):
         col_dict.update((key, 1) for key in plate_col_list)
         col_dict['future_valid'] = 1
         col_dict.update((key, 1) for key in future_col_list)
+        col_dict['trust_valid'] = 1
+        col_dict.update((key, 1) for key in trust_col_list)
 
         col_dict.update((row[0], 1) for row in pb_field_map_PreAfterMarketData_pre)
         col_dict.update((row[0], 1) for row in pb_field_map_PreAfterMarketData_after)
@@ -1818,10 +1838,13 @@ class OpenQuoteContext(OpenContextBase):
         :param stock_owner:所属正股
         :param req:futu.quote.quote_get_warrant.Request
         """
-        from futu.quote.quote_get_warrant import Request
+
 
         if (req is None) or (not isinstance(req, Request)):
             req = Request()
+
+        if stock_owner is Market.HK:
+            stock_owner = ''
 
         if stock_owner is not None:
             req.stock_owner = stock_owner

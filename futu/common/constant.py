@@ -2360,3 +2360,24 @@ class UserSecurityGroupType(FtEnum):
             self.SYSTEM: Qot_GetUserSecurityGroup_pb2.GroupType_System,
             self.ALL: Qot_GetUserSecurityGroup_pb2.GroupType_All
         }
+
+# 资产类别
+class AssetClass(FtEnum):
+    NONE = "N/A"  # 未知
+    STOCK = "STOCK"  # 股票
+    BOND = "BOND" # 债券
+    COMMODITY = "COMMODITY"  # 商品
+    CURRENCY_MARKET = "CURRENCY_MARKET"  # 货币市场
+    FUTURE = "FUTURE"  # 期货
+    SWAP = "SWAP"  # 掉期
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.AssetClass_Unknow,
+            self.STOCK: Qot_Common_pb2.AssetClass_Stock,
+            self.BOND: Qot_Common_pb2.AssetClass_Bond,
+            self.COMMODITY: Qot_Common_pb2.AssetClass_Commodity,
+            self.CURRENCY_MARKET: Qot_Common_pb2.AssetClass_CurrencyMarket,
+            self.FUTURE: Qot_Common_pb2.AssetClass_Future,
+            self.SWAP: Qot_Common_pb2.AssetClass_Swap,
+        }

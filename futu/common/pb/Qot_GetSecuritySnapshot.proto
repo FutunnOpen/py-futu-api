@@ -69,7 +69,8 @@ message OptionSnapshotExData
 	required Qot_Common.Security owner = 2; //标的股
 	required string strikeTime = 3; //行权日
     required double strikePrice = 4; //行权价
-	required int32 contractSize = 5; //每份合约数
+	required int32 contractSize = 5; //每份合约数(整型数据)
+	optional double contractSizeFloat = 22; //每份合约数（浮点型数据）
 	required int32 openInterest = 6; //未平仓合约数
 	required double impliedVolatility = 7; //隐含波动率（该字段为百分比字段，默认不展示%，如20实际对应20%）
 	required double premium = 8; //溢价（该字段为百分比字段，默认不展示%，如20实际对应20%）
@@ -115,6 +116,17 @@ message FutureSnapshotExData
 	required string lastTradeTime = 4; //最后交易日，只有非主连期货合约才有该字段
 	optional double lastTradeTimestamp = 5; //最后交易日时间戳，只有非主连期货合约才有该字段
 	required bool isMainContract = 6; //是否主连合约
+}
+
+//基金类型额外数据
+message TrustSnapshotExData
+{
+	required double dividendYield = 1; //股息率（该字段为百分比字段，默认不展示%，如20实际对应20%）
+	required double aum = 2; //资产规模
+	required int64 outstandingUnits = 3; //总发行量
+	required double netAssetValue = 4; //单位净值
+	required double premium = 5; //溢价（该字段为百分比字段，默认不展示%，如20实际对应20%）
+	required int32 assetClass = 6; //Qot_Common.AssetClass，资产类别
 }
 
  //基本快照数据
@@ -171,6 +183,7 @@ message Snapshot
 	optional IndexSnapshotExData indexExData = 5; //指数快照额外数据
 	optional PlateSnapshotExData plateExData = 6; //板块快照额外数据
 	optional FutureSnapshotExData futureExData = 7; //期货类型额外数据
+	optional TrustSnapshotExData trustExData = 8; //基金类型额外数据
 }
 
 message S2C
