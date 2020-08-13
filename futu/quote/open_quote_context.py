@@ -2573,7 +2573,7 @@ class OpenQuoteContext(OpenContextBase):
         """
         if is_str(code_list):
             code_list = code_list.split(',')
-        elif isinstance(code_list, list):
+        elif isinstance(code_list, list) and len(code_list) > 0:
             pass
         else:
             return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
