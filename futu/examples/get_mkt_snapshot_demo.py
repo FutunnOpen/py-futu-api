@@ -37,7 +37,7 @@ def loop_get_mkt_snapshot(api_svr_ip, api_svr_port, market):
     for i in range(1, len(stock_codes), 200):
         print("from {}, total {}".format(i, len(stock_codes)))
         ret_code, ret_data = quote_ctx.get_market_snapshot(stock_codes[i:i + 200])
-        if ret_code != 0:
+        if ret_code == 0:
             print(ret_data)
         time.sleep(3)
 

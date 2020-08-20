@@ -17,7 +17,7 @@ class StockQuoteTest(StockQuoteHandlerBase):
         if ret_code != RET_OK:
             logger.debug("StockQuoteTest: error, msg: %s" % content)
             return RET_ERROR, content
-        # print("* StockQuoteTest : %s" % content)
+        print("* StockQuoteTest : %s" % content)
         return RET_OK, content
 
 
@@ -39,7 +39,7 @@ class RTDataTest(RTDataHandlerBase):
         if ret_code != RET_OK:
             print("* RTDataTest: error, msg: %s" % content)
             return RET_ERROR, content
-        # print("* RTDataTest :%s \n" % content)
+        print("* RTDataTest :%s \n" % content)
         return RET_OK, content
 
 
@@ -51,7 +51,7 @@ class TickerTest(TickerHandlerBase):
         if ret_code != RET_OK:
             print("* TickerTest: error, msg: %s" % content)
             return RET_ERROR, content
-        # print("* TickerTest\n", content)
+        print("* TickerTest\n", content)
         return RET_OK, content
 
 
@@ -63,7 +63,7 @@ class OrderBookTest(OrderBookHandlerBase):
         if ret_code != RET_OK:
             print("* OrderBookTest: error, msg: %s" % content)
             return RET_ERROR, content
-        # print("* OrderBookTest\n", content)
+        print("* OrderBookTest\n", content)
         return RET_OK, content
 
 
@@ -75,9 +75,9 @@ class BrokerTest(BrokerHandlerBase):
         if ret_code == RET_OK:
             bid_content = contents[0]
             ask_content = contents[1]
-            # print("* BrokerTest code \n", stock_code)
-            # print("* BrokerTest bid \n", bid_content)
-            # print("* BrokerTest ask \n", ask_content)
+            print("* BrokerTest code \n", stock_code)
+            print("* BrokerTest bid \n", bid_content)
+            print("* BrokerTest ask \n", ask_content)
         return ret_code
 
 
@@ -132,16 +132,16 @@ def quote_test():
     quote_ctx.set_handler(OrderBookTest())
     quote_ctx.set_handler(BrokerTest())
     quote_ctx.set_handler(SysNotifyTest())
-    quote_ctx.start()
+    # quote_ctx.start()
 
     # 获取推送数据
     big_sub_codes = ['HK.02318', 'HK.02828', 'HK.00939', 'HK.01093', 'HK.01299', 'HK.00175',
                      'HK.01299', 'HK.01833', 'HK.00005', 'HK.00883', 'HK.00388', 'HK.01398',
                      'HK.01114', 'HK.02800', 'HK.02018', 'HK.03988', 'HK.00386', 'HK.01211',
-                     'HK.00700', 'HK.01177',  'HK.02601', 'HK.02628', 'HK_FUTURE.999010']
+                     'HK.00700', 'HK.01177',  'HK.02601', 'HK.02628', 'HK.HSImain']
     subtype_list = [SubType.QUOTE, SubType.ORDER_BOOK, SubType.TICKER, SubType.K_DAY, SubType.RT_DATA, SubType.BROKER]
 
-    sub_codes =  ['HK.00700', 'HK_FUTURE.999010']
+    sub_codes =  ['HK.00700', 'HK.HSImain']
 
     # print("* get_owner_plate : {}\n".format(quote_ctx.get_owner_plate(code_list)))
     # print("* get_referencestock_list : {}\n".format(quote_ctx.get_referencestock_list(
@@ -194,7 +194,7 @@ def quote_test():
     # """
 
     # """
-    sleep(60*60*24)
+    sleep(15)
     quote_ctx.close()
     # """
 

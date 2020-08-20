@@ -68,9 +68,6 @@ class ProtoId(object):
     Qot_UpdatePriceReminder = 3019 #到价提醒通知
 
     # 历史数据
-    # Qot_GetHistoryKL = 3100  # 获取历史K线
-    # Qot_GetHistoryKLPoints = 3101  # 获取多只股票历史单点K线
-    # Qot_GetRehab = 3102  # 获取复权信息
     Qot_RequestHistoryKL = 3103  # 拉取历史K线
     Qot_RequestHistoryKLQuota = 3104  # 拉取历史K线已经用掉的额度
     Qot_RequestRehab = 3105  # 获取除权信息
@@ -105,6 +102,7 @@ class ProtoId(object):
     Qot_GetPriceReminder = 3221  # 获取到价提醒
 
     Qot_GetUserSecurityGroup = 3222 # 获取自选股分组
+    Qot_GetMarketState = 3223
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
@@ -2272,6 +2270,7 @@ class SetPriceReminderOp(FtEnum):
     ENABLE = "ENABLE"                                  # 启用
     DISABLE = "DISABLE"                                # 禁用
     MODIFY = "MODIFY"                                  # 修改
+    DEL_ALL = "DEL_ALL"                                # 删除某支股票下所有到价提醒
 
     def load_dic(self):
         return {
@@ -2280,7 +2279,8 @@ class SetPriceReminderOp(FtEnum):
             self.DEL: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Del,
             self.ENABLE: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Enable,
             self.DISABLE: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Disable,
-            self.MODIFY: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Modify
+            self.MODIFY: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Modify,
+            self.DEL_ALL: Qot_SetPriceReminder_pb2.SetPriceReminderOp_DelAll,
         }
 
 class PriceReminderFreq(FtEnum):

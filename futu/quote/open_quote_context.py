@@ -2555,3 +2555,54 @@ class OpenQuoteContext(OpenContextBase):
             return RET_OK, ret_frame
         else:
             return RET_ERROR, "empty data"
+
+    def get_market_state(self, code_list):
+        """
+         获取股票对应市场的市场状态
+        :param code_list 股票列表
+        :return: (ret, data)
+        ret != RET_OK 返回错误字符串
+        ret == RET_OK data为DataFrame类型，字段如下:
+        =========================   ==================   ================================
+        参数                         类型                 说明
+        =========================   ==================   ================================
+        stock_code                   str                  股票代码
+        name                         str                  股票名称
+        market_state                 MarketState          市场状态
+        =========================   ==================   ================================
+        """
+        if is_str(code_list):
+            code_list = code_list.split(',')
+        elif isinstance(code_list, list) and len(code_list) > 0:
+            pass
+        else:
+            return RET_ERROR, "code list must be like ['HK.00001', 'HK.00700'] or 'HK.00001,HK.00700'"
+        code_list = unique_and_normalize_list(code_list)
+        for code in code_list:
+            if code is None or is_str(code) is False:
+                error_str = ERROR_STR_PREFIX + "the type of param in code_list is wrong"
+                return RET_ERROR, error_str
+
+        query_processor = self._get_sync_query_processor(
+            GetMarketStateQuery.pack_req,
+            GetMarketStateQuery.unpack,
+        )
+
+        kargs = {
+            "code_list": code_list,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+                'stock_code',
+                'name',
+                'market_state'
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
+
