@@ -3095,9 +3095,9 @@ class GetMarketStateQuery:
             data = {}
             ret_list.append(data)
             #  股票代码 type = code
-            data["stock_code"] = merge_qot_mkt_stock_str(item.security.market, item.security.code)
+            data["code"] = merge_qot_mkt_stock_str(item.security.market, item.security.code)
             #  股票名称 type = string
-            data["name"] = item.name
+            data["stock_name"] = item.name
             #  Qot_Common.QotMarketState,市场状态 type = int32
             data["market_state"] = MarketState.to_string2(item.marketState)
         return RET_OK, "", ret_list
