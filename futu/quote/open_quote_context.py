@@ -2597,8 +2597,8 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         if isinstance(ret, list):
             col_list = [
-                'stock_code',
-                'name',
+                'code',
+                'stock_name',
                 'market_state'
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)
