@@ -345,6 +345,9 @@ class MarketState(FtEnum):
     FUTURE_BREAK = "FUTURE_BREAK"                   # 期货中盘休息
     FUTURE_BREAK_OVER = "FUTURE_BREAK_OVER"         # 期货休息后开盘
     FUTURE_CLOSE = "FUTURE_CLOSE"                   # 期货收盘
+    STIB_AFTER_HOURS_WAIT = "STIB_AFTER_HOURS_WAIT"  #科创板的盘后撮合时段
+    STIB_AFTER_HOURS_BEGIN = "STIB_AFTER_HOURS_BEGIN"  # 科创板的盘后交易开始
+    STIB_AFTER_HOURS_END = "STIB_AFTER_HOURS_END"  # 科创板的盘后交易结束
 
     def load_dic(self):
         return {
@@ -373,6 +376,9 @@ class MarketState(FtEnum):
             self.FUTURE_BREAK: Qot_Common_pb2.QotMarketState_FutureBreak,
             self.FUTURE_BREAK_OVER: Qot_Common_pb2.QotMarketState_FutureBreakOver,
             self.FUTURE_CLOSE: Qot_Common_pb2.QotMarketState_FutureClose,
+            self.STIB_AFTER_HOURS_WAIT: Qot_Common_pb2.QotMarketState_StibAfterHoursWait,
+            self.STIB_AFTER_HOURS_BEGIN: Qot_Common_pb2.QotMarketState_StibAfterHoursBegin,
+            self.STIB_AFTER_HOURS_END: Qot_Common_pb2.QotMarketState_StibAfterHoursEnd,
         }
 
 # 股票类型
