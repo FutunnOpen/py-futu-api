@@ -101,8 +101,8 @@ class ProtoId(object):
     Qot_SetPriceReminder = 3220  # 设置到价提醒
     Qot_GetPriceReminder = 3221  # 获取到价提醒
 
-    Qot_GetUserSecurityGroup = 3222 # 获取自选股分组
-    Qot_GetMarketState = 3223
+    Qot_GetUserSecurityGroup = 3222  # 获取自选股分组
+    Qot_GetMarketState = 3223  # 获取指定品种的市场状态
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
