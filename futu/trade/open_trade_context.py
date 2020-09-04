@@ -436,7 +436,8 @@ class OpenTradeContextBase(OpenContextBase):
         return RET_OK, order_list
 
     def place_order(self, price, qty, code, trd_side, order_type=OrderType.NORMAL,
-                    adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, remark=None):
+                    adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, remark=None,
+                    time_in_force=TimeInForce.DAY, fill_outside_rth=False):
         """
         place order
         use  set_handle(HKTradeOrderHandlerBase) to recv order push !
@@ -464,6 +465,8 @@ class OpenTradeContextBase(OpenContextBase):
             else:
                 return RET_ERROR, make_wrong_type_msg('remark', 'str')
 
+        fill_outside_rth = True if fill_outside_rth else False
+
         market_str, stock_code = content
 
         query_processor = self._get_sync_query_processor(
@@ -482,7 +485,9 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_env': trd_env,
             'acc_id': acc_id,
             'conn_id': self.get_sync_conn_id(),
-            'remark': remark
+            'remark': remark,
+            'time_in_force': time_in_force,
+            'fill_outside_rth': fill_outside_rth
         }
 
         ret_code, msg, order_id = query_processor(**kargs)
