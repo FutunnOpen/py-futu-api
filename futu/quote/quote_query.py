@@ -971,6 +971,7 @@ class SubscriptionQuery:
                               conn_id,
                               is_first_push,
                               is_detailed_orderbook,
+                              extended_time,
                               reg_or_unreg_push,
                               unsub_all=False):
 
@@ -1002,17 +1003,19 @@ class SubscriptionQuery:
             req.c2s.isFirstPush = is_first_push
             req.c2s.isRegOrUnRegPush = reg_or_unreg_push
             req.c2s.isSubOrderBookDetail = is_detailed_orderbook
+            req.c2s.extendedTime = extended_time
 
         return pack_pb_req(req, ProtoId.Qot_Sub, conn_id)
 
     @classmethod
-    def pack_subscribe_req(cls, code_list, subtype_list, conn_id, is_first_push, subscribe_push, is_detailed_orderbook):
+    def pack_subscribe_req(cls, code_list, subtype_list, conn_id, is_first_push, subscribe_push, is_detailed_orderbook, extended_time):
         return SubscriptionQuery.pack_sub_or_unsub_req(code_list,
                                                        subtype_list,
                                                        True,
                                                        conn_id,
                                                        is_first_push,
                                                        is_detailed_orderbook,
+                                                       extended_time,
                                                        subscribe_push)  # True
 
     @classmethod

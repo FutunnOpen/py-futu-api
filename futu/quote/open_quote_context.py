@@ -14,14 +14,15 @@ from futu.quote.quote_get_warrant import *
 
 class SubRecord:
     def __init__(self):
-        self.subMap = {}  # (subkey, is_orderbook_detail) => code set
+        self.subMap = {}  # (subkey, is_orderbook_detail, extended_time) => code set
 
-    def sub(self, code_list, subtype_list, is_orderbook_detail):
+    def sub(self, code_list, subtype_list, is_orderbook_detail, extended_time):
         not_is_orderbook_detail = not is_orderbook_detail
+        not_extended_time = not extended_time
         for subtype in subtype_list:
-            old_subkey = (subtype, not_is_orderbook_detail)
+            old_subkey = (subtype, not_is_orderbook_detail, not_extended_time)
             old_code_set = self.subMap.get(old_subkey, set())
-            new_subkey = (subtype, is_orderbook_detail)
+            new_subkey = (subtype, is_orderbook_detail, extended_time)
             new_code_set = self.subMap.get(new_subkey, set())
             for code in code_list:
                 if code in old_code_set:
@@ -68,7 +69,7 @@ class SubRecord:
         """
         将原始的订阅列表合并为适合调用subscribe函数的参数的形式，并尽量合并code列表
         :param orig_sub_list: [(subkey, code_set)]
-        :return: [(code_list, subtype_list, is_orderbook_detail)]
+        :return: [(code_list, subtype_list, is_orderbook_detail, extended_time)]
         """
         if len(orig_sub_list) <= 1:
             return self._conv_sub_list(orig_sub_list)
@@ -84,7 +85,8 @@ class SubRecord:
             code_list = list(first_code_set)
             subtype_list = [item[0][0] for item in orig_sub_list]
             is_orderbook_detail = orig_sub_list[0][0][1]
-            return [(code_list, subtype_list, is_orderbook_detail)]
+            extended_time = orig_sub_list[0][0][0][1]
+            return [(code_list, subtype_list, is_orderbook_detail, extended_time)]
         else:
             return self._conv_sub_list(orig_sub_list)
 
@@ -129,11 +131,11 @@ class OpenQuoteContext(OpenContextBase):
 
         ret_code = RET_OK
         ret_msg = ''
-        for code_list, subtype_list, is_detailed_orderbook in sub_list:
+        for code_list, subtype_list, is_detailed_orderbook, extended_time in sub_list:
             ret_code, ret_msg = self._reconnect_subscribe(
-                code_list, subtype_list, is_detailed_orderbook)
-            logger.debug("reconnect subscribe code_count={} ret_code={} ret_msg={} subtype_list={} code_list={} is_detailed_orderbook={}".format(
-                len(code_list), ret_code, ret_msg, subtype_list, code_list, is_detailed_orderbook))
+                code_list, subtype_list, is_detailed_orderbook, extended_time)
+            logger.debug("reconnect subscribe code_count={} ret_code={} ret_msg={} subtype_list={} code_list={} is_detailed_orderbook={} extended_time={}".format(
+                len(code_list), ret_code, ret_msg, subtype_list, code_list, is_detailed_orderbook, extended_time))
             if ret_code != RET_OK:
                 break
 
@@ -994,7 +996,7 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, "", code_list, subtype_list
 
-    def subscribe(self, code_list, subtype_list, is_first_push=True, subscribe_push=True, is_detailed_orderbook=False):
+    def subscribe(self, code_list, subtype_list, is_first_push=True, subscribe_push=True, is_detailed_orderbook=False, extended_time=False):
         """
         订阅注册需要的实时信息，指定股票和订阅的数据类型即可
 
@@ -1005,6 +1007,7 @@ class OpenQuoteContext(OpenContextBase):
         :param is_first_push: 订阅成功后是否马上推送一次数据
         :param subscribe_push: 订阅后推送
         :param is_detailed_orderbook 是否订阅详细的摆盘订单明细，仅用于 SF 行情权限下订阅 ORDER_BOOK 类型
+        :param extended_time - 是否允许美股盘前盘后数据（仅用于订阅美股的实时报价、实时K线、实时分时、实时逐笔），False不允许，True允许
         :return: (ret, err_message)
 
                 ret == RET_OK err_message为None
@@ -1019,9 +1022,9 @@ class OpenQuoteContext(OpenContextBase):
         print(quote_ctx.subscribe(['HK.00700'], [SubType.QUOTE)])
         quote_ctx.close()
         """
-        return self._subscribe_impl(code_list, subtype_list, is_first_push, subscribe_push, is_detailed_orderbook)
+        return self._subscribe_impl(code_list, subtype_list, is_first_push, subscribe_push, is_detailed_orderbook, extended_time)
 
-    def _subscribe_impl(self, code_list, subtype_list, is_first_push, subscribe_push=True, is_detailed_orderbook=False):
+    def _subscribe_impl(self, code_list, subtype_list, is_first_push, subscribe_push=True, is_detailed_orderbook=False, extended_time=False):
 
         ret, msg, code_list, subtype_list = self._check_subscribe_param(
             code_list, subtype_list)
@@ -1045,7 +1048,8 @@ class OpenQuoteContext(OpenContextBase):
             'conn_id': self.get_sync_conn_id(),
             'is_first_push': is_first_push,
             'subscribe_push': subscribe_push,
-            'is_detailed_orderbook': is_detailed_orderbook
+            'is_detailed_orderbook': is_detailed_orderbook,
+            'extended_time': extended_time
         }
         ret_code, msg, _ = query_processor(**kargs)
 
@@ -1053,7 +1057,7 @@ class OpenQuoteContext(OpenContextBase):
             return RET_ERROR, msg
 
         with self._lock:
-            self._sub_record.sub(code_list, subtype_list, is_detailed_orderbook)
+            self._sub_record.sub(code_list, subtype_list, is_detailed_orderbook, extended_time)
         #
         # ret_code, msg, push_req_str = SubscriptionQuery.pack_push_req(
         #     code_list, subtype_list, self.get_async_conn_id(), is_first_push)
@@ -1067,7 +1071,7 @@ class OpenQuoteContext(OpenContextBase):
 
         return RET_OK, None
 
-    def _reconnect_subscribe(self, code_list, subtype_list, is_detailed_orderbook):
+    def _reconnect_subscribe(self, code_list, subtype_list, is_detailed_orderbook, extended_time):
 
         # 将k线定阅和其它定阅区分开来
         kline_sub_list = []
@@ -1104,7 +1108,7 @@ class OpenQuoteContext(OpenContextBase):
                 start_idx += sub_count
 
                 ret_code, ret_data = self._subscribe_impl(
-                    sub_codes, sub_list, True, True, is_detailed_orderbook)
+                    sub_codes, sub_list, True, True, is_detailed_orderbook, extended_time)
                 if ret_code != RET_OK:
                     break
             if ret_code != RET_OK:
