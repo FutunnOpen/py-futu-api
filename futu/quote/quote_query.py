@@ -3047,3 +3047,57 @@ class GetUserSecurityGroupQuery:
             ret_list.append(data)
 
         return RET_OK, "", ret_list
+
+class GetMarketStateQuery:
+    """
+    Query GetMarketState.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code_list, conn_id):
+        """check code_list 股票列表"""
+        stock_tuple_list = []
+        failure_tuple_list = []
+        for stock_str in code_list:
+            ret_code, content = split_stock_str(stock_str)
+            if ret_code != RET_OK:
+                error_str = content
+                failure_tuple_list.append((ret_code, error_str))
+                continue
+            market_code, stock_code = content
+            stock_tuple_list.append((market_code, stock_code))
+        if len(failure_tuple_list) > 0:
+            error_str = '\n'.join([x[1] for x in failure_tuple_list])
+            return RET_ERROR, error_str, None
+
+        # 开始组包
+        from futu.common.pb.Qot_GetMarketState_pb2 import Request
+        req = Request()
+        for market_code, stock_code in stock_tuple_list:
+            stock_inst = req.c2s.securityList.add()
+            stock_inst.market = market_code
+            stock_inst.code = stock_code
+
+        return pack_pb_req(req, ProtoId.Qot_GetMarketState, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        ret_list = list()
+        #  市场状态信息 type = Qot_GetMarketState.MarketInfo
+        market_info_list = rsp_pb.s2c.marketInfoList
+        for item in market_info_list:
+            data = {}
+            ret_list.append(data)
+            #  股票代码 type = code
+            data["code"] = merge_qot_mkt_stock_str(item.security.market, item.security.code)
+            #  股票名称 type = string
+            data["stock_name"] = item.name
+            #  Qot_Common.QotMarketState,市场状态 type = int32
+            data["market_state"] = MarketState.to_string2(item.marketState)
+        return RET_OK, "", ret_list

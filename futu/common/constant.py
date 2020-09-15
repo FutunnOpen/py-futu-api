@@ -68,9 +68,6 @@ class ProtoId(object):
     Qot_UpdatePriceReminder = 3019 #到价提醒通知
 
     # 历史数据
-    # Qot_GetHistoryKL = 3100  # 获取历史K线
-    # Qot_GetHistoryKLPoints = 3101  # 获取多只股票历史单点K线
-    # Qot_GetRehab = 3102  # 获取复权信息
     Qot_RequestHistoryKL = 3103  # 拉取历史K线
     Qot_RequestHistoryKLQuota = 3104  # 拉取历史K线已经用掉的额度
     Qot_RequestRehab = 3105  # 获取除权信息
@@ -104,7 +101,8 @@ class ProtoId(object):
     Qot_SetPriceReminder = 3220  # 设置到价提醒
     Qot_GetPriceReminder = 3221  # 获取到价提醒
 
-    Qot_GetUserSecurityGroup = 3222 # 获取自选股分组
+    Qot_GetUserSecurityGroup = 3222  # 获取自选股分组
+    Qot_GetMarketState = 3223  # 获取指定品种的市场状态
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
@@ -347,6 +345,9 @@ class MarketState(FtEnum):
     FUTURE_BREAK = "FUTURE_BREAK"                   # 期货中盘休息
     FUTURE_BREAK_OVER = "FUTURE_BREAK_OVER"         # 期货休息后开盘
     FUTURE_CLOSE = "FUTURE_CLOSE"                   # 期货收盘
+    STIB_AFTER_HOURS_WAIT = "STIB_AFTER_HOURS_WAIT"  #科创板的盘后撮合时段
+    STIB_AFTER_HOURS_BEGIN = "STIB_AFTER_HOURS_BEGIN"  # 科创板的盘后交易开始
+    STIB_AFTER_HOURS_END = "STIB_AFTER_HOURS_END"  # 科创板的盘后交易结束
 
     def load_dic(self):
         return {
@@ -375,6 +376,9 @@ class MarketState(FtEnum):
             self.FUTURE_BREAK: Qot_Common_pb2.QotMarketState_FutureBreak,
             self.FUTURE_BREAK_OVER: Qot_Common_pb2.QotMarketState_FutureBreakOver,
             self.FUTURE_CLOSE: Qot_Common_pb2.QotMarketState_FutureClose,
+            self.STIB_AFTER_HOURS_WAIT: Qot_Common_pb2.QotMarketState_StibAfterHoursWait,
+            self.STIB_AFTER_HOURS_BEGIN: Qot_Common_pb2.QotMarketState_StibAfterHoursBegin,
+            self.STIB_AFTER_HOURS_END: Qot_Common_pb2.QotMarketState_StibAfterHoursEnd,
         }
 
 # 股票类型
@@ -2272,6 +2276,7 @@ class SetPriceReminderOp(FtEnum):
     ENABLE = "ENABLE"                                  # 启用
     DISABLE = "DISABLE"                                # 禁用
     MODIFY = "MODIFY"                                  # 修改
+    DEL_ALL = "DEL_ALL"                                # 删除某支股票下所有到价提醒
 
     def load_dic(self):
         return {
@@ -2280,7 +2285,8 @@ class SetPriceReminderOp(FtEnum):
             self.DEL: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Del,
             self.ENABLE: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Enable,
             self.DISABLE: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Disable,
-            self.MODIFY: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Modify
+            self.MODIFY: Qot_SetPriceReminder_pb2.SetPriceReminderOp_Modify,
+            self.DEL_ALL: Qot_SetPriceReminder_pb2.SetPriceReminderOp_DelAll,
         }
 
 class PriceReminderFreq(FtEnum):
