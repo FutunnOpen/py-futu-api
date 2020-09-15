@@ -289,7 +289,8 @@ class PlaceOrder:
 
     @classmethod
     def pack_req(cls, trd_side, order_type, price, qty,
-                 code, adjust_limit, trd_env, sec_mkt_str, acc_id, trd_mkt, conn_id, remark):
+                 code, adjust_limit, trd_env, sec_mkt_str, acc_id, trd_mkt, conn_id, remark,
+                 time_in_force, fill_outside_rth):
         """Convert from user request for place order to PLS request"""
         from futu.common.pb.Trd_PlaceOrder_pb2 import Request
         req = Request()
@@ -315,6 +316,13 @@ class PlaceOrder:
             proto_qot_mkt = Qot_Common_pb2.QotMarket_Unknown
         proto_trd_sec_mkt = QOT_MARKET_TO_TRD_SEC_MARKET_MAP.get(proto_qot_mkt, Trd_Common_pb2.TrdSecMarket_Unknown)
         req.c2s.secMarket = proto_trd_sec_mkt
+        ret, val = TimeInForce.to_number(time_in_force)
+        if not ret:
+            return RET_ERROR, val, None
+        else:
+            req.c2s.timeInForce = val
+        if fill_outside_rth:
+            req.c2s.fillOutsideRTH = fill_outside_rth
 
         return pack_pb_req(req, ProtoId.Trd_PlaceOrder, conn_id, serial_no)
 
