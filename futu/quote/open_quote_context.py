@@ -54,15 +54,24 @@ class SubRecord:
 
         :return: [(code_list, subtype_list, is_orderbook_detail)]
         """
-        sublist_orderbook_true = []
-        sublist_orderbook_false = []
+        other_sub_list = []
+        sublist_detail_true = []
+        sublist_extend_true = []
+        sublist_extend_detail_true = []
         for subkey, code_set in self.subMap.items():
-            if subkey[1]:
-                sublist_orderbook_true.append((subkey, code_set))
+            if subkey[1] and subkey[2]:
+                sublist_extend_detail_true.append((subkey, code_set))
+            elif subkey[1]:
+                sublist_detail_true.append((subkey, code_set))
+            elif subkey[2]:
+                sublist_extend_true.append((subkey, code_set))
             else:
-                sublist_orderbook_false.append((subkey, code_set))
-        result = self._merge_sub_list(sublist_orderbook_true)
-        result.extend(self._merge_sub_list(sublist_orderbook_false))
+                other_sub_list.append((subkey, code_set))
+
+        result = self._merge_sub_list(other_sub_list)
+        result.extend(self._merge_sub_list(sublist_detail_true))
+        result.extend(self._merge_sub_list(sublist_extend_true))
+        result.extend(self._merge_sub_list(sublist_extend_detail_true))
         return result
 
     def _merge_sub_list(self, orig_sub_list):
@@ -85,7 +94,7 @@ class SubRecord:
             code_list = list(first_code_set)
             subtype_list = [item[0][0] for item in orig_sub_list]
             is_orderbook_detail = orig_sub_list[0][0][1]
-            extended_time = orig_sub_list[0][0][0][1]
+            extended_time = orig_sub_list[0][0][2]
             return [(code_list, subtype_list, is_orderbook_detail, extended_time)]
         else:
             return self._conv_sub_list(orig_sub_list)
@@ -93,7 +102,7 @@ class SubRecord:
     def _conv_sub_list(self, orig_sub_list):
         sub_list = []
         for subkey, code_set in orig_sub_list:
-            sub_list.append((list(code_set), [subkey[0]], subkey[1]))
+            sub_list.append((list(code_set), [subkey[0]], subkey[1], subkey[2]))
         return sub_list
 
 
