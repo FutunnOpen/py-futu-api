@@ -101,8 +101,8 @@ class ProtoId(object):
     Qot_SetPriceReminder = 3220  # 设置到价提醒
     Qot_GetPriceReminder = 3221  # 获取到价提醒
 
-    Qot_GetUserSecurityGroup = 3222 # 获取自选股分组
-    Qot_GetMarketState = 3223
+    Qot_GetUserSecurityGroup = 3222  # 获取自选股分组
+    Qot_GetMarketState = 3223  # 获取指定品种的市场状态
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
@@ -2386,4 +2386,18 @@ class AssetClass(FtEnum):
             self.CURRENCY_MARKET: Qot_Common_pb2.AssetClass_CurrencyMarket,
             self.FUTURE: Qot_Common_pb2.AssetClass_Future,
             self.SWAP: Qot_Common_pb2.AssetClass_Swap,
+        }
+
+
+# 订单有效期
+class TimeInForce(FtEnum):
+    NONE = 'N/A'  # 未知
+    DAY = 'DAY'   # 当日有效
+    GTC = 'GTC'   # 撤单前有效
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.TimeInForce_Unknown,
+            self.DAY: Trd_Common_pb2.TimeInForce_DAY,
+            self.GTC: Trd_Common_pb2.TimeInForce_GTC
         }
