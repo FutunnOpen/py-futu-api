@@ -1,8 +1,8 @@
-# futu-api - 富途开放API (FUTU Open API)
+# futu-api - 富途 OpenAPI
 
 ### 简介
 
-[​**futu-api**](https://futunnopen.github.io/futu-api-doc/intro/intro.html)开源项目可以满足使用[**FUTU Open API**](https://www.futunn.com/download/openAPI)软件进行量化投资的需求, 并提供包括Python、Json/Protobuf协议的行情及交易接口。
+[​**futu-api**](https://futunnopen.github.io/futu-api-doc/intro/intro.html)开源项目可以满足使用[**Futu OpenAPI**](https://www.futunn.com/download/OpenAPI)软件进行量化投资的需求, 并提供包括Python、Json/Protobuf协议的行情及交易接口。
 
 - [官方在线文档](https://futunnopen.github.io/futu-api-doc/intro/intro.html)
 
