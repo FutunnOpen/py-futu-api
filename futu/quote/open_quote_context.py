@@ -52,7 +52,7 @@ class SubRecord:
     def get_sub_list(self):
         """
 
-        :return: [(code_list, subtype_list, is_orderbook_detail)]
+        :return: [(code_list, subtype_list, is_orderbook_detail, extended_time)]
         """
         other_sub_list = []
         sublist_detail_true = []
@@ -1016,7 +1016,7 @@ class OpenQuoteContext(OpenContextBase):
         :param is_first_push: 订阅成功后是否马上推送一次数据
         :param subscribe_push: 订阅后推送
         :param is_detailed_orderbook 是否订阅详细的摆盘订单明细，仅用于 SF 行情权限下订阅 ORDER_BOOK 类型
-        :param extended_time - 是否允许美股盘前盘后数据（仅用于订阅美股的实时报价、实时K线、实时分时、实时逐笔），False不允许，True允许
+        :param extended_time - 是否允许美股盘前盘后数据（仅用于订阅美股实时K线、实时分时），False不允许，True允许
         :return: (ret, err_message)
 
                 ret == RET_OK err_message为None
