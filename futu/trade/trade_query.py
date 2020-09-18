@@ -580,7 +580,7 @@ class UpdateOrderPush:
 
         order_dict = OrderListQuery.parse_order(rsp_pb, rsp_pb.s2c.order)
         order_dict['trd_env'] = TrdEnv.to_string2(rsp_pb.s2c.header.trdEnv)
-        order_dict['trd_market'] = TrdMarket.to_string2(rsp_pb.s2c.header.trdEnv)
+        order_dict['trd_market'] = TrdMarket.to_string2(rsp_pb.s2c.header.trdMarket)
 
         return RET_OK, order_dict
 
