@@ -129,7 +129,7 @@ class MACD(object):
                 raise Exception('市场快照数据获取异常 {}'.format(snapshot))
             lot_size = snapshot['lot_size'][0]
             cur_price = snapshot['last_price'][0]
-            cash = acc_info['Power'][0]  # 购买力
+            cash = acc_info['power'][0]  # 购买力
             qty = int(math.floor(cash / cur_price))
             qty = qty // lot_size * lot_size
 
