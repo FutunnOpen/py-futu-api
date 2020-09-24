@@ -377,7 +377,9 @@ class OpenTradeContextBase(OpenContextBase):
         col_list = [
             "code", "stock_name", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
-            "dealt_qty", "dealt_avg_price", "last_err_msg", "remark"
+            "dealt_qty", "dealt_avg_price", "last_err_msg", "remark",
+            "time_in_force", "fill_outside_rth"
+
         ]
         order_list = ret_data
         order_list_table = pd.DataFrame(order_list, columns=col_list)
@@ -669,7 +671,8 @@ class OpenTradeContextBase(OpenContextBase):
         col_list = [
             "code", "stock_name", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
-            "dealt_qty", "dealt_avg_price", "last_err_msg", "remark"
+            "dealt_qty", "dealt_avg_price", "last_err_msg", "remark",
+            "time_in_force", "fill_outside_rth"
         ]
         order_list_table = pd.DataFrame(order_list, columns=col_list)
 

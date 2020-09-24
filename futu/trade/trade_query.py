@@ -267,7 +267,9 @@ class OrderListQuery:
             "dealt_qty": order.fillQty,
             "dealt_avg_price": order.fillAvgPrice,
             "last_err_msg": order.lastErrMsg,
-            "remark": order.remark if order.HasField("remark") else ""
+            "remark": order.remark if order.HasField("remark") else "",
+            "time_in_force": TimeInForce.to_string2(order.timeInForce),
+            "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A'
         }
         return order_dict
 
@@ -516,7 +518,9 @@ class HistoryOrderListQuery:
                       "dealt_qty": order.fillQty,
                       "dealt_avg_price": order.fillAvgPrice,
                       "last_err_msg": order.lastErrMsg,
-                      "remark": order.remark if order.HasField("remark") else ""
+                      "remark": order.remark if order.HasField("remark") else "",
+                      "time_in_force": TimeInForce.to_string2(order.timeInForce),
+                      "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A'
                       } for order in raw_order_list]
         return RET_OK, "", order_list
 
