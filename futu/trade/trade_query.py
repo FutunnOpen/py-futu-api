@@ -323,8 +323,8 @@ class PlaceOrder:
             return RET_ERROR, val, None
         else:
             req.c2s.timeInForce = val
-        if fill_outside_rth:
-            req.c2s.fillOutsideRTH = fill_outside_rth
+
+        req.c2s.fillOutsideRTH = fill_outside_rth
 
         return pack_pb_req(req, ProtoId.Trd_PlaceOrder, conn_id, serial_no)
 
