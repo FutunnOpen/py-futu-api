@@ -267,7 +267,9 @@ class OrderListQuery:
             "dealt_qty": order.fillQty,
             "dealt_avg_price": order.fillAvgPrice,
             "last_err_msg": order.lastErrMsg,
-            "remark": order.remark if order.HasField("remark") else ""
+            "remark": order.remark if order.HasField("remark") else "",
+            "time_in_force": TimeInForce.to_string2(order.timeInForce),
+            "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A'
         }
         return order_dict
 
@@ -321,8 +323,8 @@ class PlaceOrder:
             return RET_ERROR, val, None
         else:
             req.c2s.timeInForce = val
-        if fill_outside_rth:
-            req.c2s.fillOutsideRTH = fill_outside_rth
+
+        req.c2s.fillOutsideRTH = fill_outside_rth
 
         return pack_pb_req(req, ProtoId.Trd_PlaceOrder, conn_id, serial_no)
 
@@ -516,7 +518,9 @@ class HistoryOrderListQuery:
                       "dealt_qty": order.fillQty,
                       "dealt_avg_price": order.fillAvgPrice,
                       "last_err_msg": order.lastErrMsg,
-                      "remark": order.remark if order.HasField("remark") else ""
+                      "remark": order.remark if order.HasField("remark") else "",
+                      "time_in_force": TimeInForce.to_string2(order.timeInForce),
+                      "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A'
                       } for order in raw_order_list]
         return RET_OK, "", order_list
 
@@ -580,7 +584,7 @@ class UpdateOrderPush:
 
         order_dict = OrderListQuery.parse_order(rsp_pb, rsp_pb.s2c.order)
         order_dict['trd_env'] = TrdEnv.to_string2(rsp_pb.s2c.header.trdEnv)
-        order_dict['trd_market'] = TrdMarket.to_string2(rsp_pb.s2c.header.trdEnv)
+        order_dict['trd_market'] = TrdMarket.to_string2(rsp_pb.s2c.header.trdMarket)
 
         return RET_OK, order_dict
 
