@@ -2399,3 +2399,17 @@ class TimeInForce(FtEnum):
             self.DAY: Trd_Common_pb2.TimeInForce_DAY,
             self.GTC: Trd_Common_pb2.TimeInForce_GTC
         }
+
+
+# 券商
+class SecurityFirm(FtEnum):
+    NONE = 'N/A'
+    FUTUSECURITIES = 'FUTUSECURITIES'
+    FUTUINC = 'FUTUINC'
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.SecurityFirm_Unknown,
+            self.FUTUSECURITIES: Trd_Common_pb2.SecurityFirm_FutuSecurities,
+            self.FUTUINC: Trd_Common_pb2.SecurityFirm_FutuInc
+        }
