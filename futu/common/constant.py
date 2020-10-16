@@ -2387,3 +2387,15 @@ class AssetClass(FtEnum):
             self.FUTURE: Qot_Common_pb2.AssetClass_Future,
             self.SWAP: Qot_Common_pb2.AssetClass_Swap,
         }
+
+
+# 订单有效期
+class TimeInForce(FtEnum):
+    DAY = 'DAY'   # 当日有效
+    GTC = 'GTC'   # 撤单前有效
+
+    def load_dic(self):
+        return {
+            self.DAY: Trd_Common_pb2.TimeInForce_DAY,
+            self.GTC: Trd_Common_pb2.TimeInForce_GTC
+        }
