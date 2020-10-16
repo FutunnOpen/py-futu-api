@@ -2,7 +2,7 @@
 
 ### 简介
 
-[​**Futu API**](https://openapi.futunn.com/futu-api-doc/)开源项目可以满足使用[**Futu OpenAPI**](https://www.futunn.com/download/OpenAPI)进行量化投资的需求, 并提供包括Python、Json/Protobuf协议的行情及交易接口。
+[​**Futu API**](https://openapi.futunn.com/futu-api-doc/)开源项目可以满足使用[**Futu OpenAPI**](https://www.futunn.com/OpenAPI)进行量化投资的需求, 并提供包括Python、Json/Protobuf协议的行情及交易接口。
 
 - [官方在线文档](https://openapi.futunn.com/futu-api-doc/)
 
