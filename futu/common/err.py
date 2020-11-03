@@ -23,6 +23,7 @@ class Err:
     WrongType = _ErrField(9, 'Wrong type')
     WrongValue = _ErrField(10, 'Wrong value')
     NoNeedUnlock = _ErrField(2000, 'No need to unlock, because REAL trade is not supported in this market')
+    NoAccForSecurityFirm = _ErrField(2001, 'Something wrong with the specified securities firm ')
 
 
 def _make_kwargs_str(**kwargs):
