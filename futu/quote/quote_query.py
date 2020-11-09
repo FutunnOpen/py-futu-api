@@ -1600,7 +1600,11 @@ class SysNotifyPush:
         elif notify_type == SysNotifyType.QOT_RIGHT:
             if rsp_pb.s2c.HasField('qotRight'):
                 data = {'hk_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.hkQotRight),
+                        'hk_option_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.hkOptionQotRight),
+                        'hk_future_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.hkFutureQotRight),
                         'us_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.usQotRight),
+                        'us_option_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.usOptionQotRight),
+                        'us_future_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.usFutureQotRight),
                         'cn_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.cnQotRight)}
         elif notify_type == SysNotifyType.API_LEVEL:
             if rsp_pb.s2c.HasField('apiLevel'):
