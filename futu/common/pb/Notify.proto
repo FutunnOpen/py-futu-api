@@ -61,6 +61,8 @@ message QotRight
 	optional int32 hkOptionQotRight = 7; //港股期权行情权限, Qot_Common.QotRight
 	optional bool hasUSOptionQotRight = 8; //是否有美股期权行情权限
 	optional int32 hkFutureQotRight = 9; //港股期货行情权限, Qot_Common.QotRight
+	optional int32 usFutureQotRight = 10; //美股期货行情权限, Qot_Common.QotRight
+	optional int32 usOptionQotRight = 11; //美股期货行情权限, Qot_Common.QotRight
 }
 
 message APILevel
