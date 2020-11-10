@@ -1599,13 +1599,14 @@ class SysNotifyPush:
                         'trd_logined': rsp_pb.s2c.connectStatus.trdLogined}
         elif notify_type == SysNotifyType.QOT_RIGHT:
             if rsp_pb.s2c.HasField('qotRight'):
-                data = {'hk_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.hkQotRight),
-                        'hk_option_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.hkOptionQotRight),
-                        'hk_future_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.hkFutureQotRight),
-                        'us_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.usQotRight),
-                        'us_option_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.usOptionQotRight),
-                        'us_future_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.usFutureQotRight),
-                        'cn_qot_right': QotRight.to_string2(rsp_pb.s2c.qotRight.cnQotRight)}
+                qot_right = rsp_pb.s2c.qotRight
+                data = {'hk_qot_right': QotRight.to_string2(qot_right.hkQotRight),
+                        'hk_option_qot_right': QotRight.to_string2(qot_right.hkOptionQotRight) if qot_right.HasField('hkOptionQotRight') else 'N/A',
+                        'hk_future_qot_right': QotRight.to_string2(qot_right.hkFutureQotRight) if qot_right.HasField('hkFutureQotRight') else 'N/A',
+                        'us_qot_right': QotRight.to_string2(qot_right.usQotRight),
+                        'us_option_qot_right': QotRight.to_string2(qot_right.usOptionQotRight) if qot_right.HasField('usOptionQotRight') else 'N/A',
+                        'us_future_qot_right': QotRight.to_string2(qot_right.usFutureQotRight) if qot_right.HasField('usFutureQotRight') else 'N/A',
+                        'cn_qot_right': QotRight.to_string2(qot_right.cnQotRight)}
         elif notify_type == SysNotifyType.API_LEVEL:
             if rsp_pb.s2c.HasField('apiLevel'):
                 data = {'api_level': rsp_pb.s2c.apiLevel.apiLevel}
