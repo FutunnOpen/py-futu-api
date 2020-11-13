@@ -56,6 +56,8 @@ enum ProgramStatusType
 	
 	//OpenD登录后被强制退出登录，会导致连接全部断开,需要重连后才能得到以下该状态（并且需要在ui模式下）
 	ProgramStatusType_ForceLogout = 11; //被强制退出登录,例如修改了登录密码,中途打开设备锁等,详细原因在描述返回
+
+	ProgramStatusType_DisclaimerPullFailed = 12; //拉取免责声明标志失败
 }
 
 message ProgramStatus

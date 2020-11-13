@@ -15,12 +15,12 @@ message C2S
 message EquitySnapshotExData
 {
     required int64 issuedShares = 1; // 发行股本,即总股本
-	required double issuedMarketVal = 2; // 总市值 =总股本*当前价格
+	required double issuedMarketVal = 2; // 总市值 =总股本*当前价格（单位：元）
     required double netAsset = 3; // 资产净值
     required double netProfit = 4; // 盈利（亏损）
     required double earningsPershare = 5; // 每股盈利
     required int64 outstandingShares = 6; // 流通股本
-	required double outstandingMarketVal = 7; // 流通市值 =流通股本*当前价格
+	required double outstandingMarketVal = 7; // 流通市值 =流通股本*当前价格（单位：元）
     required double netAssetPershare = 8; // 每股净资产
     required double eyRate = 9; // 收益率（该字段为百分比字段，默认不展示%，如20实际对应20%）
     required double peRate = 10; // 市盈率
@@ -122,7 +122,7 @@ message FutureSnapshotExData
 message TrustSnapshotExData
 {
 	required double dividendYield = 1; //股息率（该字段为百分比字段，默认不展示%，如20实际对应20%）
-	required double aum = 2; //资产规模
+	required double aum = 2; //资产规模（单位：元）
 	required int64 outstandingUnits = 3; //总发行量
 	required double netAssetValue = 4; //单位净值
 	required double premium = 5; //溢价（该字段为百分比字段，默认不展示%，如20实际对应20%）
