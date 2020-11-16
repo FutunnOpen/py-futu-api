@@ -6,7 +6,7 @@ option go_package = "github.com/futuopen/ftapi4go/pb/qotgetusersecuritygroup";
 import "Common.proto";
 import "Qot_Common.proto";
 
-// 自选股的类型
+// 自选股分组类型
 enum GroupType
 {
 	GroupType_Unknown = 0; // 未知
