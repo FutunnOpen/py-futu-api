@@ -8,30 +8,30 @@ import "Qot_Common.proto";
 
 message BrokerItem
 {
-    required string name = 1; // 经纪商名(utf8)
-    required string code = 2; // 经纪商code(utf8)
-    required int64 hold = 3; // 净买入/卖出持有量
-    optional double beforeRatio = 4; // 占比数值 * 100  如：2035 -> 20.35%
-	optional double currentRatio = 5; // 占比数值 * 100  如：2035 -> 20.35%
+	required string name = 1; //券商名
+	required string code = 2; //券商id
+	required int64 hold = 3; //所占股票股数
+	required double beforeRatio = 4; //前一次交易该股票占该券商所有股票的比例
+	required double currentRatio = 5; //目前该股票占该券商所有股票的比例
 }
 
 enum BuySellType
 {
-	BuySellType_Unkown = 0;
-	BuySellType_Buy = 1;
-	BuySellType_Sell = 2;
+	BuySellType_Unkown = 0; //未知类型
+	BuySellType_Buy = 1; //买入
+	BuySellType_Sell = 2; //卖出
 }
 
 message C2S
 {
-	required Qot_Common.Security security = 1; //股票
-	required int32  type = 2;
-	required int32  tradeDays = 3;
+	required Qot_Common.Security security = 1;//股票id
+	required int32 type = 2; //买卖类型BuySellType
+	required int32 days = 3; //多少天内债券所占比列。
 }
 
 message S2C
 {
-    repeated   BrokerItem    brokerItemList = 1;
+	repeated BrokerItem brokerItemList = 1;   //BrokerItem类型
 }
 
 message Request

@@ -2529,18 +2529,18 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return RET_ERROR, "empty data"
 
-    def get_ten_broker(self, code, type, trade_days):
+    def get_ten_broker(self, code, type, days):
         """
         获取该股票买卖的十大券商
         """
         if code is not None and is_str(code) is False:
             error_str = ERROR_STR_PREFIX + 'the type of code param is wrong'
             return RET_ERROR, error_str
-        r, v = GetTenBroker.to_number(type)
+        r, v = BuySellType.to_number(type)
         if r is False:
             error_str = ERROR_STR_PREFIX + "the type of param in group_type is wrong"
             return RET_ERROR, error_str
-        if trade_days<1 :
+        if days<1 :
             error_str = ERROR_STR_PREFIX + "the number of trade_days  is small"
             return RET_ERROR, error_str
         query_processor = self._get_sync_query_processor(
@@ -2550,7 +2550,7 @@ class OpenQuoteContext(OpenContextBase):
         kargs = {
             "code": code,
             "type":type,
-            "trade_days":trade_days,
+            "days":days,
             "conn_id": self.get_sync_conn_id()
         }
         ret_code, msg, ret = query_processor(**kargs)
@@ -2561,8 +2561,8 @@ class OpenQuoteContext(OpenContextBase):
                 'broker_name',
                 'broker_code',
                 'hold',
-                'beforeRatio',
-                'currentRatio'
+                'before_ratio',
+                'current_ratio'
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)
             return RET_OK, ret_frame

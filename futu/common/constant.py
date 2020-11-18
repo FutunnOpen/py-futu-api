@@ -2354,19 +2354,17 @@ class PriceReminderMarketStatus(FtEnum):
             self.US_AFTER: Qot_UpdatePriceReminder_pb2.MarketStatus_USAfter,
         }
 
-class GetTenBroker(FtEnum):
+class BuySellType(FtEnum):
     NONE = "N/A"
     Buy = "buy"
     Sell = "sell"
 
-
     def load_dic(self):
         return {
-            self.NONE:Qot_GetTenBroker_pb2.BuySellType_Unkown,
+            self.NONE: Qot_GetTenBroker_pb2.BuySellType_Unkown,
             self.Buy: Qot_GetTenBroker_pb2.BuySellType_Buy,
-            self.Sell : Qot_GetTenBroker_pb2.BuySellType_Sell,
+            self.Sell: Qot_GetTenBroker_pb2.BuySellType_Sell,
         }
-
 
 # 自选股的类型
 class UserSecurityGroupType(FtEnum):
