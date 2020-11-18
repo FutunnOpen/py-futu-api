@@ -17,6 +17,7 @@ from futu.common.pb import Qot_SetPriceReminder_pb2
 from futu.common.pb import Qot_UpdatePriceReminder_pb2
 from futu.common.pb import Qot_GetUserSecurityGroup_pb2
 from futu.common.pb import Qot_GetOptionChain_pb2
+from futu.common.pb import Qot_GetTenBroker_pb2
 from copy import copy
 from abc import abstractmethod
 
@@ -103,6 +104,8 @@ class ProtoId(object):
 
     Qot_GetUserSecurityGroup = 3222  # 获取自选股分组
     Qot_GetMarketState = 3223  # 获取指定品种的市场状态
+    Qot_GetTenBroker =3224     #获取10个股票商
+
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
@@ -2351,6 +2354,19 @@ class PriceReminderMarketStatus(FtEnum):
             self.US_AFTER: Qot_UpdatePriceReminder_pb2.MarketStatus_USAfter,
         }
 
+class GetTenBroker(FtEnum):
+    NONE = "N/A"
+    Buy = "buy"
+    Sell = "sell"
+
+
+    def load_dic(self):
+        return {
+            self.NONE:Qot_GetTenBroker_pb2.BuySellType_Unkown,
+            self.Buy: Qot_GetTenBroker_pb2.BuySellType_Buy,
+            self.Sell : Qot_GetTenBroker_pb2.BuySellType_Sell,
+        }
+
 
 # 自选股的类型
 class UserSecurityGroupType(FtEnum):
@@ -2366,6 +2382,7 @@ class UserSecurityGroupType(FtEnum):
             self.SYSTEM: Qot_GetUserSecurityGroup_pb2.GroupType_System,
             self.ALL: Qot_GetUserSecurityGroup_pb2.GroupType_All
         }
+
 
 # 资产类别
 class AssetClass(FtEnum):

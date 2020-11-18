@@ -506,6 +506,10 @@ class ProtobufMap(dict):
         from futu.common.pb.Qot_GetMarketState_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetMarketState] = Response()
 
+        from futu.common.pb.Qot_GetTenBroker_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetTenBroker]=Response()
+        
+
     def __getitem__(self, key):
         return ProtobufMap.created_protobuf_map[key] if key in ProtobufMap.created_protobuf_map else None
 

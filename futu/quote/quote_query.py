@@ -3019,7 +3019,52 @@ class GetPriceReminderQuery:
                 data["note"] = sub_item.note
                 ret_list.append(data)
         return RET_OK, "", ret_list
+class GetUTenBrokerQuery:
+    """
+    get Brokerage.
+    """
 
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code,type,trade_days,conn_id):
+        market_code = 0
+        stock_code = ''
+        if code is not None:
+            ret, content = split_stock_str(code)
+            if ret == RET_ERROR:
+                error_str = content
+                return RET_ERROR, error_str, None
+            market_code, stock_code = content
+        from futu.common.pb.Qot_GetTenBroker_pb2 import Request
+        req = Request()
+        req.c2s.security.market = market_code
+        req.c2s.security.code = stock_code
+        _, req.c2s.type = GetTenBroker.to_number(type)
+
+        if trade_days is not None:
+            req.c2s.tradeDays = trade_days
+        return pack_pb_req(req, ProtoId.Qot_GetTenBroker, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        ret_list = list()
+
+        brokerItemList = rsp_pb.s2c.brokerItemList
+        for item in brokerItemList:
+            data = {}
+            data["broker_name"] = item.name
+            data["broker_code"] = item.code
+            data["hold"] = item.hold
+            data["beforeRatio"] = item.beforeRatio
+            data["currentRatio"]=item.currentRatio
+            ret_list.append(data)
+
+        return RET_OK, "", ret_list
 class GetUserSecurityGroupQuery:
     """
     Query GetUserSecurityGroup.

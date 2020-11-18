@@ -1,0 +1,48 @@
+syntax = "proto2";
+package Qot_GetTenBroker;
+option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/qotgettenbroker";
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+message BrokerItem
+{
+    required string name = 1; // 经纪商名(utf8)
+    required string code = 2; // 经纪商code(utf8)
+    required int64 hold = 3; // 净买入/卖出持有量
+    optional double beforeRatio = 4; // 占比数值 * 100  如：2035 -> 20.35%
+	optional double currentRatio = 5; // 占比数值 * 100  如：2035 -> 20.35%
+}
+
+enum BuySellType
+{
+	BuySellType_Unkown = 0;
+	BuySellType_Buy = 1;
+	BuySellType_Sell = 2;
+}
+
+message C2S
+{
+	required Qot_Common.Security security = 1; //股票
+	required int32  type = 2;
+	required int32  tradeDays = 3;
+}
+
+message S2C
+{
+    repeated   BrokerItem    brokerItemList = 1;
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	optional S2C s2c = 4;
+}
