@@ -70,7 +70,7 @@ class OpenTradeContextBase(OpenContextBase):
         for record in acc_list:
             trdMkt_list = record["trdMarket_list"]
             if self.__trd_mkt in trdMkt_list:
-                if record['trd_env'] == TrdEnv.SIMULATE or record['security_firm'] == self.__security_firm:
+                if record['trd_env'] == TrdEnv.SIMULATE or record['security_firm'] == NoneDataValue  or record['security_firm'] == self.__security_firm:
                     self.__last_acc_list.append({
                         "trd_env": record["trd_env"],
                         "acc_id": record["acc_id"],
