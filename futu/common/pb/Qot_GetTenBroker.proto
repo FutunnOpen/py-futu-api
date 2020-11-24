@@ -11,8 +11,6 @@ message BrokerItem
 	required string name = 1; //券商名
 	required string code = 2; //券商id
 	required int64 hold = 3; //持有量
-	required double beforeRatio = 4; //前一次交易该股票占该券商所有股票的比例
-	required double currentRatio = 5; //目前该股票占该券商所有股票的比例
 }
 
 enum BuySellType

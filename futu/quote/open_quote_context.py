@@ -12,6 +12,7 @@ from futu.quote.quote_query import *
 from futu.quote.quote_stockfilter_info import *
 from futu.quote.quote_get_warrant import *
 
+
 class SubRecord:
     def __init__(self):
         self.subMap = {}  # (subkey, is_orderbook_detail, extended_time) => code set
@@ -2538,10 +2539,7 @@ class OpenQuoteContext(OpenContextBase):
             return RET_ERROR, error_str
         r, v = BuySellType.to_number(type)
         if r is False:
-            error_str = ERROR_STR_PREFIX + "the type of param in group_type is wrong"
-            return RET_ERROR, error_str
-        if days<1 :
-            error_str = ERROR_STR_PREFIX + "the number of trade_days  is small"
+            error_str = ERROR_STR_PREFIX + "the  param of type  is wrong"
             return RET_ERROR, error_str
         query_processor = self._get_sync_query_processor(
             GetUTenBrokerQuery.pack_req,
@@ -2561,8 +2559,6 @@ class OpenQuoteContext(OpenContextBase):
                 'broker_name',
                 'broker_code',
                 'hold',
-                'before_ratio',
-                'current_ratio'
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)
             return RET_OK, ret_frame

@@ -3057,8 +3057,6 @@ class GetUTenBrokerQuery:
             data["broker_name"] = item.name
             data["broker_code"] = item.code
             data["hold"] = item.hold
-            data["before_ratio"] = item.beforeRatio
-            data["current_ratio"]=item.currentRatio
             ret_list.append(data)
 
         return RET_OK, "", ret_list

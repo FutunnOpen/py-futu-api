@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetTenBroker.proto',
   package='Qot_GetTenBroker',
   syntax='proto2',
-  serialized_pb=_b('\n\x16Qot_GetTenBroker.proto\x12\x10Qot_GetTenBroker\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"a\n\nBrokerItem\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x0c\n\x04\x63ode\x18\x02 \x02(\t\x12\x0c\n\x04hold\x18\x03 \x02(\x03\x12\x13\n\x0b\x62\x65\x66oreRatio\x18\x04 \x02(\x01\x12\x14\n\x0c\x63urrentRatio\x18\x05 \x02(\x01\"I\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04type\x18\x02 \x02(\x05\x12\x0c\n\x04\x64\x61ys\x18\x03 \x02(\x05\";\n\x03S2C\x12\x34\n\x0e\x62rokerItemList\x18\x01 \x03(\x0b\x32\x1c.Qot_GetTenBroker.BrokerItem\"-\n\x07Request\x12\"\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x15.Qot_GetTenBroker.C2S\"f\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\"\n\x03s2c\x18\x04 \x01(\x0b\x32\x15.Qot_GetTenBroker.S2C*P\n\x0b\x42uySellType\x12\x16\n\x12\x42uySellType_Unkown\x10\x00\x12\x13\n\x0f\x42uySellType_Buy\x10\x01\x12\x14\n\x10\x42uySellType_Sell\x10\x02\x42\x46\n\x13\x63om.futu.openapi.pbZ/github.com/futuopen/ftapi4go/pb/qotgettenbroker')
+  serialized_pb=_b('\n\x16Qot_GetTenBroker.proto\x12\x10Qot_GetTenBroker\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"6\n\nBrokerItem\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x0c\n\x04\x63ode\x18\x02 \x02(\t\x12\x0c\n\x04hold\x18\x03 \x02(\x03\"I\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04type\x18\x02 \x02(\x05\x12\x0c\n\x04\x64\x61ys\x18\x03 \x02(\x05\";\n\x03S2C\x12\x34\n\x0e\x62rokerItemList\x18\x01 \x03(\x0b\x32\x1c.Qot_GetTenBroker.BrokerItem\"-\n\x07Request\x12\"\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x15.Qot_GetTenBroker.C2S\"f\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\"\n\x03s2c\x18\x04 \x01(\x0b\x32\x15.Qot_GetTenBroker.S2C*P\n\x0b\x42uySellType\x12\x16\n\x12\x42uySellType_Unkown\x10\x00\x12\x13\n\x0f\x42uySellType_Buy\x10\x01\x12\x14\n\x10\x42uySellType_Sell\x10\x02\x42\x46\n\x13\x63om.futu.openapi.pbZ/github.com/futuopen/ftapi4go/pb/qotgettenbroker')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -47,8 +47,8 @@ _BUYSELLTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=462,
-  serialized_end=542,
+  serialized_start=419,
+  serialized_end=499,
 )
 _sym_db.RegisterEnumDescriptor(_BUYSELLTYPE)
 
@@ -87,20 +87,6 @@ _BROKERITEM = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='beforeRatio', full_name='Qot_GetTenBroker.BrokerItem.beforeRatio', index=3,
-      number=4, type=1, cpp_type=5, label=2,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='currentRatio', full_name='Qot_GetTenBroker.BrokerItem.currentRatio', index=4,
-      number=5, type=1, cpp_type=5, label=2,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -114,7 +100,7 @@ _BROKERITEM = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=76,
-  serialized_end=173,
+  serialized_end=130,
 )
 
 
@@ -158,8 +144,8 @@ _C2S = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=175,
-  serialized_end=248,
+  serialized_start=132,
+  serialized_end=205,
 )
 
 
@@ -189,8 +175,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=250,
-  serialized_end=309,
+  serialized_start=207,
+  serialized_end=266,
 )
 
 
@@ -220,8 +206,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=311,
-  serialized_end=356,
+  serialized_start=268,
+  serialized_end=313,
 )
 
 
@@ -272,8 +258,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=358,
-  serialized_end=460,
+  serialized_start=315,
+  serialized_end=417,
 )
 
 _C2S.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY
