@@ -3055,7 +3055,6 @@ class GetUTenBrokerQuery:
         for item in brokerItemList:
             data = {}
             data["broker_name"] = item.name
-            data["broker_code"] = item.code
             data["hold"] = item.hold
             ret_list.append(data)
 

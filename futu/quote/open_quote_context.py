@@ -2557,7 +2557,6 @@ class OpenQuoteContext(OpenContextBase):
         if isinstance(ret, list):
             col_list = [
                 'broker_name',
-                'broker_code',
                 'hold',
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)

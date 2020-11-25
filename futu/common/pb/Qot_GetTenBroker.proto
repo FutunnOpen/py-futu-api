@@ -9,7 +9,6 @@ import "Qot_Common.proto";
 message BrokerItem
 {
 	required string name = 1; //券商名
-	required string code = 2; //券商id
 	required int64 hold = 3; //持有量
 }
 
