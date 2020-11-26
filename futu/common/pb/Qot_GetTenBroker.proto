@@ -21,7 +21,7 @@ enum BuySellType
 
 message C2S
 {
-	required Qot_Common.Security security = 1;//股票id
+	required Qot_Common.Security security = 1;//股票
 	required int32 type = 2; //买卖类型BuySellType
 	required int32 days = 3; //最近多少日
 }
