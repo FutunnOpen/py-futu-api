@@ -1,10 +1,10 @@
-# futu-api - 富途开放API (FUTU Open API)
+# 富途 OpenAPI
 
 ### 简介
 
-[​**futu-api**](https://futunnopen.github.io/futu-api-doc/intro/intro.html)开源项目可以满足使用[**FUTU Open API**](https://www.futunn.com/download/openAPI)软件进行量化投资的需求, 并提供包括Python、Json/Protobuf协议的行情及交易接口。
+[​**Futu API**](https://openapi.futunn.com/futu-api-doc/)开源项目可以满足使用[**Futu OpenAPI**](https://www.futunn.com/OpenAPI)进行量化投资的需求, 并提供包括Python、Json/Protobuf协议的行情及交易接口。
 
-- [官方在线文档](https://futunnopen.github.io/futu-api-doc/intro/intro.html)
+- [官方在线文档](https://openapi.futunn.com/futu-api-doc/)
 
 -------------------
 
@@ -169,7 +169,6 @@ trade_hk_ctx.close()
 ### 使用须知
 
 - python脚本运行前，需先启动[FutuOpenD](https://www.futunn.com/download/openAPI)网关客户端
-- 详情查看[安装指南](https://futunnopen.github.io/futu-api-doc/api/setup.html)
 
 ### API与FutuOpenD网关客户端的架构
 
@@ -181,7 +180,7 @@ trade_hk_ctx.close()
 ### API及FutuOpenD客户端交流方式
 
 * 富途开放API群(229850364, 108534288) 
-* 团队或公司客户请在入群后联系群主
+* 有一定交易额或特殊需求的用户请在入群后联系群主
 
 ***
 
