@@ -639,7 +639,7 @@ class OpenQuoteContext(OpenContextBase):
                         'wrt_price_recovery_ratio',
                         'wrt_score',
                         'wrt_upper_strike_price',
-                        'wrt_lowe_strike_price',
+                        'wrt_lower_strike_price',
                         'wrt_inline_price_status',
                         'wrt_issuer_code'
                         ]
