@@ -253,7 +253,7 @@ class OpenQuoteContext(OpenContextBase):
             name                str            名字
             lot_size            int            每手数量
             stock_type          str            股票类型，参见SecurityType
-            stock_child_type    str            涡轮子类型，参见WrtType
+            stock_child_type    str            窝轮子类型，参见WrtType
             stock_owner         str            所属正股的代码
             option_type         str            期权类型，Qot_Common.OptionType
             strike_time         str            行权日
@@ -499,8 +499,8 @@ class OpenQuoteContext(OpenContextBase):
                 dividend_ratio_ttm         float          股息率TTM（该字段为百分比字段，默认不展示%）
                 dividend_lfy               float          股息LFY，上一年度派息
                 dividend_lfy_ratio         float          股息率LFY（该字段为百分比字段，默认不展示
-                stock_owner                str            涡轮所属正股的代码或期权的标的股代码
-                wrt_valid                  bool           是否是窝轮（为true时以下涡轮相关的字段才有合法数据）
+                stock_owner                str            窝轮所属正股的代码或期权的标的股代码
+                wrt_valid                  bool           是否是窝轮（为true时以下窝轮相关的字段才有合法数据）
                 wrt_conversion_ratio       float          换股比率（该字段为比例字段，默认不展示%）
                 wrt_type                   str            窝轮类型，参见WrtType
                 wrt_strike_price           float          行使价格
@@ -1502,7 +1502,7 @@ class OpenQuoteContext(OpenContextBase):
         """
         获取证券的关联数据
         :param code: 证券id，str，例如HK.00700
-        :param reference_type: 要获得的相关数据，参见SecurityReferenceType。例如WARRANT，表示获取正股相关的涡轮
+        :param reference_type: 要获得的相关数据，参见SecurityReferenceType。例如WARRANT，表示获取正股相关的窝轮
         :return: (ret, data)
 
                 ret == RET_OK 返回pd dataframe数据，数据列格式如下
@@ -1516,8 +1516,8 @@ class OpenQuoteContext(OpenContextBase):
                 stock_type                  str           证券类型，参见SecurityType
                 stock_name                  str           证券名字
                 list_time                   str           上市时间（美股默认是美东时间，港股A股默认是北京时间）
-                wrt_valid                   bool          是否是涡轮，如果为True，下面wrt开头的字段有效
-                wrt_type                    str           涡轮类型，参见WrtType
+                wrt_valid                   bool          是否是窝轮，如果为True，下面wrt开头的字段有效
+                wrt_type                    str           窝轮类型，参见WrtType
                 wrt_code                    str           所属正股
                 future_valid                bool          是否是期货，如果为True，下面future开头的字段有效
                 future_main_contract        bool          是否主连合约（期货特有字段）

@@ -2021,7 +2021,7 @@ class OrderDetail:
 
 class QuoteWarrant:
     """
-    拉取涡轮
+    拉取窝轮
     """
 
     def __init__(self):

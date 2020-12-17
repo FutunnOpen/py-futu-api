@@ -455,7 +455,7 @@ class ProtobufMap(dict):
         from futu.common.pb.Qot_UpdateOrderDetail_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdateOrderDetail] = Response()
 
-        """ Qot_GetWarrantData = 3210 获取涡轮 """
+        """ Qot_GetWarrantData = 3210 获取窝轮 """
         from futu.common.pb.Qot_GetWarrant_pb2 import Response as GetWarrantPBResponse
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetWarrant] = GetWarrantPBResponse()
 

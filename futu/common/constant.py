@@ -87,7 +87,7 @@ class ProtoId(object):
     Qot_GetOrderDetail = 3016           # 获取委托明细
     Qot_UpdateOrderDetail = 3017        # 推送委托明细
 
-    Qot_GetWarrant = 3210          # 拉取涡轮信息
+    Qot_GetWarrant = 3210          # 拉取窝轮信息
     Qot_GetCapitalFlow = 3211          # 获取资金流向
     Qot_GetCapitalDistribution = 3212  # 获取资金分布
 
@@ -393,7 +393,7 @@ class SecurityType(FtEnum):
      ..  py:attribute:: ETF
       交易所交易基金(Exchange Traded Funds)
      ..  py:attribute:: WARRANT
-      港股涡轮牛熊证
+      港股窝轮牛熊证
      ..  py:attribute:: BOND
       债券
     ..  py:attribute:: DRVT
@@ -1358,7 +1358,7 @@ class WrtType(FtEnum):
 '''-------------------------SortField----------------------------'''
 
 
-# 涡轮排序
+# 窝轮排序
 class SortField(FtEnum):
     NONE = "N/A"                                       # 未知
     CODE = "CODE"                                      # 代码
@@ -1472,7 +1472,7 @@ class SortField(FtEnum):
 '''-------------------------IpoPeriod----------------------------'''
 
 
-# 涡轮上市日
+# 窝轮上市日
 class IpoPeriod(FtEnum):
     NONE = "N/A"                                       # 未知
     TODAY = "TODAY"                                    # 今日上市
@@ -1495,7 +1495,7 @@ class IpoPeriod(FtEnum):
 '''-------------------------PriceType----------------------------'''
 
 
-# 涡轮价外/内,界内证表示界内界外
+# 窝轮价外/内,界内证表示界内界外
 class PriceType(FtEnum):
     NONE = "N/A"                                       # 未知
     OUTSIDE = "OUTSIDE"                                # 价外,界内证表示界外
@@ -1512,7 +1512,7 @@ class PriceType(FtEnum):
 '''-------------------------WarrantStatus----------------------------'''
 
 
-# 涡轮状态
+# 窝轮状态
 class WarrantStatus(FtEnum):
     NONE = "N/A"                                       # 未知
     NORMAL = "NORMAL"                                  # 正常状态
@@ -1533,7 +1533,7 @@ class WarrantStatus(FtEnum):
 '''-------------------------Issuer----------------------------'''
 
 
-# 涡轮发行人
+# 窝轮发行人
 class Issuer(FtEnum):
     NONE = "N/A"                                       # 未知
     SG = "SG"                                          # 法兴
