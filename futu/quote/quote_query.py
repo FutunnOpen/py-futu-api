@@ -590,7 +590,7 @@ class MarketSnapshotQuery:
                 #  上限价，仅界内证支持该字段 type=double
                 snapshot_tmp["wrt_upper_strike_price"] = record.warrantExData.upperStrikePrice
                 #  下限价，仅界内证支持该字段 type=double
-                snapshot_tmp["wrt_lowe_strike_price"] = record.warrantExData.lowerStrikePrice
+                snapshot_tmp["wrt_lower_strike_price"] = record.warrantExData.lowerStrikePrice
                 #  界内界外，仅界内证支持该字段 type=double
                 snapshot_tmp["wrt_inline_price_status"] = PriceType.to_string2(
                     record.warrantExData.inLinePriceStatus)
