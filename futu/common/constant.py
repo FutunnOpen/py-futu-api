@@ -2413,3 +2413,16 @@ class SecurityFirm(FtEnum):
             self.FUTUSECURITIES: Trd_Common_pb2.SecurityFirm_FutuSecurities,
             self.FUTUINC: Trd_Common_pb2.SecurityFirm_FutuInc
         }
+
+# 模拟交易账号类型
+class SimAccType(FtEnum):
+    NONE = 'N/A'
+    STOCK = 'STOCK'
+    OPTION = 'OPTION'
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.SimAccType_Unknown,
+            self.STOCK: Trd_Common_pb2.SimAccType_Stock,
+            self.OPTION: Trd_Common_pb2.SimAccType_Option
+        }

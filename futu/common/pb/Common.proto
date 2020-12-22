@@ -38,6 +38,14 @@ enum ProtoFmt
 	ProtoFmt_Json = 1; //Json格式
 }
 
+//用户类型
+enum UserAttribution
+{
+	UserAttribution_Unknown = 0; //
+	UserAttribution_NN = 1; //牛牛用户
+	UserAttribution_MM = 2; //MooMoo用户
+}
+
 enum ProgramStatusType
 {
 	ProgramStatusType_None = 0;

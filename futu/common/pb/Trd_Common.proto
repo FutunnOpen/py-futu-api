@@ -49,7 +49,7 @@ enum OrderType
 {
 	OrderType_Unknown = 0; //未知类型
 	OrderType_Normal = 1; //普通订单(港股的增强限价单、港股期权的限价单，A股限价委托、美股的限价单，港股期货的限价单，CME期货的限价单)。目前港股期权只能指定此订单类型。
-	OrderType_Market = 2; //市价订单(目前支持美股、港股正股、窝轮、牛熊、界内证)
+	OrderType_Market = 2; //市价订单(目前支持美股、港股正股、涡轮、牛熊、界内证)
 	
 	OrderType_AbsoluteLimit = 5; //绝对限价订单(目前仅港股)，只有价格完全匹配才成交，否则下单失败，比如你下价格为5元的买单，卖单价格必须也要是5元才能成交，低于5元也不能成交，下单失败。卖出同理
 	OrderType_Auction = 6; //竞价订单(目前仅港股)，仅港股早盘竞价和收盘竞价有效，A股的早盘竞价订单类型不变还是OrderType_Normal
@@ -149,6 +149,14 @@ enum SecurityFirm
     SecurityFirm_Unknown = 0;        //未知
     SecurityFirm_FutuSecurities = 1; //富途证券
 	SecurityFirm_FutuInc = 2;        //富途Inc
+}
+
+//模拟交易账户类型
+enum SimAccType
+{
+	SimAccType_Unknown = 0;		//未知
+	SimAccType_Stock = 1;		//股票模拟账户（仅用于交易证券类产品，不支持交易期权）
+	SimAccType_Option = 2;      //期权模拟账户（仅用于交易期权，不支持交易股票证券类产品）
 }
 
 //账户现金信息，目前仅用于期货账户
