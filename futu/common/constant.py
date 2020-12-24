@@ -2251,6 +2251,32 @@ class CltRiskLevel(FtEnum):
             self.OPT_DANGER: Trd_Common_pb2.CltRiskLevel_OptDanger
         }
 
+
+class CltRiskStatus(FtEnum):
+    NONE = 'N/A'
+    LEVEL1 = 'LEVEL1'
+    LEVEL2 = 'LEVEL2'
+    LEVEL3 = 'LEVEL3'
+    LEVEL4 = 'LEVEL4'
+    LEVEL5 = 'LEVEL5'
+    LEVEL6 = 'LEVEL6'
+    LEVEL7 = 'LEVEL7'
+    LEVEL8 = 'LEVEL8'
+    LEVEL9 = 'LEVEL9'
+
+    def load_dic(self):
+        return {
+            self.LEVEL1: Trd_Common_pb2.CltRiskStatus_Level1,
+            self.LEVEL2: Trd_Common_pb2.CltRiskStatus_Level2,
+            self.LEVEL3: Trd_Common_pb2.CltRiskStatus_Level3,
+            self.LEVEL4: Trd_Common_pb2.CltRiskStatus_Level4,
+            self.LEVEL5: Trd_Common_pb2.CltRiskStatus_Level5,
+            self.LEVEL6: Trd_Common_pb2.CltRiskStatus_Level6,
+            self.LEVEL7: Trd_Common_pb2.CltRiskStatus_Level7,
+            self.LEVEL8: Trd_Common_pb2.CltRiskStatus_Level8,
+            self.LEVEL9: Trd_Common_pb2.CltRiskStatus_Level9,
+        }
+
 class TradeDateMarket(FtEnum):
     NONE = 'N/A'  # 未知
     HK = 'HK'  # 港股市场

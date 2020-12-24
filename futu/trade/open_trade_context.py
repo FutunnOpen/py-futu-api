@@ -284,9 +284,11 @@ class OpenTradeContextBase(OpenContextBase):
             return RET_ERROR, msg
 
         col_list = [
-            'power', 'total_assets', 'cash', 'market_val', 'frozen_cash', 'avl_withdrawal_cash', 'currency',
-            'available_funds', 'unrealized_pl', 'realized_pl', 'risk_level', 'initial_margin', 'maintenance_margin',
-            'hk_cash', 'hk_avl_withdrawal_cash', 'us_cash', 'us_avl_withdrawal_cash'
+            'power', 'max_power_short', 'net_cash_power', 'total_assets', 'cash', 'market_val', 'long_mv', 'short_mv',
+            'pending_asset', 'interest_charged_amount', 'frozen_cash', 'avl_withdrawal_cash', 'max_withdrawal', 'currency',
+            'available_funds', 'unrealized_pl', 'realized_pl', 'risk_level', 'risk_status', 'initial_margin',
+            'margin_call_margin', 'maintenance_margin', 'hk_cash', 'hk_avl_withdrawal_cash', 'us_cash',
+            'us_avl_withdrawal_cash'
         ]
         accinfo_frame_table = pd.DataFrame(accinfo_list, columns=col_list)
 
