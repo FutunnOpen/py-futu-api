@@ -664,7 +664,9 @@ class AccTradingInfoQuery:
             'max_cash_and_margin_buy': info.maxCashAndMarginBuy if info.HasField('maxCashAndMarginBuy') else NoneDataValue,
             'max_position_sell': info.maxPositionSell,
             'max_sell_short': info.maxSellShort if info.HasField('maxSellShort') else NoneDataValue,
-            'max_buy_back': info.maxBuyBack if info.HasField('maxBuyBack') else NoneDataValue
+            'max_buy_back': info.maxBuyBack if info.HasField('maxBuyBack') else NoneDataValue,
+            'long_required_im': info.longRequiredIM if info.HasField('longRequiredIM') else NoneDataValue,
+            'short_required_im': info.shortRequiredIM if info.HasField('shortRequiredIM') else NoneDataValue
         }]
 
         return RET_OK, "", data

@@ -791,7 +791,8 @@ class OpenTradeContextBase(OpenContextBase):
         if ret_code != RET_OK:
             return RET_ERROR, msg
 
-        col_list = ['max_cash_buy', 'max_cash_and_margin_buy', 'max_position_sell', 'max_sell_short', 'max_buy_back']
+        col_list = ['max_cash_buy', 'max_cash_and_margin_buy', 'max_position_sell', 'max_sell_short', 'max_buy_back',
+                    'long_required_im', 'short_required_im']
         acctradinginfo_table = pd.DataFrame(data, columns=col_list)
         return RET_OK, acctradinginfo_table
 
