@@ -510,6 +510,7 @@ message OptionBasicQotExData
 	optional double ownerLotMultiplier = 14; //相等正股手数，指数期权无该字段
 	optional int32 optionAreaType = 15; //OptionAreaType, 期权地区类型
 	optional double contractMultiplier = 16; //合约乘数，指数期权特有字段
+	optional int32 indexOptionType = 18; //IndexOptionType，指数期权的类型，仅在指数期权有效
 }
 
 //美股支持盘前盘后数据

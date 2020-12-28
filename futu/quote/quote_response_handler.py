@@ -51,7 +51,7 @@ class StockQuoteHandlerBase(RspHandlerBase):
                 'premium', 'delta', 'gamma', 'vega', 'theta', 'rho',
                 'net_open_interest', 'expiry_date_distance', 'contract_nominal_value', 
                 'owner_lot_multiplier', 'option_area_type', 'contract_multiplier',
-                'last_settle_price','position','position_change'
+                'last_settle_price', 'position', 'position_change', 'index_option_type'
             ]
 
             col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)

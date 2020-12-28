@@ -75,6 +75,7 @@ pb_field_map_OptionBasicQotExData = [
     ('owner_lot_multiplier', 'ownerLotMultiplier', False, None),
     ('option_area_type', 'optionAreaType', False, OptionAreaType.to_string2),
     ('contract_multiplier', 'contractMultiplier', False, None),
+    ('index_option_type', 'indexOptionType', False, IndexOptionType.to_string2),
 ]
 
 pb_field_map_FutureBasicQotExData = [
@@ -619,6 +620,7 @@ class MarketSnapshotQuery:
                 snapshot_tmp['option_owner_lot_multiplier'] = record.optionExData.ownerLotMultiplier if record.optionExData.HasField('ownerLotMultiplier') else 'N/A'
                 snapshot_tmp['option_area_type'] = OptionAreaType.to_string2(record.optionExData.optionAreaType) if record.optionExData.HasField('optionAreaType') else 'N/A'
                 snapshot_tmp['option_contract_multiplier'] = record.optionExData.contractMultiplier if record.optionExData.HasField('contractMultiplier') else 'N/A'
+                snapshot_tmp['index_option_type'] = IndexOptionType.to_string2(record.optionExData.indexOptionType) if record.optionExData.HasField('indexOptionType') else 'N/A'
 
             snapshot_tmp['index_valid'] = False
             if record.HasField('indexExData'):
