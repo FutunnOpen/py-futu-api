@@ -151,6 +151,14 @@ enum SecurityFirm
 	SecurityFirm_FutuInc = 2;        //富途Inc
 }
 
+//模拟交易账户类型
+enum SimAccType
+{
+	SimAccType_Unknown = 0;		//未知
+	SimAccType_Stock = 1;		//股票模拟账户（仅用于交易证券类产品，不支持交易期权）
+	SimAccType_Option = 2;      //期权模拟账户（仅用于交易期权，不支持交易股票证券类产品）
+}
+
 //账户现金信息，目前仅用于期货账户
 message AccCashInfo
 {

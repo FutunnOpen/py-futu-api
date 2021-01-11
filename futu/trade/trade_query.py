@@ -46,10 +46,11 @@ class GetAccountList:
         acc_list = [{
             'acc_id': record.accID,
             'trd_env': TrdEnv.to_string2(record.trdEnv),
-            'trdMarket_list': [ TrdMarket.to_string2(trdMkt) for trdMkt in record.trdMarketAuthList],
+            'trdMarket_list': [TrdMarket.to_string2(trdMkt) for trdMkt in record.trdMarketAuthList],
             'acc_type': TrdAccType.to_string2(record.accType) if record.HasField("accType") else TrdAccType.NONE,
             'card_num': record.cardNum if record.HasField("cardNum") else "N/A",
-            'security_firm': SecurityFirm.to_string2(record.securityFirm) if record.HasField('securityFirm') else SecurityFirm.NONE
+            'security_firm': SecurityFirm.to_string2(record.securityFirm) if record.HasField('securityFirm') else SecurityFirm.NONE,
+            'sim_acc_type': SimAccType.to_string2(record.simAccType) if record.HasField('simAccType') else SimAccType.NONE
         } for record in raw_acc_list]
 
         return RET_OK, "", acc_list
@@ -131,17 +132,26 @@ class AccInfoQuery:
         raw_funds = rsp_pb.s2c.funds
         accinfo_list = [{
             'power': raw_funds.power,
+            'max_power_short': raw_funds.maxPowerShort if raw_funds.HasField('maxPowerShort') else NoneDataValue,
+            'net_cash_power': raw_funds.netCashPower if raw_funds.HasField('netCashPower') else NoneDataValue,
             'total_assets': raw_funds.totalAssets,
             'cash': raw_funds.cash,
             'market_val': raw_funds.marketVal,
+            'long_mv': raw_funds.longMv if raw_funds.HasField('longMv') else NoneDataValue,
+            'short_mv': raw_funds.shortMv if raw_funds.HasField('shortMv') else NoneDataValue,
+            'pending_asset': raw_funds.pendingAsset if raw_funds.HasField('pendingAsset') else NoneDataValue,
+            'interest_charged_amount': raw_funds.debtCash if raw_funds.HasField('debtCash') else NoneDataValue,
             'frozen_cash': raw_funds.frozenCash,
-            'avl_withdrawal_cash': raw_funds.avlWithdrawalCash,
+            'avl_withdrawal_cash': raw_funds.avlWithdrawalCash if raw_funds.HasField('avlWithdrawalCash') else NoneDataValue,
+            'max_withdrawal': raw_funds.maxWithdrawal if raw_funds.HasField('maxWithdrawal') else NoneDataValue,
             'currency': Currency.to_string2(raw_funds.currency) if raw_funds.HasField('currency') else Currency.NONE,
             'available_funds': raw_funds.availableFunds if raw_funds.HasField('availableFunds') else NoneDataValue,
             'unrealized_pl': raw_funds.unrealizedPL if raw_funds.HasField('unrealizedPL') else NoneDataValue,
             'realized_pl': raw_funds.realizedPL if raw_funds.HasField('realizedPL') else NoneDataValue,
             'risk_level': CltRiskLevel.to_string2(raw_funds.riskLevel) if raw_funds.HasField('riskLevel') else CltRiskLevel.NONE,
+            'risk_status': CltRiskStatus.to_string2(raw_funds.riskStatus) if raw_funds.HasField('riskStatus') else CltRiskStatus.NONE,
             'initial_margin': raw_funds.initialMargin if raw_funds.HasField('initialMargin') else NoneDataValue,
+            'margin_call_margin': raw_funds.marginCallMargin if raw_funds.HasField('marginCallMargin') else NoneDataValue,
             'maintenance_margin': raw_funds.maintenanceMargin if raw_funds.HasField('maintenanceMargin') else NoneDataValue,
             'hk_cash': NoneDataValue,
             'hk_avl_withdrawal_cash': NoneDataValue,
@@ -654,7 +664,9 @@ class AccTradingInfoQuery:
             'max_cash_and_margin_buy': info.maxCashAndMarginBuy if info.HasField('maxCashAndMarginBuy') else NoneDataValue,
             'max_position_sell': info.maxPositionSell,
             'max_sell_short': info.maxSellShort if info.HasField('maxSellShort') else NoneDataValue,
-            'max_buy_back': info.maxBuyBack if info.HasField('maxBuyBack') else NoneDataValue
+            'max_buy_back': info.maxBuyBack if info.HasField('maxBuyBack') else NoneDataValue,
+            'long_required_im': info.longRequiredIM if info.HasField('longRequiredIM') else NoneDataValue,
+            'short_required_im': info.shortRequiredIM if info.HasField('shortRequiredIM') else NoneDataValue
         }]
 
         return RET_OK, "", data
