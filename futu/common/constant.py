@@ -2266,6 +2266,7 @@ class CltRiskStatus(FtEnum):
 
     def load_dic(self):
         return {
+            self.NONE: Trd_Common_pb2.CltRiskStatus_Unknown,
             self.LEVEL1: Trd_Common_pb2.CltRiskStatus_Level1,
             self.LEVEL2: Trd_Common_pb2.CltRiskStatus_Level2,
             self.LEVEL3: Trd_Common_pb2.CltRiskStatus_Level3,
