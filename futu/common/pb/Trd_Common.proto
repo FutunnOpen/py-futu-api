@@ -159,6 +159,21 @@ enum SimAccType
 	SimAccType_Option = 2;      //期权模拟账户（仅用于交易期权，不支持交易股票证券类产品）
 }
 
+//风险状态，共分 9 个等级，LEVEL1是最安全，LEVEL9是最危险
+enum CltRiskStatus
+{
+	CltRiskStatus_Unknown = 0; //未知
+	CltRiskStatus_Level1 = 1;  //非常安全
+	CltRiskStatus_Level2 = 2;  //安全
+	CltRiskStatus_Level3 = 3;  //较安全
+	CltRiskStatus_Level4 = 4;  //较低风险
+	CltRiskStatus_Level5 = 5;  //中等风险
+	CltRiskStatus_Level6 = 6;  //较高风险
+	CltRiskStatus_Level7 = 7;  //预警
+	CltRiskStatus_Level8 = 8;  //预警
+	CltRiskStatus_Level9 = 9;  //预警
+}
+
 //账户现金信息，目前仅用于期货账户
 message AccCashInfo
 {
@@ -184,27 +199,37 @@ message TrdAcc
 	optional int32 accType = 4;   //账户类型，取值见TrdAccType
 	optional string cardNum = 5;  //卡号
 	optional int32 securityFirm = 6; //所属券商，取值见SecurityFirm
+	optional int32 simAccType = 7; //模拟交易账号类型，取值见SimAccType
 }
 
 //账户资金结构
 message Funds
 {
-	required double power = 1; //最大购买力（做多），3位精度，下同。期货账户此字段为0
+	required double power = 1; //最大购买力（做多），3位精度，下同。
 	required double totalAssets = 2; //资产净值
-	required double cash = 3; //现金, 期货账户此字段为0
-	required double marketVal = 4; //证券市值, 期货账户此字段为0
-	required double frozenCash = 5; //冻结金额
-	required double debtCash = 6; //欠款金额, 期货账户此字段为0
-	required double avlWithdrawalCash = 7; //可提金额, 期货账户此字段为0
+	required double cash = 3; //现金
+	required double marketVal = 4; //证券市值, 仅证券账户适用
+	required double frozenCash = 5; //冻结资金
+	required double debtCash = 6; //计息金额
+	required double avlWithdrawalCash = 7; //现金可提，仅证券账户适用 
 
 	optional int32 currency = 8;            //币种，本结构体资金相关的货币类型，取值参见 Currency，期货适用
     optional double availableFunds = 9;     //可用资金，期货适用
     optional double unrealizedPL = 10;      //未实现盈亏，期货适用
     optional double realizedPL = 11;        //已实现盈亏，期货适用
     optional int32 riskLevel = 12;           //风控状态，参见 CltRiskLevel, 期货适用
-    optional double initialMargin = 13;      //初始保证金，期货适用
-    optional double maintenanceMargin = 14;  //维持保证金，期货适用
+    optional double initialMargin = 13;      //初始保证金
+    optional double maintenanceMargin = 14;  //维持保证金
     repeated AccCashInfo cashInfoList = 15;  //分币种的现金信息，期货适用
+
+	optional double maxPowerShort = 16; //卖空购买力
+	optional double netCashPower = 17;  //现金购买力
+	optional double longMv = 18;        //多头市值
+	optional double shortMv = 19;       //空头市值
+	optional double pendingAsset = 20;  //在途资产
+	optional double maxWithdrawal = 21;          //融资可提，仅证券账户适用
+	optional int32 riskStatus = 22;              //风险状态，参见 [CltRiskStatus]，证券账户适用，共分 9 个等级，LEVEL1是最安全，LEVEL9是最危险
+	optional double marginCallMargin = 23;       //	Margin Call 保证金
 }
 
 //账户持仓结构
@@ -290,6 +315,8 @@ message MaxTrdQtys
     required double maxPositionSell = 3;        //不使用融券(卖空)，仅自己的持仓最大可卖整手股数
     optional double maxSellShort = 4;           //使用融券(卖空)，最大可卖空整手股数，不包括多仓，期货不适用
     optional double maxBuyBack = 5;             //卖空后，需要买回的最大整手股数。因为卖空后，必须先买回已卖空的股数，还掉股票，才能再继续买多。期货不适用
+	optional double longRequiredIM = 6;         //开多仓每张合约初始保证金。当前仅期货和期权适用（最低 FutuOpenD 版本要求：5.0.1310）
+	optional double shortRequiredIM = 7;        //开空仓每张合约初始保证金。当前仅期货和期权适用（最低 FutuOpenD 版本要求：5.0.1310）
 }
 
 //过滤条件，条件组合是"与"不是"或"，用于获取订单、成交、持仓等时二次过滤
