@@ -75,6 +75,7 @@ pb_field_map_OptionBasicQotExData = [
     ('owner_lot_multiplier', 'ownerLotMultiplier', False, None),
     ('option_area_type', 'optionAreaType', False, OptionAreaType.to_string2),
     ('contract_multiplier', 'contractMultiplier', False, None),
+    ('index_option_type', 'indexOptionType', False, IndexOptionType.to_string2),
 ]
 
 pb_field_map_FutureBasicQotExData = [
@@ -481,6 +482,25 @@ class MarketSnapshotQuery:
             snapshot_tmp['bid_price'] = record.basic.bidPrice if record.basic.HasField('bidPrice') else 'N/A'
             snapshot_tmp['ask_vol'] = record.basic.askVol if record.basic.HasField('askVol') else 'N/A'
             snapshot_tmp['bid_vol'] = record.basic.bidVol if record.basic.HasField('bidVol') else 'N/A'
+
+            # 窝轮 统一对枚举类型，初始化
+            snapshot_tmp['wrt_type'] = WrtType.to_string2(
+                record.warrantExData.warrantType) if record.warrantExData.HasField('warrantType') else 'N/A'
+            #  界内界外，仅界内证支持该字段 type=double
+            snapshot_tmp["wrt_inline_price_status"] = PriceType.to_string2(
+                record.warrantExData.inLinePriceStatus) if record.warrantExData.HasField('inLinePriceStatus') else 'N/A'
+
+            # 期权 统一对枚举类型，初始化
+            snapshot_tmp['option_type'] = OptionType.to_string2(
+                record.optionExData.type) if record.optionExData.HasField('type') else 'N/A'
+            snapshot_tmp['index_option_type'] = IndexOptionType.to_string2(
+                record.optionExData.indexOptionType) if record.optionExData.HasField('indexOptionType') else 'N/A'
+            snapshot_tmp['option_area_type'] = OptionAreaType.to_string2(
+                record.optionExData.optionAreaType) if record.optionExData.HasField('optionAreaType') else 'N/A'
+
+            # 基金 统一对枚举类型，初始化
+            snapshot_tmp['trust_assetClass'] = AssetClass.to_string2(record.trustExData.assetClass) if record.trustExData.HasField('assetClass') else 'N/A'
+
             # 2019.02.25 增加一批数据
             if record.basic.HasField("enableMargin"):
                 # 是否可融资，如果为true，后两个字段才有意
@@ -517,7 +537,7 @@ class MarketSnapshotQuery:
             #  盘后成交额 type=double
             snapshot_tmp["after_turnover"] = record.basic.afterMarket.turnover   
             #  股票状态 type=str
-            snapshot_tmp["sec_status"] = SecurityStatus.to_string2(record.basic.secStatus)
+            snapshot_tmp["sec_status"] = SecurityStatus.to_string2(record.basic.secStatus) if record.basic.HasField('secStatus') else 'N/A'
             #  5分组收盘价 type=double
             snapshot_tmp["close_price_5min"] = record.basic.closePrice5Minute
 
@@ -560,8 +580,6 @@ class MarketSnapshotQuery:
             if SecurityType.to_string2(record.basic.type) == SecurityType.WARRANT:
                 snapshot_tmp['wrt_valid'] = True
                 snapshot_tmp['wrt_conversion_ratio'] = record.warrantExData.conversionRate
-                snapshot_tmp['wrt_type'] = WrtType.to_string2(
-                    record.warrantExData.warrantType)
                 snapshot_tmp['wrt_strike_price'] = record.warrantExData.strikePrice
                 snapshot_tmp['wrt_maturity_date'] = record.warrantExData.maturityTime
                 snapshot_tmp['wrt_end_trade'] = record.warrantExData.endTradeTime
@@ -591,15 +609,12 @@ class MarketSnapshotQuery:
                 snapshot_tmp["wrt_upper_strike_price"] = record.warrantExData.upperStrikePrice
                 #  下限价，仅界内证支持该字段 type=double
                 snapshot_tmp["wrt_lower_strike_price"] = record.warrantExData.lowerStrikePrice
-                #  界内界外，仅界内证支持该字段 type=double
-                snapshot_tmp["wrt_inline_price_status"] = PriceType.to_string2(
-                    record.warrantExData.inLinePriceStatus)
                 snapshot_tmp["wrt_issuer_code"] = record.warrantExData.issuerCode
 
             snapshot_tmp['option_valid'] = False
             if SecurityType.to_string2(record.basic.type) == SecurityType.DRVT:
                 snapshot_tmp['option_valid'] = True
-                snapshot_tmp['option_type'] = OptionType.to_string2(record.optionExData.type)
+
                 snapshot_tmp['stock_owner'] = merge_qot_mkt_stock_str(
                     record.optionExData.owner.market, record.optionExData.owner.code)
                 snapshot_tmp['strike_time'] = record.optionExData.strikeTime
@@ -617,7 +632,6 @@ class MarketSnapshotQuery:
                 snapshot_tmp['option_expiry_date_distance'] = record.optionExData.expiryDateDistance if record.optionExData.HasField('expiryDateDistance') else 'N/A'
                 snapshot_tmp['option_contract_nominal_value'] = record.optionExData.contractNominalValue if record.optionExData.HasField('contractNominalValue') else 'N/A'
                 snapshot_tmp['option_owner_lot_multiplier'] = record.optionExData.ownerLotMultiplier if record.optionExData.HasField('ownerLotMultiplier') else 'N/A'
-                snapshot_tmp['option_area_type'] = OptionAreaType.to_string2(record.optionExData.optionAreaType) if record.optionExData.HasField('optionAreaType') else 'N/A'
                 snapshot_tmp['option_contract_multiplier'] = record.optionExData.contractMultiplier if record.optionExData.HasField('contractMultiplier') else 'N/A'
 
             snapshot_tmp['index_valid'] = False
@@ -657,7 +671,7 @@ class MarketSnapshotQuery:
                 snapshot_tmp['trust_outstanding_units'] = record.trustExData.outstandingUnits
                 snapshot_tmp['trust_netAssetValue'] = record.trustExData.netAssetValue
                 snapshot_tmp['trust_premium'] = record.trustExData.premium
-                snapshot_tmp['trust_assetClass'] = AssetClass.to_string2(record.trustExData.assetClass)
+
             snapshot_list.append(snapshot_tmp)
 
         return RET_OK, "", snapshot_list
@@ -1140,17 +1154,17 @@ def parse_pb_BasicQot(pb):
         'turnover_rate': pb.turnoverRate,
         'amplitude': pb.amplitude,
         'suspension': pb.isSuspended,
-        'listing_date': "N/A" if pb.HasField('optionExData') else  pb.listTime,
+        'listing_date': "N/A" if pb.HasField('optionExData') else pb.listTime,
         'price_spread': pb.priceSpread,
-        'dark_status': DarkStatus.to_string2(pb.darkStatus),
+        'dark_status': DarkStatus.to_string2(pb.darkStatus) if pb.HasField('darkStatus') else 'N/A',
         'sec_status': SecurityStatus.to_string2(pb.secStatus) if pb.HasField(
-            'secStatus') else SecurityStatus.NONE,
+            'secStatus') else 'N/A',
     }
 
     if pb.HasField('optionExData'):
         set_item_from_pb(item, pb.optionExData, pb_field_map_OptionBasicQotExData)
     else:
-        set_item_none(item, pb_field_map_OptionBasicQotExData)
+        set_item_none(item, pb_field_map_OptionBasicQotExData) # 这里设置了 'N/A'
 
     if pb.HasField('futureExData'):
         set_item_from_pb(item, pb.futureExData, pb_field_map_FutureBasicQotExData)
@@ -2021,7 +2035,7 @@ class OrderDetail:
 
 class QuoteWarrant:
     """
-    拉取涡轮
+    拉取窝轮
     """
 
     def __init__(self):
