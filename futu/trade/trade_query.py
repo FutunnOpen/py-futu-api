@@ -62,12 +62,13 @@ class UnlockTrade:
         pass
 
     @classmethod
-    def pack_req(cls, is_unlock, password_md5, conn_id):
+    def pack_req(cls, is_unlock, password_md5, conn_id, security_firm):
         """Convert from user request for trading days to PLS request"""
         from futu.common.pb.Trd_UnlockTrade_pb2 import Request
         req = Request()
         req.c2s.unlock = is_unlock
         req.c2s.pwdMD5 = password_md5
+        _, req.c2s.securityFirm = SecurityFirm.to_number(security_firm)
 
         return pack_pb_req(req, ProtoId.Trd_UnlockTrade, conn_id)
 
