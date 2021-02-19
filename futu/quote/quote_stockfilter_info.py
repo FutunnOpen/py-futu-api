@@ -34,6 +34,11 @@ class SimpleFilter(object):
             filter_req.sortDir = v
         return RET_OK, ""
 
+    # 简单 (stock_field) 作为筛选的key
+    @property
+    def query_key(self):
+        return self.stock_field.lower()
+
 class AccumulateFilter(object):
     def __init__(self):
         self.stock_field = StockField.NONE   # StockField 累计属性
@@ -63,6 +68,11 @@ class AccumulateFilter(object):
                 return RET_ERROR, 'sort is wrong. must be SortDir'
             filter_req.sortDir = v
         return RET_OK, ""
+
+    # 累积 (stock_field + days) 作为筛选的key
+    @property
+    def query_key(self):
+        return (self.stock_field.lower(), self.days)
             
 class FinancialFilter(object):
     def __init__(self):
@@ -99,6 +109,10 @@ class FinancialFilter(object):
             filter_req.sortDir = v
 
         return RET_OK, ""
+    # 财务 (stock_field + quarter) 作为筛选的key
+    @property
+    def query_key(self):
+        return self.stock_field.lower(), self.quarter.lower()
 
 class FilterStockData(object):
     # 以下是简单数据过滤所支持的字段
@@ -226,3 +240,10 @@ class FilterStockData(object):
                 else:
                     s += (" {}:{} ".format(key, value))
         return s
+
+    # 获取筛选条件的某字段，比如FinancialFilter的筛选字段。
+    def __getitem__(self, key):
+        if isinstance(key, SimpleFilter) or isinstance(key, FinancialFilter) or isinstance(key, AccumulateFilter):
+            return self.__dict__[key.query_key]
+        raise KeyError('Unknown key: {}'.format(key))
+

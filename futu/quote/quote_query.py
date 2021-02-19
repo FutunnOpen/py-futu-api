@@ -73,9 +73,9 @@ pb_field_map_OptionBasicQotExData = [
     ('expiry_date_distance', 'expiryDateDistance', False, None),
     ('contract_nominal_value', 'contractNominalValue', False, None),
     ('owner_lot_multiplier', 'ownerLotMultiplier', False, None),
-    ('option_area_type', 'optionAreaType', False, OptionAreaType.to_string2),
+    ('option_area_type', 'optionAreaType', False, OptionAreaType.to_string2), # 初始化枚举类型
     ('contract_multiplier', 'contractMultiplier', False, None),
-    ('index_option_type', 'indexOptionType', False, IndexOptionType.to_string2),
+    ('index_option_type', 'indexOptionType', False, IndexOptionType.to_string2), # 初始化枚举类型
 ]
 
 pb_field_map_FutureBasicQotExData = [
@@ -263,7 +263,7 @@ class TradeDayQuery:
         for x in raw_trading_day_list:
             if x.time is not None and len(x.time) > 0:
                 trading_day_list.append(
-                    {"time": x.time, "trade_date_type": TradeDateType.to_string2(x.tradeDateType)})
+                    {"time": x.time, "trade_date_type": TradeDateType.to_string2(x.tradeDateType) if x.HasField('tradeDateType') else 'N/A'})# 初始化枚举类型
 
         return RET_OK, "", trading_day_list
 
@@ -390,8 +390,8 @@ class StockBasicInfoQuery:
             "stock_id": record.basic.id,
             "name": record.basic.name,
             "lot_size": record.basic.lotSize,
-            "stock_type": SecurityType.to_string2(record.basic.secType),
-            "stock_child_type": WrtType.to_string2(record.warrantExData.type),
+            "stock_type": SecurityType.to_string2(record.basic.secType) if record.basic.HasField('secType') else 'N/A',# 初始化枚举类型
+            "stock_child_type": WrtType.to_string2(record.warrantExData.type)if record.warrantExData.HasField('type') else 'N/A',# 初始化枚举类型
             "stock_owner":merge_qot_mkt_stock_str(
                 record.warrantExData.owner.market,
                 record.warrantExData.owner.code) if record.HasField('warrantExData') else (
@@ -400,7 +400,7 @@ class StockBasicInfoQuery:
                     record.optionExData.owner.code) if record.HasField('optionExData')
                 else ""),
             "listing_date": "N/A" if record.HasField('optionExData') else record.basic.listTime,
-            "option_type": OptionType.to_string2(record.optionExData.type) if record.HasField('optionExData') else "",
+            "option_type": OptionType.to_string2(record.optionExData.type) if record.HasField('optionExData') else 'N/A',# 初始化枚举类型
             "strike_time": record.optionExData.strikeTime,
             "strike_price": record.optionExData.strikePrice if record.HasField('optionExData') else NoneDataType,
             "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
@@ -485,21 +485,21 @@ class MarketSnapshotQuery:
 
             # 窝轮 统一对枚举类型，初始化
             snapshot_tmp['wrt_type'] = WrtType.to_string2(
-                record.warrantExData.warrantType) if record.warrantExData.HasField('warrantType') else 'N/A'
+                record.warrantExData.warrantType) if record.warrantExData.HasField('warrantType') else 'N/A'# 初始化枚举类型
             #  界内界外，仅界内证支持该字段 type=double
             snapshot_tmp["wrt_inline_price_status"] = PriceType.to_string2(
-                record.warrantExData.inLinePriceStatus) if record.warrantExData.HasField('inLinePriceStatus') else 'N/A'
+                record.warrantExData.inLinePriceStatus) if record.warrantExData.HasField('inLinePriceStatus') else 'N/A'# 初始化枚举类型
 
             # 期权 统一对枚举类型，初始化
             snapshot_tmp['option_type'] = OptionType.to_string2(
-                record.optionExData.type) if record.optionExData.HasField('type') else 'N/A'
+                record.optionExData.type) if record.optionExData.HasField('type') else 'N/A'# 初始化枚举类型
             snapshot_tmp['index_option_type'] = IndexOptionType.to_string2(
-                record.optionExData.indexOptionType) if record.optionExData.HasField('indexOptionType') else 'N/A'
+                record.optionExData.indexOptionType) if record.optionExData.HasField('indexOptionType') else 'N/A'# 初始化枚举类型
             snapshot_tmp['option_area_type'] = OptionAreaType.to_string2(
-                record.optionExData.optionAreaType) if record.optionExData.HasField('optionAreaType') else 'N/A'
+                record.optionExData.optionAreaType) if record.optionExData.HasField('optionAreaType') else 'N/A'# 初始化枚举类型
 
             # 基金 统一对枚举类型，初始化
-            snapshot_tmp['trust_assetClass'] = AssetClass.to_string2(record.trustExData.assetClass) if record.trustExData.HasField('assetClass') else 'N/A'
+            snapshot_tmp['trust_assetClass'] = AssetClass.to_string2(record.trustExData.assetClass) if record.trustExData.HasField('assetClass') else 'N/A'# 初始化枚举类型
 
             # 2019.02.25 增加一批数据
             if record.basic.HasField("enableMargin"):
@@ -537,7 +537,7 @@ class MarketSnapshotQuery:
             #  盘后成交额 type=double
             snapshot_tmp["after_turnover"] = record.basic.afterMarket.turnover   
             #  股票状态 type=str
-            snapshot_tmp["sec_status"] = SecurityStatus.to_string2(record.basic.secStatus) if record.basic.HasField('secStatus') else 'N/A'
+            snapshot_tmp["sec_status"] = SecurityStatus.to_string2(record.basic.secStatus) if record.basic.HasField('secStatus') else 'N/A'# 初始化枚举类型
             #  5分组收盘价 type=double
             snapshot_tmp["close_price_5min"] = record.basic.closePrice5Minute
 
@@ -808,7 +808,7 @@ class PlateStockQuery:
                 record.basic.security.market, record.basic.security.code)
             stock_tmp['stock_name'] = record.basic.name
             stock_tmp['list_time'] = record.basic.listTime
-            stock_tmp['stock_type'] = SecurityType.to_string2(record.basic.secType)
+            stock_tmp['stock_type'] = SecurityType.to_string2(record.basic.secType) if record.basic.HasField('secType') else 'N/A' # 初始化枚举类型
             stock_tmp['main_contract'] = record.futureExData.isMainContract
             stock_tmp['last_trade_time'] = record.futureExData.lastTradeTime
             stock_list.append(stock_tmp)
@@ -1156,15 +1156,15 @@ def parse_pb_BasicQot(pb):
         'suspension': pb.isSuspended,
         'listing_date': "N/A" if pb.HasField('optionExData') else pb.listTime,
         'price_spread': pb.priceSpread,
-        'dark_status': DarkStatus.to_string2(pb.darkStatus) if pb.HasField('darkStatus') else 'N/A',
+        'dark_status': DarkStatus.to_string2(pb.darkStatus) if pb.HasField('darkStatus') else 'N/A',# 初始化枚举类型
         'sec_status': SecurityStatus.to_string2(pb.secStatus) if pb.HasField(
-            'secStatus') else 'N/A',
+            'secStatus') else 'N/A',# 初始化枚举类型
     }
 
     if pb.HasField('optionExData'):
         set_item_from_pb(item, pb.optionExData, pb_field_map_OptionBasicQotExData)
     else:
-        set_item_none(item, pb_field_map_OptionBasicQotExData) # 这里设置了 'N/A'
+        set_item_none(item, pb_field_map_OptionBasicQotExData) # 这里设置了 'N/A' # 初始化枚举类型
 
     if pb.HasField('futureExData'):
         set_item_from_pb(item, pb.futureExData, pb_field_map_FutureBasicQotExData)
@@ -1281,10 +1281,10 @@ class TickerQuery:
             "price": record.price,
             "volume": record.volume,
             "turnover": record.turnover,
-            "ticker_direction": TickerDirect.to_string2(record.dir),
+            "ticker_direction": TickerDirect.to_string2(record.dir) if record.HasField('dir') else 'N/A',# 初始化枚举类型
             "sequence": record.sequence,
             "recv_timestamp":record.recvTime,
-            "type": TickerType.to_string2(record.type),
+            "type": TickerType.to_string2(record.type) if record.HasField('type') else 'N/A',# 初始化枚举类型
             "push_data_type": PushDataType.to_string2(record.pushDataType),
         } for record in raw_ticker_list]
         return RET_OK, "", ticker_list
@@ -1528,21 +1528,19 @@ class GlobalStateQuery:
             return RET_ERROR, rsp_pb.retMsg, None
 
         state = rsp_pb.s2c
-        program_status_type = ProgramStatusType.NONE
+        program_status_type = ProgramStatusType.to_string2(
+            state.programStatus.type) if state.HasField('programStatus') else 'N/A'# 初始化枚举类型
         program_status_desc = ""
-        if state.HasField('programStatus'):
-            program_status_type = ProgramStatusType.to_string2(
-                state.programStatus.type)
-            if state.programStatus.HasField("strExtDesc"):
-                program_status_desc = state.programStatus.strExtDesc
+        if state.programStatus.HasField("strExtDesc"):
+            program_status_desc = state.programStatus.strExtDesc
 
         state_dict = {
-            'market_sz': MarketState.to_string2(state.marketSZ),
-            'market_us': MarketState.to_string2(state.marketUS),
-            'market_sh': MarketState.to_string2(state.marketSH),
-            'market_hk': MarketState.to_string2(state.marketHK),
-            'market_hkfuture': MarketState.to_string2(state.marketHKFuture),
-            'market_usfuture': MarketState.to_string2(state.marketUSFuture),
+            'market_sz': MarketState.to_string2(state.marketSZ) if state.HasField('marketSZ') else 'N/A',# 初始化枚举类型
+            'market_us': MarketState.to_string2(state.marketUS) if state.HasField('marketUS') else 'N/A',# 初始化枚举类型
+            'market_sh': MarketState.to_string2(state.marketSH) if state.HasField('marketSH') else 'N/A',# 初始化枚举类型
+            'market_hk': MarketState.to_string2(state.marketHK) if state.HasField('marketHK') else 'N/A',# 初始化枚举类型
+            'market_hkfuture': MarketState.to_string2(state.marketHKFuture) if state.HasField('marketHKFuture') else 'N/A',# 初始化枚举类型
+            'market_usfuture': MarketState.to_string2(state.marketUSFuture) if state.HasField('marketUSFuture') else 'N/A',# 初始化枚举类型
             'server_ver': str(state.serverVer),
             'trd_logined': state.trdLogined,
             'timestamp': str(state.time),
@@ -1667,12 +1665,12 @@ class StockReferenceList:
                 info.basic.security.market, info.basic.security.code)
             # item['stock_id'] = info.basic.id
             data['lot_size'] = info.basic.lotSize
-            data['stock_type'] = SecurityType.to_string2(info.basic.secType)
+            data['stock_type'] = SecurityType.to_string2(info.basic.secType) if info.basic.HasField('secType') else 'N/A'# 初始化枚举类型
             data['stock_name'] = info.basic.name
             data['list_time'] = info.basic.listTime
             if info.HasField('warrantExData'):
                 data['wrt_valid'] = True
-                data['wrt_type'] = WrtType.to_string2(info.warrantExData.type)
+                data['wrt_type'] = WrtType.to_string2(info.warrantExData.type) if info.warrantExData.HasField('type') else 'N/A'# 初始化枚举类型
                 data['wrt_code'] = merge_qot_mkt_stock_str(info.warrantExData.owner.market,
                                                            info.warrantExData.owner.code)
             else:
@@ -1739,7 +1737,7 @@ class OwnerPlateQuery:
                     'code': merge_qot_mkt_stock_str(record.security.market, record.security.code),
                     'plate_code': merge_qot_mkt_stock_str(plate_info.plate.market, plate_info.plate.code),
                     'plate_name': str(plate_info.name),
-                    'plate_type': Plate.to_string2(plate_info.plateType)
+                    'plate_type': Plate.to_string2(plate_info.plateType) if plate_info.HasField('plateType') else 'N/A' # 初始化枚举类型
                 }
                 data_list.append(quote_list)
 
@@ -1964,14 +1962,14 @@ class OptionChain:
                         "stock_id": record.basic.id,
                         "name": record.basic.name,
                         "lot_size": record.basic.lotSize,
-                        "stock_type": SecurityType.to_string2(record.basic.secType),
-                        "option_type": OptionType.to_string2(record.optionExData.type) if record.HasField('optionExData') else "",
+                        "stock_type": SecurityType.to_string2(record.basic.secType) if record.basic.HasField('secType') else NoneDataType,# 初始化枚举类型
+                        "option_type": OptionType.to_string2(record.optionExData.type) if record.HasField('optionExData') else NoneDataType,# 初始化枚举类型
                         "stock_owner": merge_qot_mkt_stock_str(int(record.optionExData.owner.market), record.optionExData.owner.code)
                         if record.HasField('optionExData') else "",
                         "strike_time": record.optionExData.strikeTime,
                         "strike_price": record.optionExData.strikePrice if record.HasField('optionExData') else NoneDataType,
                         "suspension": record.optionExData.suspend if record.HasField('optionExData') else NoneDataType,
-                        "index_option_type": IndexOptionType.to_string2(record.optionExData.indexOptionType) if record.HasField('optionExData') else NoneDataType,
+                        "index_option_type": IndexOptionType.to_string2(record.optionExData.indexOptionType) if record.HasField('optionExData') else NoneDataType,# 初始化枚举类型
                     }
                     data_list.append(quote_list)
 
@@ -2567,8 +2565,8 @@ class GetUserSecurityQuery:
             "stock_id": record.basic.id,
             "name": record.basic.name,
             "lot_size": record.basic.lotSize,
-            "stock_type": SecurityType.to_string2(record.basic.secType),
-            "stock_child_type": WrtType.to_string2(record.warrantExData.type),
+            "stock_type": SecurityType.to_string2(record.basic.secType) if record.basic.HasField('secType') else 'N/A',# 初始化枚举类型,
+            "stock_child_type": WrtType.to_string2(record.warrantExData.type) if record.warrantExData.HasField('type') else 'N/A',# 初始化枚举类型
             "stock_owner": merge_qot_mkt_stock_str(
                 record.warrantExData.owner.market,
                 record.warrantExData.owner.code) if record.HasField('warrantExData') else (
@@ -2577,7 +2575,7 @@ class GetUserSecurityQuery:
                     record.optionExData.owner.code) if record.HasField('optionExData')
                 else ""),
             "listing_date": "N/A" if record.HasField('optionExData') else record.basic.listTime,
-            "option_type": OptionType.to_string2(record.optionExData.type) if record.HasField('optionExData') else "",
+            "option_type": OptionType.to_string2(record.optionExData.type) if record.optionExData.HasField('type') else 'N/A',# 初始化枚举类型,
             "strike_time": record.optionExData.strikeTime,
             "strike_price": record.optionExData.strikePrice if record.HasField(
                 'optionExData') else NoneDataType,
@@ -2914,13 +2912,13 @@ class UpdatePriceReminder:
                                                   rsp_pb.s2c.security.code)
             res['price'] = rsp_pb.s2c.price
             res['change_rate'] = rsp_pb.s2c.changeRate
-            res['market_status'] = PriceReminderMarketStatus.to_string2(rsp_pb.s2c.marketStatus)
+            res['market_status'] = PriceReminderMarketStatus.to_string2(rsp_pb.s2c.marketStatus) if rsp_pb.s2c.HasField('marketStatus') else 'N/A' # 初始化枚举类型
             res['content'] = rsp_pb.s2c.content
             res['note'] = rsp_pb.s2c.note
             if rsp_pb.s2c.key is not None:
                 res['key'] = rsp_pb.s2c.key
             if rsp_pb.s2c.type is not None:
-                res['reminder_type'] = PriceReminderType.to_string2(rsp_pb.s2c.type)
+                res['reminder_type'] = PriceReminderType.to_string2(rsp_pb.s2c.type) if rsp_pb.s2c.HasField('type') else 'N/A' # 初始化枚举类型
             if rsp_pb.s2c.setValue is not None:
                 res['set_value'] = rsp_pb.s2c.setValue
             if rsp_pb.s2c.curValue is not None:
@@ -3022,9 +3020,9 @@ class GetPriceReminderQuery:
                 #  每个提醒的唯一标识 type = int64
                 data["key"] = sub_item.key
                 #  Qot_Common::PriceReminderType 提醒类型 type = int32
-                data["reminder_type"] = PriceReminderType.to_string2(sub_item.type)
+                data["reminder_type"] = PriceReminderType.to_string2(sub_item.type) if sub_item.HasField('type') else 'N/A' # 初始化枚举类型
                 #  Qot_Common::PriceReminderFreq 提醒频率类型 type = int32
-                data["reminder_freq"] = PriceReminderFreq.to_string2(sub_item.freq)
+                data["reminder_freq"] = PriceReminderFreq.to_string2(sub_item.freq) if sub_item.HasField('freq') else 'N/A' # 初始化枚举类型
                 #  提醒参数值 type = double
                 data["value"] = sub_item.value
                 #  该提醒设置是否生效。false不生效，true生效 type = bool
@@ -3066,7 +3064,7 @@ class GetUserSecurityGroupQuery:
             #  自选股分组名字 type = string
             data["group_name"] = item.groupName
             #  GroupType,自选股分组类型。 type = int32
-            data["group_type"] = UserSecurityGroupType.to_string2(item.groupType)
+            data["group_type"] = UserSecurityGroupType.to_string2(item.groupType) if item.HasField('groupType') else 'N/A' # 初始化枚举类型
             ret_list.append(data)
 
         return RET_OK, "", ret_list
@@ -3122,5 +3120,5 @@ class GetMarketStateQuery:
             #  股票名称 type = string
             data["stock_name"] = item.name
             #  Qot_Common.QotMarketState,市场状态 type = int32
-            data["market_state"] = MarketState.to_string2(item.marketState)
+            data["market_state"] = MarketState.to_string2(item.marketState)if item.HasField('marketState') else 'N/A' # 初始化枚举类型
         return RET_OK, "", ret_list

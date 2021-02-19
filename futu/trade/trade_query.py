@@ -45,12 +45,12 @@ class GetAccountList:
         raw_acc_list = rsp_pb.s2c.accList
         acc_list = [{
             'acc_id': record.accID,
-            'trd_env': TrdEnv.to_string2(record.trdEnv),
+            'trd_env': TrdEnv.to_string2(record.trdEnv) if record.HasField('trdEnv') else 'N/A',# 初始化枚举类型
             'trdMarket_list': [TrdMarket.to_string2(trdMkt) for trdMkt in record.trdMarketAuthList],
-            'acc_type': TrdAccType.to_string2(record.accType) if record.HasField("accType") else TrdAccType.NONE,
+            'acc_type': TrdAccType.to_string2(record.accType) if record.HasField("accType") else TrdAccType.NONE,# 初始化枚举类型
             'card_num': record.cardNum if record.HasField("cardNum") else "N/A",
-            'security_firm': SecurityFirm.to_string2(record.securityFirm) if record.HasField('securityFirm') else SecurityFirm.NONE,
-            'sim_acc_type': SimAccType.to_string2(record.simAccType) if record.HasField('simAccType') else SimAccType.NONE
+            'security_firm': SecurityFirm.to_string2(record.securityFirm) if record.HasField('securityFirm') else SecurityFirm.NONE,# 初始化枚举类型
+            'sim_acc_type': SimAccType.to_string2(record.simAccType) if record.HasField('simAccType') else SimAccType.NONE# 初始化枚举类型
         } for record in raw_acc_list]
 
         return RET_OK, "", acc_list
@@ -62,12 +62,13 @@ class UnlockTrade:
         pass
 
     @classmethod
-    def pack_req(cls, is_unlock, password_md5, conn_id):
+    def pack_req(cls, is_unlock, password_md5, conn_id, security_firm):
         """Convert from user request for trading days to PLS request"""
         from futu.common.pb.Trd_UnlockTrade_pb2 import Request
         req = Request()
         req.c2s.unlock = is_unlock
         req.c2s.pwdMD5 = password_md5
+        _, req.c2s.securityFirm = SecurityFirm.to_number(security_firm)
 
         return pack_pb_req(req, ProtoId.Trd_UnlockTrade, conn_id)
 
@@ -144,12 +145,12 @@ class AccInfoQuery:
             'frozen_cash': raw_funds.frozenCash,
             'avl_withdrawal_cash': raw_funds.avlWithdrawalCash if raw_funds.HasField('avlWithdrawalCash') else NoneDataValue,
             'max_withdrawal': raw_funds.maxWithdrawal if raw_funds.HasField('maxWithdrawal') else NoneDataValue,
-            'currency': Currency.to_string2(raw_funds.currency) if raw_funds.HasField('currency') else Currency.NONE,
+            'currency': Currency.to_string2(raw_funds.currency) if raw_funds.HasField('currency') else Currency.NONE,# 初始化枚举类型
             'available_funds': raw_funds.availableFunds if raw_funds.HasField('availableFunds') else NoneDataValue,
             'unrealized_pl': raw_funds.unrealizedPL if raw_funds.HasField('unrealizedPL') else NoneDataValue,
             'realized_pl': raw_funds.realizedPL if raw_funds.HasField('realizedPL') else NoneDataValue,
-            'risk_level': CltRiskLevel.to_string2(raw_funds.riskLevel) if raw_funds.HasField('riskLevel') else CltRiskLevel.NONE,
-            'risk_status': CltRiskStatus.to_string2(raw_funds.riskStatus) if raw_funds.HasField('riskStatus') else CltRiskStatus.NONE,
+            'risk_level': CltRiskLevel.to_string2(raw_funds.riskLevel) if raw_funds.HasField('riskLevel') else CltRiskLevel.NONE,# 初始化枚举类型
+            'risk_status': CltRiskStatus.to_string2(raw_funds.riskStatus) if raw_funds.HasField('riskStatus') else CltRiskStatus.NONE,# 初始化枚举类型
             'initial_margin': raw_funds.initialMargin if raw_funds.HasField('initialMargin') else NoneDataValue,
             'margin_call_margin': raw_funds.marginCallMargin if raw_funds.HasField('marginCallMargin') else NoneDataValue,
             'maintenance_margin': raw_funds.maintenanceMargin if raw_funds.HasField('maintenanceMargin') else NoneDataValue,
@@ -220,7 +221,7 @@ class PositionListQuery:
                              "today_pl_val": position.td_plVal if position.HasField('td_plVal') else NoneDataValue,
                              "today_sell_qty": position.td_sellQty if position.HasField('td_sellQty') else NoneDataValue,
                              "today_sell_val": position.td_sellVal if position.HasField('td_sellVal') else NoneDataValue,
-                             "position_side": PositionSide.to_string2(position.positionSide),
+                             "position_side": PositionSide.to_string2(position.positionSide) if position.HasField('positionSide') else 'N/A',# 初始化枚举类型
                              "unrealized_pl": position.unrealizedPL if position.HasField('unrealizedPL') else NoneDataValue,
                              "realized_pl": position.realizedPL if position.HasField('realizedPL') else NoneDataValue
                          } for position in raw_position_list]
@@ -267,9 +268,9 @@ class OrderListQuery:
         order_dict = {
             "code": merge_trd_mkt_stock_str(order.secMarket, order.code),
             "stock_name": order.name,
-            "trd_side": TrdSide.to_string2(order.trdSide),
-            "order_type": OrderType.to_string2(order.orderType),
-            "order_status": OrderStatus.to_string2(order.orderStatus),
+            "trd_side": TrdSide.to_string2(order.trdSide) if order.HasField('trdSide') else 'N/A',# 初始化枚举类型
+            "order_type": OrderType.to_string2(order.orderType) if order.HasField('orderType') else 'N/A',# 初始化枚举类型
+            "order_status": OrderStatus.to_string2(order.orderStatus) if order.HasField('orderStatus') else 'N/A',# 初始化枚举类型
             "order_id": str(order.orderID),
             "qty": order.qty,
             "price": order.price,
@@ -279,7 +280,7 @@ class OrderListQuery:
             "dealt_avg_price": order.fillAvgPrice,
             "last_err_msg": order.lastErrMsg,
             "remark": order.remark if order.HasField("remark") else "",
-            "time_in_force": TimeInForce.to_string2(order.timeInForce),
+            "time_in_force": TimeInForce.to_string2(order.timeInForce) if order.HasField('timeInForce') else 'N/A',# 初始化枚举类型
             "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A'
         }
         return order_dict
@@ -389,7 +390,7 @@ class ModifyOrder:
 
         order_id = str(rsp_pb.s2c.orderID)
         modify_order_list = [{
-            'trd_env': TrdEnv.to_string2(rsp_pb.s2c.header.trdEnv),
+            'trd_env': TrdEnv.to_string2(rsp_pb.s2c.header.trdEnv) if rsp_pb.s2c.header.HasField('trdEnv') else 'N/A',# 初始化枚举类型
             'order_id': order_id
         }]
 
@@ -458,7 +459,7 @@ class DealListQuery:
             "order_id": str(deal.orderID) if deal.HasField('orderID') else NoneDataValue,
             "qty": deal.qty,
             "price": deal.price,
-            "trd_side": TrdSide.to_string2(deal.trdSide),
+            "trd_side": TrdSide.to_string2(deal.trdSide) if deal.HasField('trdSide') else 'N/A',# 初始化枚举类型
             "create_time": deal.createTime,
             "counter_broker_id": deal.counterBrokerID if deal.HasField('counterBrokerID') else NoneDataValue,
             "counter_broker_name": deal.counterBrokerName if deal.HasField('counterBrokerName') else NoneDataValue,
@@ -518,9 +519,9 @@ class HistoryOrderListQuery:
         order_list = [{
                       "code": merge_trd_mkt_stock_str(order.secMarket, order.code),
                       "stock_name": order.name,
-                      "trd_side": TrdSide.to_string2(order.trdSide),
-                      "order_type": OrderType.to_string2(order.orderType),
-                      "order_status": OrderStatus.to_string2(order.orderStatus),
+                      "trd_side": TrdSide.to_string2(order.trdSide) if order.HasField('trdSide') else 'N/A',# 初始化枚举类型
+                      "order_type": OrderType.to_string2(order.orderType) if order.HasField('orderType') else 'N/A',# 初始化枚举类型
+                      "order_status": OrderStatus.to_string2(order.orderStatus) if order.HasField('orderStatus') else 'N/A',# 初始化枚举类型
                       "order_id": str(order.orderID),
                       "qty": order.qty,
                       "price": order.price,
@@ -530,7 +531,7 @@ class HistoryOrderListQuery:
                       "dealt_avg_price": order.fillAvgPrice,
                       "last_err_msg": order.lastErrMsg,
                       "remark": order.remark if order.HasField("remark") else "",
-                      "time_in_force": TimeInForce.to_string2(order.timeInForce),
+                      "time_in_force": TimeInForce.to_string2(order.timeInForce) if order.HasField('timeInForce') else 'N/A',# 初始化枚举类型
                       "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A'
                       } for order in raw_order_list]
         return RET_OK, "", order_list
@@ -573,11 +574,11 @@ class HistoryDealListQuery:
                     "order_id": str(deal.orderID) if deal.HasField('orderID') else "",
                     "qty": deal.qty,
                     "price": deal.price,
-                    "trd_side": TrdSide.to_string2(deal.trdSide),
+                    "trd_side": TrdSide.to_string2(deal.trdSide) if deal.HasField('trdSide') else 'N/A',# 初始化枚举类型
                     "create_time": deal.createTime,
                     "counter_broker_id": deal.counterBrokerID if deal.HasField('counterBrokerID') else "",
                     "counter_broker_name": deal.counterBrokerName,
-                    "status": DealStatus.to_string2(deal.status) if deal.HasField('status') else 'N/A'
+                    "status": DealStatus.to_string2(deal.status) if deal.HasField('status') else 'N/A'# 初始化枚举类型
                      } for deal in raw_deal_list]
 
         return RET_OK, "", deal_list
