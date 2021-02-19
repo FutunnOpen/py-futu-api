@@ -118,7 +118,8 @@ class OpenTradeContextBase(OpenContextBase):
         kargs = {
             'is_unlock': is_unlock,
             'password_md5': md5_val,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'security_firm': self.__security_firm
         }
 
         ret_code, msg, _ = query_processor(**kargs)
