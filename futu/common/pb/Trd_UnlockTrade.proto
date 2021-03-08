@@ -9,6 +9,7 @@ message C2S
 {
 	required bool unlock = 1; //true解锁交易，false锁定交易
 	optional string pwdMD5 = 2; //交易密码的MD5转16进制(全小写)，解锁交易必须要填密码，锁定交易不需要验证密码，可不填
+	optional int32 securityFirm = 3; //券商标识，取值见Trd_Common.SecurityFirm
 }
 
 message S2C
