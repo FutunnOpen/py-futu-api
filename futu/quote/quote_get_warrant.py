@@ -209,8 +209,8 @@ class Response(object):
                 int(item.stock.market), item.stock.code)  # 股票
             warrant["stock_owner"] = merge_qot_mkt_stock_str(
                 int(item.owner.market), item.owner.code)  # 所属正股
-            warrant["type"] = WrtType.to_string2(item.type)  # 窝轮类型
-            warrant["issuer"] = Issuer.to_string2(item.issuer)  # 发行人
+            warrant["type"] = WrtType.to_string2(item.type) if item.HasField('type') else 'N/A'# 初始化枚举类型 # 窝轮类型
+            warrant["issuer"] = Issuer.to_string2(item.issuer) if item.HasField('issuer') else 'N/A'# 初始化枚举类型 # 发行人
             warrant["maturity_time"] = item.maturityTime  # 到期日
             if item.HasField("maturityTimestamp"):
                 """到期日时间戳"""
@@ -253,7 +253,7 @@ class Response(object):
                 warrant["change_rate"] = item.changeRate
             if item.HasField("status"):
                 """窝轮状态"""
-                warrant["status"] = WarrantStatus.to_string2(item.status)
+                warrant["status"] = WarrantStatus.to_string2(item.status) if item.HasField('status') else 'N/A' # 初始化枚举类型
             if item.HasField("bidPrice"):
                 """买入价"""
                 warrant["bid_price"] = item.bidPrice
@@ -332,7 +332,7 @@ class Response(object):
             if item.HasField("inLinePriceStatus"):
                 """界内界外，仅界内证支持该字段"""
                 warrant["inline_price_status"] = PriceType.to_string2(
-                    item.inLinePriceStatus)
+                    item.inLinePriceStatus) if item.HasField('inLinePriceStatus') else 'N/A' # 初始化枚举类型
             warrant_data_list.append(warrant)
         return RET_OK, "", (warrant_data_list, resp.s2c.lastPage, resp.s2c.allCount)
 
