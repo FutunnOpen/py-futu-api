@@ -255,6 +255,8 @@ class Market(FtEnum):
     SH = "SH"
     SZ = "SZ"
     HK_FUTURE = "HK_FUTURE"
+    SG = "SG"
+    JP = "JP"
 
     def load_dic(self):
         return {
@@ -264,6 +266,8 @@ class Market(FtEnum):
             self.SH: Qot_Common_pb2.QotMarket_CNSH_Security,
             self.SZ: Qot_Common_pb2.QotMarket_CNSZ_Security,
             self.HK_FUTURE: Qot_Common_pb2.QotMarket_HK_Future,
+            self.SG: Qot_Common_pb2.QotMarket_SG_Security,
+            self.JP: Qot_Common_pb2.QotMarket_JP_Security
         }
 
 QOT_MARKET_TO_TRD_SEC_MARKET_MAP = {
@@ -273,6 +277,8 @@ QOT_MARKET_TO_TRD_SEC_MARKET_MAP = {
     Qot_Common_pb2.QotMarket_HK_Security: Trd_Common_pb2.TrdSecMarket_HK,
     Qot_Common_pb2.QotMarket_HK_Future: Trd_Common_pb2.TrdSecMarket_HK,
     Qot_Common_pb2.QotMarket_US_Security: Trd_Common_pb2.TrdSecMarket_US,
+    Qot_Common_pb2.QotMarket_SG_Security: Trd_Common_pb2.TrdSecMarket_SG,
+    Qot_Common_pb2.QotMarket_JP_Security: Trd_Common_pb2.TrdSecMarket_JP,
 }
 
 
@@ -2226,13 +2232,15 @@ class Currency(FtEnum):
     HKD = 'HKD'  # 港币
     USD = 'USD'  # 美元
     CNH = 'CNH'  # 离岸人民币
+    JPY = 'JPY'  # 日元
 
     def load_dic(self):
         return {
             self.NONE: Trd_Common_pb2.Currency_Unknown,
             self.HKD: Trd_Common_pb2.Currency_HKD,
             self.USD: Trd_Common_pb2.Currency_USD,
-            self.CNH: Trd_Common_pb2.Currency_CNH
+            self.CNH: Trd_Common_pb2.Currency_CNH,
+            self.JPY: Trd_Common_pb2.Currency_JPY
         }
 
 class CltRiskLevel(FtEnum):
