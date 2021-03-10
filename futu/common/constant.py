@@ -2354,6 +2354,8 @@ class PriceReminderType(FtEnum):
     ASK_PRICE_DOWN = "ASK_PRICE_DOWN"  # 卖一价低于
     BID_VOL_UP = "BID_VOL_UP"  # 买一量高于
     ASK_VOL_UP = "ASK_VOL_UP"  # 卖一量高于
+    THREE_MIN_CHANGE_RATE_UP = "THREE_MIN_CHANGE_RATE_UP"  # 3分钟涨幅
+    THREE_MIN_CHANGE_RATE_DOWN = "THREE_MIN_CHANGE_RATE_DOWN"  # 3分钟跌幅
 
     def load_dic(self):
         return {
@@ -2371,6 +2373,8 @@ class PriceReminderType(FtEnum):
             self.ASK_PRICE_DOWN: Qot_Common_pb2.PriceReminderType_AskPriceDown,
             self.BID_VOL_UP: Qot_Common_pb2.PriceReminderType_BidVolUp,
             self.ASK_VOL_UP: Qot_Common_pb2.PriceReminderType_AskVolUp,
+            self.THREE_MIN_CHANGE_RATE_UP: Qot_Common_pb2.PriceReminderType_3MinChangeRateUp,
+            self.THREE_MIN_CHANGE_RATE_DOWN: Qot_Common_pb2.PriceReminderType_3MinChangeRateDown,
         }
 
 class PriceReminderMarketStatus(FtEnum):
