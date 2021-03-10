@@ -8,11 +8,13 @@ import "Common.proto";
 enum QotMarket
 {
     QotMarket_Unknown = 0; //未知市场
-    QotMarket_HK_Security = 1; //港股
+    QotMarket_HK_Security = 1; //香港市场
     QotMarket_HK_Future = 2; //港期货(已废弃，使用QotMarket_HK_Security即可)
-    QotMarket_US_Security = 11; //美股
-    QotMarket_CNSH_Security = 21; //沪股
-    QotMarket_CNSZ_Security = 22; //深股
+    QotMarket_US_Security = 11; //美国市场
+    QotMarket_CNSH_Security = 21; //沪股市场
+    QotMarket_CNSZ_Security = 22; //深股市场
+	QotMarket_SG_Security = 31; //新加坡市场
+	QotMarket_JP_Security = 41; //日本市场
 }
 
 enum SecurityType
