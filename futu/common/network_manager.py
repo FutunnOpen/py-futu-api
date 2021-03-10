@@ -483,6 +483,8 @@ class NetManager:
             del conn.readbuf[:head_len+body_len]
             packet_count += 1
             self._on_packet(conn, head_dict, Err.Ok.code, '', rsp_body)
+            if packet_count >= 10:
+                break  #收10个包强制跳出循环，避免长时间解包导致无法发送心跳
 
         if is_closed:
             self.close(conn.conn_id)
