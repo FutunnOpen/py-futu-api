@@ -11,7 +11,7 @@ message C2S
 	required Trd_Common.TrdHeader header = 1; //交易公共参数头
 	required int32 orderType = 2; //订单类型, 参见Trd_Common.OrderType的枚举定义
 	required string code = 3; //代码，港股必须是5位数字，A股必须是6位数字，美股没限制
-	required double price = 4; //价格，3位精度（期货9位）。如果是竞价、市价单，请也填入一个当前价格，服务器才好计算
+	required double price = 4; //价格，（证券账户精确到小数点后 3 位，期货账户精确到小数点后 9 位，超出部分会被舍弃）。如果是竞价、市价单，请也填入一个当前价格，服务器才好计算
 	optional uint64 orderID = 5; //订单号，新下订单不需要，如果是修改订单就需要把原订单号带上才行，因为改单的最大买卖数量会包含原订单数量。
 	//为保证与下单的价格同步，也提供调整价格选项，以下2个为调整价格使用，对港、A股有意义，因为港股有价位，A股2位精度，美股可不传
 	optional bool adjustPrice = 6; //是否调整价格，如果价格不合法，是否调整到合法价位，true调整，false不调整

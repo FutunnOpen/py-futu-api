@@ -182,6 +182,10 @@ def merge_trd_mkt_stock_str(trd_sec_mkt, partial_stock_str):
         mkt_qot = Market.SZ
     elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_US:
         mkt_qot = Market.US
+    elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_SG:
+        mkt_qot = Market.SG
+    elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_JP:
+        mkt_qot = Market.JP
     _, mkt = Market.to_number(mkt_qot)
     return merge_qot_mkt_stock_str(mkt, partial_stock_str)
 
