@@ -150,8 +150,9 @@ enum TimeInForce
 enum SecurityFirm
 {
     SecurityFirm_Unknown = 0;        //未知
-    SecurityFirm_FutuSecurities = 1; //富途证券
-	SecurityFirm_FutuInc = 2;        //富途Inc
+    SecurityFirm_FutuSecurities = 1; //富途证券（香港）
+	SecurityFirm_FutuInc = 2;        //富途证券（美国）
+	SecurityFirm_FutuSG = 3;         //富途证券（新加坡）
 }
 
 //模拟交易账户类型

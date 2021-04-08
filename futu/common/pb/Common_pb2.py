@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Common.proto',
   package='Common',
   syntax='proto2',
-  serialized_pb=_b('\n\x0c\x43ommon.proto\x12\x06\x43ommon\",\n\x08PacketID\x12\x0e\n\x06\x63onnID\x18\x01 \x02(\x04\x12\x10\n\x08serialNo\x18\x02 \x02(\r\"L\n\rProgramStatus\x12\'\n\x04type\x18\x01 \x02(\x0e\x32\x19.Common.ProgramStatusType\x12\x12\n\nstrExtDesc\x18\x02 \x01(\t*\xb6\x01\n\x07RetType\x12\x13\n\x0fRetType_Succeed\x10\x00\x12\x1b\n\x0eRetType_Failed\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_TimeOut\x10\x9c\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1f\n\x12RetType_DisConnect\x10\xb8\xfe\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Unknown\x10\xf0\xfc\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Invalid\x10\x8c\xfc\xff\xff\xff\xff\xff\xff\xff\x01*\x83\x01\n\rPacketEncAlgo\x12\x1b\n\x17PacketEncAlgo_FTAES_ECB\x10\x00\x12\x1f\n\x12PacketEncAlgo_None\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x19\n\x15PacketEncAlgo_AES_ECB\x10\x01\x12\x19\n\x15PacketEncAlgo_AES_CBC\x10\x02*4\n\x08ProtoFmt\x12\x15\n\x11ProtoFmt_Protobuf\x10\x00\x12\x11\n\rProtoFmt_Json\x10\x01*^\n\x0fUserAttribution\x12\x1b\n\x17UserAttribution_Unknown\x10\x00\x12\x16\n\x12UserAttribution_NN\x10\x01\x12\x16\n\x12UserAttribution_MM\x10\x02*\xf0\x03\n\x11ProgramStatusType\x12\x1a\n\x16ProgramStatusType_None\x10\x00\x12\x1c\n\x18ProgramStatusType_Loaded\x10\x01\x12\x1c\n\x18ProgramStatusType_Loging\x10\x02\x12\'\n#ProgramStatusType_NeedPicVerifyCode\x10\x03\x12)\n%ProgramStatusType_NeedPhoneVerifyCode\x10\x04\x12!\n\x1dProgramStatusType_LoginFailed\x10\x05\x12!\n\x1dProgramStatusType_ForceUpdate\x10\x06\x12*\n&ProgramStatusType_NessaryDataPreparing\x10\x07\x12(\n$ProgramStatusType_NessaryDataMissing\x10\x08\x12\'\n#ProgramStatusType_UnAgreeDisclaimer\x10\t\x12\x1b\n\x17ProgramStatusType_Ready\x10\n\x12!\n\x1dProgramStatusType_ForceLogout\x10\x0b\x12*\n&ProgramStatusType_DisclaimerPullFailed\x10\x0c\x42=\n\x13\x63om.futu.openapi.pbZ&github.com/futuopen/ftapi4go/pb/common')
+  serialized_pb=_b('\n\x0c\x43ommon.proto\x12\x06\x43ommon\",\n\x08PacketID\x12\x0e\n\x06\x63onnID\x18\x01 \x02(\x04\x12\x10\n\x08serialNo\x18\x02 \x02(\r\"L\n\rProgramStatus\x12\'\n\x04type\x18\x01 \x02(\x0e\x32\x19.Common.ProgramStatusType\x12\x12\n\nstrExtDesc\x18\x02 \x01(\t*\xb6\x01\n\x07RetType\x12\x13\n\x0fRetType_Succeed\x10\x00\x12\x1b\n\x0eRetType_Failed\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_TimeOut\x10\x9c\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1f\n\x12RetType_DisConnect\x10\xb8\xfe\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Unknown\x10\xf0\xfc\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Invalid\x10\x8c\xfc\xff\xff\xff\xff\xff\xff\xff\x01*\x83\x01\n\rPacketEncAlgo\x12\x1b\n\x17PacketEncAlgo_FTAES_ECB\x10\x00\x12\x1f\n\x12PacketEncAlgo_None\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x19\n\x15PacketEncAlgo_AES_ECB\x10\x01\x12\x19\n\x15PacketEncAlgo_AES_CBC\x10\x02*4\n\x08ProtoFmt\x12\x15\n\x11ProtoFmt_Protobuf\x10\x00\x12\x11\n\rProtoFmt_Json\x10\x01*v\n\x0fUserAttribution\x12\x1b\n\x17UserAttribution_Unknown\x10\x00\x12\x16\n\x12UserAttribution_NN\x10\x01\x12\x16\n\x12UserAttribution_MM\x10\x02\x12\x16\n\x12UserAttribution_SG\x10\x03*\xf0\x03\n\x11ProgramStatusType\x12\x1a\n\x16ProgramStatusType_None\x10\x00\x12\x1c\n\x18ProgramStatusType_Loaded\x10\x01\x12\x1c\n\x18ProgramStatusType_Loging\x10\x02\x12\'\n#ProgramStatusType_NeedPicVerifyCode\x10\x03\x12)\n%ProgramStatusType_NeedPhoneVerifyCode\x10\x04\x12!\n\x1dProgramStatusType_LoginFailed\x10\x05\x12!\n\x1dProgramStatusType_ForceUpdate\x10\x06\x12*\n&ProgramStatusType_NessaryDataPreparing\x10\x07\x12(\n$ProgramStatusType_NessaryDataMissing\x10\x08\x12\'\n#ProgramStatusType_UnAgreeDisclaimer\x10\t\x12\x1b\n\x17ProgramStatusType_Ready\x10\n\x12!\n\x1dProgramStatusType_ForceLogout\x10\x0b\x12*\n&ProgramStatusType_DisclaimerPullFailed\x10\x0c\x42=\n\x13\x63om.futu.openapi.pbZ&github.com/futuopen/ftapi4go/pb/common')
 )
 
 _RETTYPE = _descriptor.EnumDescriptor(
@@ -134,11 +134,15 @@ _USERATTRIBUTION = _descriptor.EnumDescriptor(
       name='UserAttribution_MM', index=2, number=2,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UserAttribution_SG', index=3, number=3,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=521,
-  serialized_end=615,
+  serialized_end=639,
 )
 _sym_db.RegisterEnumDescriptor(_USERATTRIBUTION)
 
@@ -204,8 +208,8 @@ _PROGRAMSTATUSTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=618,
-  serialized_end=1114,
+  serialized_start=642,
+  serialized_end=1138,
 )
 _sym_db.RegisterEnumDescriptor(_PROGRAMSTATUSTYPE)
 
@@ -225,6 +229,7 @@ ProtoFmt_Json = 1
 UserAttribution_Unknown = 0
 UserAttribution_NN = 1
 UserAttribution_MM = 2
+UserAttribution_SG = 3
 ProgramStatusType_None = 0
 ProgramStatusType_Loaded = 1
 ProgramStatusType_Loging = 2
