@@ -29,6 +29,9 @@ is_py2 = sys.version_info[0] == 2
 with open(join(dirname(__file__), 'futu/VERSION.txt'), 'rb') as f:
     version = f.read().decode('ascii').strip()
 
+with open("README.md", "r") as fh:
+    long_desc = fh.read()
+
 install_requires = ["pandas",
                     "simplejson",
                     "protobuf==3.5.1",
@@ -42,6 +45,8 @@ setup(
     name='futu-api',
     version=version,
     description='Futu Quantitative Trading API',
+	long_description=long_desc,
+	long_description_content_type="text/markdown",
     classifiers=[],
     keywords='Futu HK/US Stock Quant Trading API',
     author='Futu, Inc.',
