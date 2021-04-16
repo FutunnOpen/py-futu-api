@@ -157,7 +157,9 @@ class AccInfoQuery:
             'hk_cash': NoneDataValue,
             'hk_avl_withdrawal_cash': NoneDataValue,
             'us_cash': NoneDataValue,
-            'us_avl_withdrawal_cash': NoneDataValue
+            'us_avl_withdrawal_cash': NoneDataValue,
+            'jp_cash': NoneDataValue,
+            'jp_avl_withdrawal_cash': NoneDataValue
         }]
         for cashInfo in raw_funds.cashInfoList:
             if cashInfo.currency == Trd_Common_pb2.Currency_HKD:
@@ -166,6 +168,9 @@ class AccInfoQuery:
             elif cashInfo.currency == Trd_Common_pb2.Currency_USD:
                 accinfo_list[0]['us_cash'] = cashInfo.cash
                 accinfo_list[0]['us_avl_withdrawal_cash'] = cashInfo.availableBalance
+            elif cashInfo.currency == Trd_Common_pb2.Currency_JPY:
+                accinfo_list[0]['jp_cash'] = cashInfo.cash
+                accinfo_list[0]['jp_avl_withdrawal_cash'] = cashInfo.availableBalance
         return RET_OK, "", accinfo_list
 
 

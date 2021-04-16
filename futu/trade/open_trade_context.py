@@ -289,7 +289,7 @@ class OpenTradeContextBase(OpenContextBase):
             'pending_asset', 'interest_charged_amount', 'frozen_cash', 'avl_withdrawal_cash', 'max_withdrawal', 'currency',
             'available_funds', 'unrealized_pl', 'realized_pl', 'risk_level', 'risk_status', 'initial_margin',
             'margin_call_margin', 'maintenance_margin', 'hk_cash', 'hk_avl_withdrawal_cash', 'us_cash',
-            'us_avl_withdrawal_cash'
+            'us_avl_withdrawal_cash', 'jp_cash', 'jp_avl_withdrawal_cash'
         ]
         accinfo_frame_table = pd.DataFrame(accinfo_list, columns=col_list)
 
