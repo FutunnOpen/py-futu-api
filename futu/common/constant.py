@@ -2447,12 +2447,14 @@ class SecurityFirm(FtEnum):
     NONE = 'N/A'
     FUTUSECURITIES = 'FUTUSECURITIES'
     FUTUINC = 'FUTUINC'
+    FUTUSG = 'FUTUSG'
 
     def load_dic(self):
         return {
             self.NONE: Trd_Common_pb2.SecurityFirm_Unknown,
             self.FUTUSECURITIES: Trd_Common_pb2.SecurityFirm_FutuSecurities,
-            self.FUTUINC: Trd_Common_pb2.SecurityFirm_FutuInc
+            self.FUTUINC: Trd_Common_pb2.SecurityFirm_FutuInc,
+            self.FUTUSG: Trd_Common_pb2.SecurityFirm_FutuSG
         }
 
 # 模拟交易账号类型
