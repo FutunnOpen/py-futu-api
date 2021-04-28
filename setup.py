@@ -29,7 +29,7 @@ is_py2 = sys.version_info[0] == 2
 with open(join(dirname(__file__), 'futu/VERSION.txt'), 'rb') as f:
     version = f.read().decode('ascii').strip()
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding='utf-8') as fh:
     long_desc = fh.read()
 
 install_requires = ["pandas",
