@@ -450,6 +450,7 @@ class NetManager:
         start_time = time.time()
         recv_len = 0
         buf_len = 0
+        packet_count = 0
 
         if conn.status == ConnStatus.Closed:
             return
@@ -457,7 +458,7 @@ class NetManager:
         err = None
         is_closed = False
         try:
-            data = conn.sock.recv(32 * 1024)
+            data = conn.sock.recv(128 * 1024)
             if data == b'':
                 is_closed = True
             else:
@@ -480,7 +481,10 @@ class NetManager:
 
             rsp_body = conn.readbuf[head_len:head_len+body_len]
             del conn.readbuf[:head_len+body_len]
+            packet_count += 1
             self._on_packet(conn, head_dict, Err.Ok.code, '', rsp_body)
+            if packet_count >= 10:
+                break  #收10个包强制跳出循环，避免长时间解包导致无法发送心跳
 
         if is_closed:
             self.close(conn.conn_id)

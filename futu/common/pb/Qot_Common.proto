@@ -470,6 +470,14 @@ enum AssetClass
 	AssetClass_Swap = 6; //掉期
 }
 
+// 交割周期
+enum ExpirationCycle
+{
+	ExpirationCycle_Unknown = 0; //未知
+	ExpirationCycle_Week = 1; //周期权
+	ExpirationCycle_Month = 2; //月期权
+}
+
  //两个字段确定一支股票
 message Security
 {

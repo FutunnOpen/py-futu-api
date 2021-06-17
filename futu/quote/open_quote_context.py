@@ -2622,3 +2622,53 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return RET_ERROR, "empty data"
 
+    def get_option_expiration_date(self, code, index_option_type=IndexOptionType.NORMAL):
+        """
+         获取期权链到期日
+        :param code 标的股票代码
+        :param index_option_type: 指数期权类型，IndexOptionType
+        :return: (ret, data)
+        ret != RET_OK 返回错误字符串
+        ret == RET_OK data为DataFrame类型，字段如下:
+        ============================   ==================   ================================
+        参数                            类型                 说明
+        ============================   ==================   ================================
+        strike_time                    str                  期权链行权日（港股和 A 股市场默认是北京时间，美股市场默认是美东时间）
+        option_expiry_date_distance    int                  距离到期日天数，负数表示已过期
+        expiration_cycle               ExpirationCycle      交割周期（仅用于香港指数期权）
+        ============================   ==================   ================================
+        """
+
+        if code is None or is_str(code) is False:
+            error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
+            return RET_ERROR, error_str
+
+        r, n = IndexOptionType.to_number(index_option_type)
+        if r is False:
+            msg = ERROR_STR_PREFIX + "the type of index_option_type param is wrong"
+            return RET_ERROR, msg
+
+        query_processor = self._get_sync_query_processor(
+            GetOptionExpirationDate.pack_req,
+            GetOptionExpirationDate.unpack,
+        )
+
+        kargs = {
+            "code": code,
+            "index_option_type": index_option_type,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+                'strike_time',
+                'option_expiry_date_distance',
+                'expiration_cycle'
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
+

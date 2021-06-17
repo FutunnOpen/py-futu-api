@@ -1541,6 +1541,10 @@ class GlobalStateQuery:
             'market_hk': MarketState.to_string2(state.marketHK) if state.HasField('marketHK') else 'N/A',# 初始化枚举类型
             'market_hkfuture': MarketState.to_string2(state.marketHKFuture) if state.HasField('marketHKFuture') else 'N/A',# 初始化枚举类型
             'market_usfuture': MarketState.to_string2(state.marketUSFuture) if state.HasField('marketUSFuture') else 'N/A',# 初始化枚举类型
+            'market_sgfuture': MarketState.to_string2(state.marketSGFuture) if state.HasField(
+                'marketSGFuture') else 'N/A',  # 初始化枚举类型
+            'market_jpfuture': MarketState.to_string2(state.marketJPFuture) if state.HasField(
+                'marketJPFuture') else 'N/A',  # 初始化枚举类型
             'server_ver': str(state.serverVer),
             'trd_logined': state.trdLogined,
             'timestamp': str(state.time),
@@ -2213,6 +2217,10 @@ class GetUserInfo:
             'hkFutureQotRight') else "N/A"
         us_qot_right = rsp_pb.s2c.usQotRight if rsp_pb.s2c.HasField(
             'usQotRight') else "N/A"
+        us_option_qot_right = rsp_pb.s2c.usOptionQotRight if rsp_pb.s2c.HasField(
+            'usOptionQotRight') else "N/A"
+        us_future_qot_right = rsp_pb.s2c.usFutureQotRight if rsp_pb.s2c.HasField(
+            'usFutureQotRight') else "N/A"
         cn_qot_right = rsp_pb.s2c.cnQotRight if rsp_pb.s2c.HasField(
             'cnQotRight') else "N/A"
         is_need_agree_disclaimer = rsp_pb.s2c.isNeedAgreeDisclaimer if rsp_pb.s2c.HasField(
@@ -2231,6 +2239,8 @@ class GetUserInfo:
             "hk_option_qot_right": QotRight.to_string2(hk_option_qot_right),
             "hk_future_qot_right": QotRight.to_string2(hk_future_qot_right),
             "us_qot_right": QotRight.to_string2(us_qot_right),
+            "us_option_qot_right": QotRight.to_string2(us_option_qot_right),
+            "us_future_qot_right": QotRight.to_string2(us_future_qot_right),
             "cn_qot_right": QotRight.to_string2(cn_qot_right),
             "is_need_agree_disclaimer": is_need_agree_disclaimer,
             "user_id": user_id,
@@ -3121,4 +3131,49 @@ class GetMarketStateQuery:
             data["stock_name"] = item.name
             #  Qot_Common.QotMarketState,市场状态 type = int32
             data["market_state"] = MarketState.to_string2(item.marketState)if item.HasField('marketState') else 'N/A' # 初始化枚举类型
+        return RET_OK, "", ret_list
+
+class GetOptionExpirationDate:
+    """
+    Query GetOptionExpirationDate.
+    """
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code, index_option_type, conn_id):
+        ret, content = split_stock_str(code)
+        if ret == RET_ERROR:
+            error_str = content
+            return RET_ERROR, error_str, None
+
+        market_code, stock_code = content
+
+        r, index_option_type = IndexOptionType.to_number(index_option_type)
+        if r is False:
+            index_option_type = None
+
+        from futu.common.pb.Qot_GetOptionExpirationDate_pb2 import Request
+        req = Request()
+        req.c2s.owner.market = market_code
+        req.c2s.owner.code = stock_code
+        if index_option_type is not None:
+            req.c2s.indexOptionType = index_option_type
+
+        return pack_pb_req(req, ProtoId.Qot_GetOptionExpirationDate, conn_id)
+
+    @classmethod
+    def unpack(cls, rsp_pb):
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        ret_list = list()
+        expiration_date_list = rsp_pb.s2c.dateList
+        for item in expiration_date_list:
+            data = {}
+            ret_list.append(data)
+            data["strike_time"] = item.strikeTime if item.HasField('strikeTime') else ' '
+            data["option_expiry_date_distance"] = item.optionExpiryDateDistance
+            data["expiration_cycle"] = ExpirationCycle.to_string2(item.cycle) if item.HasField('cycle') else 'N/A'
         return RET_OK, "", ret_list

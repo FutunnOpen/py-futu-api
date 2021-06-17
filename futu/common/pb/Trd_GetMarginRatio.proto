@@ -1,0 +1,51 @@
+syntax = "proto2";
+package Trd_GetMarginRatio;
+option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/trdgetmarginratio";
+
+import "Trd_Common.proto";
+import "Qot_Common.proto";
+
+message MarginRatioInfo
+{
+	required Qot_Common.Security security = 1; //股票
+	optional bool   isLongPermit = 2; //是否允许融资
+	optional bool   isShortPermit = 3; //是否允许融券
+	optional double shortPoolRemain = 4; //卖空池剩余量
+	optional double shortFeeRate = 5; //融券参考利率
+	optional double alertLongRatio = 6; //融资预警比率
+	optional double alertShortRatio = 7; //融券预警比率
+	optional double imLongRatio = 8; //融资初始保证金率
+	optional double imShortRatio = 9; //融券初始保证金率
+	optional double mcmLongRatio = 10; //融资 margin call 保证金率
+	optional double mcmShortRatio = 11; //融券 margin call 保证金率
+	optional double mmLongRatio = 12; //融资维持保证金率
+	optional double mmShortRatio = 13; //融券维持保证金率
+}
+
+message C2S
+{
+	required Trd_Common.TrdHeader header = 1; //交易公共参数头
+	repeated Qot_Common.Security securityList = 2; //股票
+}
+
+message S2C
+{
+	required Trd_Common.TrdHeader header = 1; //交易公共参数头
+	repeated MarginRatioInfo marginRatioInfoList = 2; //账户资金
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	//以下3个字段每条协议都有，注释说明在InitConnect.proto中
+	required int32 retType = 1 [default = -400];
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

@@ -1,0 +1,41 @@
+syntax = "proto2";
+package Qot_GetOptionExpirationDate;
+option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/getoptionexpirationdate";
+
+import "Common.proto";
+import "Qot_Common.proto";
+
+
+message C2S
+{
+	required Qot_Common.Security owner = 1; //期权标的股，目前仅支持传入港美正股以及恒指国指
+	optional int32 indexOptionType = 2; //Qot_Common.IndexOptionType，指数期权的类型，仅用于恒指国指
+}
+
+message OptionExpirationDate
+{
+	optional string strikeTime = 1; //期权链行权日（港股和 A 股市场默认是北京时间，美股市场默认是美东时间）
+	optional double strikeTimestamp = 2; //行权日时间戳
+	required int32 optionExpiryDateDistance = 3; //距离到期日天数，负数表示已过期
+	optional int32 cycle = 4; //Qot_Common.ExpirationCycle,交割周期（仅用于香港指数期权）
+}
+ 
+message S2C
+{
+	repeated OptionExpirationDate dateList = 1; //期权链行权日
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	required int32 retType = 1 [default = -400]; //RetType,返回结果
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

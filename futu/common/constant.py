@@ -48,6 +48,7 @@ class ProtoId(object):
     Trd_GetHistoryOrderList = 2221  # 获取历史订单列表
     Trd_GetHistoryOrderFillList = 2222  # 获取历史成交列表
     Trd_GetMaxTrdQtys = 2111    # 查询最大买卖数量
+    Trd_GetMarginRatio = 2223  # 获取融资融券数据
 
     # 订阅数据
     Qot_Sub = 3001  # 订阅或者反订阅
@@ -103,6 +104,8 @@ class ProtoId(object):
 
     Qot_GetUserSecurityGroup = 3222  # 获取自选股分组
     Qot_GetMarketState = 3223  # 获取指定品种的市场状态
+    Qot_GetOptionExpirationDate = 3224  # 获取期权到期日
+
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
@@ -2468,4 +2471,17 @@ class SimAccType(FtEnum):
             self.NONE: Trd_Common_pb2.SimAccType_Unknown,
             self.STOCK: Trd_Common_pb2.SimAccType_Stock,
             self.OPTION: Trd_Common_pb2.SimAccType_Option
+        }
+
+# 期权交割周期
+class ExpirationCycle(FtEnum):
+    NONE = 'N/A'
+    WEEK = 'WEEK'
+    MONTH = 'MONTH'
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.ExpirationCycle_Unknown,
+            self.WEEK: Qot_Common_pb2.ExpirationCycle_Week,
+            self.MONTH: Qot_Common_pb2.ExpirationCycle_Month
         }

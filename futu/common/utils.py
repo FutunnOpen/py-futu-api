@@ -208,19 +208,19 @@ def is_str(obj):
 
 def price_to_str_int1000(price):
     return str(int(round(float(price) * 1000,
-                         0))) if str(price) is not '' else ''
+                         0))) if str(price) != '' else ''
 
 
 # 1000*int price to float val
 def int1000_price_to_float(price):
     return round(float(price) / 1000.0,
-                 3) if str(price) is not '' else float(0)
+                 3) if str(price) != '' else float(0)
 
 
 # 10^9 int price to float val
 def int10_9_price_to_float(price):
     return round(float(price) / float(10**9),
-                 3) if str(price) is not '' else float(0)
+                 3) if str(price) != '' else float(0)
 
 
 # list 参数除重及规整
@@ -339,6 +339,10 @@ class ProtobufMap(dict):
         """ Trd_GetHistoryOrderFillList = 2222  # 获取历史成交列表 """
         from futu.common.pb.Trd_GetHistoryOrderFillList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetHistoryOrderFillList] = Response()
+
+        """ Qot_GetReference = 2223  获取正股相关股票，暂时只有窝轮"""
+        from futu.common.pb.Trd_GetMarginRatio_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Trd_GetMarginRatio] = Response()
 
         """ Qot_Sub = 3001  # 订阅或者反订阅 """
         from futu.common.pb.Qot_Sub_pb2 import Response
@@ -509,6 +513,9 @@ class ProtobufMap(dict):
 
         from futu.common.pb.Qot_GetMarketState_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetMarketState] = Response()
+
+        from futu.common.pb.Qot_GetOptionExpirationDate_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetOptionExpirationDate] = Response()
 
     def __getitem__(self, key):
         return ProtobufMap.created_protobuf_map[key] if key in ProtobufMap.created_protobuf_map else None

@@ -20,6 +20,8 @@ message S2C
 	required int32 marketSZ = 4; //Qot_Common.QotMarketState,深市状态 
 	required int32 marketHKFuture = 5; //Qot_Common.QotMarketState,港股期货市场状态 
 	optional int32 marketUSFuture = 15; //Qot_Common.QotMarketState,美国期货市场状态 
+	optional int32 marketSGFuture = 17; //Qot_Common.QotMarketState,新加坡期货市场状态 
+	optional int32 marketJPFuture = 18; //Qot_Common.QotMarketState,日本期货市场状态
 	required bool qotLogined = 6; //是否登陆行情服务器
 	required bool trdLogined = 7; //是否登陆交易服务器
 	required int32 serverVer = 8; //版本号

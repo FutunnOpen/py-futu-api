@@ -157,9 +157,7 @@ class AccInfoQuery:
             'hk_cash': NoneDataValue,
             'hk_avl_withdrawal_cash': NoneDataValue,
             'us_cash': NoneDataValue,
-            'us_avl_withdrawal_cash': NoneDataValue,
-            'jp_cash': NoneDataValue,
-            'jp_avl_withdrawal_cash': NoneDataValue
+            'us_avl_withdrawal_cash': NoneDataValue
         }]
         for cashInfo in raw_funds.cashInfoList:
             if cashInfo.currency == Trd_Common_pb2.Currency_HKD:
@@ -168,9 +166,6 @@ class AccInfoQuery:
             elif cashInfo.currency == Trd_Common_pb2.Currency_USD:
                 accinfo_list[0]['us_cash'] = cashInfo.cash
                 accinfo_list[0]['us_avl_withdrawal_cash'] = cashInfo.availableBalance
-            elif cashInfo.currency == Trd_Common_pb2.Currency_JPY:
-                accinfo_list[0]['jp_cash'] = cashInfo.cash
-                accinfo_list[0]['jp_avl_withdrawal_cash'] = cashInfo.availableBalance
         return RET_OK, "", accinfo_list
 
 
@@ -676,3 +671,70 @@ class AccTradingInfoQuery:
         }]
 
         return RET_OK, "", data
+
+
+class MarginRatio:
+    """Class for """
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code_list, conn_id, acc_id, trd_mkt):
+        """Convert from user request for place order to PLS request"""
+        stock_tuple_list = []
+        failure_tuple_list = []
+        for stock_str in code_list:
+            ret_code, content = split_stock_str(stock_str)
+            if ret_code != RET_OK:
+                error_str = content
+                failure_tuple_list.append((ret_code, error_str))
+                continue
+
+            market_code, stock_code = content
+            stock_tuple_list.append((market_code, stock_code))
+
+        if len(failure_tuple_list) > 0:
+            error_str = '\n'.join([x[1] for x in failure_tuple_list])
+            return RET_ERROR, error_str, None
+
+        from futu.common.pb.Trd_GetMarginRatio_pb2 import Request
+        req = Request()
+
+        req.c2s.header.trdEnv = 1
+        req.c2s.header.accID = acc_id
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
+
+        for market, code in stock_tuple_list:
+            stock_inst = req.c2s.securityList.add()
+            stock_inst.market = market
+            stock_inst.code = code
+
+        return pack_pb_req(req, ProtoId.Trd_GetMarginRatio, conn_id)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        """Convert from PLS response to user response"""
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        margin_ratio_list = rsp_pb.s2c.marginRatioInfoList
+        ret_margin_ratio_list = []
+        for margin_info in margin_ratio_list:
+            margin_ratio_tmp = {}
+            margin_ratio_tmp['code'] = merge_qot_mkt_stock_str(
+                int(margin_info.security.market), margin_info.security.code)
+            margin_ratio_tmp['is_long_permit'] = margin_info.isLongPermit if margin_info.HasField('isLongPermit') else 'N/A'  # 是否允许融资
+            margin_ratio_tmp['is_short_permit'] = margin_info.isShortPermit if margin_info.HasField('isShortPermit') else 'N/A'  # 是否允许融券
+            margin_ratio_tmp['short_pool_remain'] = margin_info.shortPoolRemain if margin_info.HasField('shortPoolRemain') else 'N/A'  # 卖空池剩余量
+            margin_ratio_tmp['short_fee_rate'] = margin_info.shortFeeRate if margin_info.HasField('shortFeeRate') else 'N/A'   # 融券参考利率
+            margin_ratio_tmp['alert_long_ratio'] = margin_info.alertLongRatio if margin_info.HasField('alertLongRatio') else 'N/A'  # 融资预警比率
+            margin_ratio_tmp['alert_short_ratio'] = margin_info.alertShortRatio if margin_info.HasField('alertShortRatio') else 'N/A'   # 融券预警比率
+            margin_ratio_tmp['im_long_ratio'] = margin_info.imLongRatio if margin_info.HasField('imLongRatio') else 'N/A'   # 融资初始保证金率
+            margin_ratio_tmp['im_short_ratio'] = margin_info.imShortRatio if margin_info.HasField('imShortRatio') else 'N/A'   # 融券初始保证金率
+            margin_ratio_tmp['mcm_long_ratio'] = margin_info.mcmLongRatio if margin_info.HasField('mcmLongRatio') else 'N/A'   # 融资 margin call 保证金率
+            margin_ratio_tmp['mcm_short_ratio'] = margin_info.mcmShortRatio if margin_info.HasField('mcmShortRatio') else 'N/A'   # 融券 margin call 保证金率
+            margin_ratio_tmp['mm_long_ratio'] = margin_info.mmLongRatio if margin_info.HasField('mmLongRatio') else 'N/A'  # 融资维持保证金率
+            margin_ratio_tmp['mm_short_ratio'] = margin_info.mmShortRatio if margin_info.HasField('mmShortRatio') else 'N/A'   # 融券维持保证金率
+            ret_margin_ratio_list.append(margin_ratio_tmp)
+
+        return RET_OK, "", ret_margin_ratio_list
