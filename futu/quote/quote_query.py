@@ -198,75 +198,6 @@ class InitConnect:
             return RET_ERROR, "rsp_pb error", None
 
         return RET_OK, "", res
-
-
-class TradeDayQuery:
-    """
-    Query Conversion for getting trading days.
-    """
-
-    def __init__(self):
-        pass
-
-    @classmethod
-    def pack_req(cls, market, conn_id, start_date=None, end_date=None):
-
-        # '''Parameter check'''
-        r, mkt = Market.to_number(market)
-        if not r:
-            error_str = ERROR_STR_PREFIX + " market is %s, which is not valid. (%s)" \
-                                           % (market, Market.get_all_keys())
-            return RET_ERROR, error_str, None
-
-        if start_date is None:
-            today = datetime.today()
-            start = today - timedelta(days=365)
-
-            start_date = start.strftime("%Y-%m-%d")
-        else:
-            ret, msg = normalize_date_format(start_date)
-            if ret != RET_OK:
-                return ret, msg, None
-            start_date = msg
-
-        if end_date is None:
-            today = datetime.today()
-            end_date = today.strftime("%Y-%m-%d")
-        else:
-            ret, msg = normalize_date_format(end_date)
-            if ret != RET_OK:
-                return ret, msg, None
-            end_date = msg
-
-        # pack to json
-        from futu.common.pb.Qot_GetTradeDate_pb2 import Request
-        req = Request()
-        req.c2s.market = mkt
-        req.c2s.beginTime = start_date
-        req.c2s.endTime = end_date
-
-        return pack_pb_req(req, ProtoId.Qot_GetTradeDate, conn_id)
-
-    @classmethod
-    def unpack_rsp(cls, rsp_pb):
-
-        # response check and unpack response json to objects
-        ret_type = rsp_pb.retType
-        ret_msg = rsp_pb.retMsg
-
-        if ret_type != RET_OK:
-            return RET_ERROR, ret_msg, None
-
-        raw_trading_day_list = rsp_pb.s2c.tradeDateList
-        trading_day_list = list()
-
-        for x in raw_trading_day_list:
-            if x.time is not None and len(x.time) > 0:
-                trading_day_list.append(
-                    {"time": x.time, "trade_date_type": TradeDateType.to_string2(x.tradeDateType) if x.HasField('tradeDateType') else 'N/A'})# 初始化枚举类型
-
-        return RET_OK, "", trading_day_list
-
 class RequestTradeDayQuery:
     """
     Query Conversion for getting trading days.
@@ -1978,62 +1909,6 @@ class OptionChain:
                     data_list.append(quote_list)
 
         return RET_OK, "", data_list
-
-
-class OrderDetail:
-    """
-    Query Conversion for getting order detail information.
-    """
-
-    def __init__(self):
-        pass
-
-    @classmethod
-    def pack_req(cls, code, conn_id):
-
-        ret, content = split_stock_str(code)
-        if ret == RET_ERROR:
-            error_str = content
-            return RET_ERROR, error_str, None
-
-        market_code, stock_code = content
-
-        from futu.common.pb.Qot_GetOrderDetail_pb2 import Request
-        req = Request()
-        req.c2s.security.market = market_code
-        req.c2s.security.code = stock_code
-
-        return pack_pb_req(req, ProtoId.Qot_GetOrderDetail, conn_id)
-
-    @classmethod
-    def unpack_rsp(cls, rsp_pb):
-        if rsp_pb.retType != RET_OK:
-            return RET_ERROR, rsp_pb.retMsg, None
-
-        code = merge_qot_mkt_stock_str(
-            int(rsp_pb.s2c.security.market), rsp_pb.s2c.security.code)
-        ask = [0, []]
-        bid = [0, []]
-        svr_recv_time_bid = rsp_pb.s2c.svrRecvTimeBid
-        svr_recv_time_ask = rsp_pb.s2c.svrRecvTimeAsk
-
-        ask[0] = rsp_pb.s2c.orderDetailAsk.orderCount
-        for vol in rsp_pb.s2c.orderDetailAsk.orderVol:
-            ask[1].append(vol)
-
-        bid[0] = rsp_pb.s2c.orderDetailBid.orderCount
-        for vol in rsp_pb.s2c.orderDetailBid.orderVol:
-            bid[1].append(vol)
-
-        data = {
-            'code': code,
-            'Ask': ask,
-            'Bid': bid,
-            'svr_recv_time_ask': svr_recv_time_ask,
-            'svr_recv_time_bid': svr_recv_time_bid
-        }
-        return RET_OK, "", data
-
 
 class QuoteWarrant:
     """

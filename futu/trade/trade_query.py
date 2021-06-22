@@ -219,6 +219,7 @@ class PositionListQuery:
                              "today_buy_qty": position.td_buyQty if position.HasField('td_buyQty') else NoneDataValue,
                              "today_buy_val": position.td_buyVal if position.HasField('td_buyVal') else NoneDataValue,
                              "today_pl_val": position.td_plVal if position.HasField('td_plVal') else NoneDataValue,
+                             "today_trd_val": position.td_plVal if position.HasField('td_trdVal') else NoneDataValue,
                              "today_sell_qty": position.td_sellQty if position.HasField('td_sellQty') else NoneDataValue,
                              "today_sell_val": position.td_sellVal if position.HasField('td_sellVal') else NoneDataValue,
                              "position_side": PositionSide.to_string2(position.positionSide) if position.HasField('positionSide') else 'N/A',# 初始化枚举类型

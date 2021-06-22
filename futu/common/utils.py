@@ -408,11 +408,6 @@ class ProtobufMap(dict):
         from futu.common.pb.Qot_UpdatePriceReminder_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdatePriceReminder] = Response()
 
-
-        """ Qot_GetTradeDate = 3200  # 获取市场交易日 """
-        from futu.common.pb.Qot_GetTradeDate_pb2 import Response
-        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetTradeDate] = Response()
-
         """ Qot_GetSuspend = 3201  # 获取股票停牌信息 """
         from futu.common.pb.Qot_GetSuspend_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetSuspend] = Response()
@@ -454,14 +449,6 @@ class ProtobufMap(dict):
 
         from futu.common.pb.Qot_GetOptionChain_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetOptionChain] = Response()
-
-        """ Qot_GetOrderDetail = 3016 获取委托明细 """
-        from futu.common.pb.Qot_GetOrderDetail_pb2 import Response
-        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetOrderDetail] = Response()
-
-        """ Qot_UpdateOrderDetail = 3017 推送委托明细 """
-        from futu.common.pb.Qot_UpdateOrderDetail_pb2 import Response
-        ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdateOrderDetail] = Response()
 
         """ Qot_GetWarrantData = 3210 获取窝轮 """
         from futu.common.pb.Qot_GetWarrant_pb2 import Response as GetWarrantPBResponse

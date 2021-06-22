@@ -74,7 +74,6 @@ class ProtoId(object):
     Qot_RequestRehab = 3105  # 获取除权信息
 
     # 其他行情数据
-    Qot_GetTradeDate = 3200         # 获取市场交易日
     Qot_GetSuspend = 3201           # 获取股票停牌信息
     Qot_GetStaticInfo = 3202        # 获取股票列表
     Qot_GetSecuritySnapshot = 3203  # 获取股票快照
@@ -84,9 +83,6 @@ class ProtoId(object):
     Qot_GetOwnerPlate = 3207        # 获取股票所属板块
     Qot_GetHoldingChangeList = 3208     # 获取高管持股变动
     Qot_GetOptionChain = 3209           # 获取期权链
-
-    Qot_GetOrderDetail = 3016           # 获取委托明细
-    Qot_UpdateOrderDetail = 3017        # 推送委托明细
 
     Qot_GetWarrant = 3210          # 拉取窝轮信息
     Qot_GetCapitalFlow = 3211          # 获取资金流向
@@ -470,14 +466,11 @@ class SubType(FtEnum):
       分时
      ..  py:attribute:: BROKER
       买卖经纪
-     ..  py:attribute:: ORDER_DETAIL
-      委托明细
     """
     NONE = "N/A"
     TICKER = "TICKER"
     QUOTE = "QUOTE"
     ORDER_BOOK = "ORDER_BOOK"
-    # ORDER_DETAIL = "ORDER_DETAIL"
     K_1M = "K_1M"
     K_3M = "K_3M"
     K_5M = "K_5M"

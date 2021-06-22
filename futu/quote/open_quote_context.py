@@ -156,47 +156,6 @@ class OpenQuoteContext(OpenContextBase):
             self._wait_reconnect()
         return ret_code, ret_msg
 
-    def get_trading_days(self, market, start=None, end=None):
-        """获取交易日
-        :param market: 市场类型，Market_
-        :param start: 起始日期。例如'2018-01-01'。
-        :param end: 结束日期。例如'2018-01-01'。
-         start和end的组合如下：
-         ==========    ==========    ========================================
-         start类型      end类型       说明
-         ==========    ==========    ========================================
-         str            str           start和end分别为指定的日期
-         None           str           start为end往前365天
-         str            None          end为start往后365天
-         None           None          end为当前日期，start为end往前365天
-         ==========    ==========    ========================================
-        :return: 成功时返回(RET_OK, data)，data是[{'trade_date_type': 0, 'time': '2018-01-05'}]数组；失败时返回(RET_ERROR, data)，其中data是错误描述字符串
-        """
-        if market is None or is_str(market) is False:
-            error_str = ERROR_STR_PREFIX + "the type of market param is wrong"
-            return RET_ERROR, error_str
-
-        ret, msg, start, end = normalize_start_end_date(start, end, 365)
-        if ret != RET_OK:
-            return ret, msg
-
-        query_processor = self._get_sync_query_processor(
-            TradeDayQuery.pack_req, TradeDayQuery.unpack_rsp)
-
-        # the keys of kargs should be corresponding to the actual function arguments
-        kargs = {
-            'market': market,
-            'start_date': start,
-            'end_date': end,
-            'conn_id': self.get_sync_conn_id()
-        }
-        ret_code, msg, trade_day_list = query_processor(**kargs)
-
-        if ret_code != RET_OK:
-            return RET_ERROR, msg
-
-        return RET_OK, trade_day_list
-
     def request_trading_days(self, market, start=None, end=None):
         """获取交易日
         :param market: 市场类型，TradeDateMarket_
@@ -1810,44 +1769,6 @@ class OpenQuoteContext(OpenContextBase):
         option_chain.index = range(len(option_chain))
 
         return RET_OK, option_chain
-
-    def get_order_detail(self, code):
-        return RET_ERROR, "this service has been cancelled"
-
-        """
-        查询A股Level 2权限下提供的委托明细
-
-        :param code: 股票代码,例如：'HK.02318'
-        :return: (ret, data)
-
-                ret == RET_OK data为1个dict，包含以下数据
-
-                ret != RET_OK data为错误字符串
-
-                {‘code’: 股票代码
-                ‘Ask’:[ order_num, [order_volume1, order_volume2] ]
-                ‘Bid’: [ order_num, [order_volume1, order_volume2] ]
-                }
-
-                'Ask'：卖盘， 'Bid'买盘。order_num指委托订单数量，order_volume是每笔委托的委托量，当前最多返回前50笔委托的委托数量。即order_num有可能多于后面的order_volume
-        """
-
-        if code is None or is_str(code) is False:
-            error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
-            return RET_ERROR, error_str
-
-        query_processor = self._get_sync_query_processor(
-            OrderDetail.pack_req, OrderDetail.unpack_rsp)
-        kargs = {
-            "code": code,
-            "conn_id": self.get_sync_conn_id()
-        }
-
-        ret_code, msg, order_detail = query_processor(**kargs)
-        if ret_code == RET_ERROR:
-            return ret_code, msg
-
-        return RET_OK, order_detail
 
     def get_warrant(self, stock_owner='', req=None):
         """

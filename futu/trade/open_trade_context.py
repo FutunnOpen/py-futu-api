@@ -358,8 +358,8 @@ class OpenTradeContextBase(OpenContextBase):
             "code", "stock_name", "qty", "can_sell_qty", "cost_price",
             "cost_price_valid", "market_val", "nominal_price", "pl_ratio",
             "pl_ratio_valid", "pl_val", "pl_val_valid", "today_buy_qty",
-            "today_buy_val", "today_pl_val", "today_sell_qty", "today_sell_val",
-            "position_side", "unrealized_pl", "realized_pl"
+            "today_buy_val", "today_pl_val", "today_trd_val", "today_sell_qty",
+            "today_sell_val", "position_side", "unrealized_pl", "realized_pl"
         ]
 
         position_list_table = pd.DataFrame(position_list, columns=col_list)

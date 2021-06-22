@@ -75,7 +75,7 @@ class OpenContextBase(object):
         self._close()
         
     def __enter__(self):
-        pass
+        return self
 
     def __exit__(self, t, v, tb):
         self._close()

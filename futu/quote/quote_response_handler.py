@@ -334,19 +334,6 @@ class SysNotifyHandlerBase(RspHandlerBase):
 
         return ret_code, content
 
-#
-# class OrderDetailHandlerBase(RspHandlerBase):
-#     def __init__(self):
-#         super(OrderDetailHandlerBase, self).__init__()
-#
-#     def on_recv_rsp(self, rsp_pb):
-#         """receive response callback function"""
-#         ret_code, msg, data = OrderDetail.unpack_rsp(rsp_pb)
-#
-#         if ret_code != RET_OK:
-#             return ret_code, msg
-#         else:
-#             return ret_code, data
 
 class PriceReminderHandlerBase(RspHandlerBase):
     """
