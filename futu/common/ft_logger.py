@@ -88,7 +88,7 @@ class FTLog(object):
         self.console_logger.setLevel(self._console_level)
         self.console_logger.propagate = False
         
-        self.formatter = logging.Formatter('%(asctime)s %(message)s')
+        self.formatter = logging.Formatter('%(asctime)s | %(process)d | %(message)s')
 
         if not hasattr(self, 'fileHandler'):
             file_name = 'py_' + datetime.now().strftime('%Y_%m_%d') + '.log'

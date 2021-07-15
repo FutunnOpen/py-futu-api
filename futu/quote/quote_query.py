@@ -207,7 +207,7 @@ class RequestTradeDayQuery:
         pass
 
     @classmethod
-    def pack_req(cls, market, conn_id, start_date=None, end_date=None):
+    def pack_req(cls, market, conn_id, start_date=None, end_date=None, code=None):
 
         # '''Parameter check'''
         r, v = TradeDateMarket.to_number(market)
@@ -216,7 +216,7 @@ class RequestTradeDayQuery:
                                            % (market)
             return RET_ERROR, error_str, None
 
-        if start_date is None:
+        if start_date is None: # start为往前365天
             today = datetime.today()
             start = today - timedelta(days=365)
 
@@ -227,7 +227,7 @@ class RequestTradeDayQuery:
                 return ret, msg, None
             start_date = msg
 
-        if end_date is None:
+        if end_date is None: # end为当前时间
             today = datetime.today()
             end_date = today.strftime("%Y-%m-%d")
         else:
@@ -236,12 +236,26 @@ class RequestTradeDayQuery:
                 return ret, msg, None
             end_date = msg
 
+        """check stock_code 股票"""
+        market_code = None
+        stock_code = None
+        if code is not None:
+            ret, content = split_stock_str(code)
+            if ret == RET_ERROR:
+                error_str = content
+                return RET_ERROR, error_str, None
+            market_code, stock_code = content
+
         # pack to json
         from futu.common.pb.Qot_RequestTradeDate_pb2 import Request
         req = Request()
         req.c2s.market = v
         req.c2s.beginTime = start_date
         req.c2s.endTime = end_date
+        if market_code is not None:
+            req.c2s.security.market = market_code
+        if stock_code is not None:
+            req.c2s.security.code = stock_code
 
         return pack_pb_req(req, ProtoId.Qot_RequestTradeDate, conn_id)
 

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_RequestTradeDate.proto',
   package='Qot_RequestTradeDate',
   syntax='proto2',
-  serialized_pb=_b('\n\x1aQot_RequestTradeDate.proto\x12\x14Qot_RequestTradeDate\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"9\n\x03\x43\x32S\x12\x0e\n\x06market\x18\x01 \x02(\x05\x12\x11\n\tbeginTime\x18\x02 \x02(\t\x12\x0f\n\x07\x65ndTime\x18\x03 \x02(\t\"C\n\tTradeDate\x12\x0c\n\x04time\x18\x01 \x02(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x01\x12\x15\n\rtradeDateType\x18\x03 \x01(\x05\"=\n\x03S2C\x12\x36\n\rtradeDateList\x18\x01 \x03(\x0b\x32\x1f.Qot_RequestTradeDate.TradeDate\"1\n\x07Request\x12&\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x19.Qot_RequestTradeDate.C2S\"j\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12&\n\x03s2c\x18\x04 \x01(\x0b\x32\x19.Qot_RequestTradeDate.S2CBJ\n\x13\x63om.futu.openapi.pbZ3github.com/futuopen/ftapi4go/pb/qotrequesttradedate')
+  serialized_pb=_b('\n\x1aQot_RequestTradeDate.proto\x12\x14Qot_RequestTradeDate\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"a\n\x03\x43\x32S\x12\x0e\n\x06market\x18\x01 \x02(\x05\x12\x11\n\tbeginTime\x18\x02 \x02(\t\x12\x0f\n\x07\x65ndTime\x18\x03 \x02(\t\x12&\n\x08security\x18\x04 \x01(\x0b\x32\x14.Qot_Common.Security\"C\n\tTradeDate\x12\x0c\n\x04time\x18\x01 \x02(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x01\x12\x15\n\rtradeDateType\x18\x03 \x01(\x05\"=\n\x03S2C\x12\x36\n\rtradeDateList\x18\x01 \x03(\x0b\x32\x1f.Qot_RequestTradeDate.TradeDate\"1\n\x07Request\x12&\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x19.Qot_RequestTradeDate.C2S\"j\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12&\n\x03s2c\x18\x04 \x01(\x0b\x32\x19.Qot_RequestTradeDate.S2CBJ\n\x13\x63om.futu.openapi.pbZ3github.com/futuopen/ftapi4go/pb/qotrequesttradedate')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -56,6 +56,13 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='security', full_name='Qot_RequestTradeDate.C2S.security', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -69,7 +76,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=84,
-  serialized_end=141,
+  serialized_end=181,
 )
 
 
@@ -113,8 +120,8 @@ _TRADEDATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=143,
-  serialized_end=210,
+  serialized_start=183,
+  serialized_end=250,
 )
 
 
@@ -144,8 +151,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=212,
-  serialized_end=273,
+  serialized_start=252,
+  serialized_end=313,
 )
 
 
@@ -175,8 +182,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=275,
-  serialized_end=324,
+  serialized_start=315,
+  serialized_end=364,
 )
 
 
@@ -227,10 +234,11 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=326,
-  serialized_end=432,
+  serialized_start=366,
+  serialized_end=472,
 )
 
+_C2S.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY
 _S2C.fields_by_name['tradeDateList'].message_type = _TRADEDATE
 _REQUEST.fields_by_name['c2s'].message_type = _C2S
 _RESPONSE.fields_by_name['s2c'].message_type = _S2C

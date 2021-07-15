@@ -24,7 +24,7 @@ class ProtoId(object):
     InitConnect = 1001  # 初始化连接
     GetGlobalState = 1002  # 获取全局状态
     Notify = 1003  # 通知推送
-    KeepAlive = 1004  # 通知推送
+    KeepAlive = 1004  # 心跳保活
     GetUserInfo = 1005  # 获取用户信息
     Verification = 1006  # 请求或输入验证码
     GetDelayStatistics = 1007  # 获取延迟统计
@@ -2291,6 +2291,8 @@ class TradeDateMarket(FtEnum):
     CN = 'CN'  # A股市场
     NT = 'NT'  # 深（沪）股通
     ST = 'ST'  # 港股通（深、沪）
+    JP_FUTURE = 'JP_FUTURE'  # 日本期货
+    SG_FUTURE = 'SG_FUTURE'  # 新加坡期货
 
     def load_dic(self):
         return {
@@ -2299,7 +2301,9 @@ class TradeDateMarket(FtEnum):
             self.US: Qot_Common_pb2.TradeDateMarket_US,
             self.CN: Qot_Common_pb2.TradeDateMarket_CN,
             self.NT: Qot_Common_pb2.TradeDateMarket_NT,
-            self.ST: Qot_Common_pb2.TradeDateMarket_ST
+            self.ST: Qot_Common_pb2.TradeDateMarket_ST,
+            self.JP_FUTURE: Qot_Common_pb2.TradeDateMarket_JP_Future,
+            self.SG_FUTURE: Qot_Common_pb2.TradeDateMarket_SG_Future,
         }
 
 class SetPriceReminderOp(FtEnum):
