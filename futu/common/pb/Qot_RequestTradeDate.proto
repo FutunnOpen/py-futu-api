@@ -8,9 +8,11 @@ import "Qot_Common.proto";
 
 message C2S
 {
+	// 当 market 和 security 同时存在，会忽略 market，仅对 security 进行查询。
 	required int32 market = 1; //Qot_Common.TradeDateMarket,要查询的市场
 	required string beginTime = 2; //开始时间字符串
 	required string endTime = 3; //结束时间字符串
+	optional Qot_Common.Security security = 4; // 指定标的
 }
 
 message TradeDate

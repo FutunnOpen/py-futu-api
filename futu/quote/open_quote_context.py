@@ -156,52 +156,12 @@ class OpenQuoteContext(OpenContextBase):
             self._wait_reconnect()
         return ret_code, ret_msg
 
-    def get_trading_days(self, market, start=None, end=None):
-        """获取交易日
-        :param market: 市场类型，Market_
-        :param start: 起始日期。例如'2018-01-01'。
-        :param end: 结束日期。例如'2018-01-01'。
-         start和end的组合如下：
-         ==========    ==========    ========================================
-         start类型      end类型       说明
-         ==========    ==========    ========================================
-         str            str           start和end分别为指定的日期
-         None           str           start为end往前365天
-         str            None          end为start往后365天
-         None           None          end为当前日期，start为end往前365天
-         ==========    ==========    ========================================
-        :return: 成功时返回(RET_OK, data)，data是[{'trade_date_type': 0, 'time': '2018-01-05'}]数组；失败时返回(RET_ERROR, data)，其中data是错误描述字符串
-        """
-        if market is None or is_str(market) is False:
-            error_str = ERROR_STR_PREFIX + "the type of market param is wrong"
-            return RET_ERROR, error_str
-
-        ret, msg, start, end = normalize_start_end_date(start, end, 365)
-        if ret != RET_OK:
-            return ret, msg
-
-        query_processor = self._get_sync_query_processor(
-            TradeDayQuery.pack_req, TradeDayQuery.unpack_rsp)
-
-        # the keys of kargs should be corresponding to the actual function arguments
-        kargs = {
-            'market': market,
-            'start_date': start,
-            'end_date': end,
-            'conn_id': self.get_sync_conn_id()
-        }
-        ret_code, msg, trade_day_list = query_processor(**kargs)
-
-        if ret_code != RET_OK:
-            return RET_ERROR, msg
-
-        return RET_OK, trade_day_list
-
-    def request_trading_days(self, market, start=None, end=None):
+    def request_trading_days(self, market=None, start=None, end=None, code=None):
         """获取交易日
         :param market: 市场类型，TradeDateMarket_
         :param start: 起始日期。例如'2018-01-01'。
         :param end: 结束日期。例如'2018-01-01'。
+        :param code: 股票代码。例如'HK.00700'，'US.APPL'。
          start和end的组合如下：
          ==========    ==========    ========================================
          start类型      end类型       说明
@@ -213,13 +173,19 @@ class OpenQuoteContext(OpenContextBase):
          ==========    ==========    ========================================
         :return: 成功时返回(RET_OK, data)，data是[{'trade_date_type': 0, 'time': '2018-01-05'}]数组；失败时返回(RET_ERROR, data)，其中data是错误描述字符串
         """
-        if market is None or is_str(market) is False:
+        if market is None:
+            market = TradeDateMarket.NONE  # 当market入参是空，设置为TradeDateMarket.NONE
+        if is_str(market) is False:
             error_str = ERROR_STR_PREFIX + "the type of market param is wrong"
             return RET_ERROR, error_str
 
         ret, msg, start, end = normalize_start_end_date(start, end, 365)
         if ret != RET_OK:
             return ret, msg
+
+        if code is not None and is_str(code) is False:
+            error_str = ERROR_STR_PREFIX + "the type of code is wrong"
+            return RET_ERROR, error_str
 
         query_processor = self._get_sync_query_processor(
             RequestTradeDayQuery.pack_req, RequestTradeDayQuery.unpack_rsp)
@@ -229,7 +195,8 @@ class OpenQuoteContext(OpenContextBase):
             'market': market,
             'start_date': start,
             'end_date': end,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'code': code
         }
         ret_code, msg, trade_day_list = query_processor(**kargs)
 
@@ -253,7 +220,7 @@ class OpenQuoteContext(OpenContextBase):
             name                str            名字
             lot_size            int            每手数量
             stock_type          str            股票类型，参见SecurityType
-            stock_child_type    str            涡轮子类型，参见WrtType
+            stock_child_type    str            窝轮子类型，参见WrtType
             stock_owner         str            所属正股的代码
             option_type         str            期权类型，Qot_Common.OptionType
             strike_time         str            行权日
@@ -499,8 +466,8 @@ class OpenQuoteContext(OpenContextBase):
                 dividend_ratio_ttm         float          股息率TTM（该字段为百分比字段，默认不展示%）
                 dividend_lfy               float          股息LFY，上一年度派息
                 dividend_lfy_ratio         float          股息率LFY（该字段为百分比字段，默认不展示
-                stock_owner                str            涡轮所属正股的代码或期权的标的股代码
-                wrt_valid                  bool           是否是窝轮（为true时以下涡轮相关的字段才有合法数据）
+                stock_owner                str            窝轮所属正股的代码或期权的标的股代码
+                wrt_valid                  bool           是否是窝轮（为true时以下窝轮相关的字段才有合法数据）
                 wrt_conversion_ratio       float          换股比率（该字段为比例字段，默认不展示%）
                 wrt_type                   str            窝轮类型，参见WrtType
                 wrt_strike_price           float          行使价格
@@ -525,16 +492,16 @@ class OpenQuoteContext(OpenContextBase):
                 wrt_inline_price_status    str            界内界外，仅界内证支持该字段，参见PriceType
                 lot_size                   int            每手股数
                 price_spread               float          当前摆盘价差亦即摆盘数据的买档或卖档的相邻档位的报价差
-                ask_price                   float          卖价
-                bid_price                   float          买价
-                ask_vol                       float          卖量
-                bid_vol                       float          买量
-                enable_margin               bool              是否可融资，如果为true，后两个字段才有意义
-                mortgage_ratio               float          股票抵押率（该字段为百分比字段，默认不展示%）
+                ask_price                  float          卖价
+                bid_price                  float          买价
+                ask_vol                    float          卖量
+                bid_vol                    float          买量
+                enable_margin              bool           是否可融资，如果为true，后两个字段才有意义
+                mortgage_ratio             float          股票抵押率（该字段为百分比字段，默认不展示%）
                 long_margin_initial_ratio  float          融资初始保证金率（该字段为百分比字段，默认不展示%）
-                enable_short_sell           bool              是否可卖空，如果为true，后三个字段才有意义
-                short_sell_rate               float          卖空参考利率（该字段为百分比字段，默认不展示%）
-                short_available_volume       int              剩余可卖空数量
+                enable_short_sell          bool           是否可卖空，如果为true，后三个字段才有意义
+                short_sell_rate            float          卖空参考利率（该字段为百分比字段，默认不展示%）
+                short_available_volume     int            剩余可卖空数量
                 short_margin_initial_ratio float          卖空（融券）初始保证金率（该字段为百分比字段，默认不展示%
                 amplitude                  float          振幅（该字段为百分比字段，默认不展示%）
                 avg_price                  float          平均价
@@ -557,12 +524,13 @@ class OpenQuoteContext(OpenContextBase):
                 option_vega                float          希腊值 Vega
                 option_theta               float          希腊值 Theta
                 option_rho                 float          希腊值 Rho
-                option_net_open_interest    int           净未平仓合约数
-                option_expiry_date_distance  int          距离到期日天数
+                option_net_open_interest   int            净未平仓合约数
+                option_expiry_date_distance    int        距离到期日天数
                 option_contract_nominal_value  float      合约名义金额
                 option_owner_lot_multiplier    float      相等正股手数，指数期权无该字段
                 option_area_type           str            期权地区类型，见 OptionAreaType_
                 option_contract_multiplier float          合约乘数，指数期权特有字段
+                index_option_type          str            指数期权类型，见 IndexOptionType
                 index_raise_count          int            指数类型上涨支数
                 index_fall_count           int            指数类型下跌支数
                 index_requal_count         int            指数类型平盘支数
@@ -660,7 +628,8 @@ class OpenQuoteContext(OpenContextBase):
                            'option_contract_nominal_value',
                            'option_owner_lot_multiplier',
                            'option_area_type',
-                           'option_contract_multiplier'
+                           'option_contract_multiplier',
+                           'index_option_type'
                            ]
 
         index_col_list = ['index_raise_count',
@@ -1297,6 +1266,7 @@ class OpenQuoteContext(OpenContextBase):
                 last_settle_price       float          昨结，期货特有字段
                 position                float          持仓量，期货特有字段
                 position_change         float          日增仓，期货特有字段
+                index_option_type       str            指数期权的类型，仅在指数期权有效
                 =====================   ===========   ==============================================================
         """
         code_list = unique_and_normalize_list(code_list)
@@ -1326,7 +1296,7 @@ class OpenQuoteContext(OpenContextBase):
             'premium', 'delta', 'gamma', 'vega', 'theta', 'rho',
             'net_open_interest', 'expiry_date_distance', 'contract_nominal_value',
             'owner_lot_multiplier', 'option_area_type', 'contract_multiplier',
-            'last_settle_price','position','position_change'
+            'last_settle_price', 'position', 'position_change', 'index_option_type'
         ]
 
         col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)
@@ -1502,7 +1472,7 @@ class OpenQuoteContext(OpenContextBase):
         """
         获取证券的关联数据
         :param code: 证券id，str，例如HK.00700
-        :param reference_type: 要获得的相关数据，参见SecurityReferenceType。例如WARRANT，表示获取正股相关的涡轮
+        :param reference_type: 要获得的相关数据，参见SecurityReferenceType。例如WARRANT，表示获取正股相关的窝轮
         :return: (ret, data)
 
                 ret == RET_OK 返回pd dataframe数据，数据列格式如下
@@ -1516,8 +1486,8 @@ class OpenQuoteContext(OpenContextBase):
                 stock_type                  str           证券类型，参见SecurityType
                 stock_name                  str           证券名字
                 list_time                   str           上市时间（美股默认是美东时间，港股A股默认是北京时间）
-                wrt_valid                   bool          是否是涡轮，如果为True，下面wrt开头的字段有效
-                wrt_type                    str           涡轮类型，参见WrtType
+                wrt_valid                   bool          是否是窝轮，如果为True，下面wrt开头的字段有效
+                wrt_type                    str           窝轮类型，参见WrtType
                 wrt_code                    str           所属正股
                 future_valid                bool          是否是期货，如果为True，下面future开头的字段有效
                 future_main_contract        bool          是否主连合约（期货特有字段）
@@ -1807,44 +1777,6 @@ class OpenQuoteContext(OpenContextBase):
         option_chain.index = range(len(option_chain))
 
         return RET_OK, option_chain
-
-    def get_order_detail(self, code):
-        return RET_ERROR, "this service has been cancelled"
-
-        """
-        查询A股Level 2权限下提供的委托明细
-
-        :param code: 股票代码,例如：'HK.02318'
-        :return: (ret, data)
-
-                ret == RET_OK data为1个dict，包含以下数据
-
-                ret != RET_OK data为错误字符串
-
-                {‘code’: 股票代码
-                ‘Ask’:[ order_num, [order_volume1, order_volume2] ]
-                ‘Bid’: [ order_num, [order_volume1, order_volume2] ]
-                }
-
-                'Ask'：卖盘， 'Bid'买盘。order_num指委托订单数量，order_volume是每笔委托的委托量，当前最多返回前50笔委托的委托数量。即order_num有可能多于后面的order_volume
-        """
-
-        if code is None or is_str(code) is False:
-            error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
-            return RET_ERROR, error_str
-
-        query_processor = self._get_sync_query_processor(
-            OrderDetail.pack_req, OrderDetail.unpack_rsp)
-        kargs = {
-            "code": code,
-            "conn_id": self.get_sync_conn_id()
-        }
-
-        ret_code, msg, order_detail = query_processor(**kargs)
-        if ret_code == RET_ERROR:
-            return ret_code, msg
-
-        return RET_OK, order_detail
 
     def get_warrant(self, stock_owner='', req=None):
         """
@@ -2613,6 +2545,56 @@ class OpenQuoteContext(OpenContextBase):
                 'code',
                 'stock_name',
                 'market_state'
+            ]
+            ret_frame = pd.DataFrame(ret, columns=col_list)
+            return RET_OK, ret_frame
+        else:
+            return RET_ERROR, "empty data"
+
+    def get_option_expiration_date(self, code, index_option_type=IndexOptionType.NORMAL):
+        """
+         获取期权链到期日
+        :param code 标的股票代码
+        :param index_option_type: 指数期权类型，IndexOptionType
+        :return: (ret, data)
+        ret != RET_OK 返回错误字符串
+        ret == RET_OK data为DataFrame类型，字段如下:
+        ============================   ==================   ================================
+        参数                            类型                 说明
+        ============================   ==================   ================================
+        strike_time                    str                  期权链行权日（港股和 A 股市场默认是北京时间，美股市场默认是美东时间）
+        option_expiry_date_distance    int                  距离到期日天数，负数表示已过期
+        expiration_cycle               ExpirationCycle      交割周期（仅用于香港指数期权）
+        ============================   ==================   ================================
+        """
+
+        if code is None or is_str(code) is False:
+            error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
+            return RET_ERROR, error_str
+
+        r, n = IndexOptionType.to_number(index_option_type)
+        if r is False:
+            msg = ERROR_STR_PREFIX + "the type of index_option_type param is wrong"
+            return RET_ERROR, msg
+
+        query_processor = self._get_sync_query_processor(
+            GetOptionExpirationDate.pack_req,
+            GetOptionExpirationDate.unpack,
+        )
+
+        kargs = {
+            "code": code,
+            "index_option_type": index_option_type,
+            "conn_id": self.get_sync_conn_id()
+        }
+        ret_code, msg, ret = query_processor(**kargs)
+        if ret_code == RET_ERROR:
+            return ret_code, msg
+        if isinstance(ret, list):
+            col_list = [
+                'strike_time',
+                'option_expiry_date_distance',
+                'expiration_cycle'
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)
             return RET_OK, ret_frame

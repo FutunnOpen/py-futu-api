@@ -46,6 +46,7 @@ class OpenContextBase(object):
         self._reconnect_interval = 8  # 重试连接的间隔
         self._sync_query_connect_timeout = None
         self._keep_alive_fail_count = 0
+        self._last_recv_time = datetime.now()
         self._is_encrypt = is_encrypt
         if self.is_encrypt():
             assert SysConfig.INIT_RSA_FILE != '', Err.NotSetRSAFile.text
@@ -74,7 +75,7 @@ class OpenContextBase(object):
         self._close()
         
     def __enter__(self):
-        pass
+        return self
 
     def __exit__(self, t, v, tb):
         self._close()
@@ -226,6 +227,8 @@ class OpenContextBase(object):
                 if ret_code != RET_OK:
                     return ret_code, msg, None
 
+                with self._lock:
+                    self._last_recv_time = datetime.now()
                 ret_code, msg, content = unpack_func(rsp_str)
                 if ret_code != RET_OK:
                     return ret_code, msg, None
@@ -306,6 +309,8 @@ class OpenContextBase(object):
                 market_hk               str            香港市场状态，参见MarketState
                 market_hkfuture         str            香港期货市场状态，参见MarketState
                 market_usfuture         str            美国期货市场状态，参见MarketState
+                market_sgfuture         str            新加坡期货市场状态，参见MarketState
+                market_jpfuture         str            日本期货市场状态，参见MarketState
                 server_ver              str            FutuOpenD版本号
                 trd_logined             str            '1'：已登录交易服务器，'0': 未登录交易服务器
                 qot_logined             str            '1'：已登录行情服务器，'0': 未登录行情服务器
@@ -398,6 +403,8 @@ class OpenContextBase(object):
         elif ret_code == RET_OK:
             item = CallbackItem(self, proto_info.proto_id, rsp_pb)
             self._callback_executor.queue.put(item)
+            with self._lock:
+                self._last_recv_time = datetime.now()
 
     def on_activate(self, conn_id, now):
         with self._lock:
@@ -440,7 +447,9 @@ class OpenContextBase(object):
                 self._sync_conn_id = conn_info['conn_id']
                 self._keep_alive_interval = conn_info['keep_alive_interval'] * 4 / 5
                 self._net_mgr.set_conn_info(conn_id, conn_info)
-                self._last_keep_alive_time = datetime.now()
+                now = datetime.now()
+                self._last_keep_alive_time = now
+                self._last_recv_time = now
                 FutuConnMng.add_conn(conn_info)
                 logger.info(FTLog.make_log_msg("InitConnect ok", conn_id=conn_id, info=conn_info))
             else:
@@ -456,9 +465,14 @@ class OpenContextBase(object):
             else:
                 self._keep_alive_fail_count += 1
 
+            now = datetime.now()
+
             if self._keep_alive_fail_count >= 3:
-                logger.warning('Fail to recv KeepAlive for 3 times')
-                should_reconnect = True
+                if (now - self._last_recv_time).total_seconds() < self._keep_alive_interval:
+                    self._keep_alive_fail_count = 0
+                else:
+                    logger.warning('Fail to recv KeepAlive for 3 times')
+                    should_reconnect = True
 
         if should_reconnect:
             self._wait_reconnect()

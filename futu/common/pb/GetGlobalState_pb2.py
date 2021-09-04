@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='GetGlobalState.proto',
   package='GetGlobalState',
   syntax='proto2',
-  serialized_pb=_b('\n\x14GetGlobalState.proto\x12\x0eGetGlobalState\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x15\n\x03\x43\x32S\x12\x0e\n\x06userID\x18\x01 \x02(\x04\"\xda\x02\n\x03S2C\x12\x10\n\x08marketHK\x18\x01 \x02(\x05\x12\x10\n\x08marketUS\x18\x02 \x02(\x05\x12\x10\n\x08marketSH\x18\x03 \x02(\x05\x12\x10\n\x08marketSZ\x18\x04 \x02(\x05\x12\x16\n\x0emarketHKFuture\x18\x05 \x02(\x05\x12\x16\n\x0emarketUSFuture\x18\x0f \x01(\x05\x12\x12\n\nqotLogined\x18\x06 \x02(\x08\x12\x12\n\ntrdLogined\x18\x07 \x02(\x08\x12\x11\n\tserverVer\x18\x08 \x02(\x05\x12\x15\n\rserverBuildNo\x18\t \x02(\x05\x12\x0c\n\x04time\x18\n \x02(\x03\x12\x11\n\tlocalTime\x18\x0b \x01(\x01\x12,\n\rprogramStatus\x18\x0c \x01(\x0b\x32\x15.Common.ProgramStatus\x12\x14\n\x0cqotSvrIpAddr\x18\r \x01(\t\x12\x14\n\x0ctrdSvrIpAddr\x18\x0e \x01(\t\x12\x0e\n\x06\x63onnID\x18\x10 \x01(\x04\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.GetGlobalState.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.GetGlobalState.S2CBE\n\x13\x63om.futu.openapi.pbZ.github.com/futuopen/ftapi4go/pb/getglobalstate')
+  serialized_pb=_b('\n\x14GetGlobalState.proto\x12\x0eGetGlobalState\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x15\n\x03\x43\x32S\x12\x0e\n\x06userID\x18\x01 \x02(\x04\"\x8a\x03\n\x03S2C\x12\x10\n\x08marketHK\x18\x01 \x02(\x05\x12\x10\n\x08marketUS\x18\x02 \x02(\x05\x12\x10\n\x08marketSH\x18\x03 \x02(\x05\x12\x10\n\x08marketSZ\x18\x04 \x02(\x05\x12\x16\n\x0emarketHKFuture\x18\x05 \x02(\x05\x12\x16\n\x0emarketUSFuture\x18\x0f \x01(\x05\x12\x16\n\x0emarketSGFuture\x18\x11 \x01(\x05\x12\x16\n\x0emarketJPFuture\x18\x12 \x01(\x05\x12\x12\n\nqotLogined\x18\x06 \x02(\x08\x12\x12\n\ntrdLogined\x18\x07 \x02(\x08\x12\x11\n\tserverVer\x18\x08 \x02(\x05\x12\x15\n\rserverBuildNo\x18\t \x02(\x05\x12\x0c\n\x04time\x18\n \x02(\x03\x12\x11\n\tlocalTime\x18\x0b \x01(\x01\x12,\n\rprogramStatus\x18\x0c \x01(\x0b\x32\x15.Common.ProgramStatus\x12\x14\n\x0cqotSvrIpAddr\x18\r \x01(\t\x12\x14\n\x0ctrdSvrIpAddr\x18\x0e \x01(\t\x12\x0e\n\x06\x63onnID\x18\x10 \x01(\x04\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.GetGlobalState.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.GetGlobalState.S2CBE\n\x13\x63om.futu.openapi.pbZ.github.com/futuopen/ftapi4go/pb/getglobalstate')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -109,70 +109,84 @@ _S2C = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='qotLogined', full_name='GetGlobalState.S2C.qotLogined', index=6,
+      name='marketSGFuture', full_name='GetGlobalState.S2C.marketSGFuture', index=6,
+      number=17, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='marketJPFuture', full_name='GetGlobalState.S2C.marketJPFuture', index=7,
+      number=18, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='qotLogined', full_name='GetGlobalState.S2C.qotLogined', index=8,
       number=6, type=8, cpp_type=7, label=2,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='trdLogined', full_name='GetGlobalState.S2C.trdLogined', index=7,
+      name='trdLogined', full_name='GetGlobalState.S2C.trdLogined', index=9,
       number=7, type=8, cpp_type=7, label=2,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='serverVer', full_name='GetGlobalState.S2C.serverVer', index=8,
+      name='serverVer', full_name='GetGlobalState.S2C.serverVer', index=10,
       number=8, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='serverBuildNo', full_name='GetGlobalState.S2C.serverBuildNo', index=9,
+      name='serverBuildNo', full_name='GetGlobalState.S2C.serverBuildNo', index=11,
       number=9, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='time', full_name='GetGlobalState.S2C.time', index=10,
+      name='time', full_name='GetGlobalState.S2C.time', index=12,
       number=10, type=3, cpp_type=2, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='localTime', full_name='GetGlobalState.S2C.localTime', index=11,
+      name='localTime', full_name='GetGlobalState.S2C.localTime', index=13,
       number=11, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='programStatus', full_name='GetGlobalState.S2C.programStatus', index=12,
+      name='programStatus', full_name='GetGlobalState.S2C.programStatus', index=14,
       number=12, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='qotSvrIpAddr', full_name='GetGlobalState.S2C.qotSvrIpAddr', index=13,
+      name='qotSvrIpAddr', full_name='GetGlobalState.S2C.qotSvrIpAddr', index=15,
       number=13, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='trdSvrIpAddr', full_name='GetGlobalState.S2C.trdSvrIpAddr', index=14,
+      name='trdSvrIpAddr', full_name='GetGlobalState.S2C.trdSvrIpAddr', index=16,
       number=14, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='connID', full_name='GetGlobalState.S2C.connID', index=15,
+      name='connID', full_name='GetGlobalState.S2C.connID', index=17,
       number=16, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -191,7 +205,7 @@ _S2C = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=96,
-  serialized_end=442,
+  serialized_end=490,
 )
 
 
@@ -221,8 +235,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=444,
-  serialized_end=487,
+  serialized_start=492,
+  serialized_end=535,
 )
 
 
@@ -273,8 +287,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=489,
-  serialized_end=589,
+  serialized_start=537,
+  serialized_end=637,
 )
 
 _S2C.fields_by_name['programStatus'].message_type = Common__pb2._PROGRAMSTATUS

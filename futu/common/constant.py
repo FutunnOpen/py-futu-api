@@ -24,7 +24,7 @@ class ProtoId(object):
     InitConnect = 1001  # 初始化连接
     GetGlobalState = 1002  # 获取全局状态
     Notify = 1003  # 通知推送
-    KeepAlive = 1004  # 通知推送
+    KeepAlive = 1004  # 心跳保活
     GetUserInfo = 1005  # 获取用户信息
     Verification = 1006  # 请求或输入验证码
     GetDelayStatistics = 1007  # 获取延迟统计
@@ -48,6 +48,7 @@ class ProtoId(object):
     Trd_GetHistoryOrderList = 2221  # 获取历史订单列表
     Trd_GetHistoryOrderFillList = 2222  # 获取历史成交列表
     Trd_GetMaxTrdQtys = 2111    # 查询最大买卖数量
+    Trd_GetMarginRatio = 2223  # 获取融资融券数据
 
     # 订阅数据
     Qot_Sub = 3001  # 订阅或者反订阅
@@ -73,7 +74,6 @@ class ProtoId(object):
     Qot_RequestRehab = 3105  # 获取除权信息
 
     # 其他行情数据
-    Qot_GetTradeDate = 3200         # 获取市场交易日
     Qot_GetSuspend = 3201           # 获取股票停牌信息
     Qot_GetStaticInfo = 3202        # 获取股票列表
     Qot_GetSecuritySnapshot = 3203  # 获取股票快照
@@ -84,10 +84,7 @@ class ProtoId(object):
     Qot_GetHoldingChangeList = 3208     # 获取高管持股变动
     Qot_GetOptionChain = 3209           # 获取期权链
 
-    Qot_GetOrderDetail = 3016           # 获取委托明细
-    Qot_UpdateOrderDetail = 3017        # 推送委托明细
-
-    Qot_GetWarrant = 3210          # 拉取涡轮信息
+    Qot_GetWarrant = 3210          # 拉取窝轮信息
     Qot_GetCapitalFlow = 3211          # 获取资金流向
     Qot_GetCapitalDistribution = 3212  # 获取资金分布
 
@@ -103,6 +100,8 @@ class ProtoId(object):
 
     Qot_GetUserSecurityGroup = 3222  # 获取自选股分组
     Qot_GetMarketState = 3223  # 获取指定品种的市场状态
+    Qot_GetOptionExpirationDate = 3224  # 获取期权到期日
+
     All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
@@ -255,6 +254,8 @@ class Market(FtEnum):
     SH = "SH"
     SZ = "SZ"
     HK_FUTURE = "HK_FUTURE"
+    SG = "SG"
+    JP = "JP"
 
     def load_dic(self):
         return {
@@ -264,6 +265,8 @@ class Market(FtEnum):
             self.SH: Qot_Common_pb2.QotMarket_CNSH_Security,
             self.SZ: Qot_Common_pb2.QotMarket_CNSZ_Security,
             self.HK_FUTURE: Qot_Common_pb2.QotMarket_HK_Future,
+            self.SG: Qot_Common_pb2.QotMarket_SG_Security,
+            self.JP: Qot_Common_pb2.QotMarket_JP_Security
         }
 
 QOT_MARKET_TO_TRD_SEC_MARKET_MAP = {
@@ -273,6 +276,8 @@ QOT_MARKET_TO_TRD_SEC_MARKET_MAP = {
     Qot_Common_pb2.QotMarket_HK_Security: Trd_Common_pb2.TrdSecMarket_HK,
     Qot_Common_pb2.QotMarket_HK_Future: Trd_Common_pb2.TrdSecMarket_HK,
     Qot_Common_pb2.QotMarket_US_Security: Trd_Common_pb2.TrdSecMarket_US,
+    Qot_Common_pb2.QotMarket_SG_Security: Trd_Common_pb2.TrdSecMarket_SG,
+    Qot_Common_pb2.QotMarket_JP_Security: Trd_Common_pb2.TrdSecMarket_JP,
 }
 
 
@@ -393,7 +398,7 @@ class SecurityType(FtEnum):
      ..  py:attribute:: ETF
       交易所交易基金(Exchange Traded Funds)
      ..  py:attribute:: WARRANT
-      港股涡轮牛熊证
+      港股窝轮牛熊证
      ..  py:attribute:: BOND
       债券
     ..  py:attribute:: DRVT
@@ -461,14 +466,11 @@ class SubType(FtEnum):
       分时
      ..  py:attribute:: BROKER
       买卖经纪
-     ..  py:attribute:: ORDER_DETAIL
-      委托明细
     """
     NONE = "N/A"
     TICKER = "TICKER"
     QUOTE = "QUOTE"
     ORDER_BOOK = "ORDER_BOOK"
-    # ORDER_DETAIL = "ORDER_DETAIL"
     K_1M = "K_1M"
     K_3M = "K_3M"
     K_5M = "K_5M"
@@ -1358,7 +1360,7 @@ class WrtType(FtEnum):
 '''-------------------------SortField----------------------------'''
 
 
-# 涡轮排序
+# 窝轮排序
 class SortField(FtEnum):
     NONE = "N/A"                                       # 未知
     CODE = "CODE"                                      # 代码
@@ -1472,7 +1474,7 @@ class SortField(FtEnum):
 '''-------------------------IpoPeriod----------------------------'''
 
 
-# 涡轮上市日
+# 窝轮上市日
 class IpoPeriod(FtEnum):
     NONE = "N/A"                                       # 未知
     TODAY = "TODAY"                                    # 今日上市
@@ -1495,7 +1497,7 @@ class IpoPeriod(FtEnum):
 '''-------------------------PriceType----------------------------'''
 
 
-# 涡轮价外/内,界内证表示界内界外
+# 窝轮价外/内,界内证表示界内界外
 class PriceType(FtEnum):
     NONE = "N/A"                                       # 未知
     OUTSIDE = "OUTSIDE"                                # 价外,界内证表示界外
@@ -1512,7 +1514,7 @@ class PriceType(FtEnum):
 '''-------------------------WarrantStatus----------------------------'''
 
 
-# 涡轮状态
+# 窝轮状态
 class WarrantStatus(FtEnum):
     NONE = "N/A"                                       # 未知
     NORMAL = "NORMAL"                                  # 正常状态
@@ -1533,7 +1535,7 @@ class WarrantStatus(FtEnum):
 '''-------------------------Issuer----------------------------'''
 
 
-# 涡轮发行人
+# 窝轮发行人
 class Issuer(FtEnum):
     NONE = "N/A"                                       # 未知
     SG = "SG"                                          # 法兴
@@ -1559,6 +1561,7 @@ class Issuer(FtEnum):
     VT = "VT"                                          # 瑞通
     KC = "KC"                                          # 比联
     MS = "MS"                                          # 摩利
+    GJ = "GJ"                                          # 国君
 
     def load_dic(self):
         return {
@@ -1585,7 +1588,8 @@ class Issuer(FtEnum):
             self.HT: Qot_Common_pb2.Issuer_HT,
             self.VT: Qot_Common_pb2.Issuer_VT,
             self.KC: Qot_Common_pb2.Issuer_KC,
-            self.MS: Qot_Common_pb2.Issuer_MS
+            self.MS: Qot_Common_pb2.Issuer_MS,
+            self.GJ: Qot_Common_pb2.Issuer_GJ
         }
 
 
@@ -2224,13 +2228,15 @@ class Currency(FtEnum):
     HKD = 'HKD'  # 港币
     USD = 'USD'  # 美元
     CNH = 'CNH'  # 离岸人民币
+    JPY = 'JPY'  # 日元
 
     def load_dic(self):
         return {
             self.NONE: Trd_Common_pb2.Currency_Unknown,
             self.HKD: Trd_Common_pb2.Currency_HKD,
             self.USD: Trd_Common_pb2.Currency_USD,
-            self.CNH: Trd_Common_pb2.Currency_CNH
+            self.CNH: Trd_Common_pb2.Currency_CNH,
+            self.JPY: Trd_Common_pb2.Currency_JPY
         }
 
 class CltRiskLevel(FtEnum):
@@ -2251,6 +2257,33 @@ class CltRiskLevel(FtEnum):
             self.OPT_DANGER: Trd_Common_pb2.CltRiskLevel_OptDanger
         }
 
+
+class CltRiskStatus(FtEnum):
+    NONE = 'N/A'
+    LEVEL1 = 'LEVEL1'
+    LEVEL2 = 'LEVEL2'
+    LEVEL3 = 'LEVEL3'
+    LEVEL4 = 'LEVEL4'
+    LEVEL5 = 'LEVEL5'
+    LEVEL6 = 'LEVEL6'
+    LEVEL7 = 'LEVEL7'
+    LEVEL8 = 'LEVEL8'
+    LEVEL9 = 'LEVEL9'
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.CltRiskStatus_Unknown,
+            self.LEVEL1: Trd_Common_pb2.CltRiskStatus_Level1,
+            self.LEVEL2: Trd_Common_pb2.CltRiskStatus_Level2,
+            self.LEVEL3: Trd_Common_pb2.CltRiskStatus_Level3,
+            self.LEVEL4: Trd_Common_pb2.CltRiskStatus_Level4,
+            self.LEVEL5: Trd_Common_pb2.CltRiskStatus_Level5,
+            self.LEVEL6: Trd_Common_pb2.CltRiskStatus_Level6,
+            self.LEVEL7: Trd_Common_pb2.CltRiskStatus_Level7,
+            self.LEVEL8: Trd_Common_pb2.CltRiskStatus_Level8,
+            self.LEVEL9: Trd_Common_pb2.CltRiskStatus_Level9,
+        }
+
 class TradeDateMarket(FtEnum):
     NONE = 'N/A'  # 未知
     HK = 'HK'  # 港股市场
@@ -2258,6 +2291,8 @@ class TradeDateMarket(FtEnum):
     CN = 'CN'  # A股市场
     NT = 'NT'  # 深（沪）股通
     ST = 'ST'  # 港股通（深、沪）
+    JP_FUTURE = 'JP_FUTURE'  # 日本期货
+    SG_FUTURE = 'SG_FUTURE'  # 新加坡期货
 
     def load_dic(self):
         return {
@@ -2266,7 +2301,9 @@ class TradeDateMarket(FtEnum):
             self.US: Qot_Common_pb2.TradeDateMarket_US,
             self.CN: Qot_Common_pb2.TradeDateMarket_CN,
             self.NT: Qot_Common_pb2.TradeDateMarket_NT,
-            self.ST: Qot_Common_pb2.TradeDateMarket_ST
+            self.ST: Qot_Common_pb2.TradeDateMarket_ST,
+            self.JP_FUTURE: Qot_Common_pb2.TradeDateMarket_JP_Future,
+            self.SG_FUTURE: Qot_Common_pb2.TradeDateMarket_SG_Future,
         }
 
 class SetPriceReminderOp(FtEnum):
@@ -2318,6 +2355,8 @@ class PriceReminderType(FtEnum):
     ASK_PRICE_DOWN = "ASK_PRICE_DOWN"  # 卖一价低于
     BID_VOL_UP = "BID_VOL_UP"  # 买一量高于
     ASK_VOL_UP = "ASK_VOL_UP"  # 卖一量高于
+    THREE_MIN_CHANGE_RATE_UP = "THREE_MIN_CHANGE_RATE_UP"  # 3分钟涨幅
+    THREE_MIN_CHANGE_RATE_DOWN = "THREE_MIN_CHANGE_RATE_DOWN"  # 3分钟跌幅
 
     def load_dic(self):
         return {
@@ -2335,6 +2374,8 @@ class PriceReminderType(FtEnum):
             self.ASK_PRICE_DOWN: Qot_Common_pb2.PriceReminderType_AskPriceDown,
             self.BID_VOL_UP: Qot_Common_pb2.PriceReminderType_BidVolUp,
             self.ASK_VOL_UP: Qot_Common_pb2.PriceReminderType_AskVolUp,
+            self.THREE_MIN_CHANGE_RATE_UP: Qot_Common_pb2.PriceReminderType_3MinChangeRateUp,
+            self.THREE_MIN_CHANGE_RATE_DOWN: Qot_Common_pb2.PriceReminderType_3MinChangeRateDown,
         }
 
 class PriceReminderMarketStatus(FtEnum):
@@ -2406,10 +2447,38 @@ class SecurityFirm(FtEnum):
     NONE = 'N/A'
     FUTUSECURITIES = 'FUTUSECURITIES'
     FUTUINC = 'FUTUINC'
+    FUTUSG = 'FUTUSG'
 
     def load_dic(self):
         return {
             self.NONE: Trd_Common_pb2.SecurityFirm_Unknown,
             self.FUTUSECURITIES: Trd_Common_pb2.SecurityFirm_FutuSecurities,
-            self.FUTUINC: Trd_Common_pb2.SecurityFirm_FutuInc
+            self.FUTUINC: Trd_Common_pb2.SecurityFirm_FutuInc,
+            self.FUTUSG: Trd_Common_pb2.SecurityFirm_FutuSG
+        }
+
+# 模拟交易账号类型
+class SimAccType(FtEnum):
+    NONE = 'N/A'
+    STOCK = 'STOCK'
+    OPTION = 'OPTION'
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.SimAccType_Unknown,
+            self.STOCK: Trd_Common_pb2.SimAccType_Stock,
+            self.OPTION: Trd_Common_pb2.SimAccType_Option
+        }
+
+# 期权交割周期
+class ExpirationCycle(FtEnum):
+    NONE = 'N/A'
+    WEEK = 'WEEK'
+    MONTH = 'MONTH'
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.ExpirationCycle_Unknown,
+            self.WEEK: Qot_Common_pb2.ExpirationCycle_Week,
+            self.MONTH: Qot_Common_pb2.ExpirationCycle_Month
         }

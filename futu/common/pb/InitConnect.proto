@@ -25,6 +25,7 @@ message S2C
 	required string connAESKey = 4; //此连接后续AES加密通信的Key，固定为16字节长字符串
 	required int32 keepAliveInterval = 5; //心跳保活间隔
 	optional string aesCBCiv = 6; //AES加密通信CBC加密模式的iv，固定为16字节长字符串
+	optional int32 userAttribution = 7; //用户类型，牛牛用户或MooMoo用户
 }
 
 message Request

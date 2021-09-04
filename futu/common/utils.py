@@ -182,6 +182,10 @@ def merge_trd_mkt_stock_str(trd_sec_mkt, partial_stock_str):
         mkt_qot = Market.SZ
     elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_US:
         mkt_qot = Market.US
+    elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_SG:
+        mkt_qot = Market.SG
+    elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_JP:
+        mkt_qot = Market.JP
     _, mkt = Market.to_number(mkt_qot)
     return merge_qot_mkt_stock_str(mkt, partial_stock_str)
 
@@ -204,19 +208,19 @@ def is_str(obj):
 
 def price_to_str_int1000(price):
     return str(int(round(float(price) * 1000,
-                         0))) if str(price) is not '' else ''
+                         0))) if str(price) != '' else ''
 
 
 # 1000*int price to float val
 def int1000_price_to_float(price):
     return round(float(price) / 1000.0,
-                 3) if str(price) is not '' else float(0)
+                 3) if str(price) != '' else float(0)
 
 
 # 10^9 int price to float val
 def int10_9_price_to_float(price):
     return round(float(price) / float(10**9),
-                 3) if str(price) is not '' else float(0)
+                 3) if str(price) != '' else float(0)
 
 
 # list 参数除重及规整
@@ -336,6 +340,10 @@ class ProtobufMap(dict):
         from futu.common.pb.Trd_GetHistoryOrderFillList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetHistoryOrderFillList] = Response()
 
+        """ Qot_GetReference = 2223  获取正股相关股票，暂时只有窝轮"""
+        from futu.common.pb.Trd_GetMarginRatio_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Trd_GetMarginRatio] = Response()
+
         """ Qot_Sub = 3001  # 订阅或者反订阅 """
         from futu.common.pb.Qot_Sub_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_Sub] = Response()
@@ -400,11 +408,6 @@ class ProtobufMap(dict):
         from futu.common.pb.Qot_UpdatePriceReminder_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdatePriceReminder] = Response()
 
-
-        """ Qot_GetTradeDate = 3200  # 获取市场交易日 """
-        from futu.common.pb.Qot_GetTradeDate_pb2 import Response
-        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetTradeDate] = Response()
-
         """ Qot_GetSuspend = 3201  # 获取股票停牌信息 """
         from futu.common.pb.Qot_GetSuspend_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetSuspend] = Response()
@@ -447,15 +450,7 @@ class ProtobufMap(dict):
         from futu.common.pb.Qot_GetOptionChain_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetOptionChain] = Response()
 
-        """ Qot_GetOrderDetail = 3016 获取委托明细 """
-        from futu.common.pb.Qot_GetOrderDetail_pb2 import Response
-        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetOrderDetail] = Response()
-
-        """ Qot_UpdateOrderDetail = 3017 推送委托明细 """
-        from futu.common.pb.Qot_UpdateOrderDetail_pb2 import Response
-        ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdateOrderDetail] = Response()
-
-        """ Qot_GetWarrantData = 3210 获取涡轮 """
+        """ Qot_GetWarrantData = 3210 获取窝轮 """
         from futu.common.pb.Qot_GetWarrant_pb2 import Response as GetWarrantPBResponse
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetWarrant] = GetWarrantPBResponse()
 
@@ -505,6 +500,9 @@ class ProtobufMap(dict):
 
         from futu.common.pb.Qot_GetMarketState_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetMarketState] = Response()
+
+        from futu.common.pb.Qot_GetOptionExpirationDate_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Qot_GetOptionExpirationDate] = Response()
 
     def __getitem__(self, key):
         return ProtobufMap.created_protobuf_map[key] if key in ProtobufMap.created_protobuf_map else None

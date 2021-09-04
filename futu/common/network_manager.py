@@ -122,6 +122,7 @@ class NetManager:
         self._next_conn_id = 1
         self._lock = threading.RLock()
         self._mgr_lock = threading.Lock()  # Used to control start and stop
+        self._pending_read_conns = set()
         self._create_all()
 
     def _close_all(self):
@@ -178,8 +179,8 @@ class NetManager:
         return RET_OK, '', conn_id
 
     def poll(self):
-        now = datetime.now()
         events = self._selector.select(0.02)
+        now = datetime.now()
         for key, evt_mask in events:
             if key.fileobj == self._r_sock:
                 self._r_sock.recv(1024)
@@ -195,7 +196,13 @@ class NetManager:
                 self._on_write(conn)
 
             if evt_mask & selectors.EVENT_READ != 0:
+                self._pending_read_conns.discard(conn)
                 self._on_read(conn)
+
+        for conn in self._pending_read_conns:
+            self._on_read(conn)
+
+        self._pending_read_conns.clear()
 
         activate_elapsed_time = now - self._last_activate_time
         check_req_elapsed_time = now - self._last_check_req_time
@@ -483,6 +490,10 @@ class NetManager:
             del conn.readbuf[:head_len+body_len]
             packet_count += 1
             self._on_packet(conn, head_dict, Err.Ok.code, '', rsp_body)
+            if packet_count >= 10:
+                self._pending_read_conns.add(conn)
+                self._w_sock.send(b'1')
+                break  #收10个包强制跳出循环，避免长时间解包导致无法发送心跳
 
         if is_closed:
             self.close(conn.conn_id)

@@ -51,7 +51,7 @@ class StockQuoteHandlerBase(RspHandlerBase):
                 'premium', 'delta', 'gamma', 'vega', 'theta', 'rho',
                 'net_open_interest', 'expiry_date_distance', 'contract_nominal_value', 
                 'owner_lot_multiplier', 'option_area_type', 'contract_multiplier',
-                'last_settle_price','position','position_change'
+                'last_settle_price', 'position', 'position_change', 'index_option_type'
             ]
 
             col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)
@@ -334,19 +334,6 @@ class SysNotifyHandlerBase(RspHandlerBase):
 
         return ret_code, content
 
-#
-# class OrderDetailHandlerBase(RspHandlerBase):
-#     def __init__(self):
-#         super(OrderDetailHandlerBase, self).__init__()
-#
-#     def on_recv_rsp(self, rsp_pb):
-#         """receive response callback function"""
-#         ret_code, msg, data = OrderDetail.unpack_rsp(rsp_pb)
-#
-#         if ret_code != RET_OK:
-#             return ret_code, msg
-#         else:
-#             return ret_code, data
 
 class PriceReminderHandlerBase(RspHandlerBase):
     """

@@ -45,11 +45,12 @@ class GetAccountList:
         raw_acc_list = rsp_pb.s2c.accList
         acc_list = [{
             'acc_id': record.accID,
-            'trd_env': TrdEnv.to_string2(record.trdEnv),
-            'trdMarket_list': [ TrdMarket.to_string2(trdMkt) for trdMkt in record.trdMarketAuthList],
-            'acc_type': TrdAccType.to_string2(record.accType) if record.HasField("accType") else TrdAccType.NONE,
+            'trd_env': TrdEnv.to_string2(record.trdEnv) if record.HasField('trdEnv') else 'N/A',# 初始化枚举类型
+            'trdMarket_list': [TrdMarket.to_string2(trdMkt) for trdMkt in record.trdMarketAuthList],
+            'acc_type': TrdAccType.to_string2(record.accType) if record.HasField("accType") else TrdAccType.NONE,# 初始化枚举类型
             'card_num': record.cardNum if record.HasField("cardNum") else "N/A",
-            'security_firm': SecurityFirm.to_string2(record.securityFirm) if record.HasField('securityFirm') else SecurityFirm.NONE
+            'security_firm': SecurityFirm.to_string2(record.securityFirm) if record.HasField('securityFirm') else SecurityFirm.NONE,# 初始化枚举类型
+            'sim_acc_type': SimAccType.to_string2(record.simAccType) if record.HasField('simAccType') else SimAccType.NONE# 初始化枚举类型
         } for record in raw_acc_list]
 
         return RET_OK, "", acc_list
@@ -61,12 +62,13 @@ class UnlockTrade:
         pass
 
     @classmethod
-    def pack_req(cls, is_unlock, password_md5, conn_id):
+    def pack_req(cls, is_unlock, password_md5, conn_id, security_firm):
         """Convert from user request for trading days to PLS request"""
         from futu.common.pb.Trd_UnlockTrade_pb2 import Request
         req = Request()
         req.c2s.unlock = is_unlock
         req.c2s.pwdMD5 = password_md5
+        _, req.c2s.securityFirm = SecurityFirm.to_number(security_firm)
 
         return pack_pb_req(req, ProtoId.Trd_UnlockTrade, conn_id)
 
@@ -131,17 +133,26 @@ class AccInfoQuery:
         raw_funds = rsp_pb.s2c.funds
         accinfo_list = [{
             'power': raw_funds.power,
+            'max_power_short': raw_funds.maxPowerShort if raw_funds.HasField('maxPowerShort') else NoneDataValue,
+            'net_cash_power': raw_funds.netCashPower if raw_funds.HasField('netCashPower') else NoneDataValue,
             'total_assets': raw_funds.totalAssets,
             'cash': raw_funds.cash,
             'market_val': raw_funds.marketVal,
+            'long_mv': raw_funds.longMv if raw_funds.HasField('longMv') else NoneDataValue,
+            'short_mv': raw_funds.shortMv if raw_funds.HasField('shortMv') else NoneDataValue,
+            'pending_asset': raw_funds.pendingAsset if raw_funds.HasField('pendingAsset') else NoneDataValue,
+            'interest_charged_amount': raw_funds.debtCash if raw_funds.HasField('debtCash') else NoneDataValue,
             'frozen_cash': raw_funds.frozenCash,
-            'avl_withdrawal_cash': raw_funds.avlWithdrawalCash,
-            'currency': Currency.to_string2(raw_funds.currency) if raw_funds.HasField('currency') else Currency.NONE,
+            'avl_withdrawal_cash': raw_funds.avlWithdrawalCash if raw_funds.HasField('avlWithdrawalCash') else NoneDataValue,
+            'max_withdrawal': raw_funds.maxWithdrawal if raw_funds.HasField('maxWithdrawal') else NoneDataValue,
+            'currency': Currency.to_string2(raw_funds.currency) if raw_funds.HasField('currency') else Currency.NONE,# 初始化枚举类型
             'available_funds': raw_funds.availableFunds if raw_funds.HasField('availableFunds') else NoneDataValue,
             'unrealized_pl': raw_funds.unrealizedPL if raw_funds.HasField('unrealizedPL') else NoneDataValue,
             'realized_pl': raw_funds.realizedPL if raw_funds.HasField('realizedPL') else NoneDataValue,
-            'risk_level': CltRiskLevel.to_string2(raw_funds.riskLevel) if raw_funds.HasField('riskLevel') else CltRiskLevel.NONE,
+            'risk_level': CltRiskLevel.to_string2(raw_funds.riskLevel) if raw_funds.HasField('riskLevel') else CltRiskLevel.NONE,# 初始化枚举类型
+            'risk_status': CltRiskStatus.to_string2(raw_funds.riskStatus) if raw_funds.HasField('riskStatus') else CltRiskStatus.NONE,# 初始化枚举类型
             'initial_margin': raw_funds.initialMargin if raw_funds.HasField('initialMargin') else NoneDataValue,
+            'margin_call_margin': raw_funds.marginCallMargin if raw_funds.HasField('marginCallMargin') else NoneDataValue,
             'maintenance_margin': raw_funds.maintenanceMargin if raw_funds.HasField('maintenanceMargin') else NoneDataValue,
             'hk_cash': NoneDataValue,
             'hk_avl_withdrawal_cash': NoneDataValue,
@@ -208,9 +219,10 @@ class PositionListQuery:
                              "today_buy_qty": position.td_buyQty if position.HasField('td_buyQty') else NoneDataValue,
                              "today_buy_val": position.td_buyVal if position.HasField('td_buyVal') else NoneDataValue,
                              "today_pl_val": position.td_plVal if position.HasField('td_plVal') else NoneDataValue,
+                             "today_trd_val": position.td_plVal if position.HasField('td_trdVal') else NoneDataValue,
                              "today_sell_qty": position.td_sellQty if position.HasField('td_sellQty') else NoneDataValue,
                              "today_sell_val": position.td_sellVal if position.HasField('td_sellVal') else NoneDataValue,
-                             "position_side": PositionSide.to_string2(position.positionSide),
+                             "position_side": PositionSide.to_string2(position.positionSide) if position.HasField('positionSide') else 'N/A',# 初始化枚举类型
                              "unrealized_pl": position.unrealizedPL if position.HasField('unrealizedPL') else NoneDataValue,
                              "realized_pl": position.realizedPL if position.HasField('realizedPL') else NoneDataValue
                          } for position in raw_position_list]
@@ -257,9 +269,9 @@ class OrderListQuery:
         order_dict = {
             "code": merge_trd_mkt_stock_str(order.secMarket, order.code),
             "stock_name": order.name,
-            "trd_side": TrdSide.to_string2(order.trdSide),
-            "order_type": OrderType.to_string2(order.orderType),
-            "order_status": OrderStatus.to_string2(order.orderStatus),
+            "trd_side": TrdSide.to_string2(order.trdSide) if order.HasField('trdSide') else 'N/A',# 初始化枚举类型
+            "order_type": OrderType.to_string2(order.orderType) if order.HasField('orderType') else 'N/A',# 初始化枚举类型
+            "order_status": OrderStatus.to_string2(order.orderStatus) if order.HasField('orderStatus') else 'N/A',# 初始化枚举类型
             "order_id": str(order.orderID),
             "qty": order.qty,
             "price": order.price,
@@ -269,7 +281,7 @@ class OrderListQuery:
             "dealt_avg_price": order.fillAvgPrice,
             "last_err_msg": order.lastErrMsg,
             "remark": order.remark if order.HasField("remark") else "",
-            "time_in_force": TimeInForce.to_string2(order.timeInForce),
+            "time_in_force": TimeInForce.to_string2(order.timeInForce) if order.HasField('timeInForce') else 'N/A',# 初始化枚举类型
             "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A'
         }
         return order_dict
@@ -379,7 +391,7 @@ class ModifyOrder:
 
         order_id = str(rsp_pb.s2c.orderID)
         modify_order_list = [{
-            'trd_env': TrdEnv.to_string2(rsp_pb.s2c.header.trdEnv),
+            'trd_env': TrdEnv.to_string2(rsp_pb.s2c.header.trdEnv) if rsp_pb.s2c.header.HasField('trdEnv') else 'N/A',# 初始化枚举类型
             'order_id': order_id
         }]
 
@@ -448,7 +460,7 @@ class DealListQuery:
             "order_id": str(deal.orderID) if deal.HasField('orderID') else NoneDataValue,
             "qty": deal.qty,
             "price": deal.price,
-            "trd_side": TrdSide.to_string2(deal.trdSide),
+            "trd_side": TrdSide.to_string2(deal.trdSide) if deal.HasField('trdSide') else 'N/A',# 初始化枚举类型
             "create_time": deal.createTime,
             "counter_broker_id": deal.counterBrokerID if deal.HasField('counterBrokerID') else NoneDataValue,
             "counter_broker_name": deal.counterBrokerName if deal.HasField('counterBrokerName') else NoneDataValue,
@@ -508,9 +520,9 @@ class HistoryOrderListQuery:
         order_list = [{
                       "code": merge_trd_mkt_stock_str(order.secMarket, order.code),
                       "stock_name": order.name,
-                      "trd_side": TrdSide.to_string2(order.trdSide),
-                      "order_type": OrderType.to_string2(order.orderType),
-                      "order_status": OrderStatus.to_string2(order.orderStatus),
+                      "trd_side": TrdSide.to_string2(order.trdSide) if order.HasField('trdSide') else 'N/A',# 初始化枚举类型
+                      "order_type": OrderType.to_string2(order.orderType) if order.HasField('orderType') else 'N/A',# 初始化枚举类型
+                      "order_status": OrderStatus.to_string2(order.orderStatus) if order.HasField('orderStatus') else 'N/A',# 初始化枚举类型
                       "order_id": str(order.orderID),
                       "qty": order.qty,
                       "price": order.price,
@@ -520,7 +532,7 @@ class HistoryOrderListQuery:
                       "dealt_avg_price": order.fillAvgPrice,
                       "last_err_msg": order.lastErrMsg,
                       "remark": order.remark if order.HasField("remark") else "",
-                      "time_in_force": TimeInForce.to_string2(order.timeInForce),
+                      "time_in_force": TimeInForce.to_string2(order.timeInForce) if order.HasField('timeInForce') else 'N/A',# 初始化枚举类型
                       "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A'
                       } for order in raw_order_list]
         return RET_OK, "", order_list
@@ -563,11 +575,11 @@ class HistoryDealListQuery:
                     "order_id": str(deal.orderID) if deal.HasField('orderID') else "",
                     "qty": deal.qty,
                     "price": deal.price,
-                    "trd_side": TrdSide.to_string2(deal.trdSide),
+                    "trd_side": TrdSide.to_string2(deal.trdSide) if deal.HasField('trdSide') else 'N/A',# 初始化枚举类型
                     "create_time": deal.createTime,
                     "counter_broker_id": deal.counterBrokerID if deal.HasField('counterBrokerID') else "",
                     "counter_broker_name": deal.counterBrokerName,
-                    "status": DealStatus.to_string2(deal.status) if deal.HasField('status') else 'N/A'
+                    "status": DealStatus.to_string2(deal.status) if deal.HasField('status') else 'N/A'# 初始化枚举类型
                      } for deal in raw_deal_list]
 
         return RET_OK, "", deal_list
@@ -654,7 +666,76 @@ class AccTradingInfoQuery:
             'max_cash_and_margin_buy': info.maxCashAndMarginBuy if info.HasField('maxCashAndMarginBuy') else NoneDataValue,
             'max_position_sell': info.maxPositionSell,
             'max_sell_short': info.maxSellShort if info.HasField('maxSellShort') else NoneDataValue,
-            'max_buy_back': info.maxBuyBack if info.HasField('maxBuyBack') else NoneDataValue
+            'max_buy_back': info.maxBuyBack if info.HasField('maxBuyBack') else NoneDataValue,
+            'long_required_im': info.longRequiredIM if info.HasField('longRequiredIM') else NoneDataValue,
+            'short_required_im': info.shortRequiredIM if info.HasField('shortRequiredIM') else NoneDataValue
         }]
 
         return RET_OK, "", data
+
+
+class MarginRatio:
+    """Class for """
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, code_list, conn_id, acc_id, trd_mkt):
+        """Convert from user request for place order to PLS request"""
+        stock_tuple_list = []
+        failure_tuple_list = []
+        for stock_str in code_list:
+            ret_code, content = split_stock_str(stock_str)
+            if ret_code != RET_OK:
+                error_str = content
+                failure_tuple_list.append((ret_code, error_str))
+                continue
+
+            market_code, stock_code = content
+            stock_tuple_list.append((market_code, stock_code))
+
+        if len(failure_tuple_list) > 0:
+            error_str = '\n'.join([x[1] for x in failure_tuple_list])
+            return RET_ERROR, error_str, None
+
+        from futu.common.pb.Trd_GetMarginRatio_pb2 import Request
+        req = Request()
+
+        req.c2s.header.trdEnv = 1
+        req.c2s.header.accID = acc_id
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
+
+        for market, code in stock_tuple_list:
+            stock_inst = req.c2s.securityList.add()
+            stock_inst.market = market
+            stock_inst.code = code
+
+        return pack_pb_req(req, ProtoId.Trd_GetMarginRatio, conn_id)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        """Convert from PLS response to user response"""
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        margin_ratio_list = rsp_pb.s2c.marginRatioInfoList
+        ret_margin_ratio_list = []
+        for margin_info in margin_ratio_list:
+            margin_ratio_tmp = {}
+            margin_ratio_tmp['code'] = merge_qot_mkt_stock_str(
+                int(margin_info.security.market), margin_info.security.code)
+            margin_ratio_tmp['is_long_permit'] = margin_info.isLongPermit if margin_info.HasField('isLongPermit') else 'N/A'  # 是否允许融资
+            margin_ratio_tmp['is_short_permit'] = margin_info.isShortPermit if margin_info.HasField('isShortPermit') else 'N/A'  # 是否允许融券
+            margin_ratio_tmp['short_pool_remain'] = margin_info.shortPoolRemain if margin_info.HasField('shortPoolRemain') else 'N/A'  # 卖空池剩余量
+            margin_ratio_tmp['short_fee_rate'] = margin_info.shortFeeRate if margin_info.HasField('shortFeeRate') else 'N/A'   # 融券参考利率
+            margin_ratio_tmp['alert_long_ratio'] = margin_info.alertLongRatio if margin_info.HasField('alertLongRatio') else 'N/A'  # 融资预警比率
+            margin_ratio_tmp['alert_short_ratio'] = margin_info.alertShortRatio if margin_info.HasField('alertShortRatio') else 'N/A'   # 融券预警比率
+            margin_ratio_tmp['im_long_ratio'] = margin_info.imLongRatio if margin_info.HasField('imLongRatio') else 'N/A'   # 融资初始保证金率
+            margin_ratio_tmp['im_short_ratio'] = margin_info.imShortRatio if margin_info.HasField('imShortRatio') else 'N/A'   # 融券初始保证金率
+            margin_ratio_tmp['mcm_long_ratio'] = margin_info.mcmLongRatio if margin_info.HasField('mcmLongRatio') else 'N/A'   # 融资 margin call 保证金率
+            margin_ratio_tmp['mcm_short_ratio'] = margin_info.mcmShortRatio if margin_info.HasField('mcmShortRatio') else 'N/A'   # 融券 margin call 保证金率
+            margin_ratio_tmp['mm_long_ratio'] = margin_info.mmLongRatio if margin_info.HasField('mmLongRatio') else 'N/A'  # 融资维持保证金率
+            margin_ratio_tmp['mm_short_ratio'] = margin_info.mmShortRatio if margin_info.HasField('mmShortRatio') else 'N/A'   # 融券维持保证金率
+            ret_margin_ratio_list.append(margin_ratio_tmp)
+
+        return RET_OK, "", ret_margin_ratio_list

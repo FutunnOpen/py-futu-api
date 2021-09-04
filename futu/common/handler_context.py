@@ -55,10 +55,6 @@ class HandlerContext:
                 "type": PriceReminderHandlerBase,
                 "obj": PriceReminderHandlerBase()
             }
-            # 3017: {
-            #     "type": OrderDetailHandlerBase,
-            #     "obj": OrderDetailHandlerBase()
-            # }
         }
 
     def set_handler(self, handler):

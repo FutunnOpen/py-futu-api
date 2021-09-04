@@ -70,15 +70,16 @@ class OpenTradeContextBase(OpenContextBase):
         for record in acc_list:
             trdMkt_list = record["trdMarket_list"]
             if self.__trd_mkt in trdMkt_list:
-                if record['trd_env'] == TrdEnv.SIMULATE or record['security_firm'] == NoneDataValue  or record['security_firm'] == self.__security_firm:
+                if record['trd_env'] == TrdEnv.SIMULATE or record['security_firm'] == NoneDataValue or record['security_firm'] == self.__security_firm:
                     self.__last_acc_list.append({
                         "trd_env": record["trd_env"],
                         "acc_id": record["acc_id"],
                         "acc_type": record["acc_type"],
                         "card_num": record["card_num"],
-                        "security_firm": record["security_firm"]})
+                        "security_firm": record["security_firm"],
+                        "sim_acc_type": record["sim_acc_type"]})
 
-        col_list = ["acc_id", "trd_env", "acc_type", "card_num", "security_firm"]
+        col_list = ["acc_id", "trd_env", "acc_type", "card_num", "security_firm", "sim_acc_type"]
 
         acc_table = pd.DataFrame(copy(self.__last_acc_list), columns=col_list)
 
@@ -102,7 +103,7 @@ class OpenTradeContextBase(OpenContextBase):
                 return RET_OK, Err.NoNeedUnlock.text
 
             if password is None and password_md5 is None:
-                return RET_ERROR, make_msg(Err.ParamErr, password=password, password_md5=password_md5)
+                return RET_ERROR, 'Missing necessary parameter. One of the two parameters (password and password_md5) is required.'
 
             md5_val = str(password_md5) if password_md5 else md5_transform(str(password))
 
@@ -117,7 +118,8 @@ class OpenTradeContextBase(OpenContextBase):
         kargs = {
             'is_unlock': is_unlock,
             'password_md5': md5_val,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'security_firm': self.__security_firm
         }
 
         ret_code, msg, _ = query_processor(**kargs)
@@ -283,9 +285,11 @@ class OpenTradeContextBase(OpenContextBase):
             return RET_ERROR, msg
 
         col_list = [
-            'power', 'total_assets', 'cash', 'market_val', 'frozen_cash', 'avl_withdrawal_cash', 'currency',
-            'available_funds', 'unrealized_pl', 'realized_pl', 'risk_level', 'initial_margin', 'maintenance_margin',
-            'hk_cash', 'hk_avl_withdrawal_cash', 'us_cash', 'us_avl_withdrawal_cash'
+            'power', 'max_power_short', 'net_cash_power', 'total_assets', 'cash', 'market_val', 'long_mv', 'short_mv',
+            'pending_asset', 'interest_charged_amount', 'frozen_cash', 'avl_withdrawal_cash', 'max_withdrawal', 'currency',
+            'available_funds', 'unrealized_pl', 'realized_pl', 'risk_level', 'risk_status', 'initial_margin',
+            'margin_call_margin', 'maintenance_margin', 'hk_cash', 'hk_avl_withdrawal_cash', 'us_cash',
+            'us_avl_withdrawal_cash'
         ]
         accinfo_frame_table = pd.DataFrame(accinfo_list, columns=col_list)
 
@@ -354,8 +358,8 @@ class OpenTradeContextBase(OpenContextBase):
             "code", "stock_name", "qty", "can_sell_qty", "cost_price",
             "cost_price_valid", "market_val", "nominal_price", "pl_ratio",
             "pl_ratio_valid", "pl_val", "pl_val_valid", "today_buy_qty",
-            "today_buy_val", "today_pl_val", "today_sell_qty", "today_sell_val",
-            "position_side", "unrealized_pl", "realized_pl"
+            "today_buy_val", "today_pl_val", "today_trd_val", "today_sell_qty",
+            "today_sell_val", "position_side", "unrealized_pl", "realized_pl"
         ]
 
         position_list_table = pd.DataFrame(position_list, columns=col_list)
@@ -788,10 +792,41 @@ class OpenTradeContextBase(OpenContextBase):
         if ret_code != RET_OK:
             return RET_ERROR, msg
 
-        col_list = ['max_cash_buy', 'max_cash_and_margin_buy', 'max_position_sell', 'max_sell_short', 'max_buy_back']
+        col_list = ['max_cash_buy', 'max_cash_and_margin_buy', 'max_position_sell', 'max_sell_short', 'max_buy_back',
+                    'long_required_im', 'short_required_im']
         acctradinginfo_table = pd.DataFrame(data, columns=col_list)
         return RET_OK, acctradinginfo_table
 
+    def get_margin_ratio(self, code_list):
+        code_list = unique_and_normalize_list(code_list)
+        if not code_list:
+            error_str = ERROR_STR_PREFIX + "the type of code param is wrong"
+            return RET_ERROR, error_str
+
+        ret, msg, acc_id = self._check_acc_id_and_acc_index(TrdEnv.REAL, 0, 0)
+        if ret != RET_OK:
+            return ret, msg
+
+        query_processor = self._get_sync_query_processor(
+            MarginRatio.pack_req, MarginRatio.unpack_rsp)
+        kargs = {
+            "code_list": code_list,
+            "conn_id": self.get_sync_conn_id(),
+            "acc_id": acc_id,
+            'trd_mkt': self.__trd_mkt,
+        }
+
+        ret_code, msg, margin_ratio_list = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return RET_ERROR, msg
+
+        col_list = [
+            "code", "is_long_permit", "is_short_permit", "short_pool_remain", "short_fee_rate", "alert_long_ratio",
+            "alert_short_ratio", "im_long_ratio", "im_short_ratio", "mcm_long_ratio", 'mcm_short_ratio', "mm_long_ratio", 'mm_short_ratio'
+        ]
+        margin_ratio_table = pd.DataFrame(margin_ratio_list, columns=col_list)
+
+        return RET_OK, margin_ratio_table
 
 # 港股交易接口
 class OpenHKTradeContext(OpenTradeContextBase):
