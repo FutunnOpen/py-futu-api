@@ -646,7 +646,7 @@ def decrypt_rsp_body(rsp_body, head_dict, conn_id, is_encrypt):
         sha20_check = hashlib.sha1(rsp_body).digest()
         if sha20_check != sha20:
             ret_code = RET_ERROR
-            msg = "proto id:{} conn_id:{} check sha error!".format(proto_id, conn_id)
+            msg = "proto_id:{} conn_id:{} check sha error!".format(proto_id, conn_id)
 
     return ret_code, msg, rsp_body
 
@@ -662,3 +662,15 @@ def make_from_namedtuple(t, **kwargs):
     d.update(kwargs)
     cls = type(t)
     return cls(**d)
+
+
+def get_pb_value(pb, field):
+    if pb.HasField(field):
+        return getattr(pb, field)
+    return 'N/A'
+
+
+def get_pb_enum(pb, field, enum_cls, enum_default):
+    if pb.HasField(field):
+        return enum_cls.to_string2(getattr(pb, field))
+    return enum_default

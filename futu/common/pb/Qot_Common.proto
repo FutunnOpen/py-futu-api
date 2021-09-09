@@ -479,6 +479,30 @@ enum ExpirationCycle
 	ExpirationCycle_Month = 2; //月期权
 }
 
+// 所属交易所
+enum ExchType
+{
+    ExchType_Unknown = 0; //未知
+    ExchType_HK_MainBoard = 1; // 港交所·主板
+    ExchType_HK_GEMBoard = 2; //港交所·创业板
+    ExchType_HK_HKEX = 3; //港交所
+    ExchType_US_NYSE = 4; //纽交所
+    ExchType_US_Nasdaq = 5; //纳斯达克
+    ExchType_US_Pink = 6; //OTC 市场
+    ExchType_US_AMEX = 7; //美交所 
+    ExchType_US_Option = 8; //美国（仅美股期权适用）
+    ExchType_US_NYMEX = 9; //NYMEX 
+    ExchType_US_COMEX = 10; //COMEX
+    ExchType_US_CBOT = 11; //CBOT
+    ExchType_US_CME = 12; //CME
+    ExchType_US_CBOE = 13; //CBOE
+    ExchType_CN_SH = 14; //上交所  
+    ExchType_CN_SZ = 15; //深交所
+    ExchType_CN_STIB = 16; //科创板
+    ExchType_SG_SGX = 17; //新交所
+    ExchType_JP_OSE = 18; //大阪交易所 
+}
+
  //两个字段确定一支股票
 message Security
 {
@@ -604,6 +628,7 @@ message SecurityStaticBasic
 	required string listTime = 6; //上市时间字符串
 	optional bool delisting = 7; //是否退市
 	optional double listTimestamp = 8; //上市时间戳
+	optional int32 exchType = 9; //Qot_Common.ExchType,所属交易所
 }
 
 message WarrantStaticExData

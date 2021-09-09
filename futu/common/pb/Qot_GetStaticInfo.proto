@@ -8,6 +8,7 @@ import "Qot_Common.proto";
 
 message C2S
 {
+	// 注：当 market 和 code_list 同时存在时，会忽略 market，仅对 code_list 进行查询。
 	optional int32 market = 1; //Qot_Common.QotMarket,股票市场
 	optional int32 secType = 2; //Qot_Common.SecurityType,股票类型
 	repeated Qot_Common.Security securityList = 3; //股票，若该字段存在，忽略其他字段，只返回该字段股票的静态信息

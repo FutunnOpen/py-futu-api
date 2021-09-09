@@ -6,18 +6,21 @@ from futu import *
 from futu.common.constant import *
 from futu.common.utils import *
 
+
 class SimpleFilter(object):
     def __init__(self):
-        self.stock_field = StockField.NONE # StockField 简单属性
+        self.stock_field = StockField.NONE  # StockField 简单属性
         self.filter_min = None  # 区间下限，闭区间
         self.filter_max = None  # 区间上限，闭区间
-        self.sort = None   # SortDir 排序方向 SortDir
-        self.is_no_filter = None # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
+        self.sort = None  # SortDir 排序方向 SortDir
+        self.is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
 
     def fill_request_pb(self, filter_req):
+        if self.stock_field == StockField.NONE:
+            return RET_ERROR, 'Missing nessary parameters: stock_field'
         r, v = StockField.to_number(self.stock_field)
         if not r:
-            return RET_ERROR, 'stock_field is wrong. must be StockField'
+            return RET_ERROR, 'Stock_field is wrong. It must be StockField'
         filter_req.fieldName = v - StockField.simple_enum_begin
         """有了这个字段，别的字段都可以不要了"""
         if self.is_no_filter is False:
@@ -30,7 +33,7 @@ class SimpleFilter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                return RET_ERROR, 'sort is wrong. must be SortDir'
+                return RET_ERROR, 'Sort is wrong. It must be SortDir'
             filter_req.sortDir = v
         return RET_OK, ""
 
@@ -39,19 +42,22 @@ class SimpleFilter(object):
     def query_key(self):
         return self.stock_field.lower()
 
+
 class AccumulateFilter(object):
     def __init__(self):
-        self.stock_field = StockField.NONE   # StockField 累计属性
+        self.stock_field = StockField.NONE  # StockField 累计属性
         self.filter_min = None  # 区间下限，闭区间
         self.filter_max = None  # 区间上限，闭区间
         self.sort = None  # SortDir 排序方向 SortDir
         self.is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
-        self.days = 1  #所筛选的数据的累计天数
+        self.days = 1  # 所筛选的数据的累计天数
 
     def fill_request_pb(self, filter_req):
+        if self.stock_field == StockField.NONE:
+            return RET_ERROR, 'Missing nessary parameters: stock_field'
         r, v = StockField.to_number(self.stock_field)
         if not r:
-            return RET_ERROR, 'stock_field is wrong. must be StockField'
+            return RET_ERROR, 'Stock_field is wrong. It must be StockField'
         filter_req.fieldName = v - StockField.acc_enum_begin
         filter_req.days = self.days
         """有了这个字段，别的字段都可以不要了"""
@@ -65,7 +71,7 @@ class AccumulateFilter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                return RET_ERROR, 'sort is wrong. must be SortDir'
+                return RET_ERROR, 'Sort is wrong. It must be SortDir'
             filter_req.sortDir = v
         return RET_OK, ""
 
@@ -73,7 +79,8 @@ class AccumulateFilter(object):
     @property
     def query_key(self):
         return (self.stock_field.lower(), self.days)
-            
+
+
 class FinancialFilter(object):
     def __init__(self):
         self.stock_field = StockField.NONE  # StockField 财务属性
@@ -81,17 +88,19 @@ class FinancialFilter(object):
         self.filter_max = None  # 区间上限，闭区间
         self.sort = None  # SortDir 排序方向 SortDir
         self.is_no_filter = None  # 如果这个字段不需要筛选，指定该字段为ture。当该字段为true时，以上三个字段无效。
-        self.quarter = FinancialQuarter.ANNUAL #财报累积时间
+        self.quarter = FinancialQuarter.ANNUAL  # 财报累积时间
 
     def fill_request_pb(self, filter_req):
+        if self.stock_field == StockField.NONE:
+            return RET_ERROR, 'Missing nessary parameters: stock_field'
         r, v = StockField.to_number(self.stock_field)
         if not r:
-            return RET_ERROR, 'stock_field is wrong. must be StockField'
+            return RET_ERROR, 'Stock_field is wrong. It must be StockField'
         filter_req.fieldName = v - StockField.financial_enum_begin
 
         r, v = FinancialQuarter.to_number(self.quarter)
         if not r:
-            return RET_ERROR, 'quarter is wrong. must be FinancialQuarter'
+            return RET_ERROR, 'Quarter is wrong. It must be FinancialQuarter'
         filter_req.quarter = v
 
         """有了这个字段，别的字段都可以不要了"""
@@ -105,14 +114,109 @@ class FinancialFilter(object):
         if self.sort is not None:
             r, v = SortDir.to_number(self.sort)
             if not r:
-                return RET_ERROR, 'sort is wrong. must be SortDir'
+                return RET_ERROR, 'Sort is wrong. It must be SortDir'
             filter_req.sortDir = v
 
         return RET_OK, ""
+
     # 财务 (stock_field + quarter) 作为筛选的key
     @property
     def query_key(self):
         return self.stock_field.lower(), self.quarter.lower()
+
+
+class CustomIndicatorFilter(object):
+    stock_field1 = StockField.NONE  # StockField 指标属性
+    stock_field2 = StockField.NONE  # StockField 指标属性
+    relative_position = None  # RelativePosition 相对位置,主要用于MA，EMA，RSI指标做比较
+    value = None  # 自定义数值，用于与RSI进行比较
+    ktype = KLType.NONE  # KLType, K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
+    is_no_filter = None  # 如果这个字段不需要筛选
+
+    def __init__(self):
+        self.stock_field1 = StockField.NONE
+        self.stock_field2 = StockField.NONE
+        self.relative_position = RelativePosition.NONE
+        self.ktype = KLType.NONE
+        self.is_no_filter = None
+
+    def fill_request_pb(self, filter_req):
+        if self.stock_field1 == StockField.NONE:
+            return RET_ERROR, 'Missing nessary parameters: stock_field1'
+        r, v = StockField.to_number(self.stock_field1)
+        if not r:
+            return RET_ERROR, 'Stock_field1 is wrong. It must be StockField'
+        filter_req.firstFieldName = v - StockField.indicator_enum_begin
+
+        if self.stock_field2 == StockField.NONE:
+            return RET_ERROR, 'Missing nessary parameters: stock_field2'
+        r, v = StockField.to_number(self.stock_field2)
+        if not r:
+            return RET_ERROR, 'Stock_field2 is wrong. It must be StockField'
+        filter_req.secondFieldName = v - StockField.indicator_enum_begin
+
+        if self.relative_position == RelativePosition.NONE:
+            return RET_ERROR, 'Missing nessary parameters: relative_position'
+        r, v = RelativePosition.to_number(self.relative_position)
+        if not r:
+            return RET_ERROR, 'Relative_position is wrong. It must be RelativePosition'
+        filter_req.relativePosition = v
+
+        if self.value is not None:
+            filter_req.fieldValue = self.value
+
+        if self.ktype == KLType.NONE:
+            return RET_ERROR, 'Missing nessary parameters: ktype'
+        r2, v2 = KLType.to_number(self.ktype)
+        if not r2:
+            return RET_ERROR, 'Ktype is wrong. It must be KLType' + 'Wrong'
+        filter_req.klType = v2
+
+        if self.is_no_filter is False:
+            filter_req.isNoFilter = False
+
+        return RET_OK, ""
+
+    # 自定义 (stock_field + ktype) 作为筛选的key
+    @property
+    def query_key1(self):
+        return self.stock_field1.lower(), self.ktype.lower()
+
+    @property
+    def query_key2(self):
+        return self.stock_field2.lower(), self.ktype.lower()
+
+
+class PatternFilter(object):
+    stock_field = StockField.NONE  # StockField 指标形态属性
+    ktype = None  # KLType, K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
+    is_no_filter = None  # 如果这个字段不需要筛选
+
+    def __init__(self):
+        self.stock_field = StockField.NONE
+        self.ktype = KLType.NONE
+        self.is_no_filter = None
+
+    def fill_request_pb(self, filter_req):
+        if self.stock_field == StockField.NONE:
+            return RET_ERROR, 'Missing nessary parameters: stock_field'
+        r, v = StockField.to_number(self.stock_field)
+        if not r:
+            return RET_ERROR, 'Stock_field is wrong. It must be StockField'
+        filter_req.fieldName = v - StockField.pattern_enum_begin
+
+        if self.ktype == KLType.NONE:
+            return RET_ERROR, 'Missing nessary parameters: ktype'
+        r2, v2 = KLType.to_number(self.ktype)
+        if not r2:
+            return RET_ERROR, 'Ktype is wrong. It must be KLType'
+        filter_req.klType = v2
+
+        if self.is_no_filter is False:
+            filter_req.isNoFilter = False
+
+        return RET_OK, ""
+
 
 class FilterStockData(object):
     # 以下是简单数据过滤所支持的字段
@@ -127,7 +231,7 @@ class FilterStockData(object):
     # market_val = None  # 市值
     # pe_annual = None  # 年化(静态) 市盈率
     # pe_ttm = None  # 市盈率ttm
-    # pb_rate = None  # 市净率   
+    # pb_rate = None  # 市净率
     # change_rate_5min = None # 五分钟价格涨跌幅
     # change_rate_begin_year = None  # 年初至今价格涨跌幅
     # ps_ttm  # 市销率(ttm) 例如填写 [100, 500] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
@@ -152,7 +256,7 @@ class FilterStockData(object):
     # gross_profit_rate = None # 毛利率
     # debt_asset_rate = None # 资产负债率
     # return_on_equity_rate = None # 净资产收益率
-    #roic # 盈利能力属性投入资本回报率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
+    # roic # 盈利能力属性投入资本回报率 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%）
     # roa_ttm  # 资产回报率(ttm) 例如填写 [1.0,10.0] 值区间（该字段为百分比字段，默认省略%，如20实际对应20%。仅适用于年报。）
     # ebit_ttm # 息税前利润(ttm) 例如填写 [1000000000,1000000000] 值区间（单位：元。仅适用于年报。）
     # ebitda  # 税息折旧及摊销前利润 例如填写 [1000000000,1000000000] 值区间（单位：元）
@@ -191,6 +295,24 @@ class FilterStockData(object):
     # diluted_eps  # 稀释每股收益 例如填写 [0.1,10] 值区间 (单位：元)
     # nocf_per_share  # 每股经营现金净流量 例如填写 [0.1,10] 值区间 (单位：元)
 
+    # 以下是技术指标过滤所支持的枚举
+    # price  # 最新价格
+    # ma5  # 5日简单均线
+    # ma10  # 10日简单均线
+    # ma20  # 20日简单均线
+    # ma30  # 30日简单均线
+    # ma60  # 60日简单均线
+    # ma120  # 120日简单均线
+    # ma250  # 250日简单均线
+    # rsi  # 动态rsi
+    # ema5  # 5日指数移动均线
+    # ema10  # 10日指数移动均线
+    # ema20  # 20日指数移动均线
+    # ema30  # 30日指数移动均线
+    # ema60  # 60日指数移动均线
+    # ema120  # 120日指数移动均线
+    # ema250  # 250日指数移动均线
+
     def __init__(self, rsp_item):
         self.stock_code = None
         self.stock_name = None
@@ -199,7 +321,7 @@ class FilterStockData(object):
         self.stock_code = merge_qot_mkt_stock_str(rsp_item.security.market, rsp_item.security.code)
         #  名称 type = string
         self.stock_name = rsp_item.name
-        
+
         # ls = StockField.get_all_key_list()
         # for key in ls:
         #     attr = key.lower()
@@ -213,21 +335,29 @@ class FilterStockData(object):
             ret, field = StockField.to_string(sub_item.fieldName + StockField.simple_enum_begin)
             if ret:
                 self.__dict__[field.lower()] = sub_item.value
-                
-        #  筛选后的累计属性数据 type = Qot_StockFilter.AccumulateData
+
+        # 筛选后的累计属性数据 type = Qot_StockFilter.AccumulateData
         base_data_list = rsp_item.accumulateDataList
         for sub_item in base_data_list:
             ret, field = StockField.to_string(sub_item.fieldName + StockField.acc_enum_begin)
             if ret:
                 self.__dict__[(field.lower(), sub_item.days)] = sub_item.value
-                
-        #  筛选后的财务属性数据 type = Qot_StockFilter.FinancialData
+
+        # 筛选后的财务属性数据 type = Qot_StockFilter.FinancialData
         base_data_list = rsp_item.financialDataList
         for sub_item in base_data_list:
             ret1, field = StockField.to_string(sub_item.fieldName + StockField.financial_enum_begin)
             ret2, quarter = FinancialQuarter.to_string(sub_item.quarter)
             if ret1 and ret2:
                 self.__dict__[(field.lower(), quarter.lower())] = sub_item.value
+
+        # 筛选后的指标属性数据 type = Qot_StockFilter.CustomIndicatorData
+        base_data_list = rsp_item.customIndicatorDataList
+        for sub_item in base_data_list:
+            ret1, field = StockField.to_string(sub_item.fieldName + StockField.indicator_enum_begin)
+            ret2, klType = KLType.to_string(sub_item.klType)
+            if ret1 and ret2:
+                self.__dict__[(field.lower(), klType.lower())] = sub_item.value
 
     def __repr__(self):
         ls = StockField.get_all_key_list()
@@ -245,5 +375,13 @@ class FilterStockData(object):
     def __getitem__(self, key):
         if isinstance(key, SimpleFilter) or isinstance(key, FinancialFilter) or isinstance(key, AccumulateFilter):
             return self.__dict__[key.query_key]
+        if isinstance(key, CustomIndicatorFilter):
+            key1 = key.stock_field1.lower()
+            value1 = self.__dict__[key.query_key1]
+            if key.stock_field2 != StockField.VALUE:
+                key2 = key.stock_field2.lower()
+                value2 = self.__dict__[key.query_key2]
+                return {key1: value1, key2: value2}
+            else:
+                return {key1: value1}
         raise KeyError('Unknown key: {}'.format(key))
-

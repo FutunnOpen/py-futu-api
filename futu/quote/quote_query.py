@@ -353,6 +353,7 @@ class StockBasicInfoQuery:
             "index_option_type": IndexOptionType.to_string2(record.optionExData.indexOptionType) if record.HasField('optionExData') else NoneDataType,
             "main_contract": record.futureExData.isMainContract,
             "last_trade_time": record.futureExData.lastTradeTime,
+            'exchange_type': ExchType.to_string2(record.basic.exchType) if record.basic.HasField('exchType') else 'N/A',# 初始化枚举类型
         } for record in raw_basic_info_list]
         return RET_OK, "", basic_info_list
 
@@ -664,7 +665,10 @@ class RtDataQuery:
                 "opened_mins": record.minute,
                 "cur_price": record.price,
                 "last_close": record.lastClosePrice,
-                "avg_price": record.avgPrice if record.HasField('avgPrice') else None,
+                # 期权没有计算这个均价，应该是N/A
+                # 期权是正股的衍生品，其价格完全依赖正股的波动，而不是期权自身的博弈。
+                # 所以不会因为期权价格回踩均线就怎么样的，均线也就没啥用了。
+                "avg_price": record.avgPrice if record.HasField('avgPrice') else 'N/A', # 初始化枚举类型
                 "turnover": record.turnover,
                 "volume": record.volume
             } for record in raw_rt_data_list
@@ -2530,7 +2534,13 @@ class StockFilterQuery:
                 elif isinstance(filter_item, FinancialFilter):
                     filter_req = req.c2s.financialFilterList.add()
                     ret, error_str = filter_item.fill_request_pb(filter_req)
-                else :
+                elif isinstance(filter_item, PatternFilter):
+                    filter_req = req.c2s.patternFilterList.add()
+                    ret, error_str = filter_item.fill_request_pb(filter_req)
+                elif isinstance(filter_item, CustomIndicatorFilter):
+                    filter_req = req.c2s.customIndicatorFilterList.add()
+                    ret, error_str = filter_item.fill_request_pb(filter_req)
+                else:
                     ret = RET_ERROR
                     error_str = ERROR_STR_PREFIX + "the item in filter_list is wrong"
 

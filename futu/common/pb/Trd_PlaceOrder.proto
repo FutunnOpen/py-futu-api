@@ -22,6 +22,10 @@ message C2S
 	optional string remark = 11; //用户备注字符串，最多只能传64字节。可用于标识订单唯一信息等，下单填上，订单结构就会带上。
 	optional int32 timeInForce = 12; //订单有效期限，参见TrdCommon_TimeInForce的枚举定义
 	optional bool fillOutsideRTH = 13; //是否允许盘前盘后成交。仅适用于美股限价单。默认false
+	optional double auxPrice = 14; //触发价格
+	optional int32 trailType = 15; //跟踪类型, 参见Trd_Common.TrailType的枚举定义
+	optional double trailValue = 16; //跟踪金额/百分比
+	optional double trailSpread = 17; //指定价差
 }
 
 message S2C

@@ -160,16 +160,30 @@ class FTLog(object):
         if (self._console_level <= logging.INFO) and ((flag & self.ONLY_CONSOLE) != 0):
             self.console_logger.info(msg, *args, **kwargs)
 
+    def fontColor(self, color):
+        # 设置日志的输出颜色
+        formatter = logging.Formatter(color % '%(asctime)s | %(process)d | %(message)s')
+        self.consoleHandler.setFormatter(formatter)
+        self.console_logger.addHandler(self.consoleHandler)
+
     def warning(self, msg, *args, **kwargs):
+        # 设置黄色日志
+        self.fontColor('\033[0;33m%s\033[0m')
         self.warning2(self.BOTH_FILE_CONSOLE, msg, *args, **kwargs)
 
     def error(self, msg, *args, **kwargs):
+        # 设置黄色日志
+        self.fontColor('\033[0;33m%s\033[0m')
         self.error2(self.BOTH_FILE_CONSOLE, msg, *args, **kwargs)
 
     def debug(self, msg, *args, **kwargs):
+        # 设置黑色日志
+        self.fontColor('\033[0;30m%s\033[0m')
         self.debug2(self.BOTH_FILE_CONSOLE, msg, *args, **kwargs)
 
     def info(self, msg, *args, **kwargs):
+        # 设置黑色日志
+        self.fontColor('\033[0;30m%s\033[0m')
         self.info2(self.BOTH_FILE_CONSOLE, msg, *args, **kwargs)
 
     @property

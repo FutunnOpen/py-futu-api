@@ -20,7 +20,7 @@ class OpenTradeContextBase(OpenContextBase):
         #     print("{} is not local connection!".format(host))
         #     raise Exception('Non-local connections must be encrypted')
 
-        super(OpenTradeContextBase, self).__init__(host, port, False, is_encrypt=is_encrypt)
+        super(OpenTradeContextBase, self).__init__(host, port, is_encrypt=is_encrypt)
 
     def close(self):
         """
@@ -289,7 +289,8 @@ class OpenTradeContextBase(OpenContextBase):
             'pending_asset', 'interest_charged_amount', 'frozen_cash', 'avl_withdrawal_cash', 'max_withdrawal', 'currency',
             'available_funds', 'unrealized_pl', 'realized_pl', 'risk_level', 'risk_status', 'initial_margin',
             'margin_call_margin', 'maintenance_margin', 'hk_cash', 'hk_avl_withdrawal_cash', 'us_cash',
-            'us_avl_withdrawal_cash'
+            'us_avl_withdrawal_cash', 'jp_cash', 'jp_avl_withdrawal_cash',
+            'is_pdt', 'pdt_seq', 'beginning_dtbp', 'remaining_dtbp', 'dt_call_amount', 'dt_status'
         ]
         accinfo_frame_table = pd.DataFrame(accinfo_list, columns=col_list)
 
@@ -386,8 +387,7 @@ class OpenTradeContextBase(OpenContextBase):
             "code", "stock_name", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
             "dealt_qty", "dealt_avg_price", "last_err_msg", "remark",
-            "time_in_force", "fill_outside_rth"
-
+            "time_in_force", "fill_outside_rth", "aux_price", "trail_type", "trail_value", "trail_spread"
         ]
         order_list = ret_data
         order_list_table = pd.DataFrame(order_list, columns=col_list)
@@ -447,7 +447,8 @@ class OpenTradeContextBase(OpenContextBase):
 
     def place_order(self, price, qty, code, trd_side, order_type=OrderType.NORMAL,
                     adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, remark=None,
-                    time_in_force=TimeInForce.DAY, fill_outside_rth=False):
+                    time_in_force=TimeInForce.DAY, fill_outside_rth=False, aux_price = None,
+                    trail_type = None ,trail_value = None ,trail_spread = None):
         """
         place order
         use  set_handle(HKTradeOrderHandlerBase) to recv order push !
@@ -497,7 +498,11 @@ class OpenTradeContextBase(OpenContextBase):
             'conn_id': self.get_sync_conn_id(),
             'remark': remark,
             'time_in_force': time_in_force,
-            'fill_outside_rth': fill_outside_rth
+            'fill_outside_rth': fill_outside_rth,
+            'aux_price': aux_price ,
+            'trail_type': trail_type ,
+            'trail_value': trail_value ,
+            'trail_spread': trail_spread ,
         }
 
         ret_code, msg, order_id = query_processor(**kargs)
@@ -520,7 +525,8 @@ class OpenTradeContextBase(OpenContextBase):
             "code", "stock_name", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
             "dealt_qty", "dealt_avg_price", "last_err_msg", "remark",
-            "time_in_force", "fill_outside_rth"
+            "time_in_force", "fill_outside_rth", 'aux_price',
+            'trail_type', 'trail_value', 'trail_spread',
         ]
         order_list = [order_item]
         order_table = pd.DataFrame(order_list, columns=col_list)
@@ -528,7 +534,8 @@ class OpenTradeContextBase(OpenContextBase):
         return RET_OK, order_table
 
     def modify_order(self, modify_order_op, order_id, qty, price,
-                     adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+                     adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0,
+                     aux_price=None, trail_type=None, trail_value=None, trail_spread=None):
 
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
@@ -544,6 +551,9 @@ class OpenTradeContextBase(OpenContextBase):
         if not ModifyOrderOp.if_has_key(modify_order_op):
             return RET_ERROR, ERROR_STR_PREFIX + "the type of modify_order_op param is wrong "
 
+        if trail_type is not None and not TrailType.if_has_key(trail_type):
+            return RET_ERROR, ERROR_STR_PREFIX + "the type of trail_type param is wrong "
+
         query_processor = self._get_sync_query_processor(
             ModifyOrder.pack_req, ModifyOrder.unpack_rsp)
 
@@ -557,6 +567,10 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_env': trd_env,
             'acc_id': acc_id,
             'conn_id': self.get_sync_conn_id(),
+            'aux_price': aux_price,
+            'trail_type': trail_type,
+            'trail_value': trail_value,
+            'trail_spread': trail_spread,
         }
 
         ret_code, msg, modify_order_list = query_processor(**kargs)
@@ -681,7 +695,7 @@ class OpenTradeContextBase(OpenContextBase):
             "code", "stock_name", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
             "dealt_qty", "dealt_avg_price", "last_err_msg", "remark",
-            "time_in_force", "fill_outside_rth"
+            "time_in_force", "fill_outside_rth", "aux_price", "trail_type", "trail_value", "trail_spread"
         ]
         order_list_table = pd.DataFrame(order_list, columns=col_list)
 

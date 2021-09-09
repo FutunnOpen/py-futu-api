@@ -20,6 +20,10 @@ message C2S
 	//以下为调整价格使用，都传才有效，对港、A股有意义，因为港股有价位，A股2位精度，美股可不传
 	optional bool adjustPrice = 10; //是否调整价格，如果价格不合法，是否调整到合法价位，true调整，false不调整
 	optional double adjustSideAndLimit = 11; //调整方向和调整幅度百分比限制，正数代表向上调整，负数代表向下调整，具体值代表调整幅度限制，如：0.015代表向上调整且幅度不超过1.5%；-0.01代表向下调整且幅度不超过1%
+	optional double auxPrice = 12; //触发价格
+	optional int32 trailType = 13; //跟踪类型, 参见Trd_Common.TrailType的枚举定义
+	optional double trailValue = 14; //跟踪金额/百分比
+	optional double trailSpread = 15; //指定价差
 }
 
 message S2C

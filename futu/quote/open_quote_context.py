@@ -118,7 +118,7 @@ class OpenQuoteContext(OpenContextBase):
         self._ctx_subscribe = {}
         self._sub_record = SubRecord()
         super(OpenQuoteContext, self).__init__(
-            host, port, is_async_connect, is_encrypt)
+            host, port, is_encrypt=is_encrypt, is_async_connect=is_async_connect)
 
     def close(self):
         """
@@ -157,10 +157,11 @@ class OpenQuoteContext(OpenContextBase):
         return ret_code, ret_msg
 
     def request_trading_days(self, market=None, start=None, end=None, code=None):
+        # 注：当 market 和 code 同时存在时，会忽略 market，仅对 code 进行查询。
         """获取交易日
-        :param market: 市场类型，TradeDateMarket_
-        :param start: 起始日期。例如'2018-01-01'。
-        :param end: 结束日期。例如'2018-01-01'。
+        :param market: 市场类型，Qot_Common.TradeDateMarket
+        :param start: 起始日期。例如'2020-04-01'。
+        :param end: 结束日期。例如'2020-04-10'。
         :param code: 股票代码。例如'HK.00700'，'US.APPL'。
          start和end的组合如下：
          ==========    ==========    ========================================
@@ -171,7 +172,7 @@ class OpenQuoteContext(OpenContextBase):
          str            None          end为start往后365天
          None           None          end为当前日期，start为end往前365天
          ==========    ==========    ========================================
-        :return: 成功时返回(RET_OK, data)，data是[{'trade_date_type': 0, 'time': '2018-01-05'}]数组；失败时返回(RET_ERROR, data)，其中data是错误描述字符串
+        :return: 成功时返回(RET_OK, data)，data是[{'time': '2020-04-01', 'trade_date_type': 'WHOLE'}]数组；失败时返回(RET_ERROR, data)，其中data是错误描述字符串
         """
         if market is None:
             market = TradeDateMarket.NONE  # 当market入参是空，设置为TradeDateMarket.NONE
@@ -208,6 +209,7 @@ class OpenQuoteContext(OpenContextBase):
     def get_stock_basicinfo(self, market, stock_type=SecurityType.STOCK, code_list=None):
         """
         获取指定市场中特定类型的股票基本信息
+        注：当 market 和 code_list 同时存在时，会忽略 market，仅对 code_list 进行查询。
         :param market: 市场类型，futu.common.constant.Market
         :param stock_type: 股票类型， futu.common.constant.SecurityType
         :param code_list: 如果不为None，应该是股票code的iterable类型，将只返回指定的股票信息
@@ -232,6 +234,7 @@ class OpenQuoteContext(OpenContextBase):
             index_option_type   str            指数期权类型（期权特有字段）
             main_contract       bool           是否主连合约（期货特有字段）
             last_trade_time     string         最后交易时间（期货特有字段，非主连期货合约才有值）
+            exchange_type       str            所属交易所，Qot_Common.ExchType
             =================   ===========   ==========================================================================
 
         :example:
@@ -278,7 +281,7 @@ class OpenQuoteContext(OpenContextBase):
             'code', 'name', 'lot_size', 'stock_type', 'stock_child_type', 'stock_owner',
             'option_type', 'strike_time', 'strike_price', 'suspension',
             'listing_date', 'stock_id', 'delisting', 'index_option_type',
-            'main_contract', 'last_trade_time'
+            'main_contract', 'last_trade_time', 'exchange_type'
         ]
 
         basic_info_table = pd.DataFrame(basic_info_list, columns=col_list)
@@ -2114,14 +2117,19 @@ class OpenQuoteContext(OpenContextBase):
         if filter_list is None:
             filter_list = []
 
-        if filter_list is not None and (isinstance(filter_list, SimpleFilter) or isinstance(filter_list, AccumulateFilter) or isinstance(filter_list, FinancialFilter)):
+        if filter_list is not None and (isinstance(filter_list, SimpleFilter) or isinstance(filter_list,
+                                                                                            AccumulateFilter) or isinstance(
+                filter_list, FinancialFilter) or isinstance(filter_list, PatternFilter) or isinstance(filter_list,
+                                                                                                      CustomIndicatorFilter)):
             filter_list = [filter_list]
         if filter_list is not None and not isinstance(filter_list, list):
             error_str = ERROR_STR_PREFIX + "the type of filter_list is wrong"
             return RET_ERROR, error_str
 
         for filter in filter_list:
-            if not (isinstance(filter, SimpleFilter) or isinstance(filter, AccumulateFilter) or isinstance(filter, FinancialFilter)):
+            if not (isinstance(filter, SimpleFilter) or isinstance(filter, AccumulateFilter) or isinstance(filter,
+                                                                                                           FinancialFilter) or isinstance(
+                    filter, PatternFilter) or isinstance(filter, CustomIndicatorFilter)):
                 error_str = ERROR_STR_PREFIX + "the item of filter_list is wrong"
                 return RET_ERROR, error_str
 

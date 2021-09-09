@@ -58,6 +58,20 @@ enum OrderType
 	OrderType_AuctionLimit = 7; //竞价限价订单(目前仅港股)，仅早盘竞价和收盘竞价有效，参与竞价，且要求满足指定价格才会成交
 	OrderType_SpecialLimit = 8; //特别限价订单(目前仅港股)，成交规则同增强限价订单，且部分成交后，交易所自动撤销订单
 	OrderType_SpecialLimit_All = 9; //特别限价且要求全部成交订单(目前仅港股)，要么全部成交，要么自动撤单
+	OrderType_Stop = 10; // 止损市价单
+    OrderType_StopLimit = 11; // 止损限价单
+    OrderType_MarketifTouched = 12; // 触及市价单（止盈）
+    OrderType_LimitifTouched = 13; // 触及限价单（止盈）
+    OrderType_TrailingStop = 14; // 跟踪止损市价单
+    OrderType_TrailingStopLimit = 15; // 跟踪止损限价单
+}
+
+//跟踪类型
+enum TrailType
+{
+	TrailType_Unknown = 0; //未知类型
+	TrailType_Ratio = 1; //比例
+	TrailType_Amount = 2; //金额
 }
 
 //订单状态
@@ -178,6 +192,15 @@ enum CltRiskStatus
 	CltRiskStatus_Level9 = 9;  //预警
 }
 
+//日内交易限制情况
+enum DTStatus
+{
+	DTStatus_Unknown = 0; 		//未知
+	DTStatus_Unlimited = 1;		//无限次(当前可以无限次日内交易，注意留意剩余日内交易购买力)
+	DTStatus_EMCall = 2;		//EM Call(当前状态不能新建仓位，需要补充资产净值至$25000以上，否则会被禁止新建仓位90天)
+	DTStatus_DTCall = 3;		//DT Call(当前状态有未补平的日内交易追缴金额（DTCall），需要在5个交易日内足额入金来补平 DTCall，否则会被禁止新建仓位，直到足额存入资金才会解禁)
+}
+
 //账户现金信息，目前仅用于期货账户
 message AccCashInfo
 {
@@ -234,6 +257,13 @@ message Funds
 	optional double maxWithdrawal = 21;          //融资可提，仅证券账户适用
 	optional int32 riskStatus = 22;              //风险状态，参见 [CltRiskStatus]，证券账户适用，共分 9 个等级，LEVEL1是最安全，LEVEL9是最危险
 	optional double marginCallMargin = 23;       //	Margin Call 保证金
+	
+	optional bool isPdt = 24;				//是否PDT账户，仅富途证券（美国）账户适用
+	optional string pdtSeq = 25;			//剩余日内交易次数
+	optional double beginningDTBP = 26;		//初始日内交易购买力
+	optional double remainingDTBP = 27;		//剩余日内交易购买力
+	optional double dtCallAmount = 28;		//日内交易待缴金额
+	optional int32 dtStatus = 29;				//日内交易限制情况，取值见DTStatus
 }
 
 //账户持仓结构
@@ -287,6 +317,10 @@ message Order
     optional string remark = 18; //用户备注字符串，最大长度64字节
 	optional int32 timeInForce = 19; //订单期限，参考 TimeInForce 类的定义
 	optional bool fillOutsideRTH = 20; //是否允许美股订单盘前盘后成交
+	optional double auxPrice = 21; //触发价格
+	optional int32 trailType = 22; //跟踪类型, 参见Trd_Common.TrailType的枚举定义
+	optional double trailValue = 23; //跟踪金额/百分比
+	optional double trailSpread = 24; //指定价差
 }
 
 //成交结构

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_PlaceOrder.proto',
   package='Trd_PlaceOrder',
   syntax='proto2',
-  serialized_pb=_b('\n\x14Trd_PlaceOrder.proto\x12\x0eTrd_PlaceOrder\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\x9f\x02\n\x03\x43\x32S\x12\"\n\x08packetID\x18\x01 \x02(\x0b\x32\x10.Common.PacketID\x12%\n\x06header\x18\x02 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x0f\n\x07trdSide\x18\x03 \x02(\x05\x12\x11\n\torderType\x18\x04 \x02(\x05\x12\x0c\n\x04\x63ode\x18\x05 \x02(\t\x12\x0b\n\x03qty\x18\x06 \x02(\x01\x12\r\n\x05price\x18\x07 \x01(\x01\x12\x13\n\x0b\x61\x64justPrice\x18\x08 \x01(\x08\x12\x1a\n\x12\x61\x64justSideAndLimit\x18\t \x01(\x01\x12\x11\n\tsecMarket\x18\n \x01(\x05\x12\x0e\n\x06remark\x18\x0b \x01(\t\x12\x13\n\x0btimeInForce\x18\x0c \x01(\x05\x12\x16\n\x0e\x66illOutsideRTH\x18\r \x01(\x08\"=\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x0f\n\x07orderID\x18\x02 \x01(\x04\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.Trd_PlaceOrder.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.Trd_PlaceOrder.S2CBD\n\x13\x63om.futu.openapi.pbZ-github.com/futuopen/ftapi4go/pb/trdplaceorder')
+  serialized_pb=_b('\n\x14Trd_PlaceOrder.proto\x12\x0eTrd_PlaceOrder\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\xed\x02\n\x03\x43\x32S\x12\"\n\x08packetID\x18\x01 \x02(\x0b\x32\x10.Common.PacketID\x12%\n\x06header\x18\x02 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x0f\n\x07trdSide\x18\x03 \x02(\x05\x12\x11\n\torderType\x18\x04 \x02(\x05\x12\x0c\n\x04\x63ode\x18\x05 \x02(\t\x12\x0b\n\x03qty\x18\x06 \x02(\x01\x12\r\n\x05price\x18\x07 \x01(\x01\x12\x13\n\x0b\x61\x64justPrice\x18\x08 \x01(\x08\x12\x1a\n\x12\x61\x64justSideAndLimit\x18\t \x01(\x01\x12\x11\n\tsecMarket\x18\n \x01(\x05\x12\x0e\n\x06remark\x18\x0b \x01(\t\x12\x13\n\x0btimeInForce\x18\x0c \x01(\x05\x12\x16\n\x0e\x66illOutsideRTH\x18\r \x01(\x08\x12\x10\n\x08\x61uxPrice\x18\x0e \x01(\x01\x12\x11\n\ttrailType\x18\x0f \x01(\x05\x12\x12\n\ntrailValue\x18\x10 \x01(\x01\x12\x13\n\x0btrailSpread\x18\x11 \x01(\x01\"=\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x0f\n\x07orderID\x18\x02 \x01(\x04\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.Trd_PlaceOrder.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.Trd_PlaceOrder.S2CBD\n\x13\x63om.futu.openapi.pbZ-github.com/futuopen/ftapi4go/pb/trdplaceorder')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Trd__Common__pb2.DESCRIPTOR,])
 
@@ -126,6 +126,34 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='auxPrice', full_name='Trd_PlaceOrder.C2S.auxPrice', index=13,
+      number=14, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='trailType', full_name='Trd_PlaceOrder.C2S.trailType', index=14,
+      number=15, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='trailValue', full_name='Trd_PlaceOrder.C2S.trailValue', index=15,
+      number=16, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='trailSpread', full_name='Trd_PlaceOrder.C2S.trailSpread', index=16,
+      number=17, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -139,7 +167,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=73,
-  serialized_end=360,
+  serialized_end=438,
 )
 
 
@@ -176,8 +204,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=362,
-  serialized_end=423,
+  serialized_start=440,
+  serialized_end=501,
 )
 
 
@@ -207,8 +235,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=425,
-  serialized_end=468,
+  serialized_start=503,
+  serialized_end=546,
 )
 
 
@@ -259,8 +287,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=470,
-  serialized_end=570,
+  serialized_start=548,
+  serialized_end=648,
 )
 
 _C2S.fields_by_name['packetID'].message_type = Common__pb2._PACKETID

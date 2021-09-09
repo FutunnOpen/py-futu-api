@@ -7,6 +7,8 @@ from futu.quote.quote_query import parse_head
 from .err import Err
 from .sys_config import SysConfig
 from .ft_logger import *
+import enum
+
 
 if IS_PY2:
     import selectors2 as selectors
@@ -23,6 +25,28 @@ class ConnStatus:
     Closed = 3
 
 
+class ConnectErr(enum.Enum):
+    Ok = 0
+    Fail = 1
+    Timeout = 2
+
+
+class CloseReason(enum.Enum):
+    Close = 0
+    RemoteClose = 1
+    ReadFail = 2
+    SendFail = 3
+    ConnectFail = 4
+
+
+class PacketErr(enum.Enum):
+    Ok = 0
+    Timeout = 1
+    Invalid = 2
+    Disconnect = 3
+    SendFail = 4
+
+
 class SyncReqRspInfo:
     def __init__(self):
         self.event = threading.Event()
@@ -31,8 +55,62 @@ class SyncReqRspInfo:
         self.data = None
 
 
+class ConnectInfo:
+    def __init__(self, is_sync):
+        self.start_time = None
+        self.event = None
+        self.conn_id = 0
+        self.err = ConnectErr.Ok
+        self.msg = ''
+        if is_sync:
+            self.event = threading.Event()
+
+    @property
+    def is_sync(self):
+        return self.event is not None
+
+    def set_result(self, err, msg):
+        self.err = err
+        self.msg = msg
+        if self.event is not None:
+            self.event.set()
+
+    def wait(self):
+        if self.event is not None:
+            self.event.wait()
+
+
+class SendInfo:
+    def __init__(self, is_sync):
+        self.send_time = None
+        self.proto_id = 0
+        self.serial_no = 0
+        self.header_dict = None
+        self.err = PacketErr.Ok
+        self.msg = ''
+        self.event = None
+        self.rsp = None
+        if is_sync:
+            self.event = threading.Event()
+
+    @property
+    def is_sync(self):
+        return self.event is not None
+
+    def set_result(self, err, msg, rsp):
+        self.err = err
+        self.msg = msg
+        self.rsp = rsp
+        if self.event is not None:
+            self.event.set()
+
+    def wait(self):
+        if self.event is not None:
+            self.event.wait()
+
+
 class Connection:
-    def __init__(self, conn_id, sock, addr, handler, is_encrypt):
+    def __init__(self, conn_id, sock, addr, handler, is_encrypt, is_sync):
         self._conn_id = conn_id
         self.opend_conn_id = 0
         self.sock = sock
@@ -43,11 +121,13 @@ class Connection:
         self.keep_alive_interval = 10
         self.last_keep_alive_time = datetime.now()
         self.timeout = None
-        self.start_time = None
         self.readbuf = bytearray()
         self.writebuf = bytearray()
         self.req_dict = {}  # ProtoInfo -> req time
         self.sync_req_dict = {}  # ProtoInfo -> SyncReqRspInfo
+        self.connect_info = ConnectInfo(is_sync)
+        self.connect_info.conn_id = conn_id
+        self.send_info_dict = {} # ProtoInfo -> SendInfo
 
     @property
     def conn_id(self):
@@ -106,6 +186,7 @@ def make_ctrl_socks():
     else:
         return socket.socketpair()
 
+
 class NetManager:
     _default_inst = None
     _default_inst_lock = threading.Lock()
@@ -149,38 +230,38 @@ class NetManager:
         self._r_sock, self._w_sock = make_ctrl_socks()
         self._selector.register(self._r_sock, selectors.EVENT_READ)
 
-    def connect(self, addr, handler, timeout, is_encrypt):
+    def connect(self, addr, handler, timeout, is_encrypt, is_sync):
         with self._lock:
             conn_id = self._next_conn_id
             self._next_conn_id += 1
 
-        def work():
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 1024 * 1024)
-            conn = Connection(conn_id, sock, addr, handler, is_encrypt)
-            conn.status = ConnStatus.Connecting
-            conn.start_time = datetime.now()
-            conn.timeout = timeout
-            sock.setblocking(False)
-            self._selector.register(sock, selectors.EVENT_READ | selectors.EVENT_WRITE, conn)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 1024 * 1024)
+        sock.setblocking(False)
+        conn = Connection(conn_id, sock, addr, handler, is_encrypt, is_sync)
+        conn.status = ConnStatus.Connecting
+        conn.timeout = timeout
 
+        def work():
+            conn.connect_info.start_time = datetime.now()
+            self._selector.register(sock, selectors.EVENT_WRITE, conn)
             try:
                 sock.connect(addr)
             except Exception as e:
                 if not is_socket_exception_wouldblock(e):
-                    conn.handler.on_error(conn.conn_id, str(e))
-                    self.close(conn.conn_id)
-                    return RET_ERROR, str(e), 0
-
-            return RET_OK, '', conn_id
+                    self._do_close(conn.conn_id, CloseReason.ConnectFail, str(e), False)
+                    conn.connect_info.set_result(ConnectErr.Fail, str(e))
+                    if not conn.connect_info.is_sync:
+                        conn.handler.on_connect(conn_id, ConnectErr.Fail, str(e))
 
         self._req_queue.put(work)
         self._w_sock.send(b'1')
-        return RET_OK, '', conn_id
+
+        return RET_OK, conn.connect_info
 
     def poll(self):
-        events = self._selector.select(0.02)
         now = datetime.now()
+        events = self._selector.select(0.05)
         for key, evt_mask in events:
             if key.fileobj == self._r_sock:
                 self._r_sock.recv(1024)
@@ -199,10 +280,10 @@ class NetManager:
                 self._pending_read_conns.discard(conn)
                 self._on_read(conn)
 
-        for conn in self._pending_read_conns:
-            self._on_read(conn)
-
+        pending_read_conns = list(self._pending_read_conns)
         self._pending_read_conns.clear()
+        for conn in pending_read_conns:
+            self._on_read(conn)
 
         activate_elapsed_time = now - self._last_activate_time
         check_req_elapsed_time = now - self._last_check_req_time
@@ -219,7 +300,7 @@ class NetManager:
                         self._check_connect_timeout(conn, now)
                 elif conn.status == ConnStatus.Connected:
                     if is_activate:
-                        conn.handler.on_activate(conn.conn_id, now)
+                        conn.handler.on_tick(conn.conn_id, now)
                     if is_check_req:
                         self._check_req(conn, now)
 
@@ -229,7 +310,7 @@ class NetManager:
             self._last_check_req_time = now
 
     def _check_connect_timeout(self, conn, now):
-        time_delta = now - conn.start_time
+        time_delta = now - conn.connect_info.start_time
         if conn.timeout is not None and conn.timeout > 0 and time_delta.total_seconds() >= conn.timeout:
             self._on_connect_timeout(conn)
 
@@ -242,11 +323,11 @@ class NetManager:
         :type now: datetime
         :return:
         """
-        req_dict = dict(conn.req_dict.items())
-        for proto_info, req_time in req_dict.items():  # type: ProtoInfo, datetime
-            elapsed_time = now - req_time
+        req_dict = dict(conn.send_info_dict.items())
+        for proto_info, send_info in req_dict.items():  # type: ProtoInfo, SendInfo
+            elapsed_time = now - send_info.send_time
             if elapsed_time.total_seconds() >= self._sync_req_timeout:
-                self._on_packet(conn, proto_info._asdict(), Err.Timeout.code, Err.Timeout.text, None)
+                self._on_packet(conn, send_info.header_dict, PacketErr.Timeout, '', None)
 
     def _thread_func(self):
         while True:
@@ -280,39 +361,31 @@ class NetManager:
         with self._lock:
             return self._use_count > 0
 
-    def do_send(self, conn_id, proto_info, data):
-        logger.debug2(FTLog.ONLY_FILE, 'Send: conn_id={}; proto_id={}; serial_no={}; total_len={};'.format(conn_id, proto_info.proto_id,
-                                                                                         proto_info.serial_no,
-                                                                                         len(data)))
+    def do_send(self, conn_id, send_info: SendInfo, data):
+        logger.debug2(FTLog.ONLY_FILE, 'Send: conn_id={}; proto_id={}; serial_no={}; total_len={};'.format(conn_id,
+                                                                                                           send_info.proto_id,
+                                                                                                           send_info.serial_no,
+                                                                                                           len(data)))
         now = datetime.now()
         ret_code = RET_OK
         msg = ''
         conn = self._get_conn(conn_id)  # type: Connection
-        sync_req_rsp = None
         if not conn:
             logger.debug(
-                FTLog.make_log_msg('Send fail', conn_id=conn_id, proto_id=proto_info.proto_id, serial_no=proto_info.serial_no,
-                             msg=Err.ConnectionLost.text))
+                FTLog.make_log_msg('Send fail', conn_id=conn_id, proto_id=send_info.proto_id, serial_no=send_info.serial_no,
+                                   msg=Err.ConnectionLost.text))
             ret_code, msg = RET_ERROR, Err.ConnectionLost.text
-        else:
-            sync_req_rsp = conn.sync_req_dict.get(proto_info, None)
-
-        if ret_code != RET_OK:
-            return ret_code, msg
-
-        if conn.status != ConnStatus.Connected:
+        elif conn.status != ConnStatus.Connected:
             ret_code, msg = RET_ERROR, Err.NotConnected.text
 
         if ret_code != RET_OK:
-            logger.warning(FTLog.make_log_msg('Send fail', proto_id=proto_info.proto_id, serial_no=proto_info.serial_no,
-                                        conn_id=conn_id, msg=msg))
-            if sync_req_rsp:
-                sync_req_rsp.ret, sync_req_rsp.msg = RET_ERROR, msg
-                sync_req_rsp.event.set()
+            logger.warning(FTLog.make_log_msg('Send fail', proto_id=send_info.proto_id, serial_no=send_info.serial_no,
+                                              conn_id=conn_id, msg=msg))
+            send_info.set_result(PacketErr.SendFail, msg, None)
+            return
 
-            return ret_code, msg
-
-        conn.req_dict[proto_info] = now
+        proto_info = ProtoInfo(send_info.proto_id, send_info.serial_no)
+        conn.send_info_dict[proto_info] = send_info
         size = 0
         try:
             if len(conn.writebuf) > 0:
@@ -325,55 +398,61 @@ class NetManager:
             else:
                 ret_code, msg = RET_ERROR, str(e)
 
-        if size > 0 and size < len(data):
+        if 0 < size < len(data):
             conn.writebuf.extend(data[size:])
             self._watch_write(conn, True)
 
         if ret_code != RET_OK:
             logger.warning(FTLog.make_log_msg('Send error', conn_id=conn_id, msg=msg))
-            if sync_req_rsp:
-                sync_req_rsp.ret, sync_req_rsp.msg = RET_ERROR, msg
-                sync_req_rsp.event.set()
-            return ret_code, msg
+            send_info.set_result(PacketErr.SendFail, msg, None)
+            self._do_close(conn.conn_id, CloseReason.SendFail, msg, True)
 
         return RET_OK, ''
 
-    def send(self, conn_id, data):
+    def send(self, conn_id, data, is_sync=False):
         """
 
         :param conn_id:
         :param data:
         :return:
         """
-        proto_info = self._parse_req_head_proto_info(data)
+        header = self._parse_req_head(data)
+        send_info = SendInfo(is_sync)
+        send_info.proto_id = header['proto_id']
+        send_info.serial_no = header['serial_no']
+        send_info.header_dict = header
 
         def work():
-            self.do_send(conn_id, proto_info, data)
+            send_info.send_time = datetime.now()
+            self.do_send(conn_id, send_info, data)
 
         self._req_queue.put(work)
         self._w_sock.send(b'1')
-        return RET_OK, None
+        return RET_OK, send_info
 
     def close(self, conn_id):
         def work():
-            conn = self._get_conn(conn_id)  # type: Connection
-            if not conn:
-                return
-            if conn.sock is None:
-                return
-            self._watch_read(conn, False)
-            self._watch_write(conn, False)
-            conn.sock.close()
-            conn.sock = None
-            conn.status = ConnStatus.Closed
-            for proto_info, sync_req_rsp in conn.sync_req_dict.items():  # type: ProtoInfo, SyncReqRspInfo
-                sync_req_rsp.ret = RET_ERROR
-                sync_req_rsp.msg = Err.ConnectionClosed.text
-                sync_req_rsp.event.set()
-            logger.info("Close: conn_id={}".format(conn_id))
+            self._do_close(conn_id, CloseReason.Close, '', True)
 
         self._req_queue.put(work)
         self._w_sock.send(b'1')
+
+    def _do_close(self, conn_id, reason, msg, notify):
+        conn = self._get_conn(conn_id)  # type: Connection
+        if not conn:
+            return
+        if conn.sock is None:
+            return
+        self._selector.unregister(conn.sock)
+        conn.sock.close()
+        conn.sock = None
+        conn.status = ConnStatus.Closed
+        send_info: SendInfo
+        for send_info in conn.send_info_dict.values():
+            send_info.set_result(PacketErr.Disconnect, '', None)
+        logger.debug("Close: conn_id={}".format(conn_id))
+        if notify:
+            conn.handler.on_disconnect(conn_id, reason, msg)
 
     def _watch_read(self, conn, is_watch):
         try:
@@ -438,7 +517,7 @@ class NetManager:
         req_head_dict = parse_head(req_str[:head_len])
         return req_head_dict
 
-    def _parse_req_head_proto_info(selfs, req_str):
+    def _parse_req_head_proto_info(self, req_str):
         head_len = get_message_head_len()
         proto_info = parse_proto_info(req_str[:head_len])
         return proto_info
@@ -454,15 +533,11 @@ class NetManager:
             return None
 
     def _on_read(self, conn):
-        start_time = time.time()
-        recv_len = 0
-        buf_len = 0
-        packet_count = 0
-
         if conn.status == ConnStatus.Closed:
             return
 
-        err = None
+        packet_count = 0
+        msg = ''
         is_closed = False
         try:
             data = conn.sock.recv(128 * 1024)
@@ -470,12 +545,10 @@ class NetManager:
                 is_closed = True
             else:
                 conn.readbuf.extend(data)
-                recv_len = len(data)
-                buf_len = len(conn.readbuf)
-
         except Exception as e:
             if not is_socket_exception_wouldblock(e):
-                err = str(e)
+                is_closed = True
+                msg = str(e)
 
         while len(conn.readbuf) > 0:
             head_len = get_message_head_len()
@@ -489,43 +562,49 @@ class NetManager:
             rsp_body = conn.readbuf[head_len:head_len+body_len]
             del conn.readbuf[:head_len+body_len]
             packet_count += 1
-            self._on_packet(conn, head_dict, Err.Ok.code, '', rsp_body)
+            self._on_packet(conn, head_dict, PacketErr.Ok, '', rsp_body)
             if packet_count >= 10:
-                self._pending_read_conns.add(conn)
-                self._w_sock.send(b'1')
-                break  #收10个包强制跳出循环，避免长时间解包导致无法发送心跳
+                if len(conn.readbuf) > 0:
+                    self._pending_read_conns.add(conn)
+                    self._w_sock.send(b'1')
+                break  # 收10个包强制跳出循环，避免长时间解包导致无法发送心跳
 
         if is_closed:
-            self.close(conn.conn_id)
-            conn.handler.on_error(conn.conn_id, Err.ConnectionClosed.text)
-        elif err:
-            self.close(conn.conn_id)
-            conn.handler.on_error(conn.conn_id, err)
-        # end_time = time.time()
+            if msg == '':
+                self._do_close(conn.conn_id, CloseReason.RemoteClose, msg, True)
+            else:
+                self._do_close(conn.conn_id, CloseReason.ReadFail, msg, True)
+
         # logger.debug2(FTLog.ONLY_FILE, 'conn_id={}; elapsed={}; recv_len={}; buf_len={}; packet={};'.format(conn.conn_id, end_time-start_time, recv_len, buf_len, packet_count))
 
-    def _on_write(self, conn):
+    def _on_write(self, conn: Connection):
         if conn.status == ConnStatus.Closed:
             return
         elif conn.status == ConnStatus.Connecting:
-            err = conn.sock.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
+            err_code = conn.sock.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
+            self._watch_read(conn, True)
             self._watch_write(conn, False)
-            if err != 0:
-                conn.handler.on_error(conn.conn_id, errno.errorcode[err])
+            if err_code != 0:
+                msg = errno.errorcode[err_code]
+                self._do_close(conn.conn_id, CloseReason.ConnectFail, msg, False)
+                conn.connect_info.set_result(ConnectErr.Fail, msg)
+                if not conn.connect_info.is_sync:
+                    conn.handler.on_connect(conn.conn_id, ConnectErr.Fail, msg)
             else:
                 conn.status = ConnStatus.Connected
-                conn.handler.on_connected(conn.conn_id)
+                conn.connect_info.set_result(ConnectErr.Ok, '')
+                if not conn.connect_info.is_sync:
+                    conn.handler.on_connect(conn.conn_id, ConnectErr.Ok, '')
             return
 
-        err = None
-
+        msg = ''
         size = 0
         try:
             if len(conn.writebuf) > 0:
                 size = conn.sock.send(conn.writebuf)
         except Exception as e:
             if not is_socket_exception_wouldblock(e):
-                err = str(e)
+                msg = str(e)
 
         if size > 0:
             del conn.writebuf[:size]
@@ -533,34 +612,28 @@ class NetManager:
         if len(conn.writebuf) == 0:
             self._watch_write(conn, False)
 
-        if err:
-            self.close(conn.conn_id)
-            conn.handler.on_error(conn.conn_id, err)
+        if msg:
+            self._do_close(conn.conn_id, CloseReason.SendFail, msg, True)
 
-    def _on_connect_timeout(self, conn):
-        conn.handler.on_connect_timeout(conn.conn_id)
+    def _on_connect_timeout(self, conn: Connection):
+        conn.connect_info.set_result(ConnectErr.Timeout, '')
+        if not conn.connect_info.is_sync:
+            conn.handler.on_connect(conn.conn_id, ConnectErr.Timeout, '')
+        self._do_close(conn.conn_id, CloseReason.ConnectFail, '', False)
 
-    def _on_packet(self, conn, head_dict, err_code, msg, rsp_body_data):
-        """
-
-        :param conn:
-        :type conn: Connection
-        :param head_dict:
-        :param err_code:
-        :param msg:
-        :param rsp_body_data:
-        :return:
-        """
+    def _on_packet(self, conn, head_dict, err: PacketErr, msg: str, rsp_body_data: bytes):
         proto_info = ProtoInfo(head_dict['proto_id'], head_dict['serial_no'])
         rsp_pb = None
-        if err_code == Err.Ok.code:
+        if err is PacketErr.Ok:
             ret_decrypt, msg_decrypt, rsp_body = decrypt_rsp_body(rsp_body_data, head_dict, conn.opend_conn_id, conn.is_encrypt)
             if ret_decrypt == RET_OK:
                 rsp_pb = binary2pb(rsp_body, head_dict['proto_id'], head_dict['proto_fmt_type'])
             else:
-                err_code = Err.PacketDataErr.code
+                err = PacketErr.Invalid
                 msg = msg_decrypt
                 rsp_pb = None
+        elif msg == '':
+            msg = str(err)
 
         log_msg = 'Recv: conn_id={}; proto_id={}; serial_no={}; data_len={}; msg={};'.format(conn.conn_id,
                                                                                              proto_info.proto_id,
@@ -568,20 +641,20 @@ class NetManager:
                                                                                              len(
                                                                                                  rsp_body_data) if rsp_body_data else 0,
                                                                                              msg)
-        if err_code == Err.Ok.code:
+        if err is PacketErr.Ok:
             logger.debug2(FTLog.ONLY_FILE, log_msg)
         else:
             logger.warning(log_msg)
 
-        ret_code = RET_OK if err_code == Err.Ok.code else RET_ERROR
-        sync_rsp_info = conn.sync_req_dict.get(proto_info, None)  # type: SyncReqRspInfo
-        conn.req_dict.pop(proto_info, None)
-        if sync_rsp_info:
-            sync_rsp_info.ret, sync_rsp_info.msg, sync_rsp_info.data = ret_code, msg, rsp_pb
-            sync_rsp_info.event.set()
-            conn.sync_req_dict.pop(proto_info)
-        else:
-            conn.handler.on_packet(conn.conn_id, proto_info, ret_code, msg, rsp_pb)
+        send_info: SendInfo
+        send_info = conn.send_info_dict.get(proto_info, None)
+        conn.send_info_dict.pop(proto_info, None)
+        if send_info:
+            send_info.set_result(err, msg, rsp_pb)
+            if not send_info.is_sync:
+                conn.handler.on_packet(conn.conn_id, proto_info, err, msg, rsp_pb)
+        elif ProtoId.is_proto_id_push(proto_info.proto_id):
+            conn.handler.on_packet(conn.conn_id, proto_info, err, msg, rsp_pb)
 
     @staticmethod
     def extract_rsp_pb(opend_conn_id, head_dict, rsp_body):

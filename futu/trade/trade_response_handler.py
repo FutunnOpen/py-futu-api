@@ -15,9 +15,9 @@ class TradeOrderHandlerBase(RspHandlerBase):
         else:
             order_dict = ret_data
             col_list = ['trd_env', 'code', 'stock_name', 'dealt_avg_price', 'dealt_qty',
-                        'qty', 'order_id', 'order_type', 'price', 'order_status',
-                        'create_time', 'updated_time', 'trd_side', 'last_err_msg', 'trd_market', "remark",
-                        "time_in_force", "fill_outside_rth"
+                        'qty', 'order_id', 'order_type', 'price', 'order_status', 'create_time',
+                        'updated_time', 'trd_side', 'last_err_msg', 'trd_market', "remark", "time_in_force",
+                        "fill_outside_rth", "aux_price", "trail_type", "trail_value", "trail_spread"
                         ]
 
             trade_frame_table = pd.DataFrame([order_dict], columns=col_list)

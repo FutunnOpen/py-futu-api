@@ -157,7 +157,15 @@ class AccInfoQuery:
             'hk_cash': NoneDataValue,
             'hk_avl_withdrawal_cash': NoneDataValue,
             'us_cash': NoneDataValue,
-            'us_avl_withdrawal_cash': NoneDataValue
+            'us_avl_withdrawal_cash': NoneDataValue,
+            'jp_cash': NoneDataValue,
+            'jp_avl_withdrawal_cash': NoneDataValue,
+            'is_pdt':  get_pb_value(raw_funds, 'isPdt'),
+            'pdt_seq': get_pb_value(raw_funds, 'pdtSeq'),
+            'beginning_dtbp': get_pb_value(raw_funds, 'beginningDTBP'),
+            'remaining_dtbp': get_pb_value(raw_funds, 'remainingDTBP'),
+            'dt_call_amount': get_pb_value(raw_funds, 'dtCallAmount'),
+            'dt_status': get_pb_enum(raw_funds, 'dtStatus', DTStatus, DTStatus.NONE)
         }]
         for cashInfo in raw_funds.cashInfoList:
             if cashInfo.currency == Trd_Common_pb2.Currency_HKD:
@@ -166,6 +174,9 @@ class AccInfoQuery:
             elif cashInfo.currency == Trd_Common_pb2.Currency_USD:
                 accinfo_list[0]['us_cash'] = cashInfo.cash
                 accinfo_list[0]['us_avl_withdrawal_cash'] = cashInfo.availableBalance
+            elif cashInfo.currency == Trd_Common_pb2.Currency_JPY:
+                accinfo_list[0]['jp_cash'] = cashInfo.cash
+                accinfo_list[0]['jp_avl_withdrawal_cash'] = cashInfo.availableBalance
         return RET_OK, "", accinfo_list
 
 
@@ -282,7 +293,11 @@ class OrderListQuery:
             "last_err_msg": order.lastErrMsg,
             "remark": order.remark if order.HasField("remark") else "",
             "time_in_force": TimeInForce.to_string2(order.timeInForce) if order.HasField('timeInForce') else 'N/A',# 初始化枚举类型
-            "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A'
+            "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A',
+            "aux_price": order.auxPrice if order.HasField("auxPrice") else 'N/A',
+            "trail_type": TrailType.to_string2(order.trailType) if order.HasField("trailType") else 'N/A',
+            "trail_value": order.trailValue if order.HasField("trailValue") else 'N/A',
+            "trail_spread": order.trailSpread if order.HasField("trailSpread") else 'N/A',
         }
         return order_dict
 
@@ -305,7 +320,7 @@ class PlaceOrder:
     @classmethod
     def pack_req(cls, trd_side, order_type, price, qty,
                  code, adjust_limit, trd_env, sec_mkt_str, acc_id, trd_mkt, conn_id, remark,
-                 time_in_force, fill_outside_rth):
+                 time_in_force, fill_outside_rth, aux_price, trail_type ,trail_value ,trail_spread):
         """Convert from user request for place order to PLS request"""
         from futu.common.pb.Trd_PlaceOrder_pb2 import Request
         req = Request()
@@ -336,6 +351,18 @@ class PlaceOrder:
             return RET_ERROR, val, None
         else:
             req.c2s.timeInForce = val
+        if aux_price is not None:
+            req.c2s.auxPrice = aux_price
+        if trail_type is not None:
+            ret, val = TrailType.to_number(trail_type)
+            if not ret:
+                return RET_ERROR, val, None
+            else:
+                req.c2s.trailType = val
+        if trail_value is not None:
+            req.c2s.trailValue = trail_value
+        if trail_spread is not None:
+            req.c2s.trailSpread = trail_spread
 
         req.c2s.fillOutsideRTH = fill_outside_rth
 
@@ -359,7 +386,8 @@ class ModifyOrder:
 
     @classmethod
     def pack_req(cls, modify_order_op, order_id, price, qty,
-                 adjust_limit, trd_env, acc_id, trd_mkt, conn_id):
+                 adjust_limit, trd_env, acc_id, trd_mkt, conn_id,
+                 aux_price, trail_type, trail_value, trail_spread):
         """Convert from user request for place order to PLS request"""
         from futu.common.pb.Trd_ModifyOrder_pb2 import Request
         req = Request()
@@ -380,6 +408,14 @@ class ModifyOrder:
             req.c2s.price = price
             req.c2s.adjustPrice = adjust_limit != 0
             req.c2s.adjustSideAndLimit = adjust_limit
+            if aux_price is not None:
+                req.c2s.auxPrice = float(aux_price)
+            if trail_type is not None:
+                _, req.c2s.trailType = TrailType.to_number(trail_type)
+            if trail_value is not None:
+                req.c2s.trailValue = float(trail_value)
+            if trail_spread is not None:
+                req.c2s.trailSpread = float(trail_spread)
 
         return pack_pb_req(req, ProtoId.Trd_ModifyOrder, conn_id, serial_no)
 
@@ -533,7 +569,11 @@ class HistoryOrderListQuery:
                       "last_err_msg": order.lastErrMsg,
                       "remark": order.remark if order.HasField("remark") else "",
                       "time_in_force": TimeInForce.to_string2(order.timeInForce) if order.HasField('timeInForce') else 'N/A',# 初始化枚举类型
-                      "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A'
+                      "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A',
+                      "aux_price": order.auxPrice if order.HasField("auxPrice") else 'N/A',
+                      "trail_type": order.trailType if order.HasField("trailType") else 'N/A',
+                      "trail_value": order.trailValue if order.HasField("trailValue") else 'N/A',
+                      "trail_spread": order.trailSpread if order.HasField("trailSpread") else 'N/A',
                       } for order in raw_order_list]
         return RET_OK, "", order_list
 

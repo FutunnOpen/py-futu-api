@@ -150,8 +150,8 @@ enum PatternField
     PatternField_RSIDeathCrossHigh = 6 ; // RSI高位死叉（50以上，短线RSI下穿长线RSI（前一日短线RSI大于长线RSI，当日短线RSI小于长线RSI）） 
     PatternField_RSITopDivergence = 7 ; // RSI顶背离（相邻的两个K线波峰，后面的波峰对应的CLOSE>前面的波峰对应的CLOSE，后面波峰的RSI12值 <前面波峰的RSI12值）
     PatternField_RSIBottomDivergence = 8 ; // RSI底背离（相邻的两个K线波谷，后面的波谷对应的CLOSE <前面的波谷对应的CLOSE，后面波谷的RSI12值>前面波谷的RSI12值） 
-    PatternField_KDJGoldCrossLow = 9 ; // KDJ低位金叉（KDJ的值都小于或等于30，且前一日K,J值分别小于D值，当日K,J值分别大于D值）
-    PatternField_KDJDeathCrossHigh = 10 ; // KDJ高位死叉（KDJ的值都大于或等于70，且前一日K,J值分别大于D值，当日K,J值分别小于D值）
+    PatternField_KDJGoldCrossLow = 9 ; // KDJ低位金叉（D值小于或等于30，且前一日K值小于D值，当日K值大于D值）
+    PatternField_KDJDeathCrossHigh = 10 ; // KDJ高位死叉（D值大于或等于70，且前一日K值大于D值，当日K值小于D值）
     PatternField_KDJTopDivergence = 11 ; // KDJ顶背离（相邻的两个K线波峰，后面的波峰对应的CLOSE>前面的波峰对应的CLOSE，后面波峰的J值 <前面波峰的J值）
     PatternField_KDJBottomDivergence = 12 ; // KDJ底背离（相邻的两个K线波谷，后面的波谷对应的CLOSE <前面的波谷对应的CLOSE，后面波谷的J值>前面波谷的J值）
     PatternField_MACDGoldCrossLow = 13 ; // MACD低位金叉（DIFF上穿DEA（前一日DIFF小于DEA，当日DIFF大于DEA））
@@ -283,6 +283,7 @@ message StockData
 	repeated BaseData baseDataList = 3; // 筛选后的简单指标属性数据
 	repeated AccumulateData accumulateDataList = 4; // 筛选后的累积指标属性数据
 	repeated FinancialData financialDataList = 5; // 筛选后的财务指标属性数据
+	repeated CustomIndicatorData customIndicatorDataList = 6; // 筛选后的自定义技术指标属性数据
 }
 
 message C2S

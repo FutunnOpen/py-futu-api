@@ -10,6 +10,11 @@ from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcs1
 from Crypto import Random
 
 
+class RunMode:
+    DEFAULT = 'DEFAULT'
+    STRATEGY = 'STRATEGY'
+
+
 class SysConfig(object):
     IS_PROTO_ENCRYPT = False                # api通讯协议是否加密
     INIT_RSA_FILE = ''                      # 初始连接协议用到的rsa private key file
@@ -18,6 +23,7 @@ class SysConfig(object):
     CLINET_ID = None                        # Client标识
     CLIENT_VER = None                       # Client ver
     ALL_THREAD_DAEMON = False               # 是否所有产生的线程都是daemon线程
+    RUN_MODE = RunMode.DEFAULT
 
     @classmethod
     def set_client_info(cls, client_id, client_ver):
@@ -186,6 +192,14 @@ class SysConfig(object):
     @classmethod
     def get_all_thread_daemon(cls):
         return SysConfig.ALL_THREAD_DAEMON
+
+    @classmethod
+    def set_run_mode(cls, mode):
+        cls.RUN_MODE = mode
+
+    @classmethod
+    def get_run_mode(cls):
+        return cls.RUN_MODE
 
 
 class RsaCrypt(object):

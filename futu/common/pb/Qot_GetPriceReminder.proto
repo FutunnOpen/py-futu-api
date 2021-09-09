@@ -12,7 +12,7 @@ message PriceReminderItem
     required int64 key = 1; // 每个提醒的唯一标识
 	required int32 type = 2; // Qot_Common::PriceReminderType 提醒类型
 	required double value = 3; // 提醒参数值
-	required string note = 4; // 备注
+	required string note = 4; // 备注仅支持 20 个以内的中文字符
 	required int32 freq = 5; // Qot_Common::PriceReminderFreq 提醒频率类型
 	required bool isEnable = 6; // 该提醒设置是否生效。false不生效，true生效
 }
