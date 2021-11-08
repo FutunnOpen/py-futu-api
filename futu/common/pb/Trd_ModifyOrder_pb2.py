@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_ModifyOrder.proto',
   package='Trd_ModifyOrder',
   syntax='proto2',
-  serialized_pb=_b('\n\x15Trd_ModifyOrder.proto\x12\x0fTrd_ModifyOrder\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\xa3\x02\n\x03\x43\x32S\x12\"\n\x08packetID\x18\x01 \x02(\x0b\x32\x10.Common.PacketID\x12%\n\x06header\x18\x02 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x0f\n\x07orderID\x18\x03 \x02(\x04\x12\x15\n\rmodifyOrderOp\x18\x04 \x02(\x05\x12\x0e\n\x06\x66orAll\x18\x05 \x01(\x08\x12\x0b\n\x03qty\x18\x08 \x01(\x01\x12\r\n\x05price\x18\t \x01(\x01\x12\x13\n\x0b\x61\x64justPrice\x18\n \x01(\x08\x12\x1a\n\x12\x61\x64justSideAndLimit\x18\x0b \x01(\x01\x12\x10\n\x08\x61uxPrice\x18\x0c \x01(\x01\x12\x11\n\ttrailType\x18\r \x01(\x05\x12\x12\n\ntrailValue\x18\x0e \x01(\x01\x12\x13\n\x0btrailSpread\x18\x0f \x01(\x01\"=\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x0f\n\x07orderID\x18\x02 \x02(\x04\",\n\x07Request\x12!\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x14.Trd_ModifyOrder.C2S\"e\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12!\n\x03s2c\x18\x04 \x01(\x0b\x32\x14.Trd_ModifyOrder.S2CBE\n\x13\x63om.futu.openapi.pbZ.github.com/futuopen/ftapi4go/pb/trdmodifyorder')
+  serialized_pb=_b('\n\x15Trd_ModifyOrder.proto\x12\x0fTrd_ModifyOrder\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\xb6\x02\n\x03\x43\x32S\x12\"\n\x08packetID\x18\x01 \x02(\x0b\x32\x10.Common.PacketID\x12%\n\x06header\x18\x02 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x0f\n\x07orderID\x18\x03 \x02(\x04\x12\x15\n\rmodifyOrderOp\x18\x04 \x02(\x05\x12\x0e\n\x06\x66orAll\x18\x05 \x01(\x08\x12\x11\n\ttrdMarket\x18\x06 \x01(\x05\x12\x0b\n\x03qty\x18\x08 \x01(\x01\x12\r\n\x05price\x18\t \x01(\x01\x12\x13\n\x0b\x61\x64justPrice\x18\n \x01(\x08\x12\x1a\n\x12\x61\x64justSideAndLimit\x18\x0b \x01(\x01\x12\x10\n\x08\x61uxPrice\x18\x0c \x01(\x01\x12\x11\n\ttrailType\x18\r \x01(\x05\x12\x12\n\ntrailValue\x18\x0e \x01(\x01\x12\x13\n\x0btrailSpread\x18\x0f \x01(\x01\"=\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x0f\n\x07orderID\x18\x02 \x02(\x04\",\n\x07Request\x12!\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x14.Trd_ModifyOrder.C2S\"e\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12!\n\x03s2c\x18\x04 \x01(\x0b\x32\x14.Trd_ModifyOrder.S2CBE\n\x13\x63om.futu.openapi.pbZ.github.com/futuopen/ftapi4go/pb/trdmodifyorder')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Trd__Common__pb2.DESCRIPTOR,])
 
@@ -71,56 +71,63 @@ _C2S = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='qty', full_name='Trd_ModifyOrder.C2S.qty', index=5,
+      name='trdMarket', full_name='Trd_ModifyOrder.C2S.trdMarket', index=5,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='qty', full_name='Trd_ModifyOrder.C2S.qty', index=6,
       number=8, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='price', full_name='Trd_ModifyOrder.C2S.price', index=6,
+      name='price', full_name='Trd_ModifyOrder.C2S.price', index=7,
       number=9, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='adjustPrice', full_name='Trd_ModifyOrder.C2S.adjustPrice', index=7,
+      name='adjustPrice', full_name='Trd_ModifyOrder.C2S.adjustPrice', index=8,
       number=10, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='adjustSideAndLimit', full_name='Trd_ModifyOrder.C2S.adjustSideAndLimit', index=8,
+      name='adjustSideAndLimit', full_name='Trd_ModifyOrder.C2S.adjustSideAndLimit', index=9,
       number=11, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='auxPrice', full_name='Trd_ModifyOrder.C2S.auxPrice', index=9,
+      name='auxPrice', full_name='Trd_ModifyOrder.C2S.auxPrice', index=10,
       number=12, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='trailType', full_name='Trd_ModifyOrder.C2S.trailType', index=10,
+      name='trailType', full_name='Trd_ModifyOrder.C2S.trailType', index=11,
       number=13, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='trailValue', full_name='Trd_ModifyOrder.C2S.trailValue', index=11,
+      name='trailValue', full_name='Trd_ModifyOrder.C2S.trailValue', index=12,
       number=14, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='trailSpread', full_name='Trd_ModifyOrder.C2S.trailSpread', index=12,
+      name='trailSpread', full_name='Trd_ModifyOrder.C2S.trailSpread', index=13,
       number=15, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
@@ -139,7 +146,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=75,
-  serialized_end=366,
+  serialized_end=385,
 )
 
 
@@ -176,8 +183,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=368,
-  serialized_end=429,
+  serialized_start=387,
+  serialized_end=448,
 )
 
 
@@ -207,8 +214,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=431,
-  serialized_end=475,
+  serialized_start=450,
+  serialized_end=494,
 )
 
 
@@ -259,8 +266,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=477,
-  serialized_end=578,
+  serialized_start=496,
+  serialized_end=597,
 )
 
 _C2S.fields_by_name['packetID'].message_type = Common__pb2._PACKETID

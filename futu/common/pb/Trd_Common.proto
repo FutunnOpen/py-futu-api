@@ -12,6 +12,14 @@ enum TrdEnv
 	TrdEnv_Real = 1; //真实环境
 }
 
+//交易品类
+enum TrdCategory
+{
+	TrdCategory_Unknown = 0; //未知品类
+	TrdCategory_Security = 1; //证券
+	TrdCategory_Future = 2; //期货
+}
+
 //交易市场，是大的市场，不是具体品种
 enum TrdMarket
 {
@@ -21,6 +29,7 @@ enum TrdMarket
 	TrdMarket_CN = 3; //大陆市场
 	TrdMarket_HKCC = 4; //香港A股通市场
 	TrdMarket_Futures = 5; //期货市场
+	TrdMarket_SG = 6; //期货市场
 }
 
 //可交易证券所属市场，目前主要是区分A股的沪市和深市，香港和美国暂不需要细分
@@ -140,6 +149,7 @@ enum Currency
     Currency_USD = 2;   // 美元
     Currency_CNH = 3;   // 离岸人民币
 	Currency_JPY = 4;   // 日元
+	Currency_SGD = 5;   // 新币
 }
 
 //账户风险控制等级
@@ -292,6 +302,8 @@ message Position
 
     optional double unrealizedPL = 28;       //未实现盈亏，期货适用
     optional double realizedPL = 29;         //已实现盈亏，期货适用
+	optional int32 currency = 30;        // 货币类型，取值参考 Currency
+	optional int32 trdMarket = 31;  //交易市场, 参见TrdMarket的枚举定义
 }
 
 //订单结构
@@ -321,6 +333,8 @@ message Order
 	optional int32 trailType = 22; //跟踪类型, 参见Trd_Common.TrailType的枚举定义
 	optional double trailValue = 23; //跟踪金额/百分比
 	optional double trailSpread = 24; //指定价差
+	optional int32 currency = 25;        // 货币类型，取值参考 Currency
+	optional int32 trdMarket = 26;  //交易市场, 参见TrdMarket的枚举定义
 }
 
 //成交结构

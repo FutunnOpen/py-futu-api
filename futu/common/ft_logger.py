@@ -99,7 +99,7 @@ class FTLog(object):
             self.file_logger.addHandler(self.fileHandler)
 
         if not hasattr(self, 'consoleHandler'):
-            self.consoleHandler = logging.StreamHandler()
+            self.consoleHandler = logging.StreamHandler(sys.stdout)
             self.consoleHandler.setLevel(self._console_level)
             self.consoleHandler.setFormatter(self.formatter)
             self.console_logger.addHandler(self.consoleHandler)

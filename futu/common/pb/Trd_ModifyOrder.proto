@@ -13,6 +13,7 @@ message C2S
 	required uint64 orderID = 3; //订单号，forAll为true时，传0
 	required int32 modifyOrderOp = 4; //修改操作类型，参见Trd_Common.ModifyOrderOp的枚举定义
 	optional bool forAll = 5; //是否对此业务账户的全部订单操作，true是，false否(对单个订单)，无此字段代表false，仅对单个订单
+	optional int32 trdMarket = 6; //指定市场，全部撤单时才需要
 	
 	//下面的字段仅针对单个订单，且modifyOrderOp为ModifyOrderOp_Normal有效
 	optional double qty = 8; //数量，期权单位是"张"（精确到小数点后 0 位，超出部分会被舍弃）

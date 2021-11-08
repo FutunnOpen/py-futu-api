@@ -29,11 +29,13 @@ class GetAccountList:
         pass
 
     @classmethod
-    def pack_req(cls, user_id, conn_id):
+    def pack_req(cls, user_id, conn_id, trd_category, need_general_sec_acc):
         from futu.common.pb.Trd_GetAccList_pb2 import Request
 
         req = Request()
         req.c2s.userID = user_id
+        _, req.c2s.trdCategory = TrdCategory.to_number(trd_category)
+        req.c2s.needGeneralSecAccount = need_general_sec_acc
         return pack_pb_req(req, ProtoId.Trd_GetAccList, conn_id)
 
     @classmethod
@@ -50,7 +52,8 @@ class GetAccountList:
             'acc_type': TrdAccType.to_string2(record.accType) if record.HasField("accType") else TrdAccType.NONE,# 初始化枚举类型
             'card_num': record.cardNum if record.HasField("cardNum") else "N/A",
             'security_firm': SecurityFirm.to_string2(record.securityFirm) if record.HasField('securityFirm') else SecurityFirm.NONE,# 初始化枚举类型
-            'sim_acc_type': SimAccType.to_string2(record.simAccType) if record.HasField('simAccType') else SimAccType.NONE# 初始化枚举类型
+            'sim_acc_type': SimAccType.to_string2(record.simAccType) if record.HasField('simAccType') else SimAccType.NONE,# 初始化枚举类型
+            'trdmarket_auth': list(record.trdMarketAuthList),
         } for record in raw_acc_list]
 
         return RET_OK, "", acc_list
@@ -158,8 +161,12 @@ class AccInfoQuery:
             'hk_avl_withdrawal_cash': NoneDataValue,
             'us_cash': NoneDataValue,
             'us_avl_withdrawal_cash': NoneDataValue,
+            'cn_cash': NoneDataValue,
+            'cn_avl_withdrawal_cash': NoneDataValue,
             'jp_cash': NoneDataValue,
             'jp_avl_withdrawal_cash': NoneDataValue,
+            'sg_cash': NoneDataValue,
+            'sg_avl_withdrawal_cash': NoneDataValue,
             'is_pdt':  get_pb_value(raw_funds, 'isPdt'),
             'pdt_seq': get_pb_value(raw_funds, 'pdtSeq'),
             'beginning_dtbp': get_pb_value(raw_funds, 'beginningDTBP'),
@@ -174,9 +181,15 @@ class AccInfoQuery:
             elif cashInfo.currency == Trd_Common_pb2.Currency_USD:
                 accinfo_list[0]['us_cash'] = cashInfo.cash
                 accinfo_list[0]['us_avl_withdrawal_cash'] = cashInfo.availableBalance
+            elif cashInfo.currency == Trd_Common_pb2.Currency_CNH:
+                accinfo_list[0]['cn_cash'] = cashInfo.cash
+                accinfo_list[0]['cn_avl_withdrawal_cash'] = cashInfo.availableBalance
             elif cashInfo.currency == Trd_Common_pb2.Currency_JPY:
                 accinfo_list[0]['jp_cash'] = cashInfo.cash
                 accinfo_list[0]['jp_avl_withdrawal_cash'] = cashInfo.availableBalance
+            elif cashInfo.currency == Trd_Common_pb2.Currency_SGD:
+                accinfo_list[0]['sg_cash'] = cashInfo.cash
+                accinfo_list[0]['sg_avl_withdrawal_cash'] = cashInfo.availableBalance
         return RET_OK, "", accinfo_list
 
 
@@ -235,7 +248,8 @@ class PositionListQuery:
                              "today_sell_val": position.td_sellVal if position.HasField('td_sellVal') else NoneDataValue,
                              "position_side": PositionSide.to_string2(position.positionSide) if position.HasField('positionSide') else 'N/A',# 初始化枚举类型
                              "unrealized_pl": position.unrealizedPL if position.HasField('unrealizedPL') else NoneDataValue,
-                             "realized_pl": position.realizedPL if position.HasField('realizedPL') else NoneDataValue
+                             "realized_pl": position.realizedPL if position.HasField('realizedPL') else NoneDataValue,
+                             "currency": Currency.to_string2(position.currency) if position.HasField('currency') else NoneDataValue,
                          } for position in raw_position_list]
         return RET_OK, "", position_list
 
@@ -298,6 +312,7 @@ class OrderListQuery:
             "trail_type": TrailType.to_string2(order.trailType) if order.HasField("trailType") else 'N/A',
             "trail_value": order.trailValue if order.HasField("trailValue") else 'N/A',
             "trail_spread": order.trailSpread if order.HasField("trailSpread") else 'N/A',
+            "currency": Currency.to_string2(order.currency) if order.HasField("currency") else 'N/A',
         }
         return order_dict
 
@@ -440,7 +455,7 @@ class CancelOrder:
         pass
 
     @classmethod
-    def pack_req(cls, trd_env, acc_id, trd_mkt, conn_id):
+    def pack_req(cls, trd_env, acc_id, trd_mkt, conn_id, trdmarket):
         """Convert from user request for place order to PLS request"""
         from futu.common.pb.Trd_ModifyOrder_pb2 import Request
         req = Request()
@@ -451,6 +466,7 @@ class CancelOrder:
         _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
         _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
+        _, req.c2s.trdMarket = TrdMarket.to_number(trdmarket)
 
         req.c2s.orderID = 0
         req.c2s.modifyOrderOp = Trd_Common_pb2.ModifyOrderOp_Cancel
@@ -574,6 +590,7 @@ class HistoryOrderListQuery:
                       "trail_type": order.trailType if order.HasField("trailType") else 'N/A',
                       "trail_value": order.trailValue if order.HasField("trailValue") else 'N/A',
                       "trail_spread": order.trailSpread if order.HasField("trailSpread") else 'N/A',
+                      "currency": Currency.to_string2(order.currency) if order.HasField('currency') else NoneDataValue,
                       } for order in raw_order_list]
         return RET_OK, "", order_list
 
@@ -637,7 +654,7 @@ class UpdateOrderPush:
 
         order_dict = OrderListQuery.parse_order(rsp_pb, rsp_pb.s2c.order)
         order_dict['trd_env'] = TrdEnv.to_string2(rsp_pb.s2c.header.trdEnv)
-        order_dict['trd_market'] = TrdMarket.to_string2(rsp_pb.s2c.header.trdMarket)
+        order_dict['trd_market'] = TrdMarket.to_string2(rsp_pb.s2c.order.trdMarket)
 
         return RET_OK, order_dict
 

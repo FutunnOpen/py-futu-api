@@ -242,7 +242,7 @@ class Market(FtEnum):
       美股
      ..  py:attribute:: SH
       沪市
-     ..  py:attribute:: SH
+     ..  py:attribute:: SZ
       深市
      ..  py:attribute:: HK_FUTURE
       港股期货
@@ -1058,6 +1058,7 @@ class TrdMarket(FtEnum):
     CN = "CN"      # 大陆市场
     HKCC = "HKCC"  # 香港A股通市场
     FUTURES = "FUTURES"  # 期货市场
+    # SG = "SG"
 
     def load_dic(self):
         return {
@@ -1067,6 +1068,7 @@ class TrdMarket(FtEnum):
             self.CN: Trd_Common_pb2.TrdMarket_CN,
             self.HKCC: Trd_Common_pb2.TrdMarket_HKCC,
             self.FUTURES: Trd_Common_pb2.TrdMarket_Futures,
+            # self.SG: Trd_Common_pb2.TrdMarket_SG,
         }
 
 # 持仓方向
@@ -1323,8 +1325,35 @@ class TrdSide(FtEnum):
             TrdSide.BUY_BACK: Trd_Common_pb2.TrdSide_BuyBack,
         }
 
+# 交易方向 (客户端下单只传Buy或Sell即可，SELL_SHORT / BUY_BACK 服务器可能会传回
+class TrdCategory(FtEnum):
+    """
+    交易品类
+    ..  py:class:: TrdCategory
+    ..  py:attribute:: NONE
+      未知
+    ..  py:attribute:: SECURITY
+      买
+     ..  py:attribute:: FUTURE
+      卖
+    """
+    NONE = "N/A"
+    SECURITY = "SECURITY"
+    FUTURE = "FUTURE"
+
+    def load_dic(self):
+        return {
+            TrdCategory.NONE: Trd_Common_pb2.TrdCategory_Unknown,
+            TrdCategory.SECURITY: Trd_Common_pb2.TrdCategory_Security,
+            TrdCategory.FUTURE: Trd_Common_pb2.TrdCategory_Future,
+        }
+
+
 # 交易的支持能力，持续更新中
 MKT_ENV_ENABLE_MAP = {
+    (TrdMarket.NONE, TrdEnv.REAL): True,
+    (TrdMarket.NONE, TrdEnv.SIMULATE): True,
+
     (TrdMarket.HK, TrdEnv.REAL): True,
     (TrdMarket.HK, TrdEnv.SIMULATE): True,
 
@@ -2366,6 +2395,7 @@ class Currency(FtEnum):
     USD = 'USD'  # 美元
     CNH = 'CNH'  # 离岸人民币
     JPY = 'JPY'  # 日元
+    SGD = 'SGD'  # 新元
 
     def load_dic(self):
         return {
@@ -2373,7 +2403,8 @@ class Currency(FtEnum):
             self.HKD: Trd_Common_pb2.Currency_HKD,
             self.USD: Trd_Common_pb2.Currency_USD,
             self.CNH: Trd_Common_pb2.Currency_CNH,
-            self.JPY: Trd_Common_pb2.Currency_JPY
+            self.JPY: Trd_Common_pb2.Currency_JPY,
+            self.SGD: Trd_Common_pb2.Currency_SGD
         }
 
 class CltRiskLevel(FtEnum):

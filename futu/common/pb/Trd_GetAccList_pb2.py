@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_GetAccList.proto',
   package='Trd_GetAccList',
   syntax='proto2',
-  serialized_pb=_b('\n\x14Trd_GetAccList.proto\x12\x0eTrd_GetAccList\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\x15\n\x03\x43\x32S\x12\x0e\n\x06userID\x18\x01 \x02(\x04\"*\n\x03S2C\x12#\n\x07\x61\x63\x63List\x18\x01 \x03(\x0b\x32\x12.Trd_Common.TrdAcc\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.Trd_GetAccList.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.Trd_GetAccList.S2CBD\n\x13\x63om.futu.openapi.pbZ-github.com/futuopen/ftapi4go/pb/trdgetacclist')
+  serialized_pb=_b('\n\x14Trd_GetAccList.proto\x12\x0eTrd_GetAccList\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"I\n\x03\x43\x32S\x12\x0e\n\x06userID\x18\x01 \x02(\x04\x12\x13\n\x0btrdCategory\x18\x02 \x01(\x05\x12\x1d\n\x15needGeneralSecAccount\x18\x03 \x01(\x08\"*\n\x03S2C\x12#\n\x07\x61\x63\x63List\x18\x01 \x03(\x0b\x32\x12.Trd_Common.TrdAcc\"+\n\x07Request\x12 \n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x13.Trd_GetAccList.C2S\"d\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12 \n\x03s2c\x18\x04 \x01(\x0b\x32\x13.Trd_GetAccList.S2CBD\n\x13\x63om.futu.openapi.pbZ-github.com/futuopen/ftapi4go/pb/trdgetacclist')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Trd__Common__pb2.DESCRIPTOR,])
 
@@ -42,6 +42,20 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='trdCategory', full_name='Trd_GetAccList.C2S.trdCategory', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='needGeneralSecAccount', full_name='Trd_GetAccList.C2S.needGeneralSecAccount', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -55,7 +69,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=72,
-  serialized_end=93,
+  serialized_end=145,
 )
 
 
@@ -85,8 +99,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=95,
-  serialized_end=137,
+  serialized_start=147,
+  serialized_end=189,
 )
 
 
@@ -116,8 +130,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=139,
-  serialized_end=182,
+  serialized_start=191,
+  serialized_end=234,
 )
 
 
@@ -168,8 +182,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=184,
-  serialized_end=284,
+  serialized_start=236,
+  serialized_end=336,
 )
 
 _S2C.fields_by_name['accList'].message_type = Trd__Common__pb2._TRDACC
