@@ -33,6 +33,7 @@ message FutureInfo
 	repeated TradeTime tradeTime = 15; //交易时间
 	required string timeZone = 16; //所在时区
 	required string exchangeFormatUrl = 17; //交易所规格
+	optional Qot_Common.Security origin = 18; //实际合约代码
 }
 
 message C2S

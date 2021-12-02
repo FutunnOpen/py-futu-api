@@ -560,7 +560,7 @@ class OpenTradeContextBase(OpenContextBase):
             "order_id", "qty", "price", "create_time", "updated_time",
             "dealt_qty", "dealt_avg_price", "last_err_msg", "remark",
             "time_in_force", "fill_outside_rth", 'aux_price',
-            'trail_type', 'trail_value', 'trail_spread', "currency"
+            'trail_type', 'trail_value', 'trail_spread', "currency",
         ]
         order_list = [order_item]
         order_table = pd.DataFrame(order_list, columns=col_list)

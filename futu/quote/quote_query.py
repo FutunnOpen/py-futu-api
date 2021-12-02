@@ -2772,6 +2772,7 @@ class GetFutureInfoQuery:
             data['time_zone'] = item.timeZone
             #  交易所规格 type = string
             data['exchange_format_url'] = item.exchangeFormatUrl
+            data['origin_code'] = merge_qot_mkt_stock_str(item.origin.market,item.origin.code)
             ret_list.append(data)
         return RET_OK, "", ret_list
 

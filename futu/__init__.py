@@ -92,7 +92,7 @@ def _check_package(package_name, version=None):
 _check_module('pandas')
 _check_module('simplejson')
 _check_module('Crypto', 'pycryptodome')
-_check_module('google.protobuf', package_name='protobuf', version='3.5.1', version_getter=lambda mod: mod.__version__)
+# _check_module('google.protobuf', package_name='protobuf', version='3.5.1', version_getter=lambda mod: mod.__version__)
 _check_module('selectors2', py_version=2)
 
 

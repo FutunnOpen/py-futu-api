@@ -2339,7 +2339,8 @@ class OpenQuoteContext(OpenContextBase):
                 'trade_time',
                 'time_zone',
                 'last_trade_time',
-                'exchange_format_url'
+                'exchange_format_url',
+                'origin_code',
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)
             return RET_OK, ret_frame
