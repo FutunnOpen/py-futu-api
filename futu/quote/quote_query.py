@@ -1565,13 +1565,25 @@ class SysNotifyPush:
         elif notify_type == SysNotifyType.QOT_RIGHT:
             if rsp_pb.s2c.HasField('qotRight'):
                 qot_right = rsp_pb.s2c.qotRight
-                data = {'hk_qot_right': QotRight.to_string2(qot_right.hkQotRight),
-                        'hk_option_qot_right': QotRight.to_string2(qot_right.hkOptionQotRight) if qot_right.HasField('hkOptionQotRight') else 'N/A',
-                        'hk_future_qot_right': QotRight.to_string2(qot_right.hkFutureQotRight) if qot_right.HasField('hkFutureQotRight') else 'N/A',
-                        'us_qot_right': QotRight.to_string2(qot_right.usQotRight),
-                        'us_option_qot_right': QotRight.to_string2(qot_right.usOptionQotRight) if qot_right.HasField('usOptionQotRight') else 'N/A',
-                        'us_future_qot_right': QotRight.to_string2(qot_right.usFutureQotRight) if qot_right.HasField('usFutureQotRight') else 'N/A',
-                        'cn_qot_right': QotRight.to_string2(qot_right.cnQotRight)}
+                data = {
+                    'hk_qot_right': QotRight.to_string2(qot_right.hkQotRight) if qot_right.HasField('hkQotRight') else 'N/A',
+                    'hk_option_qot_right': QotRight.to_string2(qot_right.hkOptionQotRight) if qot_right.HasField('hkOptionQotRight') else 'N/A',
+                    'hk_future_qot_right': QotRight.to_string2(qot_right.hkFutureQotRight) if qot_right.HasField('hkFutureQotRight') else 'N/A',
+                    'us_qot_right': QotRight.to_string2(qot_right.usQotRight) if qot_right.HasField('usQotRight') else 'N/A',
+                    'has_us_option_qot_right': QotRight.to_string2(qot_right.hasUSOptionQotRight) if qot_right.HasField('hasUSOptionQotRight') else False,
+                    'us_option_qot_right': QotRight.to_string2(qot_right.usOptionQotRight) if qot_right.HasField('usOptionQotRight') else 'N/A',
+                    'us_future_qot_right': QotRight.to_string2(qot_right.usFutureQotRight) if qot_right.HasField('usFutureQotRight') else 'N/A',
+                    'us_index_qot_right': QotRight.to_string2(qot_right.usIndexQotRight) if qot_right.HasField('usIndexQotRight') else 'N/A',
+                    'us_otc_qot_right': QotRight.to_string2(qot_right.usOtcQotRight) if qot_right.HasField('usOtcQotRight') else 'N/A',
+                    'cn_qot_right': QotRight.to_string2(qot_right.cnQotRight) if qot_right.HasField('cnQotRight') else 'N/A',
+                    'sg_future_qot_right': QotRight.to_string2(qot_right.sgFutureQotRight) if qot_right.HasField('sgFutureQotRight') else 'N/A',
+                    'jp_future_qot_right': QotRight.to_string2(qot_right.jpFutureQotRight) if qot_right.HasField('jpFutureQotRight') else 'N/A',
+                    'us_future_qot_right_cme': QotRight.to_string2(qot_right.usCMEFutureQotRight) if qot_right.HasField('usCMEFutureQotRight') else 'N/A',
+                    'us_future_qot_right_cbot': QotRight.to_string2(qot_right.usCBOTFutureQotRight) if qot_right.HasField('usCBOTFutureQotRight') else 'N/A',
+                    'us_future_qot_right_nymex': QotRight.to_string2(qot_right.usNYMEXFutureQotRight) if qot_right.HasField('usNYMEXFutureQotRight') else 'N/A',
+                    'us_future_qot_right_comex': QotRight.to_string2(qot_right.usCOMEXFutureQotRight) if qot_right.HasField('usCOMEXFutureQotRight') else 'N/A',
+                    'us_future_qot_right_cboe': QotRight.to_string2(qot_right.usCBOEFutureQotRight) if qot_right.HasField('usCBOEFutureQotRight') else 'N/A',
+                }
         elif notify_type == SysNotifyType.API_LEVEL:
             if rsp_pb.s2c.HasField('apiLevel'):
                 data = {'api_level': rsp_pb.s2c.apiLevel.apiLevel}
@@ -2040,9 +2052,6 @@ class RequestRehab:
             stock_rehab_tmp['backward_adj_factorB'] = rehab.bwdFactorB
 
             act_flag = rehab.companyActFlag
-            if act_flag == 0:
-                continue
-
             if act_flag & KLRehabFlag.SP_DIVIDED:
                 stock_rehab_tmp['special_dividend'] = rehab.spDividend
             if act_flag & KLRehabFlag.DIVIDED:
@@ -2116,6 +2125,20 @@ class GetUserInfo:
             'usFutureQotRight') else "N/A"
         cn_qot_right = rsp_pb.s2c.cnQotRight if rsp_pb.s2c.HasField(
             'cnQotRight') else "N/A"
+        sg_future_qot_right = rsp_pb.s2c.sgFutureQotRight if rsp_pb.s2c.HasField(
+            'sgFutureQotRight') else 'N/A'
+        jp_future_qot_right = rsp_pb.s2c.jpFutureQotRight if rsp_pb.s2c.HasField(
+            'jpFutureQotRight') else 'N/A'
+        us_future_qot_right_cme = rsp_pb.s2c.usCMEFutureQotRight if rsp_pb.s2c.HasField(
+            'usCMEFutureQotRight') else 'N/A'
+        us_future_qot_right_cbot = rsp_pb.s2c.usCBOTFutureQotRight if rsp_pb.s2c.HasField(
+            'usCBOTFutureQotRight') else 'N/A'
+        us_future_qot_right_nymex = rsp_pb.s2c.usNYMEXFutureQotRight if rsp_pb.s2c.HasField(
+            'usNYMEXFutureQotRight') else 'N/A'
+        us_future_qot_right_comex = rsp_pb.s2c.usCOMEXFutureQotRight if rsp_pb.s2c.HasField(
+            'usCOMEXFutureQotRight') else 'N/A'
+        us_future_qot_right_cboe = rsp_pb.s2c.usCBOEFutureQotRight if rsp_pb.s2c.HasField(
+            'usCBOEFutureQotRight') else 'N/A'
         is_need_agree_disclaimer = rsp_pb.s2c.isNeedAgreeDisclaimer if rsp_pb.s2c.HasField(
             'isNeedAgreeDisclaimer') else "N/A"
         user_id = rsp_pb.s2c.userID if rsp_pb.s2c.HasField('userID') else "N/A"
@@ -2135,6 +2158,13 @@ class GetUserInfo:
             "us_option_qot_right": QotRight.to_string2(us_option_qot_right),
             "us_future_qot_right": QotRight.to_string2(us_future_qot_right),
             "cn_qot_right": QotRight.to_string2(cn_qot_right),
+            'sg_future_qot_right': QotRight.to_string2(sg_future_qot_right),
+            'jp_future_qot_right': QotRight.to_string2(jp_future_qot_right),
+            'us_future_qot_right_cme': QotRight.to_string2(us_future_qot_right_cme),
+            'us_future_qot_right_cbot': QotRight.to_string2(us_future_qot_right_cbot),
+            'us_future_qot_right_nymex': QotRight.to_string2(us_future_qot_right_nymex),
+            'us_future_qot_right_comex': QotRight.to_string2(us_future_qot_right_comex),
+            'us_future_qot_right_cboe': QotRight.to_string2(us_future_qot_right_cboe),
             "is_need_agree_disclaimer": is_need_agree_disclaimer,
             "user_id": user_id,
             "update_type": UpdateType.to_string2(update_type),
@@ -2175,12 +2205,16 @@ class GetCapitalDistributionQuery:
         if rsp_pb.retType != RET_OK:
             return RET_ERROR, rsp_pb.retMsg, None
         ret = dict()
+        #  流入资金额度，特大单 type=double
+        ret["capital_in_super"] = rsp_pb.s2c.capitalInSuper if rsp_pb.s2c.HasField("capitalInSuper") else "N/A"
         #  流入资金额度，大单 type=double
         ret["capital_in_big"] = rsp_pb.s2c.capitalInBig
         #  流入资金额度，中单 type=double
         ret["capital_in_mid"] = rsp_pb.s2c.capitalInMid
         #  流入资金额度，小单 type=double
         ret["capital_in_small"] = rsp_pb.s2c.capitalInSmall
+        #  流出资金额度，特大单 type=double
+        ret["capital_out_super"] = rsp_pb.s2c.capitalOutSuper if rsp_pb.s2c.HasField("capitalOutSuper") else "N/A"
         #  流出资金额度，大单 type=double
         ret["capital_out_big"] = rsp_pb.s2c.capitalOutBig
         #  流出资金额度，中单 type=double
@@ -2202,7 +2236,13 @@ class GetCapitalFlowQuery:
         pass
 
     @classmethod
-    def pack_req(cls, code, conn_id):
+    def pack_req(cls, code, conn_id, start_date=None, end_date=None, period_type=PeriodType.INTRADAY):
+        # check period type
+        if not PeriodType.if_has_key(period_type):
+            error_str = ERROR_STR_PREFIX + "period_type is %s, which is not valid. (%s)" \
+                % (period_type, PeriodType.get_all_keys())
+            return RET_ERROR, error_str, None
+
         """check stock_code 股票"""
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
@@ -2215,6 +2255,12 @@ class GetCapitalFlowQuery:
         req = Request()
         req.c2s.security.market = market_code
         req.c2s.security.code = stock_code
+        _, req.c2s.periodType = PeriodType.to_number(period_type)
+        if start_date:
+            req.c2s.beginTime = start_date
+        if end_date:
+            req.c2s.endTime = end_date
+        
         return pack_pb_req(req, ProtoId.Qot_GetCapitalFlow, conn_id)
 
     @classmethod
@@ -2225,12 +2271,17 @@ class GetCapitalFlowQuery:
         #  资金流向 type = Qot_GetCapitalFlow.CapitalFlowItem
         flow_item_list = rsp_pb.s2c.flowItemList
         #  数据最后有效时间字符串 type = string
-        last_valid_time = rsp_pb.s2c.lastValidTime
+        last_valid_time = rsp_pb.s2c.lastValidTime if rsp_pb.s2c.HasField("lastValidTime") else "N/A"
         for item in flow_item_list:
             data = dict()
             ret_list.append(data)
             #  净流入的资金额度 type = double
             data["in_flow"] = item.inFlow
+            data["super_in_flow"] = item.superInFlow
+            data["big_in_flow"] = item.bigInFlow
+            data["mid_in_flow"] = item.midInFlow
+            data["sml_in_flow"] = item.smlInFlow
+            data["main_in_flow"] = item.mainInFlow if item.HasField("mainInFlow") else "N/A"
             #  开始时间字符串,以分钟为单位 type = string
             data["capital_flow_item_time"] = item.time
             data["last_valid_time"] = last_valid_time

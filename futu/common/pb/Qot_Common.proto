@@ -503,6 +503,16 @@ enum ExchType
     ExchType_JP_OSE = 18; //大阪交易所 
 }
 
+// 周期类型
+enum PeriodType
+{
+    PeriodType_Unknown = 0; // 未知
+    PeriodType_INTRADAY = 1; // 实时
+	PeriodType_DAY = 2; // 日
+	PeriodType_WEEK = 3; // 周
+	PeriodType_MONTH = 4; // 月
+}
+
  //两个字段确定一支股票
 message Security
 {

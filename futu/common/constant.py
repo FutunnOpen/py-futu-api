@@ -2080,22 +2080,33 @@ class StockField(FtEnum):
     # 以下是技术指标过滤所支持的枚举
     indicator_enum_begin = 400
     PRICE = "PRICE"  # 最新价格
-    MA5 = "MA5"  # 5日简单均线
-    MA10 = "MA10"  # 10日简单均线
-    MA20 = "MA20"  # 20日简单均线
-    MA30 = "MA30"  # 30日简单均线
-    MA60 = "MA60"  # 60日简单均线
-    MA120 = "MA120"  # 120日简单均线
-    MA250 = "MA250"  # 250日简单均线
-    RSI = "RSI"  # 动态RSI
-    EMA5 = "EMA5"  # 5日指数移动均线
-    EMA10 = "EMA10"  # 10日指数移动均线
-    EMA20 = "EMA20"  # 20日指数移动均线
-    EMA30 = "EMA30"  # 30日指数移动均线
-    EMA60 = "EMA60"  # 60日指数移动均线
-    EMA120 = "EMA120"  # 120日指数移动均线
-    EMA250 = "EMA250"  # 250日指数移动均线
-    VALUE = "VALUE"  # 自定义数值，用于与 RSI 进行比较（stock_field1 不支持此字段）
+    MA5 = "MA5"  # 5日简单均线（不建议使用）
+    MA10 = "MA10"  # 10日简单均线（不建议使用）
+    MA20 = "MA20"  # 20日简单均线（不建议使用）
+    MA30 = "MA30"  # 30日简单均线（不建议使用）
+    MA60 = "MA60"  # 60日简单均线（不建议使用）
+    MA120 = "MA120"  # 120日简单均线（不建议使用）
+    MA250 = "MA250"  # 250日简单均线（不建议使用）
+    RSI = "RSI"  # RSI 指标参数的默认值为12
+    EMA5 = "EMA5"  # 5日指数移动均线（不建议使用）
+    EMA10 = "EMA10"  # 10日指数移动均线（不建议使用）
+    EMA20 = "EMA20"  # 20日指数移动均线（不建议使用）
+    EMA30 = "EMA30"  # 30日指数移动均线（不建议使用）
+    EMA60 = "EMA60"  # 60日指数移动均线（不建议使用）
+    EMA120 = "EMA120"  # 120日指数移动均线（不建议使用）
+    EMA250 = "EMA250"  # 250日指数移动均线（不建议使用）
+    VALUE = "VALUE"  # 自定义数值（stock_field1 不支持此字段）
+    MA = "MA" # 简单均线
+    EMA = "EMA" # 指数移动均线
+    KDJ_K = "KDJ_K"  # KDJ 指标的 K 值。指标参数需要根据 KDJ 进行传参。不传则默认为 [9,3,3]
+    KDJ_D = "KDJ_D"  # KDJ 指标的 D 值。指标参数需要根据 KDJ 进行传参。不传则默认为 [9,3,3]
+    KDJ_J = "KDJ_J"  # KDJ 指标的 J 值。指标参数需要根据 KDJ 进行传参。不传则默认为 [9,3,3]
+    MACD_DIFF = "MACD_DIFF"  # MACD 指标的 DIFF 值。指标参数需要根据 MACD 进行传参。不传则默认为 [12,26,9]
+    MACD_DEA = "MACD_DEA"  # MACD 指标的 DEA 值。指标参数需要根据 MACD 进行传参。不传则默认为 [12,26,9]
+    MACD = "MACD"  # MACD 指标的 MACD 值。指标参数需要根据 MACD 进行传参。不传则默认为 [12,26,9]
+    BOLL_UPPER = "BOLL_UPPER"  # BOLL 指标的 UPPER 值。指标参数需要根据 BOLL 进行传参。不传则默认为 [20,2]
+    BOLL_MIDDLER = "BOLL_MIDDLER"  # BOLL 指标的 MIDDLER 值。指标参数需要根据 BOLL 进行传参。不传则默认为 [20,2]
+    BOLL_LOWER = "BOLL_LOWER"  # BOLL 指标的 LOWER 值。指标参数需要根据 BOLL 进行传参。不传则默认为 [20,2]
 
     def load_dic(self):
         return {
@@ -2218,7 +2229,17 @@ class StockField(FtEnum):
             self.EMA120: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_EMA120,
             self.EMA250: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_EMA250,
             self.VALUE: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_Value,
-
+            self.MA: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_MA,
+            self.EMA: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_EMA,
+            self.KDJ_K: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_KDJ_K,
+            self.KDJ_D: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_KDJ_D,
+            self.KDJ_J: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_KDJ_J,
+            self.MACD_DIFF: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_MACD_DIFF,
+            self.MACD_DEA: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_MACD_DEA,
+            self.MACD: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_MACD,
+            self.BOLL_UPPER: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_BOLL_UPPER,
+            self.BOLL_MIDDLER: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_BOLL_MIDDLER,
+            self.BOLL_LOWER: self.indicator_enum_begin + Qot_StockFilter_pb2.CustomIndicatorField_BOLL_LOWER,
         }
 
 
@@ -2715,4 +2736,21 @@ class DTStatus(FtEnum):
             self.UNLIMITED: Trd_Common_pb2.DTStatus_Unlimited,
             self.DT_CALL: Trd_Common_pb2.DTStatus_DTCall,
             self.EM_CALL: Trd_Common_pb2.DTStatus_EMCall
+        }
+
+# 获取资金流向的周期类型
+class PeriodType(FtEnum):
+    NONE = 'N/A'
+    INTRADAY = 'INTRADAY'
+    DAY = 'DAY'
+    WEEK = 'WEEK'
+    MONTH = 'MONTH'
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.PeriodType_Unknown,
+            self.INTRADAY: Qot_Common_pb2.PeriodType_INTRADAY,
+            self.DAY: Qot_Common_pb2.PeriodType_DAY,
+            self.WEEK: Qot_Common_pb2.PeriodType_WEEK,
+            self.MONTH: Qot_Common_pb2.PeriodType_MONTH
         }

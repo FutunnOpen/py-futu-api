@@ -13,9 +13,11 @@ message C2S
 
 message S2C
 {
+	optional double capitalInSuper = 9; // 流入资金额度，特大单
 	required double capitalInBig = 1; //流入资金额度，大单
 	required double capitalInMid = 2; //流入资金额度，中单
 	required double capitalInSmall = 3; //流入资金额度，小单
+	optional double capitalOutSuper = 10; // 流出资金额度，特大单
 	required double capitalOutBig = 4; //流出资金额度，大单
 	required double capitalOutMid = 5; //流出资金额度，中单
 	required double capitalOutSmall = 6; //流出资金额度，小单

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetCapitalDistribution.proto',
   package='Qot_GetCapitalDistribution',
   syntax='proto2',
-  serialized_pb=_b('\n Qot_GetCapitalDistribution.proto\x12\x1aQot_GetCapitalDistribution\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"-\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\"\xbd\x01\n\x03S2C\x12\x14\n\x0c\x63\x61pitalInBig\x18\x01 \x02(\x01\x12\x14\n\x0c\x63\x61pitalInMid\x18\x02 \x02(\x01\x12\x16\n\x0e\x63\x61pitalInSmall\x18\x03 \x02(\x01\x12\x15\n\rcapitalOutBig\x18\x04 \x02(\x01\x12\x15\n\rcapitalOutMid\x18\x05 \x02(\x01\x12\x17\n\x0f\x63\x61pitalOutSmall\x18\x06 \x02(\x01\x12\x12\n\nupdateTime\x18\x07 \x01(\t\x12\x17\n\x0fupdateTimestamp\x18\x08 \x01(\x01\"7\n\x07Request\x12,\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x1f.Qot_GetCapitalDistribution.C2S\"p\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12,\n\x03s2c\x18\x04 \x01(\x0b\x32\x1f.Qot_GetCapitalDistribution.S2CBP\n\x13\x63om.futu.openapi.pbZ9github.com/futuopen/ftapi4go/pb/qotgetcapitaldistribution')
+  serialized_pb=_b('\n Qot_GetCapitalDistribution.proto\x12\x1aQot_GetCapitalDistribution\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"-\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\"\xee\x01\n\x03S2C\x12\x16\n\x0e\x63\x61pitalInSuper\x18\t \x01(\x01\x12\x14\n\x0c\x63\x61pitalInBig\x18\x01 \x02(\x01\x12\x14\n\x0c\x63\x61pitalInMid\x18\x02 \x02(\x01\x12\x16\n\x0e\x63\x61pitalInSmall\x18\x03 \x02(\x01\x12\x17\n\x0f\x63\x61pitalOutSuper\x18\n \x01(\x01\x12\x15\n\rcapitalOutBig\x18\x04 \x02(\x01\x12\x15\n\rcapitalOutMid\x18\x05 \x02(\x01\x12\x17\n\x0f\x63\x61pitalOutSmall\x18\x06 \x02(\x01\x12\x12\n\nupdateTime\x18\x07 \x01(\t\x12\x17\n\x0fupdateTimestamp\x18\x08 \x01(\x01\"7\n\x07Request\x12,\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x1f.Qot_GetCapitalDistribution.C2S\"p\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12,\n\x03s2c\x18\x04 \x01(\x0b\x32\x1f.Qot_GetCapitalDistribution.S2CBP\n\x13\x63om.futu.openapi.pbZ9github.com/futuopen/ftapi4go/pb/qotgetcapitaldistribution')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -67,56 +67,70 @@ _S2C = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='capitalInBig', full_name='Qot_GetCapitalDistribution.S2C.capitalInBig', index=0,
+      name='capitalInSuper', full_name='Qot_GetCapitalDistribution.S2C.capitalInSuper', index=0,
+      number=9, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='capitalInBig', full_name='Qot_GetCapitalDistribution.S2C.capitalInBig', index=1,
       number=1, type=1, cpp_type=5, label=2,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='capitalInMid', full_name='Qot_GetCapitalDistribution.S2C.capitalInMid', index=1,
+      name='capitalInMid', full_name='Qot_GetCapitalDistribution.S2C.capitalInMid', index=2,
       number=2, type=1, cpp_type=5, label=2,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='capitalInSmall', full_name='Qot_GetCapitalDistribution.S2C.capitalInSmall', index=2,
+      name='capitalInSmall', full_name='Qot_GetCapitalDistribution.S2C.capitalInSmall', index=3,
       number=3, type=1, cpp_type=5, label=2,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='capitalOutBig', full_name='Qot_GetCapitalDistribution.S2C.capitalOutBig', index=3,
+      name='capitalOutSuper', full_name='Qot_GetCapitalDistribution.S2C.capitalOutSuper', index=4,
+      number=10, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='capitalOutBig', full_name='Qot_GetCapitalDistribution.S2C.capitalOutBig', index=5,
       number=4, type=1, cpp_type=5, label=2,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='capitalOutMid', full_name='Qot_GetCapitalDistribution.S2C.capitalOutMid', index=4,
+      name='capitalOutMid', full_name='Qot_GetCapitalDistribution.S2C.capitalOutMid', index=6,
       number=5, type=1, cpp_type=5, label=2,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='capitalOutSmall', full_name='Qot_GetCapitalDistribution.S2C.capitalOutSmall', index=5,
+      name='capitalOutSmall', full_name='Qot_GetCapitalDistribution.S2C.capitalOutSmall', index=7,
       number=6, type=1, cpp_type=5, label=2,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='updateTime', full_name='Qot_GetCapitalDistribution.S2C.updateTime', index=6,
+      name='updateTime', full_name='Qot_GetCapitalDistribution.S2C.updateTime', index=8,
       number=7, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='updateTimestamp', full_name='Qot_GetCapitalDistribution.S2C.updateTimestamp', index=7,
+      name='updateTimestamp', full_name='Qot_GetCapitalDistribution.S2C.updateTimestamp', index=9,
       number=8, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
@@ -135,7 +149,7 @@ _S2C = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=144,
-  serialized_end=333,
+  serialized_end=382,
 )
 
 
@@ -165,8 +179,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=335,
-  serialized_end=390,
+  serialized_start=384,
+  serialized_end=439,
 )
 
 
@@ -217,8 +231,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=392,
-  serialized_end=504,
+  serialized_start=441,
+  serialized_end=553,
 )
 
 _C2S.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY

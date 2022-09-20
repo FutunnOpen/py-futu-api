@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='GetUserInfo.proto',
   package='GetUserInfo',
   syntax='proto2',
-  serialized_pb=_b('\n\x11GetUserInfo.proto\x12\x0bGetUserInfo\x1a\x0c\x43ommon.proto\"\x13\n\x03\x43\x32S\x12\x0c\n\x04\x66lag\x18\x02 \x01(\x05\"\xf3\x03\n\x03S2C\x12\x10\n\x08nickName\x18\x01 \x01(\t\x12\x11\n\tavatarUrl\x18\x02 \x01(\t\x12\x10\n\x08\x61piLevel\x18\x03 \x01(\t\x12\x12\n\nhkQotRight\x18\x04 \x01(\x05\x12\x12\n\nusQotRight\x18\x05 \x01(\x05\x12\x12\n\ncnQotRight\x18\x06 \x01(\x05\x12\x1d\n\x15isNeedAgreeDisclaimer\x18\x07 \x01(\x08\x12\x0e\n\x06userID\x18\x08 \x01(\x03\x12\x12\n\nupdateType\x18\t \x01(\x05\x12\x0e\n\x06webKey\x18\n \x01(\t\x12\x16\n\x0ewebJumpUrlHead\x18\x12 \x01(\t\x12\x18\n\x10hkOptionQotRight\x18\x0b \x01(\x05\x12\x1b\n\x13hasUSOptionQotRight\x18\x0c \x01(\x08\x12\x18\n\x10hkFutureQotRight\x18\r \x01(\x05\x12\x10\n\x08subQuota\x18\x0e \x01(\x05\x12\x16\n\x0ehistoryKLQuota\x18\x0f \x01(\x05\x12\x18\n\x10usFutureQotRight\x18\x10 \x01(\x05\x12\x18\n\x10usOptionQotRight\x18\x11 \x01(\x05\x12\x17\n\x0fuserAttribution\x18\x13 \x01(\x05\x12\x16\n\x0eupdateWhatsNew\x18\x14 \x01(\t\x12\x17\n\x0fusIndexQotRight\x18\x15 \x01(\x05\x12\x15\n\rusOtcQotRight\x18\x16 \x01(\x05\"(\n\x07Request\x12\x1d\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x10.GetUserInfo.C2S\"a\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1d\n\x03s2c\x18\x04 \x01(\x0b\x32\x10.GetUserInfo.S2C*N\n\nUpdateType\x12\x13\n\x0fUpdateType_None\x10\x00\x12\x15\n\x11UpdateType_Advice\x10\x01\x12\x14\n\x10UpdateType_Force\x10\x02*\xae\x01\n\rUserInfoField\x12\x17\n\x13UserInfoField_Basic\x10\x01\x12\x15\n\x11UserInfoField_API\x10\x02\x12\x1a\n\x16UserInfoField_QotRight\x10\x04\x12\x1c\n\x18UserInfoField_Disclaimer\x10\x08\x12\x18\n\x14UserInfoField_Update\x10\x10\x12\x19\n\x14UserInfoField_WebKey\x10\x80\x10\x42\x42\n\x13\x63om.futu.openapi.pbZ+github.com/futuopen/ftapi4go/pb/getuserinfo')
+  serialized_pb=_b('\n\x11GetUserInfo.proto\x12\x0bGetUserInfo\x1a\x0c\x43ommon.proto\"\x13\n\x03\x43\x32S\x12\x0c\n\x04\x66lag\x18\x02 \x01(\x05\"\xbe\x05\n\x03S2C\x12\x10\n\x08nickName\x18\x01 \x01(\t\x12\x11\n\tavatarUrl\x18\x02 \x01(\t\x12\x10\n\x08\x61piLevel\x18\x03 \x01(\t\x12\x12\n\nhkQotRight\x18\x04 \x01(\x05\x12\x12\n\nusQotRight\x18\x05 \x01(\x05\x12\x12\n\ncnQotRight\x18\x06 \x01(\x05\x12\x1d\n\x15isNeedAgreeDisclaimer\x18\x07 \x01(\x08\x12\x0e\n\x06userID\x18\x08 \x01(\x03\x12\x12\n\nupdateType\x18\t \x01(\x05\x12\x0e\n\x06webKey\x18\n \x01(\t\x12\x16\n\x0ewebJumpUrlHead\x18\x12 \x01(\t\x12\x18\n\x10hkOptionQotRight\x18\x0b \x01(\x05\x12\x1b\n\x13hasUSOptionQotRight\x18\x0c \x01(\x08\x12\x18\n\x10hkFutureQotRight\x18\r \x01(\x05\x12\x10\n\x08subQuota\x18\x0e \x01(\x05\x12\x16\n\x0ehistoryKLQuota\x18\x0f \x01(\x05\x12\x18\n\x10usFutureQotRight\x18\x10 \x01(\x05\x12\x18\n\x10usOptionQotRight\x18\x11 \x01(\x05\x12\x17\n\x0fuserAttribution\x18\x13 \x01(\x05\x12\x16\n\x0eupdateWhatsNew\x18\x14 \x01(\t\x12\x17\n\x0fusIndexQotRight\x18\x15 \x01(\x05\x12\x15\n\rusOtcQotRight\x18\x16 \x01(\x05\x12\x1b\n\x13usCMEFutureQotRight\x18\x17 \x01(\x05\x12\x1c\n\x14usCBOTFutureQotRight\x18\x18 \x01(\x05\x12\x1d\n\x15usNYMEXFutureQotRight\x18\x19 \x01(\x05\x12\x1d\n\x15usCOMEXFutureQotRight\x18\x1a \x01(\x05\x12\x1c\n\x14usCBOEFutureQotRight\x18\x1b \x01(\x05\x12\x18\n\x10sgFutureQotRight\x18\x1c \x01(\x05\x12\x18\n\x10jpFutureQotRight\x18\x1d \x01(\x05\"(\n\x07Request\x12\x1d\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x10.GetUserInfo.C2S\"a\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1d\n\x03s2c\x18\x04 \x01(\x0b\x32\x10.GetUserInfo.S2C*N\n\nUpdateType\x12\x13\n\x0fUpdateType_None\x10\x00\x12\x15\n\x11UpdateType_Advice\x10\x01\x12\x14\n\x10UpdateType_Force\x10\x02*\xae\x01\n\rUserInfoField\x12\x17\n\x13UserInfoField_Basic\x10\x01\x12\x15\n\x11UserInfoField_API\x10\x02\x12\x1a\n\x16UserInfoField_QotRight\x10\x04\x12\x1c\n\x18UserInfoField_Disclaimer\x10\x08\x12\x18\n\x14UserInfoField_Update\x10\x10\x12\x19\n\x14UserInfoField_WebKey\x10\x80\x10\x42\x42\n\x13\x63om.futu.openapi.pbZ+github.com/futuopen/ftapi4go/pb/getuserinfo')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,])
 
@@ -46,8 +46,8 @@ _UPDATETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=712,
-  serialized_end=790,
+  serialized_start=915,
+  serialized_end=993,
 )
 _sym_db.RegisterEnumDescriptor(_UPDATETYPE)
 
@@ -85,8 +85,8 @@ _USERINFOFIELD = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=793,
-  serialized_end=967,
+  serialized_start=996,
+  serialized_end=1170,
 )
 _sym_db.RegisterEnumDescriptor(_USERINFOFIELD)
 
@@ -295,6 +295,55 @@ _S2C = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='usCMEFutureQotRight', full_name='GetUserInfo.S2C.usCMEFutureQotRight', index=22,
+      number=23, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='usCBOTFutureQotRight', full_name='GetUserInfo.S2C.usCBOTFutureQotRight', index=23,
+      number=24, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='usNYMEXFutureQotRight', full_name='GetUserInfo.S2C.usNYMEXFutureQotRight', index=24,
+      number=25, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='usCOMEXFutureQotRight', full_name='GetUserInfo.S2C.usCOMEXFutureQotRight', index=25,
+      number=26, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='usCBOEFutureQotRight', full_name='GetUserInfo.S2C.usCBOEFutureQotRight', index=26,
+      number=27, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='sgFutureQotRight', full_name='GetUserInfo.S2C.sgFutureQotRight', index=27,
+      number=28, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='jpFutureQotRight', full_name='GetUserInfo.S2C.jpFutureQotRight', index=28,
+      number=29, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -308,7 +357,7 @@ _S2C = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=70,
-  serialized_end=569,
+  serialized_end=772,
 )
 
 
@@ -338,8 +387,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=571,
-  serialized_end=611,
+  serialized_start=774,
+  serialized_end=814,
 )
 
 
@@ -390,8 +439,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=613,
-  serialized_end=710,
+  serialized_start=816,
+  serialized_end=913,
 )
 
 _REQUEST.fields_by_name['c2s'].message_type = _C2S

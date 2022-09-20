@@ -119,23 +119,34 @@ enum FinancialField
 enum CustomIndicatorField
 {
 	CustomIndicatorField_Unknown = 0; // 未知
-	CustomIndicatorField_Price = 1; // 最新价格 
-	CustomIndicatorField_MA5 = 2; // 5日简单均线 
-    CustomIndicatorField_MA10 = 3; // 10日简单均线 
-    CustomIndicatorField_MA20 = 4; // 20日简单均线 
-    CustomIndicatorField_MA30 = 5; // 30日简单均线 
-    CustomIndicatorField_MA60 = 6; // 60日简单均线 
-	CustomIndicatorField_MA120 = 7; // 120日简单均线
-    CustomIndicatorField_MA250 = 8; // 250日简单均线
-	CustomIndicatorField_RSI = 9; // RSI(12)
-    CustomIndicatorField_EMA5 = 10; // 5日指数移动均线 
-    CustomIndicatorField_EMA10 = 11; // 10日指数移动均线 
-    CustomIndicatorField_EMA20 = 12; // 20日指数移动均线 
-	CustomIndicatorField_EMA30 = 13; // 30日指数移动均线 
-    CustomIndicatorField_EMA60 = 14; // 60日指数移动均线 
-    CustomIndicatorField_EMA120 = 15; // 120日指数移动均线
-    CustomIndicatorField_EMA250 = 16; // 250日指数移动均线
-	CustomIndicatorField_Value = 17; // 自定义数值，用于与 RSI 进行比较（stock_field1不支持此字段）
+	CustomIndicatorField_Price = 1; // 最新价格
+	CustomIndicatorField_MA5 = 2; // 5日简单均线（不建议使用）
+    CustomIndicatorField_MA10 = 3; // 10日简单均线 （不建议使用）
+    CustomIndicatorField_MA20 = 4; // 20日简单均线 （不建议使用）
+    CustomIndicatorField_MA30 = 5; // 30日简单均线 （不建议使用）
+    CustomIndicatorField_MA60 = 6; // 60日简单均线 （不建议使用）
+	CustomIndicatorField_MA120 = 7; // 120日简单均线（不建议使用）
+    CustomIndicatorField_MA250 = 8; // 250日简单均线（不建议使用）
+	CustomIndicatorField_RSI = 9; // RSI 指标参数的默认值为12
+    CustomIndicatorField_EMA5 = 10; // 5日指数移动均线 （不建议使用）
+    CustomIndicatorField_EMA10 = 11; // 10日指数移动均线 （不建议使用）
+    CustomIndicatorField_EMA20 = 12; // 20日指数移动均线 （不建议使用）
+	CustomIndicatorField_EMA30 = 13; // 30日指数移动均线 （不建议使用）
+    CustomIndicatorField_EMA60 = 14; // 60日指数移动均线 （不建议使用）
+    CustomIndicatorField_EMA120 = 15; // 120日指数移动均线（不建议使用）
+    CustomIndicatorField_EMA250 = 16; // 250日指数移动均线（不建议使用）
+	CustomIndicatorField_Value = 17; // 自定义数值（stock_field1 不支持此字段）
+	CustomIndicatorField_MA = 30; // 简单均线
+	CustomIndicatorField_EMA = 40; // 指数移动均线
+	CustomIndicatorField_KDJ_K = 50; // KDJ 指标的 K 值。指标参数需要根据 KDJ 进行传参。不传则默认为 [9,3,3]
+	CustomIndicatorField_KDJ_D = 51; // KDJ 指标的 D 值。指标参数需要根据 KDJ 进行传参。不传则默认为 [9,3,3]
+	CustomIndicatorField_KDJ_J = 52; // KDJ 指标的 J 值。指标参数需要根据 KDJ 进行传参。不传则默认为 [9,3,3]	
+	CustomIndicatorField_MACD_DIFF = 60; // MACD 指标的 DIFF 值。指标参数需要根据 MACD 进行传参。不传则默认为 [12,26,9]
+	CustomIndicatorField_MACD_DEA = 61; // MACD 指标的 DEA 值。指标参数需要根据 MACD 进行传参。不传则默认为 [12,26,9]
+	CustomIndicatorField_MACD = 62; // MACD 指标的 MACD 值。指标参数需要根据 MACD 进行传参。不传则默认为 [12,26,9]
+	CustomIndicatorField_BOLL_UPPER = 70; // BOLL 指标的 UPPER 值。指标参数需要根据 BOLL 进行传参。不传则默认为 [20,2]
+	CustomIndicatorField_BOLL_MIDDLER = 71; // BOLL 指标的 MIDDLER 值。指标参数需要根据 BOLL 进行传参。不传则默认为 [20,2]
+	CustomIndicatorField_BOLL_LOWER = 72; // BOLL 指标的 LOWER 值。指标参数需要根据 BOLL 进行传参。不传则默认为 [20,2]
 }
 
 // 形态技术指标属性
@@ -150,8 +161,8 @@ enum PatternField
     PatternField_RSIDeathCrossHigh = 6 ; // RSI高位死叉（50以上，短线RSI下穿长线RSI（前一日短线RSI大于长线RSI，当日短线RSI小于长线RSI）） 
     PatternField_RSITopDivergence = 7 ; // RSI顶背离（相邻的两个K线波峰，后面的波峰对应的CLOSE>前面的波峰对应的CLOSE，后面波峰的RSI12值 <前面波峰的RSI12值）
     PatternField_RSIBottomDivergence = 8 ; // RSI底背离（相邻的两个K线波谷，后面的波谷对应的CLOSE <前面的波谷对应的CLOSE，后面波谷的RSI12值>前面波谷的RSI12值） 
-    PatternField_KDJGoldCrossLow = 9 ; // KDJ低位金叉（D值小于或等于30，且前一日K值小于D值，当日K值大于D值）
-    PatternField_KDJDeathCrossHigh = 10 ; // KDJ高位死叉（D值大于或等于70，且前一日K值大于D值，当日K值小于D值）
+    PatternField_KDJGoldCrossLow = 9 ; // KDJ低位金叉（KDJ的值都小于或等于30，且前一日K,J值分别小于D值，当日K,J值分别大于D值）
+    PatternField_KDJDeathCrossHigh = 10 ; // KDJ高位死叉（KDJ的值都大于或等于70，且前一日K,J值分别大于D值，当日K,J值分别小于D值）
     PatternField_KDJTopDivergence = 11 ; // KDJ顶背离（相邻的两个K线波峰，后面的波峰对应的CLOSE>前面的波峰对应的CLOSE，后面波峰的J值 <前面波峰的J值）
     PatternField_KDJBottomDivergence = 12 ; // KDJ底背离（相邻的两个K线波谷，后面的波谷对应的CLOSE <前面的波谷对应的CLOSE，后面波谷的J值>前面波谷的J值）
     PatternField_MACDGoldCrossLow = 13 ; // MACD低位金叉（DIFF上穿DEA（前一日DIFF小于DEA，当日DIFF大于DEA））
@@ -231,6 +242,7 @@ message PatternFilter
 	required int32 fieldName = 1; // PatternField 形态技术指标属性
 	required int32 klType = 2; // Qot_Common.KLType，K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
 	optional bool isNoFilter = 3; // 该字段是否不需要筛选，True代表不筛选，False代表筛选。不传默认为不筛选
+	optional int32 consecutivePeriod = 4; // 筛选连续周期都符合条件的数据，填写范围为[1,12]
 }
 
 // 自定义技术指标属性筛选
@@ -238,10 +250,13 @@ message CustomIndicatorFilter
 {
 	required int32 firstFieldName = 1; // CustomIndicatorField 自定义技术指标属性
 	required int32 secondFieldName = 2; // CustomIndicatorField 自定义技术指标属性
-	required int32 relativePosition = 3; // RelativePosition 相对位置,主要用于MA，EMA，RSI指标做比较
-	optional double fieldValue = 4; // 自定义数值，用于与RSI进行比较
+	required int32 relativePosition = 3; // RelativePosition 相对位置
+	optional double fieldValue = 4; // 自定义数值。当 stock_field2 选择自定义数值时，value 为必传参数。支持与KDJ_K，KDJ_D，KDJ_J，MACD_DIFF，MACD_DEA，MACD，BOLL_UPPER，BOLL_MIDDLER，BOLL_LOWER 进行比较（stock_field1 不支持此字段）
 	required int32 klType = 5; // Qot_Common.KLType，K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期	
 	optional bool isNoFilter = 6; // 该字段是否不需要筛选，True代表不筛选，False代表筛选。不传默认为不筛选
+	repeated int32 firstFieldParaList = 7; // 自定义指标参数 根据指标类型进行传参：1. MA：[平均移动周期] 2.EMA：[指数移动平均周期] 3.RSI：[RSI 指标周期] 4.MACD：[快速平均线值, 慢速平均线值, DIF值] 5.BOLL：[均线周期, 偏移值] 6.KDJ：[RSV 周期, K 值计算周期, D 值计算周期]
+	repeated int32 secondFieldParaList = 8; // 自定义指标参数 根据指标类型进行传参：1. MA：[平均移动周期] 2.EMA：[指数移动平均周期] 3.RSI：[RSI 指标周期] 4.MACD：[快速平均线值, 慢速平均线值, DIF值] 5.BOLL：[均线周期, 偏移值] 6.KDJ：[RSV 周期, K 值计算周期, D 值计算周期]
+	optional int32 consecutivePeriod = 9; // 筛选连续周期都符合条件的数据，填写范围为[1,12]
 }
 
 // 简单属性数据
@@ -273,6 +288,7 @@ message CustomIndicatorData
 	required int32 fieldName = 1; // CustomIndicatorField 自定义技术指标属性
 	required double value = 2; 
 	required int32 klType = 3; // Qot_Common.KLType，K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
+	repeated int32 fieldParaList = 4; // 自定义指标参数 根据指标类型进行传参：1. MA：[平均移动周期] 2.EMA：[指数移动平均周期] 3.RSI：[RSI 指标周期] 4.MACD：[快速平均线值, 慢速平均线值, DIF值] 5.BOLL：[均线周期, 偏移值] 6.KDJ：[RSV 周期, K 值计算周期, D 值计算周期]
 }
 
 // 返回的股票数据
@@ -283,7 +299,8 @@ message StockData
 	repeated BaseData baseDataList = 3; // 筛选后的简单指标属性数据
 	repeated AccumulateData accumulateDataList = 4; // 筛选后的累积指标属性数据
 	repeated FinancialData financialDataList = 5; // 筛选后的财务指标属性数据
-	repeated CustomIndicatorData customIndicatorDataList = 6; // 筛选后的自定义技术指标属性数据
+	repeated CustomIndicatorData customIndicatorDataList = 6; // 自定义技术指标属性数据
+    // CustomIndicatorFilter 中的 firstFieldName 和 secondFieldName 的数值会在这个列表中分开返回
 }
 
 message C2S

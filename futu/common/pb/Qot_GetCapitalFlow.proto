@@ -9,13 +9,21 @@ import "Qot_Common.proto";
 message C2S
 {
 	required Qot_Common.Security security = 1; //股票
+	optional int32 periodType = 2; // Qot_Common.PeriodType 周期类型
+	optional string beginTime = 3; // 开始时间（格式：yyyy-MM-dd），仅周期类型不为实时有效
+	optional string endTime = 4; // 结束时间（格式：yyyy-MM-dd），仅周期类型不为实时有效
 }
 
 message CapitalFlowItem
-{	
-	required double inFlow = 1; //净流入的资金额度
+{
+	required double inFlow = 1; // 整体净流入
 	optional string time = 2; //开始时间字符串,以分钟为单位
 	optional double timestamp = 3; //开始时间戳
+	optional double mainInFlow = 4; // 主力大单净流入，仅周期类型不为实时有效
+	optional double superInFlow = 5; // 特大单净流入
+	optional double bigInFlow = 6; // 大单净流入
+	optional double midInFlow = 7; // 中单净流入
+	optional double smlInFlow = 8; // 小单净流入
 }
 
 message S2C

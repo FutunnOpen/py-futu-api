@@ -61,10 +61,17 @@ message QotRight
 	optional int32 hkOptionQotRight = 7; //港股期权行情权限, Qot_Common.QotRight
 	optional bool hasUSOptionQotRight = 8; //是否有美股期权行情权限
 	optional int32 hkFutureQotRight = 9; //港股期货行情权限, Qot_Common.QotRight
-	optional int32 usFutureQotRight = 10; //美股期货行情权限, Qot_Common.QotRight
+	optional int32 usFutureQotRight = 10; //美股期货行情权限, Qot_Common.QotRight(已废弃)
 	optional int32 usOptionQotRight = 11; //美股期权行情权限, Qot_Common.QotRight
 	optional int32 usIndexQotRight = 12; //美股指数行情权限, Qot_Common.QotRight
 	optional int32 usOtcQotRight = 13; //美股OTC市场行情权限, Qot_Common.QotRight
+	optional int32 sgFutureQotRight = 14; //新加坡市场期货行情权限, Qot_Common.QotRight
+	optional int32 jpFutureQotRight = 15; //日本市场期货行情权限, Qot_Common.QotRight
+	optional int32 usCMEFutureQotRight = 16; //美股CME期货行情权限, Qot_Common.QotRight
+	optional int32 usCBOTFutureQotRight = 17; //美股CBOT期货行情权限, Qot_Common.QotRight
+	optional int32 usNYMEXFutureQotRight = 18; //美股NYMEX期货行情权限, Qot_Common.QotRight
+	optional int32 usCOMEXFutureQotRight = 19; //美股COMEX期货行情权限, Qot_Common.QotRight
+	optional int32 usCBOEFutureQotRight = 20; //美股CBOE期货行情权限, Qot_Common.QotRight
 }
 
 message APILevel

@@ -132,6 +132,9 @@ class CustomIndicatorFilter(object):
     value = None  # 自定义数值，用于与RSI进行比较
     ktype = KLType.NONE  # KLType, K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
     is_no_filter = None  # 如果这个字段不需要筛选
+    stock_field1_para = None
+    stock_field2_para = None
+    consecutive_period = None
 
     def __init__(self):
         self.stock_field1 = StockField.NONE
@@ -139,6 +142,9 @@ class CustomIndicatorFilter(object):
         self.relative_position = RelativePosition.NONE
         self.ktype = KLType.NONE
         self.is_no_filter = None
+        self.stock_field1_para = []
+        self.stock_field2_para = []
+        self.consecutive_period = None
 
     def fill_request_pb(self, filter_req):
         if self.stock_field1 == StockField.NONE:
@@ -175,27 +181,86 @@ class CustomIndicatorFilter(object):
         if self.is_no_filter is False:
             filter_req.isNoFilter = False
 
+        """容错"""
+        if self.stock_field1_para is None:
+            self.stock_field1_para = []
+        if self.stock_field1_para is not None and not isinstance(self.stock_field1_para, list):
+            error_str = ERROR_STR_PREFIX + "the type of stock_field1_para is wrong"
+            return RET_ERROR, error_str
+
+        if self.stock_field2_para is None:
+            self.stock_field2_para = []
+        if self.stock_field2_para is not None and not isinstance(self.stock_field2_para, list):
+            error_str = ERROR_STR_PREFIX + "the type of stock_field2_para is wrong"
+            return RET_ERROR, error_str
+
+        """参数设置列表"""
+        if self.stock_field1_para is not None:
+            for field1_item in self.stock_field1_para:
+                filter_req.firstFieldParaList.append(field1_item)
+
+        if self.stock_field2_para is not None:
+            for field2_item in self.stock_field2_para:
+                filter_req.secondFieldParaList.append(field2_item)
+
+        """连续周期"""
+        if self.consecutive_period is not None:
+            filter_req.consecutivePeriod = self.consecutive_period
+
         return RET_OK, ""
 
-    # 自定义 (stock_field + ktype) 作为筛选的key
+    # 自定义 (stock_field + stock_field1_para + ktype) 作为筛选的key
     @property
     def query_key1(self):
-        return self.stock_field1.lower(), self.ktype.lower()
+        tuple_key = ()
+        field_fixed = ('MA5', 'MA10', 'MA20', 'MA30', 'MA60', 'MA120', 'MA250',
+                       'EMA5', 'EMA10', 'EMA20', 'EMA30', 'EMA60', 'EMA120', 'EMA250',
+                       'PRICE')
+        if (field_fixed.count(self.stock_field1) > 0):
+            tuple_key = self.stock_field1.lower(), self.ktype.lower()
+        elif len(self.stock_field1_para) == 0:
+            tuple_key =self.stock_field1.lower(), self.ktype.lower()
+        elif len(self.stock_field1_para) == 1:
+            tuple_key = self.stock_field1.lower(), str(self.stock_field1_para[0]), self.ktype.lower()
+        elif len(self.stock_field1_para) == 2:
+            str_para = '{},{}'.format(self.stock_field1_para[0], self.stock_field1_para[1])
+            tuple_key = self.stock_field1.lower(), str_para, self.ktype.lower()
+        elif len(self.stock_field1_para) == 3:
+            str_para = '{},{},{}'.format(self.stock_field1_para[0], self.stock_field1_para[1], self.stock_field1_para[2])
+            tuple_key = self.stock_field1.lower(), str_para, self.ktype.lower()
+        return tuple_key
 
     @property
     def query_key2(self):
-        return self.stock_field2.lower(), self.ktype.lower()
-
+        tuple_key = ()
+        field_fixed = ('MA5', 'MA10', 'MA20', 'MA30', 'MA60', 'MA120', 'MA250',
+                       'EMA5', 'EMA10', 'EMA20', 'EMA30', 'EMA60', 'EMA120', 'EMA250',
+                       'PRICE')
+        if (field_fixed.count(self.stock_field2) > 0):
+            tuple_key = self.stock_field2.lower(), self.ktype.lower()
+        elif len(self.stock_field2_para) == 0:
+            tuple_key =self.stock_field2.lower(), self.ktype.lower()
+        elif len(self.stock_field2_para) == 1:
+            tuple_key = self.stock_field2.lower(), str(self.stock_field2_para[0]), self.ktype.lower()
+        elif len(self.stock_field2_para) == 2:
+            str_para = '{},{}'.format(self.stock_field2_para[0], self.stock_field2_para[1])
+            tuple_key = self.stock_field2.lower(), str_para, self.ktype.lower()
+        elif len(self.stock_field2_para) == 3:
+            str_para = '{},{},{}'.format(self.stock_field2_para[0], self.stock_field2_para[1], self.stock_field2_para[2])
+            tuple_key = self.stock_field2.lower(), str_para, self.ktype.lower()
+        return tuple_key
 
 class PatternFilter(object):
     stock_field = StockField.NONE  # StockField 指标形态属性
     ktype = None  # KLType, K线类型，仅支持K_60M，K_DAY，K_WEEK，K_MON 四种时间周期
     is_no_filter = None  # 如果这个字段不需要筛选
+    consecutive_period = None
 
     def __init__(self):
         self.stock_field = StockField.NONE
         self.ktype = KLType.NONE
         self.is_no_filter = None
+        self.consecutive_period = None
 
     def fill_request_pb(self, filter_req):
         if self.stock_field == StockField.NONE:
@@ -214,6 +279,10 @@ class PatternFilter(object):
 
         if self.is_no_filter is False:
             filter_req.isNoFilter = False
+
+        """连续周期"""
+        if self.consecutive_period is not None:
+            filter_req.consecutivePeriod = self.consecutive_period
 
         return RET_OK, ""
 
@@ -297,21 +366,33 @@ class FilterStockData(object):
 
     # 以下是技术指标过滤所支持的枚举
     # price  # 最新价格
-    # ma5  # 5日简单均线
-    # ma10  # 10日简单均线
-    # ma20  # 20日简单均线
-    # ma30  # 30日简单均线
-    # ma60  # 60日简单均线
-    # ma120  # 120日简单均线
-    # ma250  # 250日简单均线
-    # rsi  # 动态rsi
-    # ema5  # 5日指数移动均线
-    # ema10  # 10日指数移动均线
-    # ema20  # 20日指数移动均线
-    # ema30  # 30日指数移动均线
-    # ema60  # 60日指数移动均线
-    # ema120  # 120日指数移动均线
-    # ema250  # 250日指数移动均线
+    # ma5  # 5日简单均线（不建议使用）
+    # ma10  # 10日简单均线（不建议使用）
+    # ma20  # 20日简单均线（不建议使用）
+    # ma30  # 30日简单均线（不建议使用）
+    # ma60  # 60日简单均线（不建议使用）
+    # ma120  # 120日简单均线（不建议使用）
+    # ma250  # 250日简单均线（不建议使用）
+    # rsi  # RSI 指标参数的默认值为12
+    # ema5  # 5日指数移动均线（不建议使用）
+    # ema10  # 10日指数移动均线（不建议使用）
+    # ema20  # 20日指数移动均线（不建议使用）
+    # ema30  # 30日指数移动均线（不建议使用）
+    # ema60  # 60日指数移动均线（不建议使用）
+    # ema120  # 120日指数移动均线（不建议使用）
+    # ema250  # 250日指数移动均线（不建议使用）
+    # value  # 自定义数值（stock_field1 不支持此字段）
+    # ma  # 简单均线
+    # ema  # 指数移动均线
+    # kdj_k  # KDJ 指标的 K 值。指标参数需要根据 KDJ 进行传参。不传则默认为 [9,3,3]
+    # kdj_d  # KDJ 指标的 D 值。指标参数需要根据 KDJ 进行传参。不传则默认为 [9,3,3]
+    # kdj_j  # KDJ 指标的 J 值。指标参数需要根据 KDJ 进行传参。不传则默认为 [9,3,3]
+    # macd_diff  # MACD 指标的 DIFF 值。指标参数需要根据 MACD 进行传参。不传则默认为 [12,26,9]
+    # macd_dea  # MACD 指标的 DEA 值。指标参数需要根据 MACD 进行传参。不传则默认为 [12,26,9]
+    # macd  # MACD 指标的 MACD 值。指标参数需要根据 MACD 进行传参。不传则默认为 [12,26,9]
+    # boll_upper  # BOLL 指标的 UPPER 值。指标参数需要根据 BOLL 进行传参。不传则默认为 [20,2]
+    # boll_middler  # BOLL 指标的 MIDDLER 值。指标参数需要根据 BOLL 进行传参。不传则默认为 [20,2]
+    # boll_lower  # BOLL 指标的 LOWER 值。指标参数需要根据 BOLL 进行传参。不传则默认为 [20,2]
 
     def __init__(self, rsp_item):
         self.stock_code = None
@@ -356,7 +437,18 @@ class FilterStockData(object):
         for sub_item in base_data_list:
             ret1, field = StockField.to_string(sub_item.fieldName + StockField.indicator_enum_begin)
             ret2, klType = KLType.to_string(sub_item.klType)
-            if ret1 and ret2:
+
+            key = sub_item.fieldParaList
+            str_list = ""
+            if len(sub_item.fieldParaList) == 1:
+                str_list = ("{}".format(key[0]))
+            elif len(sub_item.fieldParaList) == 2:
+                str_list = ("{},{}".format(key[0], key[1]))
+            elif len(sub_item.fieldParaList) == 3:
+                str_list = ("{},{},{}".format(key[0], key[1], key[2]))
+            if ret1 and ret2 and (len(str_list)>0):
+                self.__dict__[(field.lower(), str_list, klType.lower())] = sub_item.value
+            elif ret1 and ret2:
                 self.__dict__[(field.lower(), klType.lower())] = sub_item.value
 
     def __repr__(self):
@@ -365,23 +457,110 @@ class FilterStockData(object):
         for key in self.__dict__:
             value = self.__dict__[key]
             if value is not None:
-                if isinstance(key, tuple):
+                if isinstance(key, tuple) and (len(key) > 2) and (len(key[2]) > 0):
+                    if (key[1].count(',') <= 0):
+                        s += (" {}{}({}):{} ".format(key[0], key[1], key[2], value))
+                    else:
+                        s += (" {}({})({}):{} ".format(key[0], key[1], key[2], value))
+                elif isinstance(key, tuple):
                     s += (" {}({}):{} ".format(key[0], key[1], value))
                 else:
                     s += (" {}:{} ".format(key, value))
         return s
+
+    # 输出key值，ma5，rsi12， macd_diff(12,26,9)
+    @staticmethod
+    def field_to_key1(key):
+        key1 = None
+        field_fixed = ('MA5', 'MA10', 'MA20', 'MA30', 'MA60', 'MA120', 'MA250',
+                       'EMA5', 'EMA10', 'EMA20', 'EMA30', 'EMA60', 'EMA120', 'EMA250',
+                       'PRICE')
+        if (field_fixed.count(key.stock_field1) > 0):
+            key1 = key.stock_field1.lower()
+        elif len(key.stock_field1_para) == 0:
+            key1 = key.stock_field1.lower()
+        elif len(key.stock_field1_para) == 1:
+            key1 = key.stock_field1.lower() + "{}".format(key.stock_field1_para[0])
+        elif len(key.stock_field1_para) == 2:
+            key1 = key.stock_field1.lower() + "({},{})".format(key.stock_field1_para[0],
+                                                               key.stock_field1_para[1])
+        elif len(key.stock_field1_para) == 3:
+            key1 = key.stock_field1.lower() + "({},{},{})".format(key.stock_field1_para[0],
+                                                                  key.stock_field1_para[1],
+                                                                  key.stock_field1_para[2])
+        return key1
+
+    # 输出key值，ma5，rsi12， macd_diff(12,26,9)
+    @staticmethod
+    def field_to_key2(key):
+        key2 = None
+        field_fixed = ('MA5', 'MA10', 'MA20', 'MA30', 'MA60', 'MA120', 'MA250',
+                       'EMA5', 'EMA10', 'EMA20', 'EMA30', 'EMA60', 'EMA120', 'EMA250',
+                       'PRICE')
+        if key.stock_field2 != StockField.VALUE:
+            if (field_fixed.count(key.stock_field2) > 0):
+                key2 = key.stock_field2.lower()
+            elif len(key.stock_field2_para) == 0:
+                key2 = key.stock_field2.lower()
+            elif len(key.stock_field2_para) == 1:
+                key2 = key.stock_field2.lower() + "{}".format(key.stock_field2_para[0])
+            elif len(key.stock_field2_para) == 2:
+                key2 = key.stock_field2.lower() + "({},{})".format(key.stock_field2_para[0],
+                                                                   key.stock_field2_para[1])
+            elif len(key.stock_field2_para) == 3:
+                key2 = key.stock_field2.lower() + "({},{},{})".format(key.stock_field2_para[0],
+                                                                      key.stock_field2_para[1],
+                                                                      key.stock_field2_para[2])
+        return key2
+
+    # 修改key的stock_field1_para和stock_field2_para值。当是空的时候，给赋默认值。
+    def assign_default_value(self, key):
+        field_kdj = ('KDJ_K', 'KDJ_D', 'KDJ_J')
+        if (field_kdj.count(key.stock_field1)) and (len(key.stock_field1_para) == 0):
+            key.stock_field1_para = [9, 3, 3]
+        if (field_kdj.count(key.stock_field2)) and (len(key.stock_field2_para) == 0):
+            key.stock_field2_para = [9, 3, 3]
+
+        field_macd = ('MACD_DIFF', 'MACD_DEA', 'MACD')
+        if (field_macd.count(key.stock_field1)) and (len(key.stock_field1_para) == 0):
+            key.stock_field1_para = [12,26,9]
+        if (field_macd.count(key.stock_field2)) and (len(key.stock_field2_para) == 0):
+            key.stock_field2_para = [12,26,9]
+
+        field_boll = ('BOLL_UPPER', 'BOLL_MIDDLER', 'BOLL_LOWER')
+        if (field_boll.count(key.stock_field1)) and (len(key.stock_field1_para) == 0):
+            key.stock_field1_para = [20,2]
+        if (field_boll.count(key.stock_field2)) and (len(key.stock_field2_para) == 0):
+            key.stock_field2_para = [20,2]
+
+        return key
+
 
     # 获取筛选条件的某字段，比如FinancialFilter的筛选字段。
     def __getitem__(self, key):
         if isinstance(key, SimpleFilter) or isinstance(key, FinancialFilter) or isinstance(key, AccumulateFilter):
             return self.__dict__[key.query_key]
         if isinstance(key, CustomIndicatorFilter):
-            key1 = key.stock_field1.lower()
-            value1 = self.__dict__[key.query_key1]
-            if key.stock_field2 != StockField.VALUE:
-                key2 = key.stock_field2.lower()
-                value2 = self.__dict__[key.query_key2]
-                return {key1: value1, key2: value2}
+
+            # 当是stock_field1_para和stock_field2_para空的时候，给赋默认值。
+            self.assign_default_value(key)
+
+            key1 = self.field_to_key1(key)
+            key2 = self.field_to_key2(key)
+
+            if (key.consecutive_period is not None) and (key.consecutive_period > 0):
+                if (key.stock_field2 is StockField.VALUE) or (key.stock_field1 is StockField.RSI) :
+                    return {key1: float("nan")}
+                elif key.stock_field2 is StockField.RSI :
+                    return {key2: float("nan")}
+                else:
+                    return {key1: float("nan"), key2: float("nan")}
             else:
-                return {key1: value1}
+                value1 = self.__dict__[key.query_key1]
+                if key.stock_field2 is StockField.VALUE:
+                    return {key1: value1}
+                else:
+                    value2 = self.__dict__[key.query_key2]
+                    return {key1: value1, key2: value2}
+        # 捕获异常
         raise KeyError('Unknown key: {}'.format(key))

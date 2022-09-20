@@ -1931,9 +1931,11 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         if isinstance(ret, dict):
             col_list = [
+                'capital_in_super',
                 'capital_in_big',
                 'capital_in_mid',
                 'capital_in_small',
+                'capital_out_super',
                 'capital_out_big',
                 'capital_out_mid',
                 'capital_out_small',
@@ -1944,11 +1946,20 @@ class OpenQuoteContext(OpenContextBase):
         else:
             return RET_ERROR, "empty data"
 
-    def get_capital_flow(self, stock_code):
+    def get_capital_flow(self, stock_code, period_type = PeriodType.INTRADAY, start=None, end=None):
         """
         个股资金流入流出
         GetCapitalFlow
         """
+        if not PeriodType.if_has_key(period_type):
+            msg = ERROR_STR_PREFIX + "the type of period_type param is wrong"
+            return RET_ERROR, msg
+
+        if period_type != PeriodType.INTRADAY:
+            ret_code, msg, start, end = normalize_start_end_date(start, end, 365)
+            if ret_code != RET_OK:
+                return ret_code, msg
+
         if stock_code is None or is_str(stock_code) is False:
             error_str = ERROR_STR_PREFIX + 'the type of stock_code param is wrong'
             return RET_ERROR, error_str
@@ -1960,7 +1971,10 @@ class OpenQuoteContext(OpenContextBase):
 
         kargs = {
             "code": stock_code,
-            "conn_id": self.get_sync_conn_id()
+            "conn_id": self.get_sync_conn_id(),
+            "start_date": start,
+            "end_date": end,
+            "period_type": period_type
         }
         ret_code, msg, ret = query_processor(**kargs)
         if ret_code == RET_ERROR:
@@ -1969,6 +1983,11 @@ class OpenQuoteContext(OpenContextBase):
             col_list = [
                 'last_valid_time',
                 'in_flow',
+                'super_in_flow',
+                'big_in_flow',
+                'mid_in_flow',
+                'sml_in_flow',
+                'main_in_flow',
                 'capital_flow_item_time',
             ]
             ret_frame = pd.DataFrame(ret, columns=col_list)

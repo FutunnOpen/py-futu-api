@@ -46,12 +46,19 @@ message S2C
 	optional int32 hkFutureQotRight = 13; //港股期货行情权限, Qot_Common.QotRight
 	optional int32 subQuota = 14; //订阅额度
     optional int32 historyKLQuota = 15; //历史K线额度
-	optional int32 usFutureQotRight = 16; //美股期货行情权限, Qot_Common.QotRight
+	optional int32 usFutureQotRight = 16; //美股期货行情权限, Qot_Common.QotRight(已废弃)
 	optional int32 usOptionQotRight = 17; //美股期货行情权限, Qot_Common.QotRight
 	optional int32 userAttribution = 19; //用户注册归属地
 	optional string updateWhatsNew = 20; //升级提示
 	optional int32 usIndexQotRight = 21; //美股指数行情权限, Qot_Common.QotRight
 	optional int32 usOtcQotRight = 22; //美股OTC市场行情权限, Qot_Common.QotRight
+	optional int32 usCMEFutureQotRight = 23; //美股CME期货行情权限, Qot_Common.QotRight
+	optional int32 usCBOTFutureQotRight = 24; //美股CBOT期货行情权限, Qot_Common.QotRight
+	optional int32 usNYMEXFutureQotRight = 25; //美股NYMEX期货行情权限, Qot_Common.QotRight
+	optional int32 usCOMEXFutureQotRight = 26; //美股COMEX期货行情权限, Qot_Common.QotRight
+	optional int32 usCBOEFutureQotRight = 27; //美股CBOE期货行情权限, Qot_Common.QotRight
+	optional int32 sgFutureQotRight = 28; //新加坡市场期货行情权限, Qot_Common.QotRight
+	optional int32 jpFutureQotRight = 29; //日本市场期货行情权限, Qot_Common.QotRight
 }
 
 message Request

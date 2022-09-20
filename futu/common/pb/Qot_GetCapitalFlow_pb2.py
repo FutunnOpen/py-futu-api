@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetCapitalFlow.proto',
   package='Qot_GetCapitalFlow',
   syntax='proto2',
-  serialized_pb=_b('\n\x18Qot_GetCapitalFlow.proto\x12\x12Qot_GetCapitalFlow\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"-\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\"B\n\x0f\x43\x61pitalFlowItem\x12\x0e\n\x06inFlow\x18\x01 \x02(\x01\x12\x0c\n\x04time\x18\x02 \x01(\t\x12\x11\n\ttimestamp\x18\x03 \x01(\x01\"s\n\x03S2C\x12\x39\n\x0c\x66lowItemList\x18\x01 \x03(\x0b\x32#.Qot_GetCapitalFlow.CapitalFlowItem\x12\x15\n\rlastValidTime\x18\x02 \x01(\t\x12\x1a\n\x12lastValidTimestamp\x18\x03 \x01(\x01\"/\n\x07Request\x12$\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x17.Qot_GetCapitalFlow.C2S\"h\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12$\n\x03s2c\x18\x04 \x01(\x0b\x32\x17.Qot_GetCapitalFlow.S2CBH\n\x13\x63om.futu.openapi.pbZ1github.com/futuopen/ftapi4go/pb/qotgetcapitalflow')
+  serialized_pb=_b('\n\x18Qot_GetCapitalFlow.proto\x12\x12Qot_GetCapitalFlow\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"e\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x12\n\nperiodType\x18\x02 \x01(\x05\x12\x11\n\tbeginTime\x18\x03 \x01(\t\x12\x0f\n\x07\x65ndTime\x18\x04 \x01(\t\"\xa4\x01\n\x0f\x43\x61pitalFlowItem\x12\x0e\n\x06inFlow\x18\x01 \x02(\x01\x12\x0c\n\x04time\x18\x02 \x01(\t\x12\x11\n\ttimestamp\x18\x03 \x01(\x01\x12\x12\n\nmainInFlow\x18\x04 \x01(\x01\x12\x13\n\x0bsuperInFlow\x18\x05 \x01(\x01\x12\x11\n\tbigInFlow\x18\x06 \x01(\x01\x12\x11\n\tmidInFlow\x18\x07 \x01(\x01\x12\x11\n\tsmlInFlow\x18\x08 \x01(\x01\"s\n\x03S2C\x12\x39\n\x0c\x66lowItemList\x18\x01 \x03(\x0b\x32#.Qot_GetCapitalFlow.CapitalFlowItem\x12\x15\n\rlastValidTime\x18\x02 \x01(\t\x12\x1a\n\x12lastValidTimestamp\x18\x03 \x01(\x01\"/\n\x07Request\x12$\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x17.Qot_GetCapitalFlow.C2S\"h\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12$\n\x03s2c\x18\x04 \x01(\x0b\x32\x17.Qot_GetCapitalFlow.S2CBH\n\x13\x63om.futu.openapi.pbZ1github.com/futuopen/ftapi4go/pb/qotgetcapitalflow')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -42,6 +42,27 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='periodType', full_name='Qot_GetCapitalFlow.C2S.periodType', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='beginTime', full_name='Qot_GetCapitalFlow.C2S.beginTime', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='endTime', full_name='Qot_GetCapitalFlow.C2S.endTime', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -55,7 +76,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=80,
-  serialized_end=125,
+  serialized_end=181,
 )
 
 
@@ -87,6 +108,41 @@ _CAPITALFLOWITEM = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='mainInFlow', full_name='Qot_GetCapitalFlow.CapitalFlowItem.mainInFlow', index=3,
+      number=4, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='superInFlow', full_name='Qot_GetCapitalFlow.CapitalFlowItem.superInFlow', index=4,
+      number=5, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='bigInFlow', full_name='Qot_GetCapitalFlow.CapitalFlowItem.bigInFlow', index=5,
+      number=6, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='midInFlow', full_name='Qot_GetCapitalFlow.CapitalFlowItem.midInFlow', index=6,
+      number=7, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='smlInFlow', full_name='Qot_GetCapitalFlow.CapitalFlowItem.smlInFlow', index=7,
+      number=8, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -99,8 +155,8 @@ _CAPITALFLOWITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=127,
-  serialized_end=193,
+  serialized_start=184,
+  serialized_end=348,
 )
 
 
@@ -144,8 +200,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=195,
-  serialized_end=310,
+  serialized_start=350,
+  serialized_end=465,
 )
 
 
@@ -175,8 +231,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=312,
-  serialized_end=359,
+  serialized_start=467,
+  serialized_end=514,
 )
 
 
@@ -227,8 +283,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=361,
-  serialized_end=465,
+  serialized_start=516,
+  serialized_end=620,
 )
 
 _C2S.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY
