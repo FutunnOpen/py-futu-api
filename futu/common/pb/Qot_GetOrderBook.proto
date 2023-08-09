@@ -15,6 +15,7 @@ message C2S
 message S2C
 {
 	required Qot_Common.Security security = 1; //股票
+	optional string name = 8; //股票名称
 	repeated Qot_Common.OrderBook orderBookAskList = 2; //卖盘
 	repeated Qot_Common.OrderBook orderBookBidList = 3; //买盘
 	optional string svrRecvTimeBid = 4; // 富途服务器从交易所收到数据的时间(for bid)部分数据的接收时间为零，例如服务器重启或第一次推送的缓存数据。该字段暂时只支持港股。

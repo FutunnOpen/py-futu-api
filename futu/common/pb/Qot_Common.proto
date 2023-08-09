@@ -374,6 +374,7 @@ enum Issuer
     Issuer_KC = 22; //比联
 	Issuer_MS = 23; //摩利
 	Issuer_GJ = 24; //国君
+	Issuer_XZ = 25; //星展
 }
 
 //窝轮上市日
@@ -591,6 +592,7 @@ message WarrantBasicQotExData
 message BasicQot
 {
 	required Security security = 1; //股票
+	optional string name = 24; // 股票名称
 	required bool isSuspended = 2; //是否停牌
 	required string listTime = 3; //上市日期字符串
 	required double priceSpread = 4; //价差

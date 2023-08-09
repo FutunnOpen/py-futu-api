@@ -410,6 +410,7 @@ class MarketSnapshotQuery:
             snapshot_tmp = {}
             snapshot_tmp['code'] = merge_qot_mkt_stock_str(
                 int(record.basic.security.market), record.basic.security.code)
+            snapshot_tmp['name'] = record.basic.name if record.basic.HasField('name') else 'N/A'
             snapshot_tmp['update_time'] = record.basic.updateTime
             snapshot_tmp['last_price'] = record.basic.curPrice
             snapshot_tmp['open_price'] = record.basic.openPrice
@@ -660,6 +661,7 @@ class RtDataQuery:
         rt_list = [
             {
                 "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code),
+                "name": rsp_pb.s2c.name if rsp_pb.s2c.HasField('name') else 'N/A',
                 "time": record.time,
                 "is_blank":  True if record.isBlank else False,
                 "opened_mins": record.minute,
@@ -805,6 +807,7 @@ class BrokerQueueQuery:
                 "bid_broker_name": record.name,
                 "bid_broker_pos": record.pos,
                 "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code),
+                "name": rsp_pb.s2c.name if rsp_pb.s2c.HasField('name') else 'N/A',
                 "order_id": record.orderID if record.HasField('orderID') else 'N/A',
                 "order_volume": record.volume if record.HasField('volume') else 'N/A'
             } for record in raw_broker_bid]
@@ -817,6 +820,7 @@ class BrokerQueueQuery:
                 "ask_broker_name": record.name,
                 "ask_broker_pos": record.pos,
                 "code": merge_qot_mkt_stock_str(rsp_pb.s2c.security.market, rsp_pb.s2c.security.code),
+                "name": rsp_pb.s2c.name if rsp_pb.s2c.HasField('name') else 'N/A',
                 "order_id": record.orderID if record.HasField('orderID') else 'N/A',
                 "order_volume": record.volume if record.HasField('volume') else 'N/A'
             } for record in raw_broker_ask]
@@ -883,12 +887,14 @@ class RequestHistoryKlineQuery:
 
         stock_code = merge_qot_mkt_stock_str(rsp_pb.s2c.security.market,
                                              rsp_pb.s2c.security.code)
+        stock_name = rsp_pb.s2c.name if rsp_pb.s2c.HasField('name') else "N/A"
 
         list_ret = []
         dict_data = {}
         raw_kline_list = rsp_pb.s2c.klList
         for record in raw_kline_list:
             dict_data['code'] = stock_code
+            dict_data['name'] = stock_name
             dict_data['time_key'] = record.time
             if record.isBlank:
                 continue
@@ -1091,6 +1097,7 @@ class SubscriptionQuery:
 def parse_pb_BasicQot(pb):
     item = {
         'code': merge_qot_mkt_stock_str(int(pb.security.market), pb.security.code),
+        'name': "N/A" if not pb.HasField('name') else pb.name,
         'data_date':pb.updateTime.split()[0] if len(pb.updateTime) > 0 else '',
         'data_time': pb.updateTime.split()[1] if len(pb.updateTime) > 0 else '',
         'last_price': pb.curPrice,
@@ -1223,9 +1230,11 @@ class TickerQuery:
 
         stock_code = merge_qot_mkt_stock_str(rsp_pb.s2c.security.market,
                                              rsp_pb.s2c.security.code)
+        stock_name = rsp_pb.s2c.name if rsp_pb.s2c.HasField('name') else "N/A"
         raw_ticker_list = rsp_pb.s2c.tickerList
         ticker_list = [{
             "code": stock_code,
+            "name": stock_name,
             "time": record.time,
             "price": record.price,
             "volume": record.volume,
@@ -1291,9 +1300,11 @@ class CurKlineQuery:
 
         stock_code = merge_qot_mkt_stock_str(rsp_pb.s2c.security.market,
                                              rsp_pb.s2c.security.code)
+        stock_name = rsp_pb.s2c.name if rsp_pb.s2c.HasField('name') else "N/A"
         raw_kline_list = rsp_pb.s2c.klList
         kline_list = [{
             "code": stock_code,
+            "name": stock_name,
             "time_key": record.time,
             "open": record.openPrice,
             "high": record.highPrice,
@@ -1327,10 +1338,12 @@ class CurKlinePush:
 
         stock_code = merge_qot_mkt_stock_str(rsp_pb.s2c.security.market,
                                              rsp_pb.s2c.security.code)
+        stock_name = rsp_pb.s2c.name if rsp_pb.s2c.HasField('name') else "N/A"
         raw_kline_list = rsp_pb.s2c.klList
         kline_list = [{
             "k_type": kl_type,
             "code": stock_code,
+            "name": stock_name,
             "time_key": record.time,
             "open": record.openPrice,
             "high": record.highPrice,
@@ -1383,6 +1396,7 @@ class OrderBookQuery:
         order_book = {}
         order_book['code'] = merge_qot_mkt_stock_str(
             rsp_pb.s2c.security.market, rsp_pb.s2c.security.code)
+        order_book['name'] = rsp_pb.s2c.name if rsp_pb.s2c.HasField('name') else 'N/A'
         order_book['svr_recv_time_bid'] = rsp_pb.s2c.svrRecvTimeBid
         order_book['svr_recv_time_ask'] = rsp_pb.s2c.svrRecvTimeAsk
         order_book['Bid'] = []
@@ -1588,10 +1602,6 @@ class SysNotifyPush:
             if rsp_pb.s2c.HasField('apiLevel'):
                 data = {'api_level': rsp_pb.s2c.apiLevel.apiLevel}
 
-        if data is None:
-            logger.warning(
-                "SysNotifyPush data is None: notify_type={}".format(notify_type))
-
         return RET_OK, (notify_type, sub_type, data)
 
 
@@ -1700,6 +1710,7 @@ class OwnerPlateQuery:
             for plate_info in plate_info_list:
                 quote_list = {
                     'code': merge_qot_mkt_stock_str(record.security.market, record.security.code),
+                    'name': record.name if record.HasField('name') else 'N/A',
                     'plate_code': merge_qot_mkt_stock_str(plate_info.plate.market, plate_info.plate.code),
                     'plate_name': str(plate_info.name),
                     'plate_type': Plate.to_string2(plate_info.plateType) if plate_info.HasField('plateType') else 'N/A' # 初始化枚举类型
@@ -1992,8 +2003,9 @@ class HistoryKLQuota:
         for item in details:
             code = merge_qot_mkt_stock_str(
                 int(item.security.market), item.security.code)
+            name = item.name if item.HasField('name') else "N/A"
             request_time = str(item.requestTime)
-            detail_list.append({"code": code, "request_time": request_time})
+            detail_list.append({"code": code, "name": name, "request_time": request_time})
 
         data = {
             "used_quota": used_quota,
@@ -2871,6 +2883,7 @@ class UpdatePriceReminder:
         if rsp_pb.HasField('s2c'):
             res['code'] = merge_qot_mkt_stock_str(rsp_pb.s2c.security.market,
                                                   rsp_pb.s2c.security.code)
+            res['name'] = rsp_pb.s2c.name if rsp_pb.s2c.HasField('name') else 'N/A'
             res['price'] = rsp_pb.s2c.price
             res['change_rate'] = rsp_pb.s2c.changeRate
             res['market_status'] = PriceReminderMarketStatus.to_string2(rsp_pb.s2c.marketStatus) if rsp_pb.s2c.HasField('marketStatus') else 'N/A' # 初始化枚举类型
@@ -2974,10 +2987,12 @@ class GetPriceReminderQuery:
         #  到价提醒 type = Qot_GetPriceReminder.PriceReminder
         for item in rsp_pb.s2c.priceReminderList:
             stock_code = merge_qot_mkt_stock_str(item.security.market, item.security.code)
+            stock_name = item.name if item.HasField('name') else 'N/A'
             #  提醒信息列表 type = Qot_GetPriceReminder.PriceReminderItem
             for sub_item in item.itemList:
                 data = {}
                 data["code"] = stock_code
+                data["name"] = stock_name
                 #  每个提醒的唯一标识 type = int64
                 data["key"] = sub_item.key
                 #  Qot_Common::PriceReminderType 提醒类型 type = int32

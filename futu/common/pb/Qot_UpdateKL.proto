@@ -11,6 +11,7 @@ message S2C
 	required int32 rehabType = 1; //Qot_Common.RehabType,复权类型
 	required int32 klType = 2; //Qot_Common.KLType,K线类型
 	required Qot_Common.Security security = 3; //股票
+	optional string name = 5; // 股票名称
 	repeated Qot_Common.KLine klList = 4; //推送的k线点
 }
 

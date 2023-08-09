@@ -933,6 +933,7 @@ class SysNotifyType(FtEnum):
     QOT_RIGHT = "QOT_RIGHT"
     API_LEVEL = "API_LEVEL"
     API_QUOTA = "API_QUOTA"
+    USED_QUOTA = "USED_QUOTA"
 
     def load_dic(self):
         return {
@@ -943,6 +944,7 @@ class SysNotifyType(FtEnum):
             self.QOT_RIGHT: Notify_pb2.NotifyType_QotRight,
             self.API_LEVEL: Notify_pb2.NotifyType_APILevel,
             self.API_QUOTA: Notify_pb2.NotifyType_APIQuota,
+            self.USED_QUOTA: Notify_pb2.NotifyType_UsedQuota,
         }
 
 class GtwEventType(FtEnum):
@@ -1627,6 +1629,7 @@ class Issuer(FtEnum):
     KC = "KC"                                          # 比联
     MS = "MS"                                          # 摩利
     GJ = "GJ"                                          # 国君
+    XZ = "XZ"                                          # 星展
 
     def load_dic(self):
         return {
@@ -1654,7 +1657,8 @@ class Issuer(FtEnum):
             self.VT: Qot_Common_pb2.Issuer_VT,
             self.KC: Qot_Common_pb2.Issuer_KC,
             self.MS: Qot_Common_pb2.Issuer_MS,
-            self.GJ: Qot_Common_pb2.Issuer_GJ
+            self.GJ: Qot_Common_pb2.Issuer_GJ,
+            self.XZ: Qot_Common_pb2.Issuer_XZ
         }
 
 
@@ -2417,6 +2421,7 @@ class Currency(FtEnum):
     CNH = 'CNH'  # 离岸人民币
     JPY = 'JPY'  # 日元
     SGD = 'SGD'  # 新元
+    AUD = 'AUD'  # 澳元
 
     def load_dic(self):
         return {
@@ -2425,7 +2430,8 @@ class Currency(FtEnum):
             self.USD: Trd_Common_pb2.Currency_USD,
             self.CNH: Trd_Common_pb2.Currency_CNH,
             self.JPY: Trd_Common_pb2.Currency_JPY,
-            self.SGD: Trd_Common_pb2.Currency_SGD
+            self.SGD: Trd_Common_pb2.Currency_SGD,
+            self.AUD: Trd_Common_pb2.Currency_AUD
         }
 
 class CltRiskLevel(FtEnum):
@@ -2682,13 +2688,15 @@ class SecurityFirm(FtEnum):
     FUTUSECURITIES = 'FUTUSECURITIES'
     FUTUINC = 'FUTUINC'
     FUTUSG = 'FUTUSG'
+    FUTUAU = 'FUTUAU'
 
     def load_dic(self):
         return {
             self.NONE: Trd_Common_pb2.SecurityFirm_Unknown,
             self.FUTUSECURITIES: Trd_Common_pb2.SecurityFirm_FutuSecurities,
             self.FUTUINC: Trd_Common_pb2.SecurityFirm_FutuInc,
-            self.FUTUSG: Trd_Common_pb2.SecurityFirm_FutuSG
+            self.FUTUSG: Trd_Common_pb2.SecurityFirm_FutuSG,
+            self.FUTUAU: Trd_Common_pb2.SecurityFirm_FutuAU,
         }
 
 # 模拟交易账号类型

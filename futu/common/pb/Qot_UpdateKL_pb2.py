@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_UpdateKL.proto',
   package='Qot_UpdateKL',
   syntax='proto2',
-  serialized_pb=_b('\n\x12Qot_UpdateKL.proto\x12\x0cQot_UpdateKL\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"s\n\x03S2C\x12\x11\n\trehabType\x18\x01 \x02(\x05\x12\x0e\n\x06klType\x18\x02 \x02(\x05\x12&\n\x08security\x18\x03 \x02(\x0b\x32\x14.Qot_Common.Security\x12!\n\x06klList\x18\x04 \x03(\x0b\x32\x11.Qot_Common.KLine\"b\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1e\n\x03s2c\x18\x04 \x01(\x0b\x32\x11.Qot_UpdateKL.S2CBB\n\x13\x63om.futu.openapi.pbZ+github.com/futuopen/ftapi4go/pb/qotupdatekl')
+  serialized_pb=_b('\n\x12Qot_UpdateKL.proto\x12\x0cQot_UpdateKL\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x81\x01\n\x03S2C\x12\x11\n\trehabType\x18\x01 \x02(\x05\x12\x0e\n\x06klType\x18\x02 \x02(\x05\x12&\n\x08security\x18\x03 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x05 \x01(\t\x12!\n\x06klList\x18\x04 \x03(\x0b\x32\x11.Qot_Common.KLine\"b\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1e\n\x03s2c\x18\x04 \x01(\x0b\x32\x11.Qot_UpdateKL.S2CBB\n\x13\x63om.futu.openapi.pbZ+github.com/futuopen/ftapi4go/pb/qotupdatekl')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -57,7 +57,14 @@ _S2C = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='klList', full_name='Qot_UpdateKL.S2C.klList', index=3,
+      name='name', full_name='Qot_UpdateKL.S2C.name', index=3,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='klList', full_name='Qot_UpdateKL.S2C.klList', index=4,
       number=4, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -75,8 +82,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=68,
-  serialized_end=183,
+  serialized_start=69,
+  serialized_end=198,
 )
 
 
@@ -127,8 +134,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=185,
-  serialized_end=283,
+  serialized_start=200,
+  serialized_end=298,
 )
 
 _S2C.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY

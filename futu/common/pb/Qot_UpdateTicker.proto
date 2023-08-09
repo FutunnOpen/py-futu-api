@@ -9,6 +9,7 @@ import "Qot_Common.proto";
 message S2C
 {
 	required Qot_Common.Security security = 1; //股票
+	optional string name = 3; //股票名称
 	repeated Qot_Common.Ticker tickerList = 2; //逐笔
 }
 

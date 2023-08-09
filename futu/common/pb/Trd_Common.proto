@@ -150,6 +150,7 @@ enum Currency
     Currency_CNH = 3;   // 离岸人民币
 	Currency_JPY = 4;   // 日元
 	Currency_SGD = 5;   // 新币
+	Currency_AUD = 6;   // 澳元
 }
 
 //账户风险控制等级
@@ -177,6 +178,7 @@ enum SecurityFirm
     SecurityFirm_FutuSecurities = 1; //富途证券（香港）
 	SecurityFirm_FutuInc = 2;        //富途证券（美国）
 	SecurityFirm_FutuSG = 3;         //富途证券（新加坡）
+	SecurityFirm_FutuAU = 4;         //富途证券（澳洲）
 }
 
 //模拟交易账户类型

@@ -415,7 +415,7 @@ class OpenQuoteContext(OpenContextBase):
                 data_finish = not has_next
 
         # 表头列
-        col_list = ['code']
+        col_list = ['code', 'name']
         for field in req_fields:
             str_field = KL_FIELD.DICT_KL_FIELD_STR[field]
             if str_field not in col_list:
@@ -662,6 +662,7 @@ class OpenQuoteContext(OpenContextBase):
 
         col_list = [
             'code',
+            'name',
             'update_time',
             'last_price',
             'open_price',
@@ -769,7 +770,7 @@ class OpenQuoteContext(OpenContextBase):
             x['code'] = code
 
         col_list = [
-            'code', 'time', 'is_blank', 'opened_mins', 'cur_price',
+            'code', 'name', 'time', 'is_blank', 'opened_mins', 'cur_price',
             'last_close', 'avg_price', 'volume', 'turnover'
         ]
 
@@ -941,10 +942,10 @@ class OpenQuoteContext(OpenContextBase):
 
         (_, bid_list, ask_list) = content
         col_bid_list = [
-            'code', 'bid_broker_id', 'bid_broker_name', 'bid_broker_pos', 'order_id', 'order_volume'
+            'code', 'name', 'bid_broker_id', 'bid_broker_name', 'bid_broker_pos', 'order_id', 'order_volume'
         ]
         col_ask_list = [
-            'code', 'ask_broker_id', 'ask_broker_name', 'ask_broker_pos', 'order_id', 'order_volume'
+            'code', 'name', 'ask_broker_id', 'ask_broker_name', 'ask_broker_pos', 'order_id', 'order_volume'
         ]
 
         bid_frame_table = pd.DataFrame(bid_list, columns=col_bid_list)
@@ -1291,7 +1292,7 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
 
         col_list = [
-            'code', 'data_date', 'data_time', 'last_price', 'open_price',
+            'code', 'name', 'data_date', 'data_time', 'last_price', 'open_price',
             'high_price', 'low_price', 'prev_close_price', 'volume',
             'turnover', 'turnover_rate', 'amplitude', 'suspension',
             'listing_date', 'price_spread', 'dark_status', 'sec_status', 'strike_price',
@@ -1357,7 +1358,7 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
 
         col_list = [
-            'code', 'time', 'price', 'volume', 'turnover', "ticker_direction",
+            'code', 'name', 'time', 'price', 'volume', 'turnover', "ticker_direction",
             'sequence', 'type'
         ]
         ticker_frame_table = pd.DataFrame(ticker_list, columns=col_list)
@@ -1425,7 +1426,7 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
 
         col_list = [
-            'code', 'time_key', 'open', 'close', 'high', 'low', 'volume',
+            'code', 'name', 'time_key', 'open', 'close', 'high', 'low', 'volume',
             'turnover', 'pe_ratio', 'turnover_rate', 'last_close'
         ]
         kline_frame_table = pd.DataFrame(kline_list, columns=col_list)
@@ -1578,7 +1579,7 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
 
         col_list = [
-            'code', 'plate_code', 'plate_name', 'plate_type'
+            'code', 'name', 'plate_code', 'plate_name', 'plate_type'
         ]
 
         owner_plate_table = pd.DataFrame(owner_plate_list, columns=col_list)
@@ -2476,6 +2477,7 @@ class OpenQuoteContext(OpenContextBase):
         if isinstance(ret, list):
             col_list = [
                 'code',
+                'name',
                 'key',
                 'reminder_type',
                 'reminder_freq',

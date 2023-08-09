@@ -14,6 +14,7 @@ message C2S
 message SecurityOwnerPlate
 {
 	required Qot_Common.Security security = 1; //股票
+	optional string name = 3; // 股票名称
 	repeated Qot_Common.PlateInfo plateInfoList = 2; //所属板块
 }
 

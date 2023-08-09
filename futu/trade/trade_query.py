@@ -167,6 +167,8 @@ class AccInfoQuery:
             'jp_avl_withdrawal_cash': NoneDataValue,
             'sg_cash': NoneDataValue,
             'sg_avl_withdrawal_cash': NoneDataValue,
+            'au_cash': NoneDataValue,
+            'au_avl_withdrawal_cash': NoneDataValue,
             'is_pdt':  get_pb_value(raw_funds, 'isPdt'),
             'pdt_seq': get_pb_value(raw_funds, 'pdtSeq'),
             'beginning_dtbp': get_pb_value(raw_funds, 'beginningDTBP'),
@@ -190,6 +192,9 @@ class AccInfoQuery:
             elif cashInfo.currency == Trd_Common_pb2.Currency_SGD:
                 accinfo_list[0]['sg_cash'] = cashInfo.cash
                 accinfo_list[0]['sg_avl_withdrawal_cash'] = cashInfo.availableBalance
+            elif cashInfo.currency == Trd_Common_pb2.Currency_AUD:
+                accinfo_list[0]['au_cash'] = cashInfo.cash
+                accinfo_list[0]['au_avl_withdrawal_cash'] = cashInfo.availableBalance
         return RET_OK, "", accinfo_list
 
 
@@ -243,7 +248,7 @@ class PositionListQuery:
                              "today_buy_qty": position.td_buyQty if position.HasField('td_buyQty') else NoneDataValue,
                              "today_buy_val": position.td_buyVal if position.HasField('td_buyVal') else NoneDataValue,
                              "today_pl_val": position.td_plVal if position.HasField('td_plVal') else NoneDataValue,
-                             "today_trd_val": position.td_plVal if position.HasField('td_trdVal') else NoneDataValue,
+                             "today_trd_val": position.td_trdVal if position.HasField('td_trdVal') else NoneDataValue,
                              "today_sell_qty": position.td_sellQty if position.HasField('td_sellQty') else NoneDataValue,
                              "today_sell_val": position.td_sellVal if position.HasField('td_sellVal') else NoneDataValue,
                              "position_side": PositionSide.to_string2(position.positionSide) if position.HasField('positionSide') else 'N/A',# 初始化枚举类型

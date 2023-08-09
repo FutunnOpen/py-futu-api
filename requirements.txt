@@ -1,6 +1,6 @@
 pandas
 simplejson
-protobuf==3.5.1
+protobuf>=3.8.0,==3.*
 PyCryptodome
 
 

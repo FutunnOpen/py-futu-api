@@ -301,7 +301,7 @@ class OpenTradeContextBase(OpenContextBase):
             'available_funds', 'unrealized_pl', 'realized_pl', 'risk_level', 'risk_status', 'initial_margin',
             'margin_call_margin', 'maintenance_margin', 'hk_cash', 'hk_avl_withdrawal_cash', 'us_cash',
             'us_avl_withdrawal_cash', 'cn_cash', 'cn_avl_withdrawal_cash', 'jp_cash', 'jp_avl_withdrawal_cash',
-            'sg_cash', 'sg_avl_withdrawal_cash', 'is_pdt', 'pdt_seq', 'beginning_dtbp', 'remaining_dtbp',
+            'sg_cash', 'sg_avl_withdrawal_cash', 'au_cash', 'au_avl_withdrawal_cash', 'is_pdt', 'pdt_seq', 'beginning_dtbp', 'remaining_dtbp',
             'dt_call_amount', 'dt_status'
         ]
         accinfo_frame_table = pd.DataFrame(accinfo_list, columns=col_list)

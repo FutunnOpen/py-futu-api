@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetOwnerPlate.proto',
   package='Qot_GetOwnerPlate',
   syntax='proto2',
-  serialized_pb=_b('\n\x17Qot_GetOwnerPlate.proto\x12\x11Qot_GetOwnerPlate\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"1\n\x03\x43\x32S\x12*\n\x0csecurityList\x18\x01 \x03(\x0b\x32\x14.Qot_Common.Security\"j\n\x12SecurityOwnerPlate\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12,\n\rplateInfoList\x18\x02 \x03(\x0b\x32\x15.Qot_Common.PlateInfo\"D\n\x03S2C\x12=\n\x0eownerPlateList\x18\x01 \x03(\x0b\x32%.Qot_GetOwnerPlate.SecurityOwnerPlate\".\n\x07Request\x12#\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x16.Qot_GetOwnerPlate.C2S\"g\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12#\n\x03s2c\x18\x04 \x01(\x0b\x32\x16.Qot_GetOwnerPlate.S2CBG\n\x13\x63om.futu.openapi.pbZ0github.com/futuopen/ftapi4go/pb/qotgetownerplate')
+  serialized_pb=_b('\n\x17Qot_GetOwnerPlate.proto\x12\x11Qot_GetOwnerPlate\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"1\n\x03\x43\x32S\x12*\n\x0csecurityList\x18\x01 \x03(\x0b\x32\x14.Qot_Common.Security\"x\n\x12SecurityOwnerPlate\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x03 \x01(\t\x12,\n\rplateInfoList\x18\x02 \x03(\x0b\x32\x15.Qot_Common.PlateInfo\"D\n\x03S2C\x12=\n\x0eownerPlateList\x18\x01 \x03(\x0b\x32%.Qot_GetOwnerPlate.SecurityOwnerPlate\".\n\x07Request\x12#\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x16.Qot_GetOwnerPlate.C2S\"g\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12#\n\x03s2c\x18\x04 \x01(\x0b\x32\x16.Qot_GetOwnerPlate.S2CBG\n\x13\x63om.futu.openapi.pbZ0github.com/futuopen/ftapi4go/pb/qotgetownerplate')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -74,7 +74,14 @@ _SECURITYOWNERPLATE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='plateInfoList', full_name='Qot_GetOwnerPlate.SecurityOwnerPlate.plateInfoList', index=1,
+      name='name', full_name='Qot_GetOwnerPlate.SecurityOwnerPlate.name', index=1,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='plateInfoList', full_name='Qot_GetOwnerPlate.SecurityOwnerPlate.plateInfoList', index=2,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -93,7 +100,7 @@ _SECURITYOWNERPLATE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=129,
-  serialized_end=235,
+  serialized_end=249,
 )
 
 
@@ -123,8 +130,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=237,
-  serialized_end=305,
+  serialized_start=251,
+  serialized_end=319,
 )
 
 
@@ -154,8 +161,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=307,
-  serialized_end=353,
+  serialized_start=321,
+  serialized_end=367,
 )
 
 
@@ -206,8 +213,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=355,
-  serialized_end=458,
+  serialized_start=369,
+  serialized_end=472,
 )
 
 _C2S.fields_by_name['securityList'].message_type = Qot__Common__pb2._SECURITY

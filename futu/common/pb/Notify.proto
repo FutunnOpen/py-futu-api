@@ -14,6 +14,7 @@ enum NotifyType
 	NotifyType_QotRight = 4; //行情权限
 	NotifyType_APILevel = 5; //用户等级，已在2.10版本之后废弃
 	NotifyType_APIQuota = 6; //API额度
+	NotifyType_UsedQuota = 7; // 已使用额度
 }
 
 enum GtwEventType
@@ -57,7 +58,7 @@ message QotRight
 {
 	required int32 hkQotRight = 4; //港股行情权限, Qot_Common.QotRight
 	required int32 usQotRight = 5; //美股行情权限, Qot_Common.QotRight
-	required int32 cnQotRight = 6; //A股行情权限, Qot_Common.QotRight
+	required int32 cnQotRight = 6; //A股行情权限, Qot_Common.QotRight // (已废弃)，使用shQotRight和szQotRight
 	optional int32 hkOptionQotRight = 7; //港股期权行情权限, Qot_Common.QotRight
 	optional bool hasUSOptionQotRight = 8; //是否有美股期权行情权限
 	optional int32 hkFutureQotRight = 9; //港股期货行情权限, Qot_Common.QotRight
@@ -72,6 +73,8 @@ message QotRight
 	optional int32 usNYMEXFutureQotRight = 18; //美股NYMEX期货行情权限, Qot_Common.QotRight
 	optional int32 usCOMEXFutureQotRight = 19; //美股COMEX期货行情权限, Qot_Common.QotRight
 	optional int32 usCBOEFutureQotRight = 20; //美股CBOE期货行情权限, Qot_Common.QotRight
+	optional int32 shQotRight = 21; //上海A股行情权限, Qot_Common.QotRight
+	optional int32 szQotRight = 22; //深圳A股行情权限, Qot_Common.QotRight
 }
 
 message APILevel
@@ -85,6 +88,12 @@ message APIQuota
 	required int32 historyKLQuota = 2; //历史K线额度
 }
 
+message UsedQuota
+{
+	optional int32 usedSubQuota = 1; // 已使用订阅额度
+	optional int32 usedKLineQuota = 2; // 已使用历史 K 线额度
+}
+
 message S2C
 {
 	required int32 type = 1; //通知类型
@@ -94,6 +103,7 @@ message S2C
 	optional QotRight qotRight = 5; //行情权限
 	optional APILevel apiLevel = 6; //用户等级，已在2.10版本之后废弃
 	optional APIQuota apiQuota = 7; //API额度
+	optional UsedQuota usedQuota = 8; // 已使用额度
 }
 
 message Response

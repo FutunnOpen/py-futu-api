@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetOrderBook.proto',
   package='Qot_GetOrderBook',
   syntax='proto2',
-  serialized_pb=_b('\n\x16Qot_GetOrderBook.proto\x12\x10Qot_GetOrderBook\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\":\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0b\n\x03num\x18\x02 \x02(\x05\"\x81\x02\n\x03S2C\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12/\n\x10orderBookAskList\x18\x02 \x03(\x0b\x32\x15.Qot_Common.OrderBook\x12/\n\x10orderBookBidList\x18\x03 \x03(\x0b\x32\x15.Qot_Common.OrderBook\x12\x16\n\x0esvrRecvTimeBid\x18\x04 \x01(\t\x12\x1f\n\x17svrRecvTimeBidTimestamp\x18\x05 \x01(\x01\x12\x16\n\x0esvrRecvTimeAsk\x18\x06 \x01(\t\x12\x1f\n\x17svrRecvTimeAskTimestamp\x18\x07 \x01(\x01\"-\n\x07Request\x12\"\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x15.Qot_GetOrderBook.C2S\"f\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\"\n\x03s2c\x18\x04 \x01(\x0b\x32\x15.Qot_GetOrderBook.S2CBF\n\x13\x63om.futu.openapi.pbZ/github.com/futuopen/ftapi4go/pb/qotgetorderbook')
+  serialized_pb=_b('\n\x16Qot_GetOrderBook.proto\x12\x10Qot_GetOrderBook\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\":\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0b\n\x03num\x18\x02 \x02(\x05\"\x8f\x02\n\x03S2C\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x08 \x01(\t\x12/\n\x10orderBookAskList\x18\x02 \x03(\x0b\x32\x15.Qot_Common.OrderBook\x12/\n\x10orderBookBidList\x18\x03 \x03(\x0b\x32\x15.Qot_Common.OrderBook\x12\x16\n\x0esvrRecvTimeBid\x18\x04 \x01(\t\x12\x1f\n\x17svrRecvTimeBidTimestamp\x18\x05 \x01(\x01\x12\x16\n\x0esvrRecvTimeAsk\x18\x06 \x01(\t\x12\x1f\n\x17svrRecvTimeAskTimestamp\x18\x07 \x01(\x01\"-\n\x07Request\x12\"\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x15.Qot_GetOrderBook.C2S\"f\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\"\n\x03s2c\x18\x04 \x01(\x0b\x32\x15.Qot_GetOrderBook.S2CBF\n\x13\x63om.futu.openapi.pbZ/github.com/futuopen/ftapi4go/pb/qotgetorderbook')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -81,42 +81,49 @@ _S2C = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='orderBookAskList', full_name='Qot_GetOrderBook.S2C.orderBookAskList', index=1,
+      name='name', full_name='Qot_GetOrderBook.S2C.name', index=1,
+      number=8, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='orderBookAskList', full_name='Qot_GetOrderBook.S2C.orderBookAskList', index=2,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='orderBookBidList', full_name='Qot_GetOrderBook.S2C.orderBookBidList', index=2,
+      name='orderBookBidList', full_name='Qot_GetOrderBook.S2C.orderBookBidList', index=3,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='svrRecvTimeBid', full_name='Qot_GetOrderBook.S2C.svrRecvTimeBid', index=3,
+      name='svrRecvTimeBid', full_name='Qot_GetOrderBook.S2C.svrRecvTimeBid', index=4,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='svrRecvTimeBidTimestamp', full_name='Qot_GetOrderBook.S2C.svrRecvTimeBidTimestamp', index=4,
+      name='svrRecvTimeBidTimestamp', full_name='Qot_GetOrderBook.S2C.svrRecvTimeBidTimestamp', index=5,
       number=5, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='svrRecvTimeAsk', full_name='Qot_GetOrderBook.S2C.svrRecvTimeAsk', index=5,
+      name='svrRecvTimeAsk', full_name='Qot_GetOrderBook.S2C.svrRecvTimeAsk', index=6,
       number=6, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='svrRecvTimeAskTimestamp', full_name='Qot_GetOrderBook.S2C.svrRecvTimeAskTimestamp', index=6,
+      name='svrRecvTimeAskTimestamp', full_name='Qot_GetOrderBook.S2C.svrRecvTimeAskTimestamp', index=7,
       number=7, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
@@ -135,7 +142,7 @@ _S2C = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=137,
-  serialized_end=394,
+  serialized_end=408,
 )
 
 
@@ -165,8 +172,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=396,
-  serialized_end=441,
+  serialized_start=410,
+  serialized_end=455,
 )
 
 
@@ -217,8 +224,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=443,
-  serialized_end=545,
+  serialized_start=457,
+  serialized_end=559,
 )
 
 _C2S.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY

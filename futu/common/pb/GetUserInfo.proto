@@ -35,7 +35,7 @@ message S2C
 	optional string apiLevel = 3; //api用户等级描述, 已在2.10版本之后废弃
 	optional int32 hkQotRight = 4; //港股行情权限, QotRight
 	optional int32 usQotRight = 5; //美股行情权限, QotRight
-	optional int32 cnQotRight = 6; //A股行情权限, QotRight
+	optional int32 cnQotRight = 6; //A股行情权限, QotRight // 废弃，使用shQotRight和szQotRight
 	optional bool isNeedAgreeDisclaimer = 7; //已开户用户需要同意免责声明，未开户或已同意的用户返回false
 	optional int64 userID = 8; //用户牛牛号
 	optional int32 updateType = 9; //升级类型，UpdateType
@@ -48,7 +48,7 @@ message S2C
     optional int32 historyKLQuota = 15; //历史K线额度
 	optional int32 usFutureQotRight = 16; //美股期货行情权限, Qot_Common.QotRight(已废弃)
 	optional int32 usOptionQotRight = 17; //美股期货行情权限, Qot_Common.QotRight
-	optional int32 userAttribution = 19; //用户注册归属地
+	optional int32 userAttribution = 19; //用户注册归属地, Common.UserAttribution
 	optional string updateWhatsNew = 20; //升级提示
 	optional int32 usIndexQotRight = 21; //美股指数行情权限, Qot_Common.QotRight
 	optional int32 usOtcQotRight = 22; //美股OTC市场行情权限, Qot_Common.QotRight
@@ -59,6 +59,9 @@ message S2C
 	optional int32 usCBOEFutureQotRight = 27; //美股CBOE期货行情权限, Qot_Common.QotRight
 	optional int32 sgFutureQotRight = 28; //新加坡市场期货行情权限, Qot_Common.QotRight
 	optional int32 jpFutureQotRight = 29; //日本市场期货行情权限, Qot_Common.QotRight
+	optional bool isAppNNOrMM = 30; //true:NN false:MM
+	optional int32 shQotRight = 31; //上海市场行情权限, Qot_Common.QotRight
+	optional int32 szQotRight = 32; //深圳市场行情权限, Qot_Common.QotRight
 }
 
 message Request

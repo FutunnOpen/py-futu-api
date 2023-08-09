@@ -22,6 +22,7 @@ message C2S
 message S2C
 {
 	required Qot_Common.Security security = 1;
+	optional string name = 4; // 股票名称
 	repeated Qot_Common.KLine klList = 2; //K线数据
 	optional bytes nextReqKey = 3; //分页请求key。一次请求没有返回所有数据时，下次请求带上这个key，会接着请求
 }

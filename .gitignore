@@ -5,6 +5,7 @@ site/*
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
 
 # C extensions
 *.so
@@ -99,4 +100,4 @@ ENV/
 !.gitignore
 .idea/
 /dist/
-/futuquant.egg-info/
+/futu_api.egg-info/

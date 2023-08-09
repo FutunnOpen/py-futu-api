@@ -9,6 +9,7 @@ import "Qot_Common.proto";
 message DetailItem
 {
 	required Qot_Common.Security security = 1;	//拉取的股票
+	optional string name = 4; //股票名称
 	required string requestTime = 2;			//拉取的时间字符串
 	optional int64 requestTimeStamp = 3;				//拉取的时间戳
 }

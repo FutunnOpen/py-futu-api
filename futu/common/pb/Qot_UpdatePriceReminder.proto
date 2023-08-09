@@ -17,6 +17,7 @@ enum MarketStatus
 message S2C
 {
 	required Qot_Common.Security security = 1; //股票
+	optional string name = 11; // 股票名称
 	required double price = 2; //价格
 	required double changeRate = 3; //涨跌幅
 	required int32 marketStatus = 4; //市场状态

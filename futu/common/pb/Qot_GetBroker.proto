@@ -14,6 +14,7 @@ message C2S
 message S2C
 {
 	required Qot_Common.Security security = 1; //股票
+	optional string name = 4; // 股票名称
 	repeated Qot_Common.Broker brokerAskList = 2; //经纪Ask(卖)盘
 	repeated Qot_Common.Broker brokerBidList = 3; //经纪Bid(买)盘
 }

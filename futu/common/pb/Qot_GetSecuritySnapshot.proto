@@ -131,6 +131,7 @@ message TrustSnapshotExData
 message SnapshotBasicData
 {
 	required Qot_Common.Security security = 1; //股票
+	optional string name = 41; //股票名称
 	required int32 type = 2; //Qot_Common.SecurityType,股票类型
 	required bool isSuspend = 3; //是否停牌
 	required string listTime = 4; //上市时间字符串

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_GetBroker.proto',
   package='Qot_GetBroker',
   syntax='proto2',
-  serialized_pb=_b('\n\x13Qot_GetBroker.proto\x12\rQot_GetBroker\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"-\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\"\x83\x01\n\x03S2C\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12)\n\rbrokerAskList\x18\x02 \x03(\x0b\x32\x12.Qot_Common.Broker\x12)\n\rbrokerBidList\x18\x03 \x03(\x0b\x32\x12.Qot_Common.Broker\"*\n\x07Request\x12\x1f\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x12.Qot_GetBroker.C2S\"c\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1f\n\x03s2c\x18\x04 \x01(\x0b\x32\x12.Qot_GetBroker.S2CBC\n\x13\x63om.futu.openapi.pbZ,github.com/futuopen/ftapi4go/pb/qotgetbroker')
+  serialized_pb=_b('\n\x13Qot_GetBroker.proto\x12\rQot_GetBroker\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"-\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\"\x91\x01\n\x03S2C\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x04 \x01(\t\x12)\n\rbrokerAskList\x18\x02 \x03(\x0b\x32\x12.Qot_Common.Broker\x12)\n\rbrokerBidList\x18\x03 \x03(\x0b\x32\x12.Qot_Common.Broker\"*\n\x07Request\x12\x1f\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x12.Qot_GetBroker.C2S\"c\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1f\n\x03s2c\x18\x04 \x01(\x0b\x32\x12.Qot_GetBroker.S2CBC\n\x13\x63om.futu.openapi.pbZ,github.com/futuopen/ftapi4go/pb/qotgetbroker')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -74,14 +74,21 @@ _S2C = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='brokerAskList', full_name='Qot_GetBroker.S2C.brokerAskList', index=1,
+      name='name', full_name='Qot_GetBroker.S2C.name', index=1,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='brokerAskList', full_name='Qot_GetBroker.S2C.brokerAskList', index=2,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='brokerBidList', full_name='Qot_GetBroker.S2C.brokerBidList', index=2,
+      name='brokerBidList', full_name='Qot_GetBroker.S2C.brokerBidList', index=3,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -100,7 +107,7 @@ _S2C = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=118,
-  serialized_end=249,
+  serialized_end=263,
 )
 
 
@@ -130,8 +137,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=251,
-  serialized_end=293,
+  serialized_start=265,
+  serialized_end=307,
 )
 
 
@@ -182,8 +189,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=295,
-  serialized_end=394,
+  serialized_start=309,
+  serialized_end=408,
 )
 
 _C2S.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY
