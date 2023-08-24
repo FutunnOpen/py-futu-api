@@ -2071,21 +2071,33 @@ class RequestRehab:
             if act_flag & KLRehabFlag.ADD:
                 stock_rehab_tmp['stk_spo_ratio'] = rehab.addBase / rehab.addErt
                 stock_rehab_tmp['stk_spo_price'] = rehab.addPrice
+                stock_rehab_tmp['add_base'] = rehab.addBase
+                stock_rehab_tmp['add_ert'] = rehab.ert
             if act_flag & KLRehabFlag.ALLOT:
                 stock_rehab_tmp['allotment_ratio'] = rehab.allotBase / \
                     rehab.allotErt
                 stock_rehab_tmp['allotment_price'] = rehab.allotPrice
+                stock_rehab_tmp['allot_base'] = rehab.allotBase
+                stock_rehab_tmp['allot_ert'] = rehab.allotErt
             if act_flag & KLRehabFlag.TRANSFER:
                 stock_rehab_tmp['per_share_trans_ratio'] = rehab.transferBase / \
                     rehab.transferErt
+                stock_rehab_tmp['transfer_base'] = rehab.transferBase
+                stock_rehab_tmp['transfer_ert'] = rehab.transferErt
             if act_flag & KLRehabFlag.BONUS:
                 stock_rehab_tmp['per_share_div_ratio'] = rehab.bonusBase / \
                     rehab.bonusErt
+                stock_rehab_tmp['bonus_base'] = rehab.bonusBase
+                stock_rehab_tmp['bonus_ert'] = rehab.bonusErt
             if act_flag & KLRehabFlag.JOIN:
-                stock_rehab_tmp['join_ratio'] = rehab.joinBase / rehab.joinErt
+                stock_rehab_tmp['split_ratio'] = rehab.joinBase / rehab.joinErt
+                stock_rehab_tmp['join_base'] = rehab.joinBase
+                stock_rehab_tmp['join_ert'] = rehab.joinErt
             if act_flag & KLRehabFlag.SPLIT:
                 stock_rehab_tmp['split_ratio'] = rehab.splitBase / \
                     rehab.splitErt
+                stock_rehab_tmp['split_base'] = rehab.splitBase
+                stock_rehab_tmp['split_ert'] = rehab.splitErt
 
             rehab_list.append(stock_rehab_tmp)
 

@@ -1861,13 +1861,26 @@ class OpenQuoteContext(OpenContextBase):
                 参数                      类型                        说明
                 =====================   ===========   =================================================================================
                 ex_div_date             str            除权除息日
-                split_ratio             float          拆合股比例（该字段为比例字段，默认不展示%），例如，对于5股合1股为1/5，对于1股拆5股为5/1
+                split_base              float          拆股分子
+                split_ert               float          拆股分母
+                join_base               float          合股分子
+                join_ert                float          合股分母
+                split_ratio             float          拆合股比例，例如，对于5股合1股为1/5，对于1股拆5股为5/1
                 per_cash_div            float          每股派现
-                per_share_div_ratio     float          每股送股比例（该字段为比例字段，默认不展示%）
-                per_share_trans_ratio   float          每股转增股比例（该字段为比例字段，默认不展示%）
-                allotment_ratio         float          每股配股比例（该字段为比例字段，默认不展示%）
+                special_dividend        float          特别股息
+                bonus_base              float          送股分子
+                bonus_ert               float          送股分母
+                per_share_div_ratio     float          每股送股比例
+                transfer_base           float          转赠股分子
+                transfer_ert            float          转赠股分母
+                per_share_trans_ratio   float          每股转增股比例
+                allot_base              float          配股分子
+                allot_ert               float          配股分母
+                allotment_ratio         float          每股配股比例
                 allotment_price         float          配股价
-                stk_spo_ratio           float          增发比例（该字段为比例字段，默认不展示%）
+                add_base                float          增发股分子
+                add_ert                 float          增发股分母
+                stk_spo_ratio           float          增发比例
                 stk_spo_price           float          增发价格
                 forward_adj_factorA     float          前复权因子A
                 forward_adj_factorB     float          前复权因子B
@@ -1886,11 +1899,14 @@ class OpenQuoteContext(OpenContextBase):
             return ret_code, msg
         else:
             col_list = [
-                'ex_div_date', 'split_ratio', 'per_cash_div',
-                'per_share_div_ratio', 'per_share_trans_ratio', 'allotment_ratio',
-                'allotment_price', 'stk_spo_ratio', 'stk_spo_price',
+                'ex_div_date', 'split_base','split_ert','join_base', 'join_ert','split_ratio', 
+                'per_cash_div', 'special_dividend', 'bonus_base', 'bonus_ert', 'per_share_div_ratio', 
+                'transfer_base', 'transfer_ert', 'per_share_trans_ratio', 
+                'allot_base','allot_ert', 'allotment_ratio', 'allotment_price', 
+                'add_base', 'add_ert', 'stk_spo_ratio', 'stk_spo_price',
                 'forward_adj_factorA', 'forward_adj_factorB',
-                'backward_adj_factorA', 'backward_adj_factorB'
+                'backward_adj_factorA', 'backward_adj_factorB',    
+                   
             ]
             exr_frame_table = pd.DataFrame(data, columns=col_list)
             return ret_code, exr_frame_table
