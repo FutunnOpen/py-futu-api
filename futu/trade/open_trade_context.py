@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
-from futu.common.open_context_base import OpenContextBase
-from futu.trade.trade_query import *
-from futu.common.err import *
-from futu.common.constant import *
+from ..common.open_context_base import OpenContextBase
+from .trade_query import *
+from ..common.err import *
+from ..common.constant import *
 
 class OpenTradeContextBase(OpenContextBase):
     """Class for set context of HK stock trade"""
@@ -27,7 +27,7 @@ class OpenTradeContextBase(OpenContextBase):
 
     def close(self):
         """
-        to call close old obj before loop create new, otherwise socket will encounter erro 10053 or more!
+        to call close old obj before loop create new, otherwise socket will encounter error 10053 or more!
         """
         super(OpenTradeContextBase, self).close()
 
@@ -51,6 +51,17 @@ class OpenTradeContextBase(OpenContextBase):
 
         return ret, msg
 
+    def is_futures_market_sim(self, trdMkt_list):
+        if self.__trd_mkt != TrdMarket.FUTURES:
+            return False
+        is_futures = False
+        futures_list = [TrdMarket.FUTURES_SIMULATE_HK, TrdMarket.FUTURES_SIMULATE_US, TrdMarket.FUTURES_SIMULATE_JP, TrdMarket.FUTURES_SIMULATE_SG]
+        for trdMkt in trdMkt_list:
+            if trdMkt in futures_list:
+                is_futures = True
+                break
+        return is_futures
+
     def get_acc_list(self):
         """
         :return: (ret, data)
@@ -71,10 +82,11 @@ class OpenTradeContextBase(OpenContextBase):
 
         # 记录当前市场的帐号列表
         self.__last_acc_list = []
-
         for record in acc_list:
             trdMkt_list = record["trdMarket_list"]
-            if self.__trd_mkt == TrdMarket.NONE or self.__trd_mkt in trdMkt_list:
+            if (self.__trd_mkt == TrdMarket.NONE or
+                    self.__trd_mkt in trdMkt_list or
+                    self.is_futures_market_sim(trdMkt_list)):
                 if record['trd_env'] == TrdEnv.SIMULATE or record['security_firm'] == NoneDataValue or record['security_firm'] == self.__security_firm:
                     trd_marketauth = []
                     for item in record["trdmarket_auth"]:
@@ -83,12 +95,14 @@ class OpenTradeContextBase(OpenContextBase):
                         "trd_env": record["trd_env"],
                         "acc_id": record["acc_id"],
                         "acc_type": record["acc_type"],
+                        "uni_card_num": record["uni_card_num"],
                         "card_num": record["card_num"],
                         "security_firm": record["security_firm"],
                         "sim_acc_type": record["sim_acc_type"],
-                        "trdmarket_auth" : trd_marketauth})
+                        "trdmarket_auth": trd_marketauth,
+                        "acc_status": record["acc_status"]})
 
-        col_list = ["acc_id", "trd_env", "acc_type", "card_num", "security_firm", "sim_acc_type", "trdmarket_auth"]
+        col_list = ["acc_id", "trd_env", "acc_type", "uni_card_num", "card_num", "security_firm", "sim_acc_type", "trdmarket_auth", "acc_status"]
 
         acc_table = pd.DataFrame(copy(self.__last_acc_list), columns=col_list)
 
@@ -150,7 +164,7 @@ class OpenTradeContextBase(OpenContextBase):
     def _async_sub_acc_push(self, acc_id_list):
         """
         异步连接指定要接收送的acc id
-        :param acc_id:
+        :param acc_id_list:
         :return:
         """
         kargs = {
@@ -215,12 +229,6 @@ class OpenTradeContextBase(OpenContextBase):
                 return record['acc_id']
         return 0
 
-    def _get_default_acc_id(self, trd_env):
-        for record in self.__last_acc_list:
-            if record['trd_env'] == trd_env:
-                return record['acc_id']
-        return 0
-
     def _get_acc_id_by_acc_index(self, trd_env, acc_index=0):
         ret, msg = self.get_acc_list()
         if ret != RET_OK:
@@ -232,10 +240,13 @@ class OpenTradeContextBase(OpenContextBase):
 
         total_acc_num = acc_table.shape[0]
         if total_acc_num == 0:
-            msg = Err.NoAccForSecurityFirm.text
+            if trd_env == TrdEnv.REAL:
+                msg = "No available real accounts with {0} market authority in {1}, please check the input parameters 'security_firm' and 'filter_trdmarket' of {2}.".format(self.__trd_mkt, get_string_by_securityFirm(self.__security_firm), self.__class__.__name__)
+            else:
+                msg = "No available paper accounts with {0} market authority in {1}, please check the input parameters 'security_firm' and 'filter_trdmarket' of {2}.".format(self.__trd_mkt, get_string_by_securityFirm(self.__security_firm), self.__class__.__name__)
             return RET_ERROR, msg, acc_index, []
         elif acc_index >= total_acc_num:
-            msg = ERROR_STR_PREFIX + "the index {0} is out of the total amount {1} ".format(acc_index, total_acc_num)
+            msg = "The acc_index is out of range"
             return RET_ERROR, msg, acc_index, []
         return RET_OK, "", acc_table['acc_id'][acc_index], acc_table['trdmarket_auth'][acc_index]
 
@@ -249,7 +260,7 @@ class OpenTradeContextBase(OpenContextBase):
         if len(acc_index):
             return RET_OK, "", acc_id, content['trdmarket_auth'][acc_index[0]]
         else:
-            return RET_ERROR, ERROR_STR_PREFIX + "This account is not available account!", acc_id, []
+            return RET_ERROR, ERROR_STR_PREFIX + "Nonexisting acc_id {0}!".format(acc_id), acc_id, []
 
     def _check_acc_id_and_acc_index(self, trd_env, acc_id, acc_index):
         if self.__trd_category == TrdCategory.SECURITY and self.__trd_mkt == TrdMarket.FUTURES:
@@ -296,13 +307,19 @@ class OpenTradeContextBase(OpenContextBase):
             return RET_ERROR, msg
 
         col_list = [
-            'power', 'max_power_short', 'net_cash_power', 'total_assets', 'cash', 'market_val', 'long_mv', 'short_mv',
+            'power', 'max_power_short', 'net_cash_power', 'total_assets', 'securities_assets', 'fund_assets',
+            'bond_assets', 'cash', 'market_val', 'long_mv', 'short_mv',
             'pending_asset', 'interest_charged_amount', 'frozen_cash', 'avl_withdrawal_cash', 'max_withdrawal', 'currency',
             'available_funds', 'unrealized_pl', 'realized_pl', 'risk_level', 'risk_status', 'initial_margin',
-            'margin_call_margin', 'maintenance_margin', 'hk_cash', 'hk_avl_withdrawal_cash', 'us_cash',
-            'us_avl_withdrawal_cash', 'cn_cash', 'cn_avl_withdrawal_cash', 'jp_cash', 'jp_avl_withdrawal_cash',
-            'sg_cash', 'sg_avl_withdrawal_cash', 'au_cash', 'au_avl_withdrawal_cash', 'is_pdt', 'pdt_seq', 'beginning_dtbp', 'remaining_dtbp',
-            'dt_call_amount', 'dt_status'
+            'margin_call_margin', 'maintenance_margin',
+            'hk_cash', 'hk_avl_withdrawal_cash', 'hkd_net_cash_power', 'hkd_assets',
+            'us_cash', 'us_avl_withdrawal_cash', 'usd_net_cash_power', 'usd_assets',
+            'cn_cash', 'cn_avl_withdrawal_cash', 'cnh_net_cash_power', 'cnh_assets',
+            'jp_cash', 'jp_avl_withdrawal_cash', 'jpy_net_cash_power', 'jpy_assets',
+            'sg_cash', 'sg_avl_withdrawal_cash', 'sgd_net_cash_power', 'sgd_assets',
+            'au_cash', 'au_avl_withdrawal_cash', 'aud_net_cash_power', 'aud_assets',
+            'is_pdt', 'pdt_seq', 'beginning_dtbp', 'remaining_dtbp',
+            'dt_call_amount', 'dt_status',
         ]
         accinfo_frame_table = pd.DataFrame(accinfo_list, columns=col_list)
 
@@ -313,7 +330,17 @@ class OpenTradeContextBase(OpenContextBase):
         #     return self.__trd_mkt
         trd_market = 'N/A'
         if trd_category == TrdCategory.FUTURE:
-            trd_market = TrdMarket.FUTURES
+            if trd_env == TrdEnv.REAL:
+                trd_market = TrdMarket.FUTURES
+            else:
+                if qot_market == Market.HK:
+                    trd_market = TrdMarket.FUTURES_SIMULATE_HK
+                elif qot_market == Market.US:
+                    trd_market = TrdMarket.FUTURES_SIMULATE_US
+                elif qot_market == Market.JP:
+                    trd_market = TrdMarket.FUTURES_SIMULATE_JP
+                elif qot_market == Market.SG:
+                    trd_market = TrdMarket.FUTURES_SIMULATE_SG
         else:
             if qot_market == Market.HK:
                 trd_market = TrdMarket.HK
@@ -324,6 +351,16 @@ class OpenTradeContextBase(OpenContextBase):
                     trd_market = TrdMarket.HKCC
                 else:
                     trd_market = TrdMarket.CN
+            if qot_market == Market.AU:
+                trd_market = TrdMarket.AU
+            if qot_market == Market.SG:
+                trd_market = TrdMarket.SG
+            if qot_market == Market.JP:
+                trd_market = TrdMarket.JP
+            if qot_market == Market.MY:
+                trd_market = TrdMarket.MY
+            if qot_market == Market.CA:
+                trd_market = TrdMarket.CA
         return trd_market
 
     def _check_stock_code(self, code):
@@ -353,7 +390,7 @@ class OpenTradeContextBase(OpenContextBase):
             return RET_ERROR, error_str
 
     def position_list_query(self, code='', pl_ratio_min=None,
-                            pl_ratio_max=None, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
+                            pl_ratio_max=None, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False, position_market = TrdMarket.NONE):
         """for querying the position list"""
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
@@ -378,7 +415,8 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_env': trd_env,
             'acc_id': acc_id,
             'conn_id': self.get_sync_conn_id(),
-            'refresh_cache': refresh_cache
+            'refresh_cache': refresh_cache,
+            'position_market': position_market
         }
         ret_code, msg, position_list = query_processor(**kargs)
 
@@ -386,9 +424,9 @@ class OpenTradeContextBase(OpenContextBase):
             return RET_ERROR, msg
 
         col_list = [
-            "code", "stock_name", "qty", "can_sell_qty", "cost_price",
-            "cost_price_valid", "market_val", "nominal_price", "pl_ratio",
-            "pl_ratio_valid", "pl_val", "pl_val_valid", "today_buy_qty",
+            "code", "stock_name", "position_market", "qty", "can_sell_qty", "cost_price",
+            "cost_price_valid", "average_cost", "diluted_cost", "market_val", "nominal_price", "pl_ratio",
+            "pl_ratio_valid", "pl_ratio_avg_cost", "pl_val", "pl_val_valid", "today_buy_qty",
             "today_buy_val", "today_pl_val", "today_trd_val", "today_sell_qty",
             "today_sell_val", "position_side", "unrealized_pl", "realized_pl",
             "currency",
@@ -398,7 +436,7 @@ class OpenTradeContextBase(OpenContextBase):
         return RET_OK, position_list_table
 
     def order_list_query(self, order_id="", status_filter_list=[], code='', start='', end='',
-                         trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
+                         trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False, order_market= TrdMarket.NONE):
 
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
@@ -410,15 +448,15 @@ class OpenTradeContextBase(OpenContextBase):
 
         ret_code, ret_data = self._order_list_query_impl(order_id, status_filter_list,
                                                          code, start, end, trd_env, acc_id,
-                                                         refresh_cache, acc_auth_list[0])
+                                                         refresh_cache, acc_auth_list[0], order_market)
         if ret_code != RET_OK:
             return ret_code, ret_data
 
         col_list = [
-            "code", "stock_name", "trd_side", "order_type", "order_status",
+            "code", "stock_name", "order_market", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
             "dealt_qty", "dealt_avg_price", "last_err_msg", "remark",
-            "time_in_force", "fill_outside_rth", "aux_price", "trail_type",
+            "time_in_force", "fill_outside_rth", "session", "aux_price", "trail_type",
             "trail_value", "trail_spread", "currency",
         ]
         order_list = ret_data
@@ -426,7 +464,7 @@ class OpenTradeContextBase(OpenContextBase):
 
         return RET_OK, order_list_table
 
-    def _order_list_query_impl(self, order_id, status_filter_list, code, start, end, trd_env, acc_id, refresh_cache, trd_mkt):
+    def _order_list_query_impl(self, order_id, status_filter_list, code, start, end, trd_env, acc_id, refresh_cache, trd_mkt, order_market):
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
             return ret, msg
@@ -468,7 +506,8 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_env': trd_env,
             'acc_id': acc_id,
             'conn_id': self.get_sync_conn_id(),
-            'refresh_cache': refresh_cache
+            'refresh_cache': refresh_cache,
+            'order_market': order_market
         }
         ret_code, msg, order_list = query_processor(**kargs)
 
@@ -479,15 +518,12 @@ class OpenTradeContextBase(OpenContextBase):
 
     def place_order(self, price, qty, code, trd_side, order_type=OrderType.NORMAL,
                     adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, remark=None,
-                    time_in_force=TimeInForce.DAY, fill_outside_rth=False, aux_price = None,
-                    trail_type = None ,trail_value = None ,trail_spread = None):
+                    time_in_force=TimeInForce.DAY, fill_outside_rth=False, aux_price=None,
+                    trail_type=None, trail_value=None, trail_spread=None, session=Session.NONE):
         """
         place order
         use  set_handle(HKTradeOrderHandlerBase) to recv order push !
         """
-        # ret, msg = self._check_trd_env(trd_env)
-        # if ret != RET_OK:
-        #     return ret, msg
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
             return ret, msg
@@ -533,6 +569,7 @@ class OpenTradeContextBase(OpenContextBase):
             'remark': remark,
             'time_in_force': time_in_force,
             'fill_outside_rth': fill_outside_rth,
+            "session": session,
             'aux_price': aux_price ,
             'trail_type': trail_type ,
             'trail_value': trail_value ,
@@ -547,9 +584,9 @@ class OpenTradeContextBase(OpenContextBase):
 
         # 保持跟v2.0兼容， 增加必要的订单字段
         for x in range(3):
-            ret_code, ret_data = self._order_list_query_impl(order_id=order_id,status_filter_list=[],
+            ret_code, ret_data = self._order_list_query_impl(order_id=order_id, status_filter_list=[],
                                             code="", start="", end="", trd_env=trd_env, acc_id=acc_id,
-                                                             refresh_cache=False, trd_mkt=acc_auth_list[0])
+                                                             refresh_cache=False, trd_mkt=acc_auth_list[0], order_market=TrdMarket.NONE)
             if ret_code == RET_OK and len(ret_data) > 0:
                 order_item = ret_data[0]
                 order_item['trd_env'] = trd_env
@@ -559,7 +596,7 @@ class OpenTradeContextBase(OpenContextBase):
             "code", "stock_name", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
             "dealt_qty", "dealt_avg_price", "last_err_msg", "remark",
-            "time_in_force", "fill_outside_rth", 'aux_price',
+            "time_in_force", "fill_outside_rth", "session", 'aux_price',
             'trail_type', 'trail_value', 'trail_spread', "currency",
         ]
         order_list = [order_item]
@@ -651,7 +688,7 @@ class OpenTradeContextBase(OpenContextBase):
         return self.modify_order(ModifyOrderOp.NORMAL, order_id=order_id, qty=qty, price=price,
                                  adjust_limit=adjust_limit, trd_env=trd_env, acc_id=acc_id)
 
-    def deal_list_query(self, code="", trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False):
+    def deal_list_query(self, code="", trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False, deal_market= TrdMarket.NONE):
         """for querying deal list"""
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
@@ -674,14 +711,15 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_env': trd_env,
             'acc_id': acc_id,
             'conn_id': self.get_sync_conn_id(),
-            'refresh_cache': refresh_cache
+            'refresh_cache': refresh_cache,
+            'deal_market': deal_market
             }
         ret_code, msg, deal_list = query_processor(**kargs)
         if ret_code != RET_OK:
             return RET_ERROR, msg
 
         col_list = [
-            "code", "stock_name", "deal_id", "order_id", "qty", "price",
+            "code", "stock_name", "deal_market", "deal_id", "order_id", "qty", "price",
             "trd_side", "create_time", "counter_broker_id", "counter_broker_name", 'status'
         ]
         deal_list_table = pd.DataFrame(deal_list, columns=col_list)
@@ -689,7 +727,7 @@ class OpenTradeContextBase(OpenContextBase):
         return RET_OK, deal_list_table
 
     def history_order_list_query(self, status_filter_list=[], code='', start='', end='',
-                                 trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+                                 trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, order_market= TrdMarket.NONE):
 
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
@@ -723,24 +761,60 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_mkt': acc_auth_list[0],
             'trd_env': trd_env,
             'acc_id': acc_id,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'order_market': order_market
         }
         ret_code, msg, order_list = query_processor(**kargs)
         if ret_code != RET_OK:
             return RET_ERROR, msg
 
         col_list = [
-            "code", "stock_name", "trd_side", "order_type", "order_status",
+            "code", "stock_name", "order_market", "trd_side", "order_type", "order_status",
             "order_id", "qty", "price", "create_time", "updated_time",
             "dealt_qty", "dealt_avg_price", "last_err_msg", "remark",
-            "time_in_force", "fill_outside_rth", "aux_price", "trail_type", "trail_value",
+            "time_in_force", "fill_outside_rth", "session", "aux_price", "trail_type", "trail_value",
             "trail_spread", "currency",
         ]
         order_list_table = pd.DataFrame(order_list, columns=col_list)
 
         return RET_OK, order_list_table
 
-    def history_deal_list_query(self, code='', start='', end='', trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+    def order_fee_query(self, order_id_list=[], trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+        ret, msg = self._check_trd_env(trd_env)
+        if ret != RET_OK:
+            return ret, msg
+
+        ret, msg, acc_id, acc_auth_list = self._check_acc_id_and_acc_index(trd_env, acc_id, acc_index)
+        if ret != RET_OK:
+            return ret, msg
+
+        if order_id_list is not None and not isinstance(order_id_list, list):
+            return RET_ERROR, 'order_id_list type error'
+
+        query_processor = self._get_sync_query_processor(
+            OrderFeeQuery.pack_req,
+            OrderFeeQuery.unpack_rsp)
+
+        kargs = {
+            'order_id_list': order_id_list,
+            'trd_mkt': acc_auth_list[0],
+            'trd_env': trd_env,
+            'acc_id': acc_id,
+            'conn_id': self.get_sync_conn_id()
+        }
+
+        ret_code, msg, order_fee_list = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return RET_ERROR, msg
+
+        col_list = [
+            "order_id", "fee_amount", "fee_details",
+        ]
+        order_fee_list_table = pd.DataFrame(order_fee_list, columns=col_list)
+
+        return RET_OK, order_fee_list_table
+
+    def history_deal_list_query(self, code='', start='', end='', trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, deal_market= TrdMarket.NONE):
 
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
@@ -769,14 +843,15 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_mkt': acc_auth_list[0],
             'trd_env': trd_env,
             'acc_id': acc_id,
-            'conn_id': self.get_sync_conn_id()
+            'conn_id': self.get_sync_conn_id(),
+            'deal_market': deal_market
         }
         ret_code, msg, deal_list = query_processor(**kargs)
         if ret_code != RET_OK:
             return RET_ERROR, msg
 
         col_list = [
-            "code", "stock_name", "deal_id", "order_id", "qty", "price",
+            "code", "stock_name", "deal_market", "deal_id", "order_id", "qty", "price",
             "trd_side", "create_time", "counter_broker_id", "counter_broker_name", 'status'
         ]
         deal_list_table = pd.DataFrame(deal_list, columns=col_list)
@@ -890,6 +965,33 @@ class OpenTradeContextBase(OpenContextBase):
         margin_ratio_table = pd.DataFrame(margin_ratio_list, columns=col_list)
 
         return RET_OK, margin_ratio_table
+
+    def get_acc_cash_flow(self, clearing_date='', trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, cashflow_direction=CashFlowDirection.NONE):
+
+        ret, msg, acc_id, acc_auth_list = self._check_acc_id_and_acc_index(trd_env, acc_id, acc_index)
+        if ret != RET_OK:
+            return ret, msg
+
+        query_processor = self._get_sync_query_processor(FlowSummary.pack_req, FlowSummary.unpack_rsp)
+        kargs = {
+            "conn_id": self.get_sync_conn_id(),
+            "acc_id": acc_id,
+            "trd_mkt": acc_auth_list[0],
+            "clearing_date": clearing_date,
+            "direction": cashflow_direction,
+            "trd_env" : trd_env,
+        }
+
+        ret_code, msg, flow_summary_list = query_processor(**kargs)
+        if ret_code != RET_OK:
+            return RET_ERROR, msg
+
+        col_list = [
+            "cashflow_id", "clearing_date", "settlement_date", "currency", "cashflow_type", "cashflow_direction", "cashflow_amount", "cashflow_remark",
+        ]
+        flow_summary_table = pd.DataFrame(flow_summary_list, columns=col_list)
+
+        return RET_OK, flow_summary_table
 
 # 港股交易接口
 class OpenHKTradeContext(OpenTradeContextBase):

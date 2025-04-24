@@ -8,13 +8,13 @@ from time import sleep
 from threading import Timer
 from datetime import datetime
 from threading import RLock, Thread
-from futu.common.utils import *
-from futu.common.handler_context import HandlerContext
-from futu.quote.quote_query import InitConnect, TestCmd
-from futu.quote.quote_query import GlobalStateQuery
-from futu.quote.quote_query import KeepAlive, parse_head
-from futu.common.conn_mng import FutuConnMng
-from futu.common.network_manager import NetManager, PacketErr, ConnectErr, CloseReason
+from .utils import *
+from .handler_context import HandlerContext
+from ..quote.quote_query import InitConnect, TestCmd
+from ..quote.quote_query import GlobalStateQuery
+from ..quote.quote_query import KeepAlive, parse_head
+from .conn_mng import FutuConnMng
+from .network_manager import NetManager, PacketErr, ConnectErr, CloseReason
 from .err import Err
 from .constant import ContextStatus
 from .callback_executor import CallbackExecutor, CallbackItem

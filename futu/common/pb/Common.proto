@@ -42,9 +42,12 @@ enum ProtoFmt
 enum UserAttribution
 {
 	UserAttribution_Unknown = 0; //
-	UserAttribution_NN = 1; //牛牛
-	UserAttribution_MM = 2; //MooMoo
+	UserAttribution_NN = 1; //大陆
+	UserAttribution_MM = 2; //美国
 	UserAttribution_SG = 3; //新加坡
+	UserAttribution_AU = 4; //澳洲 
+	UserAttribution_JP = 5; //日本
+	UserAttribution_HK = 6; //香港
 }
 
 enum ProgramStatusType
@@ -73,4 +76,13 @@ message ProgramStatus
 {
 	required ProgramStatusType type = 1; //当前状态
 	optional string strExtDesc = 2; // 额外描述
+}
+
+enum Session
+{
+	Session_NONE = 0;
+	Session_RTH = 1;
+	Session_ETH = 2;
+	Session_ALL = 3;
+	Session_OVERNIGHT = 4;
 }

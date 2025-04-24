@@ -3,8 +3,9 @@
     Trade query
 """
 import datetime as dt
-from futu.common.utils import *
-from futu.quote.quote_query import pack_pb_req
+
+from ..common.utils import *
+from ..quote.quote_query import pack_pb_req
 
 # 无数据时的值
 NoneDataValue = 'N/A'
@@ -30,7 +31,7 @@ class GetAccountList:
 
     @classmethod
     def pack_req(cls, user_id, conn_id, trd_category, need_general_sec_acc):
-        from futu.common.pb.Trd_GetAccList_pb2 import Request
+        from ..common.pb.Trd_GetAccList_pb2 import Request
 
         req = Request()
         req.c2s.userID = user_id
@@ -50,10 +51,12 @@ class GetAccountList:
             'trd_env': TrdEnv.to_string2(record.trdEnv) if record.HasField('trdEnv') else 'N/A',# 初始化枚举类型
             'trdMarket_list': [TrdMarket.to_string2(trdMkt) for trdMkt in record.trdMarketAuthList],
             'acc_type': TrdAccType.to_string2(record.accType) if record.HasField("accType") else TrdAccType.NONE,# 初始化枚举类型
+            'uni_card_num': record.uniCardNum if record.HasField("uniCardNum") else "N/A",
             'card_num': record.cardNum if record.HasField("cardNum") else "N/A",
             'security_firm': SecurityFirm.to_string2(record.securityFirm) if record.HasField('securityFirm') else SecurityFirm.NONE,# 初始化枚举类型
             'sim_acc_type': SimAccType.to_string2(record.simAccType) if record.HasField('simAccType') else SimAccType.NONE,# 初始化枚举类型
             'trdmarket_auth': list(record.trdMarketAuthList),
+            'acc_status': TrdAccStatus.to_string2(record.accStatus) if record.HasField('accStatus') else 'N/A',# 初始化枚举类型
         } for record in raw_acc_list]
 
         return RET_OK, "", acc_list
@@ -67,7 +70,7 @@ class UnlockTrade:
     @classmethod
     def pack_req(cls, is_unlock, password_md5, conn_id, security_firm):
         """Convert from user request for trading days to PLS request"""
-        from futu.common.pb.Trd_UnlockTrade_pb2 import Request
+        from ..common.pb.Trd_UnlockTrade_pb2 import Request
         req = Request()
         req.c2s.unlock = is_unlock
         req.c2s.pwdMD5 = password_md5
@@ -93,7 +96,7 @@ class SubAccPush:
 
     @classmethod
     def pack_req(cls, acc_id_list, conn_id):
-        from futu.common.pb.Trd_SubAccPush_pb2 import Request
+        from ..common.pb.Trd_SubAccPush_pb2 import Request
         req = Request()
         for x in acc_id_list:
             req.c2s.accIDList.append(x)
@@ -117,7 +120,7 @@ class AccInfoQuery:
 
     @classmethod
     def pack_req(cls, acc_id, trd_market, trd_env, conn_id, refresh_cache, currency):
-        from futu.common.pb.Trd_GetFunds_pb2 import Request
+        from ..common.pb.Trd_GetFunds_pb2 import Request
         req = Request()
         _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
@@ -139,6 +142,9 @@ class AccInfoQuery:
             'max_power_short': raw_funds.maxPowerShort if raw_funds.HasField('maxPowerShort') else NoneDataValue,
             'net_cash_power': raw_funds.netCashPower if raw_funds.HasField('netCashPower') else NoneDataValue,
             'total_assets': raw_funds.totalAssets,
+            'securities_assets': raw_funds.securitiesAssets if raw_funds.HasField('securitiesAssets') else NoneDataValue,
+            'fund_assets': raw_funds.fundAssets if raw_funds.HasField('fundAssets') else NoneDataValue,
+            'bond_assets': raw_funds.bondAssets if raw_funds.HasField('bondAssets') else NoneDataValue,
             'cash': raw_funds.cash,
             'market_val': raw_funds.marketVal,
             'long_mv': raw_funds.longMv if raw_funds.HasField('longMv') else NoneDataValue,
@@ -159,42 +165,73 @@ class AccInfoQuery:
             'maintenance_margin': raw_funds.maintenanceMargin if raw_funds.HasField('maintenanceMargin') else NoneDataValue,
             'hk_cash': NoneDataValue,
             'hk_avl_withdrawal_cash': NoneDataValue,
+            'hkd_net_cash_power': NoneDataValue,
+            'hkd_assets': NoneDataValue,
             'us_cash': NoneDataValue,
             'us_avl_withdrawal_cash': NoneDataValue,
+            'usd_net_cash_power': NoneDataValue,
+            'usd_assets': NoneDataValue,
             'cn_cash': NoneDataValue,
             'cn_avl_withdrawal_cash': NoneDataValue,
+            'cnh_net_cash_power': NoneDataValue,
+            'cnh_assets': NoneDataValue,
             'jp_cash': NoneDataValue,
             'jp_avl_withdrawal_cash': NoneDataValue,
+            'jpy_net_cash_power': NoneDataValue,
+            'jpy_assets': NoneDataValue,
             'sg_cash': NoneDataValue,
             'sg_avl_withdrawal_cash': NoneDataValue,
+            'sgd_net_cash_power': NoneDataValue,
+            'sgd_assets': NoneDataValue,
             'au_cash': NoneDataValue,
             'au_avl_withdrawal_cash': NoneDataValue,
+            'aud_net_cash_power': NoneDataValue,
+            'aud_assets': NoneDataValue,
             'is_pdt':  get_pb_value(raw_funds, 'isPdt'),
             'pdt_seq': get_pb_value(raw_funds, 'pdtSeq'),
             'beginning_dtbp': get_pb_value(raw_funds, 'beginningDTBP'),
             'remaining_dtbp': get_pb_value(raw_funds, 'remainingDTBP'),
             'dt_call_amount': get_pb_value(raw_funds, 'dtCallAmount'),
-            'dt_status': get_pb_enum(raw_funds, 'dtStatus', DTStatus, DTStatus.NONE)
+            'dt_status': get_pb_enum(raw_funds, 'dtStatus', DTStatus, DTStatus.NONE),    
         }]
         for cashInfo in raw_funds.cashInfoList:
             if cashInfo.currency == Trd_Common_pb2.Currency_HKD:
                 accinfo_list[0]['hk_cash'] = cashInfo.cash
                 accinfo_list[0]['hk_avl_withdrawal_cash'] = cashInfo.availableBalance
+                accinfo_list[0]['hkd_net_cash_power'] = cashInfo.netCashPower if cashInfo.HasField('netCashPower') else NoneDataValue
             elif cashInfo.currency == Trd_Common_pb2.Currency_USD:
                 accinfo_list[0]['us_cash'] = cashInfo.cash
                 accinfo_list[0]['us_avl_withdrawal_cash'] = cashInfo.availableBalance
+                accinfo_list[0]['usd_net_cash_power'] = cashInfo.netCashPower if cashInfo.HasField('netCashPower') else NoneDataValue
             elif cashInfo.currency == Trd_Common_pb2.Currency_CNH:
                 accinfo_list[0]['cn_cash'] = cashInfo.cash
                 accinfo_list[0]['cn_avl_withdrawal_cash'] = cashInfo.availableBalance
+                accinfo_list[0]['cnh_net_cash_power'] = cashInfo.netCashPower if cashInfo.HasField('netCashPower') else NoneDataValue
             elif cashInfo.currency == Trd_Common_pb2.Currency_JPY:
                 accinfo_list[0]['jp_cash'] = cashInfo.cash
                 accinfo_list[0]['jp_avl_withdrawal_cash'] = cashInfo.availableBalance
+                accinfo_list[0]['jpy_net_cash_power'] = cashInfo.netCashPower if cashInfo.HasField('netCashPower') else NoneDataValue
             elif cashInfo.currency == Trd_Common_pb2.Currency_SGD:
                 accinfo_list[0]['sg_cash'] = cashInfo.cash
                 accinfo_list[0]['sg_avl_withdrawal_cash'] = cashInfo.availableBalance
+                accinfo_list[0]['sgd_net_cash_power'] = cashInfo.netCashPower if cashInfo.HasField('netCashPower') else NoneDataValue
             elif cashInfo.currency == Trd_Common_pb2.Currency_AUD:
                 accinfo_list[0]['au_cash'] = cashInfo.cash
                 accinfo_list[0]['au_avl_withdrawal_cash'] = cashInfo.availableBalance
+                accinfo_list[0]['aud_net_cash_power'] = cashInfo.netCashPower if cashInfo.HasField('netCashPower') else NoneDataValue
+        for marketInfo in raw_funds.marketInfoList:
+            if marketInfo.trdMarket == Trd_Common_pb2.TrdMarket_HK:
+                accinfo_list[0]['hkd_assets'] = marketInfo.assets if marketInfo.HasField('assets') else NoneDataValue
+            elif marketInfo.trdMarket == Trd_Common_pb2.TrdMarket_US:
+                accinfo_list[0]['usd_assets'] = marketInfo.assets if marketInfo.HasField('assets') else NoneDataValue
+            elif marketInfo.trdMarket == Trd_Common_pb2.TrdMarket_HKCC:
+                accinfo_list[0]['cnh_assets'] = marketInfo.assets if marketInfo.HasField('assets') else NoneDataValue
+            elif marketInfo.trdMarket == Trd_Common_pb2.TrdMarket_JP:
+                accinfo_list[0]['jpy_assets'] = marketInfo.assets if marketInfo.HasField('assets') else NoneDataValue
+            elif marketInfo.trdMarket == Trd_Common_pb2.TrdMarket_SG:
+                accinfo_list[0]['sgd_assets'] = marketInfo.assets if marketInfo.HasField('assets') else NoneDataValue
+            elif marketInfo.trdMarket == Trd_Common_pb2.TrdMarket_AU:
+                accinfo_list[0]['aud_assets'] = marketInfo.assets if marketInfo.HasField('assets') else NoneDataValue
         return RET_OK, "", accinfo_list
 
 
@@ -206,15 +243,16 @@ class PositionListQuery:
 
     @classmethod
     def pack_req(cls, code, pl_ratio_min,
-                 pl_ratio_max, trd_env, acc_id, trd_mkt, conn_id, refresh_cache):
+                 pl_ratio_max, trd_env, acc_id, trd_mkt, conn_id, refresh_cache, position_market):
         """Convert from user request for trading days to PLS request"""
-        from futu.common.pb.Trd_GetPositionList_pb2 import Request
+        from ..common.pb.Trd_GetPositionList_pb2 import Request
         req = Request()
         _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
         _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
         if code:
             req.c2s.filterConditions.codeList.append(code)
+        _, req.c2s.filterConditions.filterMarket = TrdMarket.to_number(position_market)
         if pl_ratio_min is not None:
             req.c2s.filterPLRatioMin = float(pl_ratio_min) / 100.0
         if pl_ratio_max is not None:
@@ -235,14 +273,18 @@ class PositionListQuery:
         position_list = [{
                              "code": merge_trd_mkt_stock_str(position.secMarket, position.code),
                              "stock_name": position.name,
+                             "position_market": TrdMarket.to_string2(position.trdMarket) if position.HasField('trdMarket') else 'N/A',# 初始化枚举类型
                              "qty": position.qty,
                              "can_sell_qty": position.canSellQty,
                              "cost_price": position.costPrice if position.HasField('costPrice') else NoneDataValue,
                              "cost_price_valid": position.HasField('costPrice'),
+                             "average_cost": position.averageCostPrice if position.HasField('averageCostPrice') else NoneDataValue,
+                             "diluted_cost": position.dilutedCostPrice if position.HasField('dilutedCostPrice') else NoneDataValue,
                              "market_val": position.val,
                              "nominal_price": position.price,
                              "pl_ratio": 100 * position.plRatio if position.HasField('plRatio') else NoneDataValue,
                              "pl_ratio_valid": position.HasField('plRatio'),
+                             "pl_ratio_avg_cost": 100 * position.averagePlRatio if position.HasField('averagePlRatio') else NoneDataValue,
                              "pl_val": position.plVal,
                              "pl_val_valid": position.HasField('plVal'),
                              "today_buy_qty": position.td_buyQty if position.HasField('td_buyQty') else NoneDataValue,
@@ -266,9 +308,9 @@ class OrderListQuery:
 
     @classmethod
     def pack_req(cls, order_id, status_filter_list, code, start, end,
-                 trd_env, acc_id, trd_mkt, conn_id, refresh_cache):
+                 trd_env, acc_id, trd_mkt, conn_id, refresh_cache, order_market):
         """Convert from user request for trading days to PLS request"""
-        from futu.common.pb.Trd_GetOrderList_pb2 import Request
+        from ..common.pb.Trd_GetOrderList_pb2 import Request
         req = Request()
         _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
@@ -277,7 +319,8 @@ class OrderListQuery:
         if code:
             req.c2s.filterConditions.codeList.append(code)
         if order_id:
-            req.c2s.filterConditions.idList.append(int(order_id))
+            req.c2s.filterConditions.orderIDExList.append(order_id)
+        _, req.c2s.filterConditions.filterMarket = TrdMarket.to_number(order_market)
 
         if start:
             req.c2s.filterConditions.beginTime = start
@@ -299,10 +342,11 @@ class OrderListQuery:
         order_dict = {
             "code": merge_trd_mkt_stock_str(order.secMarket, order.code),
             "stock_name": order.name,
+            "order_market": TrdMarket.to_string2(order.trdMarket) if order.HasField('trdMarket') else 'N/A',# 初始化枚举类型
             "trd_side": TrdSide.to_string2(order.trdSide) if order.HasField('trdSide') else 'N/A',# 初始化枚举类型
             "order_type": OrderType.to_string2(order.orderType) if order.HasField('orderType') else 'N/A',# 初始化枚举类型
             "order_status": OrderStatus.to_string2(order.orderStatus) if order.HasField('orderStatus') else 'N/A',# 初始化枚举类型
-            "order_id": str(order.orderID),
+            "order_id": str(order.orderIDEx),
             "qty": order.qty,
             "price": order.price,
             "create_time": order.createTime,
@@ -313,6 +357,7 @@ class OrderListQuery:
             "remark": order.remark if order.HasField("remark") else "",
             "time_in_force": TimeInForce.to_string2(order.timeInForce) if order.HasField('timeInForce') else 'N/A',# 初始化枚举类型
             "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A',
+            "session": Session.to_string2(order.session) if order.HasField('session') else 'N/A',
             "aux_price": order.auxPrice if order.HasField("auxPrice") else 'N/A',
             "trail_type": TrailType.to_string2(order.trailType) if order.HasField("trailType") else 'N/A',
             "trail_value": order.trailValue if order.HasField("trailValue") else 'N/A',
@@ -340,9 +385,9 @@ class PlaceOrder:
     @classmethod
     def pack_req(cls, trd_side, order_type, price, qty,
                  code, adjust_limit, trd_env, sec_mkt_str, acc_id, trd_mkt, conn_id, remark,
-                 time_in_force, fill_outside_rth, aux_price, trail_type ,trail_value ,trail_spread):
+                 time_in_force, fill_outside_rth, session, aux_price, trail_type ,trail_value ,trail_spread):
         """Convert from user request for place order to PLS request"""
-        from futu.common.pb.Trd_PlaceOrder_pb2 import Request
+        from ..common.pb.Trd_PlaceOrder_pb2 import Request
         req = Request()
         serial_no = get_unique_id32()
         req.c2s.packetID.serialNo = serial_no
@@ -385,6 +430,7 @@ class PlaceOrder:
             req.c2s.trailSpread = trail_spread
 
         req.c2s.fillOutsideRTH = fill_outside_rth
+        _, req.c2s.session = Session.to_number(session)
 
         return pack_pb_req(req, ProtoId.Trd_PlaceOrder, conn_id, serial_no)
 
@@ -394,7 +440,7 @@ class PlaceOrder:
         if rsp_pb.retType != RET_OK:
             return RET_ERROR, rsp_pb.retMsg, None
 
-        order_id = str(rsp_pb.s2c.orderID)
+        order_id = str(rsp_pb.s2c.orderIDEx)
 
         return RET_OK, "", order_id
 
@@ -409,7 +455,7 @@ class ModifyOrder:
                  adjust_limit, trd_env, acc_id, trd_mkt, conn_id,
                  aux_price, trail_type, trail_value, trail_spread):
         """Convert from user request for place order to PLS request"""
-        from futu.common.pb.Trd_ModifyOrder_pb2 import Request
+        from ..common.pb.Trd_ModifyOrder_pb2 import Request
         req = Request()
         serial_no = get_unique_id32()
         req.c2s.packetID.serialNo = serial_no
@@ -419,7 +465,9 @@ class ModifyOrder:
         req.c2s.header.accID = acc_id
         _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
 
-        req.c2s.orderID = int(order_id)
+        # orderID不使用了，但是required字段必须传值
+        req.c2s.orderID = 0
+        req.c2s.orderIDEx = order_id
         _, req.c2s.modifyOrderOp = ModifyOrderOp.to_number(modify_order_op)
         req.c2s.forAll = False
 
@@ -445,7 +493,7 @@ class ModifyOrder:
         if rsp_pb.retType != RET_OK:
             return RET_ERROR, rsp_pb.retMsg, None
 
-        order_id = str(rsp_pb.s2c.orderID)
+        order_id = str(rsp_pb.s2c.orderIDEx)
         modify_order_list = [{
             'trd_env': TrdEnv.to_string2(rsp_pb.s2c.header.trdEnv) if rsp_pb.s2c.header.HasField('trdEnv') else 'N/A',# 初始化枚举类型
             'order_id': order_id
@@ -462,7 +510,7 @@ class CancelOrder:
     @classmethod
     def pack_req(cls, trd_env, acc_id, trd_mkt, conn_id, trdmarket):
         """Convert from user request for place order to PLS request"""
-        from futu.common.pb.Trd_ModifyOrder_pb2 import Request
+        from ..common.pb.Trd_ModifyOrder_pb2 import Request
         req = Request()
         serial_no = get_unique_id32()
         req.c2s.packetID.serialNo = serial_no
@@ -492,9 +540,9 @@ class DealListQuery:
         pass
 
     @classmethod
-    def pack_req(cls, code, trd_env, acc_id, trd_mkt, conn_id, refresh_cache):
+    def pack_req(cls, code, trd_env, acc_id, trd_mkt, conn_id, refresh_cache, deal_market):
         """Convert from user request for place order to PLS request"""
-        from futu.common.pb.Trd_GetOrderFillList_pb2 import Request
+        from ..common.pb.Trd_GetOrderFillList_pb2 import Request
         req = Request()
         _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
@@ -502,6 +550,7 @@ class DealListQuery:
 
         if code:
             req.c2s.filterConditions.codeList.append(code)
+        _, req.c2s.filterConditions.filterMarket = TrdMarket.to_number(deal_market)
 
         if refresh_cache:
             req.c2s.refreshCache = refresh_cache
@@ -513,8 +562,9 @@ class DealListQuery:
         deal_dict = {
             "code": merge_trd_mkt_stock_str(deal.secMarket, deal.code),
             "stock_name": deal.name,
+            "deal_market": TrdMarket.to_string2(deal.trdMarket) if deal.HasField('trdMarket') else 'N/A',# 初始化枚举类型
             "deal_id": deal.fillID,
-            "order_id": str(deal.orderID) if deal.HasField('orderID') else NoneDataValue,
+            "order_id": str(deal.orderIDEx) if deal.HasField('orderIDEx') else NoneDataValue,
             "qty": deal.qty,
             "price": deal.price,
             "trd_side": TrdSide.to_string2(deal.trdSide) if deal.HasField('trdSide') else 'N/A',# 初始化枚举类型
@@ -545,9 +595,9 @@ class HistoryOrderListQuery:
 
     @classmethod
     def pack_req(cls, status_filter_list, code, start, end,
-                 trd_env, acc_id, trd_mkt, conn_id):
+                 trd_env, acc_id, trd_mkt, conn_id, order_market):
 
-        from futu.common.pb.Trd_GetHistoryOrderList_pb2 import Request
+        from ..common.pb.Trd_GetHistoryOrderList_pb2 import Request
         req = Request()
         _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
@@ -558,6 +608,7 @@ class HistoryOrderListQuery:
 
         req.c2s.filterConditions.beginTime = start
         req.c2s.filterConditions.endTime = end
+        _, req.c2s.filterConditions.filterMarket = TrdMarket.to_number(order_market)
 
         if status_filter_list:
             for order_status in status_filter_list:
@@ -577,10 +628,11 @@ class HistoryOrderListQuery:
         order_list = [{
                       "code": merge_trd_mkt_stock_str(order.secMarket, order.code),
                       "stock_name": order.name,
+                      "order_market": TrdMarket.to_string2(order.trdMarket) if order.HasField('trdMarket') else 'N/A',# 初始化枚举类型
                       "trd_side": TrdSide.to_string2(order.trdSide) if order.HasField('trdSide') else 'N/A',# 初始化枚举类型
                       "order_type": OrderType.to_string2(order.orderType) if order.HasField('orderType') else 'N/A',# 初始化枚举类型
                       "order_status": OrderStatus.to_string2(order.orderStatus) if order.HasField('orderStatus') else 'N/A',# 初始化枚举类型
-                      "order_id": str(order.orderID),
+                      "order_id": str(order.orderIDEx),
                       "qty": order.qty,
                       "price": order.price,
                       "create_time": order.createTime,
@@ -592,12 +644,58 @@ class HistoryOrderListQuery:
                       "time_in_force": TimeInForce.to_string2(order.timeInForce) if order.HasField('timeInForce') else 'N/A',# 初始化枚举类型
                       "fill_outside_rth": order.fillOutsideRTH if order.HasField("fillOutsideRTH") else 'N/A',
                       "aux_price": order.auxPrice if order.HasField("auxPrice") else 'N/A',
-                      "trail_type": order.trailType if order.HasField("trailType") else 'N/A',
+                      "trail_type": TrailType.to_string2(order.trailType) if order.HasField("trailType") else 'N/A',
                       "trail_value": order.trailValue if order.HasField("trailValue") else 'N/A',
                       "trail_spread": order.trailSpread if order.HasField("trailSpread") else 'N/A',
                       "currency": Currency.to_string2(order.currency) if order.HasField('currency') else NoneDataValue,
+                      "session": Session.to_string2(order.session) if order.HasField('session') else 'N/A',
                       } for order in raw_order_list]
         return RET_OK, "", order_list
+
+
+class OrderFeeQuery:
+    """Class for querying order fee"""
+
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, order_id_list, trd_env, acc_id, trd_mkt, conn_id):
+
+        from ..common.pb.Trd_GetOrderFee_pb2 import Request
+        req = Request()
+        _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
+        req.c2s.header.accID = acc_id
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
+
+        if order_id_list:
+            for order_id in order_id_list:
+                req.c2s.orderIdExList.append(str(order_id))
+
+        return pack_pb_req(req, ProtoId.Trd_GetOrderFee, conn_id)
+
+    @classmethod
+    def get_fee_details(cls, order_fee):
+        fee_details = []
+        for fee_item in order_fee.feeList:
+            fee_details.append((str(fee_item.title), fee_item.value))
+        return fee_details
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        none_data = 'N/A'
+        raw_order_fee_list = rsp_pb.s2c.orderFeeList
+
+        order_fee_list = [{
+            "order_id": str(order_fee.orderIDEx),
+            "fee_amount": order_fee.feeAmount if order_fee.HasField('feeAmount') else none_data,
+            "fee_details": cls.get_fee_details(order_fee),
+        } for order_fee in raw_order_fee_list]
+        return RET_OK, "", order_fee_list
 
 
 class HistoryDealListQuery:
@@ -607,9 +705,9 @@ class HistoryDealListQuery:
         pass
 
     @classmethod
-    def pack_req(cls, code, start, end, trd_env, acc_id, trd_mkt, conn_id):
+    def pack_req(cls, code, start, end, trd_env, acc_id, trd_mkt, conn_id, deal_market):
 
-        from futu.common.pb.Trd_GetHistoryOrderFillList_pb2 import Request
+        from ..common.pb.Trd_GetHistoryOrderFillList_pb2 import Request
         req = Request()
         _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
@@ -620,6 +718,7 @@ class HistoryDealListQuery:
 
         req.c2s.filterConditions.beginTime = start
         req.c2s.filterConditions.endTime = end
+        _, req.c2s.filterConditions.filterMarket = TrdMarket.to_number(deal_market)
 
         return pack_pb_req(req, ProtoId.Trd_GetHistoryOrderFillList, conn_id)
 
@@ -633,8 +732,9 @@ class HistoryDealListQuery:
         deal_list = [{
                     "code": merge_trd_mkt_stock_str(deal.secMarket, deal.code),
                     "stock_name": deal.name,
+                    "deal_market": TrdMarket.to_string2(deal.trdMarket) if deal.HasField('trdMarket') else 'N/A',# 初始化枚举类型
                     "deal_id": deal.fillID,
-                    "order_id": str(deal.orderID) if deal.HasField('orderID') else "",
+                    "order_id": str(deal.orderIDEx) if deal.HasField('orderIDEx') else "",
                     "qty": deal.qty,
                     "price": deal.price,
                     "trd_side": TrdSide.to_string2(deal.trdSide) if deal.HasField('trdSide') else 'N/A',# 初始化枚举类型
@@ -689,7 +789,7 @@ class AccTradingInfoQuery:
     @classmethod
     def pack_req(cls, order_type, code, price, order_id, adjust_limit, sec_mkt_str, trd_env, acc_id, trd_mkt, conn_id):
 
-        from futu.common.pb.Trd_GetMaxTrdQtys_pb2 import Request
+        from ..common.pb.Trd_GetMaxTrdQtys_pb2 import Request
         req = Request()
         _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
@@ -699,7 +799,7 @@ class AccTradingInfoQuery:
         req.c2s.code = code
         req.c2s.price = price
         if order_id is not None:
-            req.c2s.orderID = int(order_id)
+            req.c2s.orderIDEx = order_id
         if adjust_limit == 0:
             req.c2s.adjustPrice = False
         else:
@@ -717,7 +817,7 @@ class AccTradingInfoQuery:
 
     @classmethod
     def unpack_rsp(cls, rsp_pb):
-        from futu.common.pb.Trd_Common_pb2 import MaxTrdQtys
+        from ..common.pb.Trd_Common_pb2 import MaxTrdQtys
 
         if rsp_pb.retType != RET_OK:
             return RET_ERROR, rsp_pb.retMsg, None
@@ -760,7 +860,7 @@ class MarginRatio:
             error_str = '\n'.join([x[1] for x in failure_tuple_list])
             return RET_ERROR, error_str, None
 
-        from futu.common.pb.Trd_GetMarginRatio_pb2 import Request
+        from ..common.pb.Trd_GetMarginRatio_pb2 import Request
         req = Request()
 
         req.c2s.header.trdEnv = 1
@@ -801,3 +901,47 @@ class MarginRatio:
             ret_margin_ratio_list.append(margin_ratio_tmp)
 
         return RET_OK, "", ret_margin_ratio_list
+
+
+class FlowSummary:
+    """Class for """
+    def __init__(self):
+        pass
+
+    @classmethod
+    def pack_req(cls, conn_id, acc_id, trd_mkt, clearing_date, direction, trd_env):
+        """Convert from user request for place order to PLS request"""
+
+        from ..common.pb.Trd_FlowSummary_pb2 import Request
+        req = Request()
+
+        _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
+        req.c2s.header.accID = acc_id
+        _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
+
+        req.c2s.clearingDate = clearing_date
+        _, req.c2s.cashFlowDirection = CashFlowDirection.to_number(direction)
+
+        return pack_pb_req(req, ProtoId.Trd_FlowSummary, conn_id)
+
+    @classmethod
+    def unpack_rsp(cls, rsp_pb):
+        """Convert from PLS response to user response"""
+        if rsp_pb.retType != RET_OK:
+            return RET_ERROR, rsp_pb.retMsg, None
+
+        flow_summary_list = rsp_pb.s2c.flowSummaryInfoList
+        ret_flow_summary_list = []
+        for flow_summary in flow_summary_list:
+            flow_summary_tmp = {}
+            flow_summary_tmp['cashflow_id'] = flow_summary.cashFlowID if flow_summary.HasField('cashFlowID') else 'N/A'  # 清算日期
+            flow_summary_tmp['clearing_date'] = flow_summary.clearingDate if flow_summary.HasField('clearingDate') else 'N/A'  # 清算日期
+            flow_summary_tmp['settlement_date'] = flow_summary.settlementDate if flow_summary.HasField('settlementDate') else 'N/A'  # 結算日期
+            flow_summary_tmp['currency'] = Currency.to_string2(flow_summary.currency) if flow_summary.HasField('currency') else 'N/A'  # 貨幣
+            flow_summary_tmp['cashflow_type'] = flow_summary.cashFlowType if flow_summary.HasField('cashFlowType') else 'N/A'  # 類型
+            flow_summary_tmp['cashflow_direction'] = CashFlowDirection.to_string2(flow_summary.cashFlowDirection) if flow_summary.HasField('cashFlowDirection') else 'N/A'  # 方向
+            flow_summary_tmp['cashflow_amount'] = flow_summary.cashFlowAmount if flow_summary.HasField('cashFlowAmount') else 'N/A'  # 數量
+            flow_summary_tmp['cashflow_remark'] = flow_summary.cashFlowRemark if flow_summary.HasField('cashFlowRemark') else 'N/A'  # 備註
+            ret_flow_summary_list.append(flow_summary_tmp)
+
+        return RET_OK, "", ret_flow_summary_list

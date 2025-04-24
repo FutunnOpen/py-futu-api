@@ -2,8 +2,8 @@ import errno
 import datetime
 import threading
 from time import sleep
-from futu.common.utils import *
-from futu.quote.quote_query import parse_head
+from .utils import *
+from ..quote.quote_query import parse_head
 from .err import Err
 from .sys_config import SysConfig
 from .ft_logger import *

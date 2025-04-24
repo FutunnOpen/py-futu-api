@@ -42,7 +42,7 @@ if is_py2:
     install_requires.append("selectors2")
 
 setup(
-    name='futu-api',
+    name='futu_api',
     version=version,
     description='Futu Quantitative Trading API',
 	long_description=long_desc,

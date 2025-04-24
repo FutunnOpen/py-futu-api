@@ -13,7 +13,7 @@
 pip install futu-api
 ```
 
-###### 注: 本API支持Python2.7/Python3.x, 推荐安装anaconda2或anaconda3环境，方便快捷。
+###### 注: 本API支持Python2.7/Python3.x。
 
 ---
 

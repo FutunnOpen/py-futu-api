@@ -16,7 +16,8 @@ message C2S
 	optional int32 maxAckKLNum = 6; //最多返回多少根K线，如果未指定表示不限制
 	optional int64 needKLFieldsFlag = 7; //指定返回K线结构体特定某几项数据，KLFields枚举值或组合，如果未指定返回全部字段
 	optional bytes nextReqKey = 8; //分页请求key
-	optional bool extendedTime = 9;  //是否获取美股盘前盘后数据，当前仅支持1分k。
+	optional bool extendedTime = 9;  //是否获取美股盘前盘后数据，仅支持 60 分钟及以下级别
+	optional int32 session = 10; //Qot_Common.Session, 美股盘前盘后数据，仅支持 60 分钟及以下级别
 }
 
 message S2C

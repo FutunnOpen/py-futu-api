@@ -15,6 +15,7 @@ message PriceReminderItem
 	required string note = 4; // 备注仅支持 20 个以内的中文字符
 	required int32 freq = 5; // Qot_Common::PriceReminderFreq 提醒频率类型
 	required bool isEnable = 6; // 该提醒设置是否生效。false不生效，true生效
+	repeated int32 reminderSessionList = 7; // 枚举参考Qot_Common::PriceReminderMarketStatus
 }
 
 message PriceReminder

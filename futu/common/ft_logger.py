@@ -54,7 +54,7 @@ else:  # pragma: no cover
         except Exception:
             return sys.exc_info()[2].tb_frame.f_back
 
-__LogPathName__ = "com.futunn.FutuOpenD//Log"
+__LogPathName__ = "com.futunn.FutuOpenD/Log"
 
 
 class FTLog(object):

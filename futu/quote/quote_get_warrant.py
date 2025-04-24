@@ -2,9 +2,8 @@
 """
     Market quote and trade context setting
 """
-from futu import *
-from futu.common.conn_mng import *
-from futu.common.utils import *
+
+from ..common.utils import *
 
 class Request(object):
 

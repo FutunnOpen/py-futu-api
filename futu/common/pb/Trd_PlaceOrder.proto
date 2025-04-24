@@ -26,12 +26,14 @@ message C2S
 	optional int32 trailType = 15; //跟踪类型, 参见Trd_Common.TrailType的枚举定义
 	optional double trailValue = 16; //跟踪金额/百分比
 	optional double trailSpread = 17; //指定价差
+	optional int32 session = 18; //美股订单时段, 参见Common.Session的枚举定义
 }
 
 message S2C
 {
 	required Trd_Common.TrdHeader header = 1; //交易公共参数头
 	optional uint64 orderID = 2; //订单号
+	optional string orderIDEx = 3; //表示服务器订单id，可以用来代替orderID，和orderID二选一
 }
 
 message Request

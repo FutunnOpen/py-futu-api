@@ -26,6 +26,7 @@ message C2S
 	optional int32 freq = 7; // Qot_Common::PriceReminderFreq，提醒频率类型，删除、启用、禁用的情况下会忽略该字段
 	optional double value = 5; // 提醒值，删除、启用、禁用的情况下会忽略该字段（精确到小数点后 3 位，超出部分会被舍弃）
 	optional string note = 6; // 用户设置到价提醒时的标注，仅支持 20 个以内的中文字符，删除、启用、禁用的情况下会忽略该字段
+	repeated int32 reminderSessionList = 8; // 到价提醒的时段列表，删除、启用、禁用的情况下会忽略该入参,枚举参考Qot_Common::PriceReminderMarketStatus
 }
 //注意：
 //1. API 中成交量设置统一以股为单位。但是牛牛客户端中，A 股是以为手为单位展示

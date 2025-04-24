@@ -1,0 +1,53 @@
+syntax = "proto2";
+package Trd_FlowSummary;
+option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/trdflowsummary";
+
+import "Trd_Common.proto";
+
+enum TrdCashFlowDirection
+{
+	TrdCashFlowDirection_Unknown = 0; //未知
+	TrdCashFlowDirection_In = 1; //现金流入
+	TrdCashFlowDirection_Out = 2; //现金流出
+}
+
+message FlowSummaryInfo
+{
+	optional string clearingDate = 1; //清算日期
+	optional string settlementDate = 2; //结算日期
+	optional int32 currency = 3; //币种
+	optional string cashFlowType = 4; //现金流类型
+	optional int32 cashFlowDirection = 5; //现金流方向 TrdCashFlowDirection
+	optional double cashFlowAmount = 6; //金额
+	optional string cashFlowRemark = 7; // 备注
+	optional uint64 cashFlowID = 8; // 现金流ID
+}
+
+message C2S
+{
+	required Trd_Common.TrdHeader header = 1; //交易公共参数头
+	required string clearingDate = 2; //清算日期，格式 "2017-05-20"
+	optional int32 cashFlowDirection = 3; //现金流方向 TrdCashFlowDirection
+}
+
+message S2C
+{
+	required Trd_Common.TrdHeader header = 1; //交易公共参数头
+	repeated FlowSummaryInfo flowSummaryInfoList = 2; //账户资金
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	//以下3个字段每条协议都有，注释说明在InitConnect.proto中
+	required int32 retType = 1 [default = -400];
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_Common.proto',
   package='Qot_Common',
   syntax='proto2',
-  serialized_pb=_b('\n\x10Qot_Common.proto\x12\nQot_Common\x1a\x0c\x43ommon.proto\"(\n\x08Security\x12\x0e\n\x06market\x18\x01 \x02(\x05\x12\x0c\n\x04\x63ode\x18\x02 \x02(\t\"\xf5\x01\n\x05KLine\x12\x0c\n\x04time\x18\x01 \x02(\t\x12\x0f\n\x07isBlank\x18\x02 \x02(\x08\x12\x11\n\thighPrice\x18\x03 \x01(\x01\x12\x11\n\topenPrice\x18\x04 \x01(\x01\x12\x10\n\x08lowPrice\x18\x05 \x01(\x01\x12\x12\n\nclosePrice\x18\x06 \x01(\x01\x12\x16\n\x0elastClosePrice\x18\x07 \x01(\x01\x12\x0e\n\x06volume\x18\x08 \x01(\x03\x12\x10\n\x08turnover\x18\t \x01(\x01\x12\x14\n\x0cturnoverRate\x18\n \x01(\x01\x12\n\n\x02pe\x18\x0b \x01(\x01\x12\x12\n\nchangeRate\x18\x0c \x01(\x01\x12\x11\n\ttimestamp\x18\r \x01(\x01\"\xa2\x03\n\x14OptionBasicQotExData\x12\x13\n\x0bstrikePrice\x18\x01 \x02(\x01\x12\x14\n\x0c\x63ontractSize\x18\x02 \x02(\x05\x12\x19\n\x11\x63ontractSizeFloat\x18\x11 \x01(\x01\x12\x14\n\x0copenInterest\x18\x03 \x02(\x05\x12\x19\n\x11impliedVolatility\x18\x04 \x02(\x01\x12\x0f\n\x07premium\x18\x05 \x02(\x01\x12\r\n\x05\x64\x65lta\x18\x06 \x02(\x01\x12\r\n\x05gamma\x18\x07 \x02(\x01\x12\x0c\n\x04vega\x18\x08 \x02(\x01\x12\r\n\x05theta\x18\t \x02(\x01\x12\x0b\n\x03rho\x18\n \x02(\x01\x12\x17\n\x0fnetOpenInterest\x18\x0b \x01(\x05\x12\x1a\n\x12\x65xpiryDateDistance\x18\x0c \x01(\x05\x12\x1c\n\x14\x63ontractNominalValue\x18\r \x01(\x01\x12\x1a\n\x12ownerLotMultiplier\x18\x0e \x01(\x01\x12\x16\n\x0eoptionAreaType\x18\x0f \x01(\x05\x12\x1a\n\x12\x63ontractMultiplier\x18\x10 \x01(\x01\x12\x17\n\x0findexOptionType\x18\x12 \x01(\x05\"\xa4\x01\n\x12PreAfterMarketData\x12\r\n\x05price\x18\x01 \x01(\x01\x12\x11\n\thighPrice\x18\x02 \x01(\x01\x12\x10\n\x08lowPrice\x18\x03 \x01(\x01\x12\x0e\n\x06volume\x18\x04 \x01(\x03\x12\x10\n\x08turnover\x18\x05 \x01(\x01\x12\x11\n\tchangeVal\x18\x06 \x01(\x01\x12\x12\n\nchangeRate\x18\x07 \x01(\x01\x12\x11\n\tamplitude\x18\x08 \x01(\x01\"u\n\x14\x46utureBasicQotExData\x12\x17\n\x0flastSettlePrice\x18\x01 \x02(\x01\x12\x10\n\x08position\x18\x02 \x02(\x05\x12\x16\n\x0epositionChange\x18\x03 \x02(\x05\x12\x1a\n\x12\x65xpiryDateDistance\x18\x04 \x01(\x05\"R\n\x15WarrantBasicQotExData\x12\r\n\x05\x64\x65lta\x18\x01 \x01(\x01\x12\x19\n\x11impliedVolatility\x18\x02 \x01(\x01\x12\x0f\n\x07premium\x18\x03 \x02(\x01\"\xa6\x05\n\x08\x42\x61sicQot\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x18 \x01(\t\x12\x13\n\x0bisSuspended\x18\x02 \x02(\x08\x12\x10\n\x08listTime\x18\x03 \x02(\t\x12\x13\n\x0bpriceSpread\x18\x04 \x02(\x01\x12\x12\n\nupdateTime\x18\x05 \x02(\t\x12\x11\n\thighPrice\x18\x06 \x02(\x01\x12\x11\n\topenPrice\x18\x07 \x02(\x01\x12\x10\n\x08lowPrice\x18\x08 \x02(\x01\x12\x10\n\x08\x63urPrice\x18\t \x02(\x01\x12\x16\n\x0elastClosePrice\x18\n \x02(\x01\x12\x0e\n\x06volume\x18\x0b \x02(\x03\x12\x10\n\x08turnover\x18\x0c \x02(\x01\x12\x14\n\x0cturnoverRate\x18\r \x02(\x01\x12\x11\n\tamplitude\x18\x0e \x02(\x01\x12\x12\n\ndarkStatus\x18\x0f \x01(\x05\x12\x36\n\x0coptionExData\x18\x10 \x01(\x0b\x32 .Qot_Common.OptionBasicQotExData\x12\x15\n\rlistTimestamp\x18\x11 \x01(\x01\x12\x17\n\x0fupdateTimestamp\x18\x12 \x01(\x01\x12\x31\n\tpreMarket\x18\x13 \x01(\x0b\x32\x1e.Qot_Common.PreAfterMarketData\x12\x33\n\x0b\x61\x66terMarket\x18\x14 \x01(\x0b\x32\x1e.Qot_Common.PreAfterMarketData\x12\x11\n\tsecStatus\x18\x15 \x01(\x05\x12\x36\n\x0c\x66utureExData\x18\x16 \x01(\x0b\x32 .Qot_Common.FutureBasicQotExData\x12\x38\n\rwarrantExData\x18\x17 \x01(\x0b\x32!.Qot_Common.WarrantBasicQotExData\"\xa8\x01\n\tTimeShare\x12\x0c\n\x04time\x18\x01 \x02(\t\x12\x0e\n\x06minute\x18\x02 \x02(\x05\x12\x0f\n\x07isBlank\x18\x03 \x02(\x08\x12\r\n\x05price\x18\x04 \x01(\x01\x12\x16\n\x0elastClosePrice\x18\x05 \x01(\x01\x12\x10\n\x08\x61vgPrice\x18\x06 \x01(\x01\x12\x0e\n\x06volume\x18\x07 \x01(\x03\x12\x10\n\x08turnover\x18\x08 \x01(\x01\x12\x11\n\ttimestamp\x18\t \x01(\x01\"\xc7\x01\n\x13SecurityStaticBasic\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\n\n\x02id\x18\x02 \x02(\x03\x12\x0f\n\x07lotSize\x18\x03 \x02(\x05\x12\x0f\n\x07secType\x18\x04 \x02(\x05\x12\x0c\n\x04name\x18\x05 \x02(\t\x12\x10\n\x08listTime\x18\x06 \x02(\t\x12\x11\n\tdelisting\x18\x07 \x01(\x08\x12\x15\n\rlistTimestamp\x18\x08 \x01(\x01\x12\x10\n\x08\x65xchType\x18\t \x01(\x05\"H\n\x13WarrantStaticExData\x12\x0c\n\x04type\x18\x01 \x02(\x05\x12#\n\x05owner\x18\x02 \x02(\x0b\x32\x14.Qot_Common.Security\"\xc3\x01\n\x12OptionStaticExData\x12\x0c\n\x04type\x18\x01 \x02(\x05\x12#\n\x05owner\x18\x02 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x12\n\nstrikeTime\x18\x03 \x02(\t\x12\x13\n\x0bstrikePrice\x18\x04 \x02(\x01\x12\x0f\n\x07suspend\x18\x05 \x02(\x08\x12\x0e\n\x06market\x18\x06 \x02(\t\x12\x17\n\x0fstrikeTimestamp\x18\x07 \x01(\x01\x12\x17\n\x0findexOptionType\x18\x08 \x01(\x05\"_\n\x12\x46utureStaticExData\x12\x15\n\rlastTradeTime\x18\x01 \x02(\t\x12\x1a\n\x12lastTradeTimestamp\x18\x02 \x01(\x01\x12\x16\n\x0eisMainContract\x18\x03 \x02(\x08\"\xe8\x01\n\x12SecurityStaticInfo\x12.\n\x05\x62\x61sic\x18\x01 \x02(\x0b\x32\x1f.Qot_Common.SecurityStaticBasic\x12\x36\n\rwarrantExData\x18\x02 \x01(\x0b\x32\x1f.Qot_Common.WarrantStaticExData\x12\x34\n\x0coptionExData\x18\x03 \x01(\x0b\x32\x1e.Qot_Common.OptionStaticExData\x12\x34\n\x0c\x66utureExData\x18\x04 \x01(\x0b\x32\x1e.Qot_Common.FutureStaticExData\"P\n\x06\x42roker\x12\n\n\x02id\x18\x01 \x02(\x03\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x0b\n\x03pos\x18\x03 \x02(\x05\x12\x0f\n\x07orderID\x18\x04 \x01(\x03\x12\x0e\n\x06volume\x18\x05 \x01(\x03\"\xc1\x01\n\x06Ticker\x12\x0c\n\x04time\x18\x01 \x02(\t\x12\x10\n\x08sequence\x18\x02 \x02(\x03\x12\x0b\n\x03\x64ir\x18\x03 \x02(\x05\x12\r\n\x05price\x18\x04 \x02(\x01\x12\x0e\n\x06volume\x18\x05 \x02(\x03\x12\x10\n\x08turnover\x18\x06 \x02(\x01\x12\x10\n\x08recvTime\x18\x07 \x01(\x01\x12\x0c\n\x04type\x18\x08 \x01(\x05\x12\x10\n\x08typeSign\x18\t \x01(\x05\x12\x14\n\x0cpushDataType\x18\n \x01(\x05\x12\x11\n\ttimestamp\x18\x0b \x01(\x01\"2\n\x0fOrderBookDetail\x12\x0f\n\x07orderID\x18\x01 \x02(\x03\x12\x0e\n\x06volume\x18\x02 \x02(\x03\"p\n\tOrderBook\x12\r\n\x05price\x18\x01 \x02(\x01\x12\x0e\n\x06volume\x18\x02 \x02(\x03\x12\x13\n\x0borederCount\x18\x03 \x02(\x05\x12/\n\ndetailList\x18\x04 \x03(\x0b\x32\x1b.Qot_Common.OrderBookDetail\"\x9b\x01\n\x12ShareHoldingChange\x12\x12\n\nholderName\x18\x01 \x02(\t\x12\x12\n\nholdingQty\x18\x02 \x02(\x01\x12\x14\n\x0choldingRatio\x18\x03 \x02(\x01\x12\x11\n\tchangeQty\x18\x04 \x02(\x01\x12\x13\n\x0b\x63hangeRatio\x18\x05 \x02(\x01\x12\x0c\n\x04time\x18\x06 \x02(\t\x12\x11\n\ttimestamp\x18\x07 \x01(\x01\"F\n\x07SubInfo\x12\x0f\n\x07subType\x18\x01 \x02(\x05\x12*\n\x0csecurityList\x18\x02 \x03(\x0b\x32\x14.Qot_Common.Security\"a\n\x0b\x43onnSubInfo\x12(\n\x0bsubInfoList\x18\x01 \x03(\x0b\x32\x13.Qot_Common.SubInfo\x12\x11\n\tusedQuota\x18\x02 \x02(\x05\x12\x15\n\risOwnConnData\x18\x03 \x02(\x08\"Q\n\tPlateInfo\x12#\n\x05plate\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x11\n\tplateType\x18\x03 \x01(\x05\"\xba\x03\n\x05Rehab\x12\x0c\n\x04time\x18\x01 \x02(\t\x12\x16\n\x0e\x63ompanyActFlag\x18\x02 \x02(\x03\x12\x12\n\nfwdFactorA\x18\x03 \x02(\x01\x12\x12\n\nfwdFactorB\x18\x04 \x02(\x01\x12\x12\n\nbwdFactorA\x18\x05 \x02(\x01\x12\x12\n\nbwdFactorB\x18\x06 \x02(\x01\x12\x11\n\tsplitBase\x18\x07 \x01(\x05\x12\x10\n\x08splitErt\x18\x08 \x01(\x05\x12\x10\n\x08joinBase\x18\t \x01(\x05\x12\x0f\n\x07joinErt\x18\n \x01(\x05\x12\x11\n\tbonusBase\x18\x0b \x01(\x05\x12\x10\n\x08\x62onusErt\x18\x0c \x01(\x05\x12\x14\n\x0ctransferBase\x18\r \x01(\x05\x12\x13\n\x0btransferErt\x18\x0e \x01(\x05\x12\x11\n\tallotBase\x18\x0f \x01(\x05\x12\x10\n\x08\x61llotErt\x18\x10 \x01(\x05\x12\x12\n\nallotPrice\x18\x11 \x01(\x01\x12\x0f\n\x07\x61\x64\x64\x42\x61se\x18\x12 \x01(\x05\x12\x0e\n\x06\x61\x64\x64\x45rt\x18\x13 \x01(\x05\x12\x10\n\x08\x61\x64\x64Price\x18\x14 \x01(\x01\x12\x10\n\x08\x64ividend\x18\x15 \x01(\x01\x12\x12\n\nspDividend\x18\x16 \x01(\x01\x12\x11\n\ttimestamp\x18\x17 \x01(\x01*\xe1\x01\n\tQotMarket\x12\x15\n\x11QotMarket_Unknown\x10\x00\x12\x19\n\x15QotMarket_HK_Security\x10\x01\x12\x17\n\x13QotMarket_HK_Future\x10\x02\x12\x19\n\x15QotMarket_US_Security\x10\x0b\x12\x1b\n\x17QotMarket_CNSH_Security\x10\x15\x12\x1b\n\x17QotMarket_CNSZ_Security\x10\x16\x12\x19\n\x15QotMarket_SG_Security\x10\x1f\x12\x19\n\x15QotMarket_JP_Security\x10)*\x9a\x02\n\x0cSecurityType\x12\x18\n\x14SecurityType_Unknown\x10\x00\x12\x15\n\x11SecurityType_Bond\x10\x01\x12\x15\n\x11SecurityType_Bwrt\x10\x02\x12\x15\n\x11SecurityType_Eqty\x10\x03\x12\x16\n\x12SecurityType_Trust\x10\x04\x12\x18\n\x14SecurityType_Warrant\x10\x05\x12\x16\n\x12SecurityType_Index\x10\x06\x12\x16\n\x12SecurityType_Plate\x10\x07\x12\x15\n\x11SecurityType_Drvt\x10\x08\x12\x19\n\x15SecurityType_PlateSet\x10\t\x12\x17\n\x13SecurityType_Future\x10\n*\x8a\x01\n\x0cPlateSetType\x12\x14\n\x10PlateSetType_All\x10\x00\x12\x19\n\x15PlateSetType_Industry\x10\x01\x12\x17\n\x13PlateSetType_Region\x10\x02\x12\x18\n\x14PlateSetType_Concept\x10\x03\x12\x16\n\x12PlateSetType_Other\x10\x04*\x95\x01\n\x0bWarrantType\x12\x17\n\x13WarrantType_Unknown\x10\x00\x12\x13\n\x0fWarrantType_Buy\x10\x01\x12\x14\n\x10WarrantType_Sell\x10\x02\x12\x14\n\x10WarrantType_Bull\x10\x03\x12\x14\n\x10WarrantType_Bear\x10\x04\x12\x16\n\x12WarrantType_InLine\x10\x05*M\n\nOptionType\x12\x16\n\x12OptionType_Unknown\x10\x00\x12\x13\n\x0fOptionType_Call\x10\x01\x12\x12\n\x0eOptionType_Put\x10\x02*e\n\x0fIndexOptionType\x12\x1b\n\x17IndexOptionType_Unknown\x10\x00\x12\x1a\n\x16IndexOptionType_Normal\x10\x01\x12\x19\n\x15IndexOptionType_Small\x10\x02*\x82\x01\n\x0eOptionAreaType\x12\x1a\n\x16OptionAreaType_Unknown\x10\x00\x12\x1b\n\x17OptionAreaType_American\x10\x01\x12\x1b\n\x17OptionAreaType_European\x10\x02\x12\x1a\n\x16OptionAreaType_Bermuda\x10\x03*\xa8\x07\n\x0eQotMarketState\x12\x17\n\x13QotMarketState_None\x10\x00\x12\x1a\n\x16QotMarketState_Auction\x10\x01\x12\x1e\n\x1aQotMarketState_WaitingOpen\x10\x02\x12\x1a\n\x16QotMarketState_Morning\x10\x03\x12\x17\n\x13QotMarketState_Rest\x10\x04\x12\x1c\n\x18QotMarketState_Afternoon\x10\x05\x12\x19\n\x15QotMarketState_Closed\x10\x06\x12!\n\x1dQotMarketState_PreMarketBegin\x10\x08\x12\x1f\n\x1bQotMarketState_PreMarketEnd\x10\t\x12\"\n\x1eQotMarketState_AfterHoursBegin\x10\n\x12 \n\x1cQotMarketState_AfterHoursEnd\x10\x0b\x12\x1c\n\x18QotMarketState_NightOpen\x10\r\x12\x1b\n\x17QotMarketState_NightEnd\x10\x0e\x12 \n\x1cQotMarketState_FutureDayOpen\x10\x0f\x12!\n\x1dQotMarketState_FutureDayBreak\x10\x10\x12!\n\x1dQotMarketState_FutureDayClose\x10\x11\x12\'\n#QotMarketState_FutureDayWaitForOpen\x10\x12\x12\x18\n\x14QotMarketState_HkCas\x10\x13\x12\"\n\x1eQotMarketState_FutureNightWait\x10\x14\x12\"\n\x1eQotMarketState_FutureAfternoon\x10\x15\x12#\n\x1fQotMarketState_FutureSwitchDate\x10\x16\x12\x1d\n\x19QotMarketState_FutureOpen\x10\x17\x12\x1e\n\x1aQotMarketState_FutureBreak\x10\x18\x12\"\n\x1eQotMarketState_FutureBreakOver\x10\x19\x12\x1e\n\x1aQotMarketState_FutureClose\x10\x1a\x12%\n!QotMarketState_StibAfterHoursWait\x10\x1b\x12&\n\"QotMarketState_StibAfterHoursBegin\x10\x1c\x12$\n QotMarketState_StibAfterHoursEnd\x10\x1d*\xe4\x01\n\x0fTradeDateMarket\x12\x1b\n\x17TradeDateMarket_Unknown\x10\x00\x12\x16\n\x12TradeDateMarket_HK\x10\x01\x12\x16\n\x12TradeDateMarket_US\x10\x02\x12\x16\n\x12TradeDateMarket_CN\x10\x03\x12\x16\n\x12TradeDateMarket_NT\x10\x04\x12\x16\n\x12TradeDateMarket_ST\x10\x05\x12\x1d\n\x19TradeDateMarket_JP_Future\x10\x06\x12\x1d\n\x19TradeDateMarket_SG_Future\x10\x07*`\n\rTradeDateType\x12\x17\n\x13TradeDateType_Whole\x10\x00\x12\x19\n\x15TradeDateType_Morning\x10\x01\x12\x1b\n\x17TradeDateType_Afternoon\x10\x02*N\n\tRehabType\x12\x12\n\x0eRehabType_None\x10\x00\x12\x15\n\x11RehabType_Forward\x10\x01\x12\x16\n\x12RehabType_Backward\x10\x02*\xdd\x01\n\x06KLType\x12\x12\n\x0eKLType_Unknown\x10\x00\x12\x0f\n\x0bKLType_1Min\x10\x01\x12\x0e\n\nKLType_Day\x10\x02\x12\x0f\n\x0bKLType_Week\x10\x03\x12\x10\n\x0cKLType_Month\x10\x04\x12\x0f\n\x0bKLType_Year\x10\x05\x12\x0f\n\x0bKLType_5Min\x10\x06\x12\x10\n\x0cKLType_15Min\x10\x07\x12\x10\n\x0cKLType_30Min\x10\x08\x12\x10\n\x0cKLType_60Min\x10\t\x12\x0f\n\x0bKLType_3Min\x10\n\x12\x12\n\x0eKLType_Quarter\x10\x0b*\xf5\x01\n\x08KLFields\x12\x11\n\rKLFields_None\x10\x00\x12\x11\n\rKLFields_High\x10\x01\x12\x11\n\rKLFields_Open\x10\x02\x12\x10\n\x0cKLFields_Low\x10\x04\x12\x12\n\x0eKLFields_Close\x10\x08\x12\x16\n\x12KLFields_LastClose\x10\x10\x12\x13\n\x0fKLFields_Volume\x10 \x12\x15\n\x11KLFields_Turnover\x10@\x12\x1a\n\x15KLFields_TurnoverRate\x10\x80\x01\x12\x10\n\x0bKLFields_PE\x10\x80\x02\x12\x18\n\x13KLFields_ChangeRate\x10\x80\x04*\xea\x02\n\x07SubType\x12\x10\n\x0cSubType_None\x10\x00\x12\x11\n\rSubType_Basic\x10\x01\x12\x15\n\x11SubType_OrderBook\x10\x02\x12\x12\n\x0eSubType_Ticker\x10\x04\x12\x0e\n\nSubType_RT\x10\x05\x12\x12\n\x0eSubType_KL_Day\x10\x06\x12\x13\n\x0fSubType_KL_5Min\x10\x07\x12\x14\n\x10SubType_KL_15Min\x10\x08\x12\x14\n\x10SubType_KL_30Min\x10\t\x12\x14\n\x10SubType_KL_60Min\x10\n\x12\x13\n\x0fSubType_KL_1Min\x10\x0b\x12\x13\n\x0fSubType_KL_Week\x10\x0c\x12\x14\n\x10SubType_KL_Month\x10\r\x12\x12\n\x0eSubType_Broker\x10\x0e\x12\x16\n\x12SubType_KL_Qurater\x10\x0f\x12\x13\n\x0fSubType_KL_Year\x10\x10\x12\x13\n\x0fSubType_KL_3Min\x10\x11*}\n\x0fTickerDirection\x12\x1b\n\x17TickerDirection_Unknown\x10\x00\x12\x17\n\x13TickerDirection_Bid\x10\x01\x12\x17\n\x13TickerDirection_Ask\x10\x02\x12\x1b\n\x17TickerDirection_Neutral\x10\x03*\x9c\x07\n\nTickerType\x12\x16\n\x12TickerType_Unknown\x10\x00\x12\x18\n\x14TickerType_Automatch\x10\x01\x12\x13\n\x0fTickerType_Late\x10\x02\x12\x1c\n\x18TickerType_NoneAutomatch\x10\x03\x12\x1d\n\x19TickerType_InterAutomatch\x10\x04\x12!\n\x1dTickerType_InterNoneAutomatch\x10\x05\x12\x15\n\x11TickerType_OddLot\x10\x06\x12\x16\n\x12TickerType_Auction\x10\x07\x12\x13\n\x0fTickerType_Bulk\x10\x08\x12\x14\n\x10TickerType_Crash\x10\t\x12\x1a\n\x16TickerType_CrossMarket\x10\n\x12\x17\n\x13TickerType_BulkSold\x10\x0b\x12\x1a\n\x16TickerType_FreeOnBoard\x10\x0c\x12\x1b\n\x17TickerType_Rule127Or155\x10\r\x12\x14\n\x10TickerType_Delay\x10\x0e\x12%\n!TickerType_MarketCenterClosePrice\x10\x0f\x12\x16\n\x12TickerType_NextDay\x10\x10\x12\"\n\x1eTickerType_MarketCenterOpening\x10\x11\x12\"\n\x1eTickerType_PriorReferencePrice\x10\x12\x12$\n TickerType_MarketCenterOpenPrice\x10\x13\x12\x15\n\x11TickerType_Seller\x10\x14\x12\x10\n\x0cTickerType_T\x10\x15\x12#\n\x1fTickerType_ExtendedTradingHours\x10\x16\x12\x19\n\x15TickerType_Contingent\x10\x17\x12\x17\n\x13TickerType_AvgPrice\x10\x18\x12\x16\n\x12TickerType_OTCSold\x10\x19\x12 \n\x1cTickerType_OddLotCrossMarket\x10\x1a\x12!\n\x1dTickerType_DerivativelyPriced\x10\x1b\x12\x1e\n\x1aTickerType_ReOpeningPriced\x10\x1c\x12\x1c\n\x18TickerType_ClosingPriced\x10\x1d\x12&\n\"TickerType_ComprehensiveDelayPrice\x10\x1e\x12\x17\n\x13TickerType_Overseas\x10\x1f*M\n\nDarkStatus\x12\x13\n\x0f\x44\x61rkStatus_None\x10\x00\x12\x16\n\x12\x44\x61rkStatus_Trading\x10\x01\x12\x12\n\x0e\x44\x61rkStatus_End\x10\x02*\x94\x06\n\x0eSecurityStatus\x12\x1a\n\x16SecurityStatus_Unknown\x10\x00\x12\x19\n\x15SecurityStatus_Normal\x10\x01\x12\x1a\n\x16SecurityStatus_Listing\x10\x02\x12\x1d\n\x19SecurityStatus_Purchasing\x10\x03\x12\x1e\n\x1aSecurityStatus_Subscribing\x10\x04\x12)\n%SecurityStatus_BeforeDrakTradeOpening\x10\x05\x12\x1e\n\x1aSecurityStatus_DrakTrading\x10\x06\x12\x1f\n\x1bSecurityStatus_DrakTradeEnd\x10\x07\x12\x1b\n\x17SecurityStatus_ToBeOpen\x10\x08\x12\x1c\n\x18SecurityStatus_Suspended\x10\t\x12\x19\n\x15SecurityStatus_Called\x10\n\x12)\n%SecurityStatus_ExpiredLastTradingDate\x10\x0b\x12\x1a\n\x16SecurityStatus_Expired\x10\x0c\x12\x1b\n\x17SecurityStatus_Delisted\x10\r\x12(\n$SecurityStatus_ChangeToTemporaryCode\x10\x0e\x12(\n$SecurityStatus_TemporaryCodeTradeEnd\x10\x0f\x12\'\n#SecurityStatus_ChangedPlateTradeEnd\x10\x10\x12&\n\"SecurityStatus_ChangedCodeTradeEnd\x10\x11\x12,\n(SecurityStatus_RecoverableCircuitBreaker\x10\x12\x12.\n*SecurityStatus_UnRecoverableCircuitBreaker\x10\x13\x12#\n\x1fSecurityStatus_AfterCombination\x10\x14\x12\"\n\x1eSecurityStatus_AfterTransation\x10\x15*\x81\x01\n\x0eHolderCategory\x12\x19\n\x15HolderCategory_Unknow\x10\x00\x12\x19\n\x15HolderCategory_Agency\x10\x01\x12\x17\n\x13HolderCategory_Fund\x10\x02\x12 \n\x1cHolderCategory_SeniorManager\x10\x03*v\n\x0cPushDataType\x12\x17\n\x13PushDataType_Unknow\x10\x00\x12\x19\n\x15PushDataType_Realtime\x10\x01\x12\x1a\n\x16PushDataType_ByDisConn\x10\x02\x12\x16\n\x12PushDataType_Cache\x10\x03*\xd3\n\n\tSortField\x12\x14\n\x10SortField_Unknow\x10\x00\x12\x12\n\x0eSortField_Code\x10\x01\x12\x16\n\x12SortField_CurPrice\x10\x02\x12\x1c\n\x18SortField_PriceChangeVal\x10\x03\x12\x18\n\x14SortField_ChangeRate\x10\x04\x12\x14\n\x10SortField_Status\x10\x05\x12\x16\n\x12SortField_BidPrice\x10\x06\x12\x16\n\x12SortField_AskPrice\x10\x07\x12\x14\n\x10SortField_BidVol\x10\x08\x12\x14\n\x10SortField_AskVol\x10\t\x12\x14\n\x10SortField_Volume\x10\n\x12\x16\n\x12SortField_Turnover\x10\x0b\x12\x17\n\x13SortField_Amplitude\x10\x1e\x12\x13\n\x0fSortField_Score\x10\x0c\x12\x15\n\x11SortField_Premium\x10\r\x12\x1f\n\x1bSortField_EffectiveLeverage\x10\x0e\x12\x13\n\x0fSortField_Delta\x10\x0f\x12\x1f\n\x1bSortField_ImpliedVolatility\x10\x10\x12\x12\n\x0eSortField_Type\x10\x11\x12\x19\n\x15SortField_StrikePrice\x10\x12\x12\x1c\n\x18SortField_BreakEvenPoint\x10\x13\x12\x1a\n\x16SortField_MaturityTime\x10\x14\x12\x16\n\x12SortField_ListTime\x10\x15\x12\x1b\n\x17SortField_LastTradeTime\x10\x16\x12\x16\n\x12SortField_Leverage\x10\x17\x12\x18\n\x14SortField_InOutMoney\x10\x18\x12\x1b\n\x17SortField_RecoveryPrice\x10\x19\x12\x19\n\x15SortField_ChangePrice\x10\x1a\x12\x14\n\x10SortField_Change\x10\x1b\x12\x18\n\x14SortField_StreetRate\x10\x1c\x12\x17\n\x13SortField_StreetVol\x10\x1d\x12\x19\n\x15SortField_WarrantName\x10\x1f\x12\x14\n\x10SortField_Issuer\x10 \x12\x15\n\x11SortField_LotSize\x10!\x12\x17\n\x13SortField_IssueSize\x10\"\x12\x1e\n\x1aSortField_UpperStrikePrice\x10-\x12\x1e\n\x1aSortField_LowerStrikePrice\x10.\x12\x1f\n\x1bSortField_InLinePriceStatus\x10/\x12\x19\n\x15SortField_PreCurPrice\x10#\x12\x1b\n\x17SortField_AfterCurPrice\x10$\x12\x1f\n\x1bSortField_PrePriceChangeVal\x10%\x12!\n\x1dSortField_AfterPriceChangeVal\x10&\x12\x1b\n\x17SortField_PreChangeRate\x10\'\x12\x1d\n\x19SortField_AfterChangeRate\x10(\x12\x1a\n\x16SortField_PreAmplitude\x10)\x12\x1c\n\x18SortField_AfterAmplitude\x10*\x12\x19\n\x15SortField_PreTurnover\x10+\x12\x1b\n\x17SortField_AfterTurnover\x10,\x12\x1d\n\x19SortField_LastSettlePrice\x10\x30\x12\x16\n\x12SortField_Position\x10\x31\x12\x1c\n\x18SortField_PositionChange\x10\x32*\x92\x03\n\x06Issuer\x12\x11\n\rIssuer_Unknow\x10\x00\x12\r\n\tIssuer_SG\x10\x01\x12\r\n\tIssuer_BP\x10\x02\x12\r\n\tIssuer_CS\x10\x03\x12\r\n\tIssuer_CT\x10\x04\x12\r\n\tIssuer_EA\x10\x05\x12\r\n\tIssuer_GS\x10\x06\x12\r\n\tIssuer_HS\x10\x07\x12\r\n\tIssuer_JP\x10\x08\x12\r\n\tIssuer_MB\x10\t\x12\r\n\tIssuer_SC\x10\n\x12\r\n\tIssuer_UB\x10\x0b\x12\r\n\tIssuer_BI\x10\x0c\x12\r\n\tIssuer_DB\x10\r\x12\r\n\tIssuer_DC\x10\x0e\x12\r\n\tIssuer_ML\x10\x0f\x12\r\n\tIssuer_NM\x10\x10\x12\r\n\tIssuer_RB\x10\x11\x12\r\n\tIssuer_RS\x10\x12\x12\r\n\tIssuer_BC\x10\x13\x12\r\n\tIssuer_HT\x10\x14\x12\r\n\tIssuer_VT\x10\x15\x12\r\n\tIssuer_KC\x10\x16\x12\r\n\tIssuer_MS\x10\x17\x12\r\n\tIssuer_GJ\x10\x18\x12\r\n\tIssuer_XZ\x10\x19*\x97\x01\n\tIpoPeriod\x12\x14\n\x10IpoPeriod_Unknow\x10\x00\x12\x13\n\x0fIpoPeriod_Today\x10\x01\x12\x16\n\x12IpoPeriod_Tomorrow\x10\x02\x12\x16\n\x12IpoPeriod_Nextweek\x10\x03\x12\x16\n\x12IpoPeriod_Lastweek\x10\x04\x12\x17\n\x13IpoPeriod_Lastmonth\x10\x05*N\n\tPriceType\x12\x14\n\x10PriceType_Unknow\x10\x00\x12\x15\n\x11PriceType_Outside\x10\x01\x12\x14\n\x10PriceType_WithIn\x10\x02*\x9d\x01\n\rWarrantStatus\x12\x18\n\x14WarrantStatus_Unknow\x10\x00\x12\x18\n\x14WarrantStatus_Normal\x10\x01\x12\x19\n\x15WarrantStatus_Suspend\x10\x02\x12\x1b\n\x17WarrantStatus_StopTrade\x10\x03\x12 \n\x1cWarrantStatus_PendingListing\x10\x04*\xda\x01\n\nCompanyAct\x12\x13\n\x0f\x43ompanyAct_None\x10\x00\x12\x14\n\x10\x43ompanyAct_Split\x10\x01\x12\x13\n\x0f\x43ompanyAct_Join\x10\x02\x12\x14\n\x10\x43ompanyAct_Bonus\x10\x04\x12\x17\n\x13\x43ompanyAct_Transfer\x10\x08\x12\x14\n\x10\x43ompanyAct_Allot\x10\x10\x12\x12\n\x0e\x43ompanyAct_Add\x10 \x12\x17\n\x13\x43ompanyAct_Dividend\x10@\x12\x1a\n\x15\x43ompanyAct_SPDividend\x10\x80\x01*}\n\x08QotRight\x12\x13\n\x0fQotRight_Unknow\x10\x00\x12\x10\n\x0cQotRight_Bmp\x10\x01\x12\x13\n\x0fQotRight_Level1\x10\x02\x12\x13\n\x0fQotRight_Level2\x10\x03\x12\x0f\n\x0bQotRight_SF\x10\x04\x12\x0f\n\x0bQotRight_No\x10\x05*\xce\x04\n\x11PriceReminderType\x12\x1d\n\x19PriceReminderType_Unknown\x10\x00\x12\x1d\n\x19PriceReminderType_PriceUp\x10\x01\x12\x1f\n\x1bPriceReminderType_PriceDown\x10\x02\x12\"\n\x1ePriceReminderType_ChangeRateUp\x10\x03\x12$\n PriceReminderType_ChangeRateDown\x10\x04\x12&\n\"PriceReminderType_5MinChangeRateUp\x10\x05\x12(\n$PriceReminderType_5MinChangeRateDown\x10\x06\x12\x1e\n\x1aPriceReminderType_VolumeUp\x10\x07\x12 \n\x1cPriceReminderType_TurnoverUp\x10\x08\x12$\n PriceReminderType_TurnoverRateUp\x10\t\x12 \n\x1cPriceReminderType_BidPriceUp\x10\n\x12\"\n\x1ePriceReminderType_AskPriceDown\x10\x0b\x12\x1e\n\x1aPriceReminderType_BidVolUp\x10\x0c\x12\x1e\n\x1aPriceReminderType_AskVolUp\x10\r\x12&\n\"PriceReminderType_3MinChangeRateUp\x10\x0e\x12(\n$PriceReminderType_3MinChangeRateDown\x10\x0f*\x90\x01\n\x11PriceReminderFreq\x12\x1d\n\x19PriceReminderFreq_Unknown\x10\x00\x12\x1c\n\x18PriceReminderFreq_Always\x10\x01\x12\x1e\n\x1aPriceReminderFreq_OnceADay\x10\x02\x12\x1e\n\x1aPriceReminderFreq_OnlyOnce\x10\x03*\xb3\x01\n\nAssetClass\x12\x15\n\x11\x41ssetClass_Unknow\x10\x00\x12\x14\n\x10\x41ssetClass_Stock\x10\x01\x12\x13\n\x0f\x41ssetClass_Bond\x10\x02\x12\x18\n\x14\x41ssetClass_Commodity\x10\x03\x12\x1d\n\x19\x41ssetClass_CurrencyMarket\x10\x04\x12\x15\n\x11\x41ssetClass_Future\x10\x05\x12\x13\n\x0f\x41ssetClass_Swap\x10\x06*c\n\x0f\x45xpirationCycle\x12\x1b\n\x17\x45xpirationCycle_Unknown\x10\x00\x12\x18\n\x14\x45xpirationCycle_Week\x10\x01\x12\x19\n\x15\x45xpirationCycle_Month\x10\x02*\xb4\x03\n\x08\x45xchType\x12\x14\n\x10\x45xchType_Unknown\x10\x00\x12\x19\n\x15\x45xchType_HK_MainBoard\x10\x01\x12\x18\n\x14\x45xchType_HK_GEMBoard\x10\x02\x12\x14\n\x10\x45xchType_HK_HKEX\x10\x03\x12\x14\n\x10\x45xchType_US_NYSE\x10\x04\x12\x16\n\x12\x45xchType_US_Nasdaq\x10\x05\x12\x14\n\x10\x45xchType_US_Pink\x10\x06\x12\x14\n\x10\x45xchType_US_AMEX\x10\x07\x12\x16\n\x12\x45xchType_US_Option\x10\x08\x12\x15\n\x11\x45xchType_US_NYMEX\x10\t\x12\x15\n\x11\x45xchType_US_COMEX\x10\n\x12\x14\n\x10\x45xchType_US_CBOT\x10\x0b\x12\x13\n\x0f\x45xchType_US_CME\x10\x0c\x12\x14\n\x10\x45xchType_US_CBOE\x10\r\x12\x12\n\x0e\x45xchType_CN_SH\x10\x0e\x12\x12\n\x0e\x45xchType_CN_SZ\x10\x0f\x12\x14\n\x10\x45xchType_CN_STIB\x10\x10\x12\x13\n\x0f\x45xchType_SG_SGX\x10\x11\x12\x13\n\x0f\x45xchType_JP_OSE\x10\x12*|\n\nPeriodType\x12\x16\n\x12PeriodType_Unknown\x10\x00\x12\x17\n\x13PeriodType_INTRADAY\x10\x01\x12\x12\n\x0ePeriodType_DAY\x10\x02\x12\x13\n\x0fPeriodType_WEEK\x10\x03\x12\x14\n\x10PeriodType_MONTH\x10\x04\x42@\n\x13\x63om.futu.openapi.pbZ)github.com/futuopen/ftapi4go/pb/qotcommon')
+  serialized_pb=_b('\n\x10Qot_Common.proto\x12\nQot_Common\x1a\x0c\x43ommon.proto\"(\n\x08Security\x12\x0e\n\x06market\x18\x01 \x02(\x05\x12\x0c\n\x04\x63ode\x18\x02 \x02(\t\"\xf5\x01\n\x05KLine\x12\x0c\n\x04time\x18\x01 \x02(\t\x12\x0f\n\x07isBlank\x18\x02 \x02(\x08\x12\x11\n\thighPrice\x18\x03 \x01(\x01\x12\x11\n\topenPrice\x18\x04 \x01(\x01\x12\x10\n\x08lowPrice\x18\x05 \x01(\x01\x12\x12\n\nclosePrice\x18\x06 \x01(\x01\x12\x16\n\x0elastClosePrice\x18\x07 \x01(\x01\x12\x0e\n\x06volume\x18\x08 \x01(\x03\x12\x10\n\x08turnover\x18\t \x01(\x01\x12\x14\n\x0cturnoverRate\x18\n \x01(\x01\x12\n\n\x02pe\x18\x0b \x01(\x01\x12\x12\n\nchangeRate\x18\x0c \x01(\x01\x12\x11\n\ttimestamp\x18\r \x01(\x01\"\xa2\x03\n\x14OptionBasicQotExData\x12\x13\n\x0bstrikePrice\x18\x01 \x02(\x01\x12\x14\n\x0c\x63ontractSize\x18\x02 \x02(\x05\x12\x19\n\x11\x63ontractSizeFloat\x18\x11 \x01(\x01\x12\x14\n\x0copenInterest\x18\x03 \x02(\x05\x12\x19\n\x11impliedVolatility\x18\x04 \x02(\x01\x12\x0f\n\x07premium\x18\x05 \x02(\x01\x12\r\n\x05\x64\x65lta\x18\x06 \x02(\x01\x12\r\n\x05gamma\x18\x07 \x02(\x01\x12\x0c\n\x04vega\x18\x08 \x02(\x01\x12\r\n\x05theta\x18\t \x02(\x01\x12\x0b\n\x03rho\x18\n \x02(\x01\x12\x17\n\x0fnetOpenInterest\x18\x0b \x01(\x05\x12\x1a\n\x12\x65xpiryDateDistance\x18\x0c \x01(\x05\x12\x1c\n\x14\x63ontractNominalValue\x18\r \x01(\x01\x12\x1a\n\x12ownerLotMultiplier\x18\x0e \x01(\x01\x12\x16\n\x0eoptionAreaType\x18\x0f \x01(\x05\x12\x1a\n\x12\x63ontractMultiplier\x18\x10 \x01(\x01\x12\x17\n\x0findexOptionType\x18\x12 \x01(\x05\"\xa4\x01\n\x12PreAfterMarketData\x12\r\n\x05price\x18\x01 \x01(\x01\x12\x11\n\thighPrice\x18\x02 \x01(\x01\x12\x10\n\x08lowPrice\x18\x03 \x01(\x01\x12\x0e\n\x06volume\x18\x04 \x01(\x03\x12\x10\n\x08turnover\x18\x05 \x01(\x01\x12\x11\n\tchangeVal\x18\x06 \x01(\x01\x12\x12\n\nchangeRate\x18\x07 \x01(\x01\x12\x11\n\tamplitude\x18\x08 \x01(\x01\"u\n\x14\x46utureBasicQotExData\x12\x17\n\x0flastSettlePrice\x18\x01 \x02(\x01\x12\x10\n\x08position\x18\x02 \x02(\x05\x12\x16\n\x0epositionChange\x18\x03 \x02(\x05\x12\x1a\n\x12\x65xpiryDateDistance\x18\x04 \x01(\x05\"R\n\x15WarrantBasicQotExData\x12\r\n\x05\x64\x65lta\x18\x01 \x01(\x01\x12\x19\n\x11impliedVolatility\x18\x02 \x01(\x01\x12\x0f\n\x07premium\x18\x03 \x02(\x01\"\xd9\x05\n\x08\x42\x61sicQot\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x18 \x01(\t\x12\x13\n\x0bisSuspended\x18\x02 \x02(\x08\x12\x10\n\x08listTime\x18\x03 \x02(\t\x12\x13\n\x0bpriceSpread\x18\x04 \x02(\x01\x12\x12\n\nupdateTime\x18\x05 \x02(\t\x12\x11\n\thighPrice\x18\x06 \x02(\x01\x12\x11\n\topenPrice\x18\x07 \x02(\x01\x12\x10\n\x08lowPrice\x18\x08 \x02(\x01\x12\x10\n\x08\x63urPrice\x18\t \x02(\x01\x12\x16\n\x0elastClosePrice\x18\n \x02(\x01\x12\x0e\n\x06volume\x18\x0b \x02(\x03\x12\x10\n\x08turnover\x18\x0c \x02(\x01\x12\x14\n\x0cturnoverRate\x18\r \x02(\x01\x12\x11\n\tamplitude\x18\x0e \x02(\x01\x12\x12\n\ndarkStatus\x18\x0f \x01(\x05\x12\x36\n\x0coptionExData\x18\x10 \x01(\x0b\x32 .Qot_Common.OptionBasicQotExData\x12\x15\n\rlistTimestamp\x18\x11 \x01(\x01\x12\x17\n\x0fupdateTimestamp\x18\x12 \x01(\x01\x12\x31\n\tpreMarket\x18\x13 \x01(\x0b\x32\x1e.Qot_Common.PreAfterMarketData\x12\x33\n\x0b\x61\x66terMarket\x18\x14 \x01(\x0b\x32\x1e.Qot_Common.PreAfterMarketData\x12\x11\n\tsecStatus\x18\x15 \x01(\x05\x12\x36\n\x0c\x66utureExData\x18\x16 \x01(\x0b\x32 .Qot_Common.FutureBasicQotExData\x12\x38\n\rwarrantExData\x18\x17 \x01(\x0b\x32!.Qot_Common.WarrantBasicQotExData\x12\x31\n\tovernight\x18\x19 \x01(\x0b\x32\x1e.Qot_Common.PreAfterMarketData\"\xa8\x01\n\tTimeShare\x12\x0c\n\x04time\x18\x01 \x02(\t\x12\x0e\n\x06minute\x18\x02 \x02(\x05\x12\x0f\n\x07isBlank\x18\x03 \x02(\x08\x12\r\n\x05price\x18\x04 \x01(\x01\x12\x16\n\x0elastClosePrice\x18\x05 \x01(\x01\x12\x10\n\x08\x61vgPrice\x18\x06 \x01(\x01\x12\x0e\n\x06volume\x18\x07 \x01(\x03\x12\x10\n\x08turnover\x18\x08 \x01(\x01\x12\x11\n\ttimestamp\x18\t \x01(\x01\"\xc7\x01\n\x13SecurityStaticBasic\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\n\n\x02id\x18\x02 \x02(\x03\x12\x0f\n\x07lotSize\x18\x03 \x02(\x05\x12\x0f\n\x07secType\x18\x04 \x02(\x05\x12\x0c\n\x04name\x18\x05 \x02(\t\x12\x10\n\x08listTime\x18\x06 \x02(\t\x12\x11\n\tdelisting\x18\x07 \x01(\x08\x12\x15\n\rlistTimestamp\x18\x08 \x01(\x01\x12\x10\n\x08\x65xchType\x18\t \x01(\x05\"H\n\x13WarrantStaticExData\x12\x0c\n\x04type\x18\x01 \x02(\x05\x12#\n\x05owner\x18\x02 \x02(\x0b\x32\x14.Qot_Common.Security\"\x96\x02\n\x12OptionStaticExData\x12\x0c\n\x04type\x18\x01 \x02(\x05\x12#\n\x05owner\x18\x02 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x12\n\nstrikeTime\x18\x03 \x02(\t\x12\x13\n\x0bstrikePrice\x18\x04 \x02(\x01\x12\x0f\n\x07suspend\x18\x05 \x02(\x08\x12\x0e\n\x06market\x18\x06 \x02(\t\x12\x17\n\x0fstrikeTimestamp\x18\x07 \x01(\x01\x12\x17\n\x0findexOptionType\x18\x08 \x01(\x05\x12\x17\n\x0f\x65xpirationCycle\x18\t \x01(\x05\x12\x1a\n\x12optionStandardType\x18\n \x01(\x05\x12\x1c\n\x14optionSettlementMode\x18\x0b \x01(\x05\"_\n\x12\x46utureStaticExData\x12\x15\n\rlastTradeTime\x18\x01 \x02(\t\x12\x1a\n\x12lastTradeTimestamp\x18\x02 \x01(\x01\x12\x16\n\x0eisMainContract\x18\x03 \x02(\x08\"\xe8\x01\n\x12SecurityStaticInfo\x12.\n\x05\x62\x61sic\x18\x01 \x02(\x0b\x32\x1f.Qot_Common.SecurityStaticBasic\x12\x36\n\rwarrantExData\x18\x02 \x01(\x0b\x32\x1f.Qot_Common.WarrantStaticExData\x12\x34\n\x0coptionExData\x18\x03 \x01(\x0b\x32\x1e.Qot_Common.OptionStaticExData\x12\x34\n\x0c\x66utureExData\x18\x04 \x01(\x0b\x32\x1e.Qot_Common.FutureStaticExData\"P\n\x06\x42roker\x12\n\n\x02id\x18\x01 \x02(\x03\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x0b\n\x03pos\x18\x03 \x02(\x05\x12\x0f\n\x07orderID\x18\x04 \x01(\x03\x12\x0e\n\x06volume\x18\x05 \x01(\x03\"\xc1\x01\n\x06Ticker\x12\x0c\n\x04time\x18\x01 \x02(\t\x12\x10\n\x08sequence\x18\x02 \x02(\x03\x12\x0b\n\x03\x64ir\x18\x03 \x02(\x05\x12\r\n\x05price\x18\x04 \x02(\x01\x12\x0e\n\x06volume\x18\x05 \x02(\x03\x12\x10\n\x08turnover\x18\x06 \x02(\x01\x12\x10\n\x08recvTime\x18\x07 \x01(\x01\x12\x0c\n\x04type\x18\x08 \x01(\x05\x12\x10\n\x08typeSign\x18\t \x01(\x05\x12\x14\n\x0cpushDataType\x18\n \x01(\x05\x12\x11\n\ttimestamp\x18\x0b \x01(\x01\"2\n\x0fOrderBookDetail\x12\x0f\n\x07orderID\x18\x01 \x02(\x03\x12\x0e\n\x06volume\x18\x02 \x02(\x03\"p\n\tOrderBook\x12\r\n\x05price\x18\x01 \x02(\x01\x12\x0e\n\x06volume\x18\x02 \x02(\x03\x12\x13\n\x0borederCount\x18\x03 \x02(\x05\x12/\n\ndetailList\x18\x04 \x03(\x0b\x32\x1b.Qot_Common.OrderBookDetail\"\x9b\x01\n\x12ShareHoldingChange\x12\x12\n\nholderName\x18\x01 \x02(\t\x12\x12\n\nholdingQty\x18\x02 \x02(\x01\x12\x14\n\x0choldingRatio\x18\x03 \x02(\x01\x12\x11\n\tchangeQty\x18\x04 \x02(\x01\x12\x13\n\x0b\x63hangeRatio\x18\x05 \x02(\x01\x12\x0c\n\x04time\x18\x06 \x02(\t\x12\x11\n\ttimestamp\x18\x07 \x01(\x01\"F\n\x07SubInfo\x12\x0f\n\x07subType\x18\x01 \x02(\x05\x12*\n\x0csecurityList\x18\x02 \x03(\x0b\x32\x14.Qot_Common.Security\"a\n\x0b\x43onnSubInfo\x12(\n\x0bsubInfoList\x18\x01 \x03(\x0b\x32\x13.Qot_Common.SubInfo\x12\x11\n\tusedQuota\x18\x02 \x02(\x05\x12\x15\n\risOwnConnData\x18\x03 \x02(\x08\"Q\n\tPlateInfo\x12#\n\x05plate\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x11\n\tplateType\x18\x03 \x01(\x05\"\xba\x03\n\x05Rehab\x12\x0c\n\x04time\x18\x01 \x02(\t\x12\x16\n\x0e\x63ompanyActFlag\x18\x02 \x02(\x03\x12\x12\n\nfwdFactorA\x18\x03 \x02(\x01\x12\x12\n\nfwdFactorB\x18\x04 \x02(\x01\x12\x12\n\nbwdFactorA\x18\x05 \x02(\x01\x12\x12\n\nbwdFactorB\x18\x06 \x02(\x01\x12\x11\n\tsplitBase\x18\x07 \x01(\x05\x12\x10\n\x08splitErt\x18\x08 \x01(\x05\x12\x10\n\x08joinBase\x18\t \x01(\x05\x12\x0f\n\x07joinErt\x18\n \x01(\x05\x12\x11\n\tbonusBase\x18\x0b \x01(\x05\x12\x10\n\x08\x62onusErt\x18\x0c \x01(\x05\x12\x14\n\x0ctransferBase\x18\r \x01(\x05\x12\x13\n\x0btransferErt\x18\x0e \x01(\x05\x12\x11\n\tallotBase\x18\x0f \x01(\x05\x12\x10\n\x08\x61llotErt\x18\x10 \x01(\x05\x12\x12\n\nallotPrice\x18\x11 \x01(\x01\x12\x0f\n\x07\x61\x64\x64\x42\x61se\x18\x12 \x01(\x05\x12\x0e\n\x06\x61\x64\x64\x45rt\x18\x13 \x01(\x05\x12\x10\n\x08\x61\x64\x64Price\x18\x14 \x01(\x01\x12\x10\n\x08\x64ividend\x18\x15 \x01(\x01\x12\x12\n\nspDividend\x18\x16 \x01(\x01\x12\x11\n\ttimestamp\x18\x17 \x01(\x01*\xcd\x02\n\tQotMarket\x12\x15\n\x11QotMarket_Unknown\x10\x00\x12\x19\n\x15QotMarket_HK_Security\x10\x01\x12\x17\n\x13QotMarket_HK_Future\x10\x02\x12\x19\n\x15QotMarket_US_Security\x10\x0b\x12\x1b\n\x17QotMarket_CNSH_Security\x10\x15\x12\x1b\n\x17QotMarket_CNSZ_Security\x10\x16\x12\x19\n\x15QotMarket_SG_Security\x10\x1f\x12\x19\n\x15QotMarket_JP_Security\x10)\x12\x19\n\x15QotMarket_AU_Security\x10\x33\x12\x19\n\x15QotMarket_MY_Security\x10=\x12\x19\n\x15QotMarket_CA_Security\x10G\x12\x19\n\x15QotMarket_FX_Security\x10Q*\x9a\x02\n\x0cSecurityType\x12\x18\n\x14SecurityType_Unknown\x10\x00\x12\x15\n\x11SecurityType_Bond\x10\x01\x12\x15\n\x11SecurityType_Bwrt\x10\x02\x12\x15\n\x11SecurityType_Eqty\x10\x03\x12\x16\n\x12SecurityType_Trust\x10\x04\x12\x18\n\x14SecurityType_Warrant\x10\x05\x12\x16\n\x12SecurityType_Index\x10\x06\x12\x16\n\x12SecurityType_Plate\x10\x07\x12\x15\n\x11SecurityType_Drvt\x10\x08\x12\x19\n\x15SecurityType_PlateSet\x10\t\x12\x17\n\x13SecurityType_Future\x10\n*\x8a\x01\n\x0cPlateSetType\x12\x14\n\x10PlateSetType_All\x10\x00\x12\x19\n\x15PlateSetType_Industry\x10\x01\x12\x17\n\x13PlateSetType_Region\x10\x02\x12\x18\n\x14PlateSetType_Concept\x10\x03\x12\x16\n\x12PlateSetType_Other\x10\x04*\x95\x01\n\x0bWarrantType\x12\x17\n\x13WarrantType_Unknown\x10\x00\x12\x13\n\x0fWarrantType_Buy\x10\x01\x12\x14\n\x10WarrantType_Sell\x10\x02\x12\x14\n\x10WarrantType_Bull\x10\x03\x12\x14\n\x10WarrantType_Bear\x10\x04\x12\x16\n\x12WarrantType_InLine\x10\x05*M\n\nOptionType\x12\x16\n\x12OptionType_Unknown\x10\x00\x12\x13\n\x0fOptionType_Call\x10\x01\x12\x12\n\x0eOptionType_Put\x10\x02*e\n\x0fIndexOptionType\x12\x1b\n\x17IndexOptionType_Unknown\x10\x00\x12\x1a\n\x16IndexOptionType_Normal\x10\x01\x12\x19\n\x15IndexOptionType_Small\x10\x02*\x82\x01\n\x0eOptionAreaType\x12\x1a\n\x16OptionAreaType_Unknown\x10\x00\x12\x1b\n\x17OptionAreaType_American\x10\x01\x12\x1b\n\x17OptionAreaType_European\x10\x02\x12\x1a\n\x16OptionAreaType_Bermuda\x10\x03*\xd3\t\n\x0eQotMarketState\x12\x17\n\x13QotMarketState_None\x10\x00\x12\x1a\n\x16QotMarketState_Auction\x10\x01\x12\x1e\n\x1aQotMarketState_WaitingOpen\x10\x02\x12\x1a\n\x16QotMarketState_Morning\x10\x03\x12\x17\n\x13QotMarketState_Rest\x10\x04\x12\x1c\n\x18QotMarketState_Afternoon\x10\x05\x12\x19\n\x15QotMarketState_Closed\x10\x06\x12!\n\x1dQotMarketState_PreMarketBegin\x10\x08\x12\x1f\n\x1bQotMarketState_PreMarketEnd\x10\t\x12\"\n\x1eQotMarketState_AfterHoursBegin\x10\n\x12 \n\x1cQotMarketState_AfterHoursEnd\x10\x0b\x12#\n\x1fQotMarketState_FUTU_SWITCH_DATE\x10\x0c\x12\x1c\n\x18QotMarketState_NightOpen\x10\r\x12\x1b\n\x17QotMarketState_NightEnd\x10\x0e\x12 \n\x1cQotMarketState_FutureDayOpen\x10\x0f\x12!\n\x1dQotMarketState_FutureDayBreak\x10\x10\x12!\n\x1dQotMarketState_FutureDayClose\x10\x11\x12\'\n#QotMarketState_FutureDayWaitForOpen\x10\x12\x12\x18\n\x14QotMarketState_HkCas\x10\x13\x12\"\n\x1eQotMarketState_FutureNightWait\x10\x14\x12\"\n\x1eQotMarketState_FutureAfternoon\x10\x15\x12#\n\x1fQotMarketState_FutureSwitchDate\x10\x16\x12\x1d\n\x19QotMarketState_FutureOpen\x10\x17\x12\x1e\n\x1aQotMarketState_FutureBreak\x10\x18\x12\"\n\x1eQotMarketState_FutureBreakOver\x10\x19\x12\x1e\n\x1aQotMarketState_FutureClose\x10\x1a\x12%\n!QotMarketState_StibAfterHoursWait\x10\x1b\x12&\n\"QotMarketState_StibAfterHoursBegin\x10\x1c\x12$\n QotMarketState_StibAfterHoursEnd\x10\x1d\x12 \n\x1cQotMarketState_CLOSE_AUCTION\x10\x1e\x12 \n\x1cQotMarketState_AFTERNOON_END\x10\x1f\x12\x18\n\x14QotMarketState_NIGHT\x10 \x12\"\n\x1eQotMarketState_OVERNIGHT_BEGIN\x10!\x12 \n\x1cQotMarketState_OVERNIGHT_END\x10\"\x12 \n\x1cQotMarketState_TRADE_AT_LAST\x10#\x12 \n\x1cQotMarketState_TRADE_AUCTION\x10$\x12\x1c\n\x18QotMarketState_OVERNIGHT\x10%*\xe4\x01\n\x0fTradeDateMarket\x12\x1b\n\x17TradeDateMarket_Unknown\x10\x00\x12\x16\n\x12TradeDateMarket_HK\x10\x01\x12\x16\n\x12TradeDateMarket_US\x10\x02\x12\x16\n\x12TradeDateMarket_CN\x10\x03\x12\x16\n\x12TradeDateMarket_NT\x10\x04\x12\x16\n\x12TradeDateMarket_ST\x10\x05\x12\x1d\n\x19TradeDateMarket_JP_Future\x10\x06\x12\x1d\n\x19TradeDateMarket_SG_Future\x10\x07*`\n\rTradeDateType\x12\x17\n\x13TradeDateType_Whole\x10\x00\x12\x19\n\x15TradeDateType_Morning\x10\x01\x12\x1b\n\x17TradeDateType_Afternoon\x10\x02*N\n\tRehabType\x12\x12\n\x0eRehabType_None\x10\x00\x12\x15\n\x11RehabType_Forward\x10\x01\x12\x16\n\x12RehabType_Backward\x10\x02*\xdd\x01\n\x06KLType\x12\x12\n\x0eKLType_Unknown\x10\x00\x12\x0f\n\x0bKLType_1Min\x10\x01\x12\x0e\n\nKLType_Day\x10\x02\x12\x0f\n\x0bKLType_Week\x10\x03\x12\x10\n\x0cKLType_Month\x10\x04\x12\x0f\n\x0bKLType_Year\x10\x05\x12\x0f\n\x0bKLType_5Min\x10\x06\x12\x10\n\x0cKLType_15Min\x10\x07\x12\x10\n\x0cKLType_30Min\x10\x08\x12\x10\n\x0cKLType_60Min\x10\t\x12\x0f\n\x0bKLType_3Min\x10\n\x12\x12\n\x0eKLType_Quarter\x10\x0b*\xf5\x01\n\x08KLFields\x12\x11\n\rKLFields_None\x10\x00\x12\x11\n\rKLFields_High\x10\x01\x12\x11\n\rKLFields_Open\x10\x02\x12\x10\n\x0cKLFields_Low\x10\x04\x12\x12\n\x0eKLFields_Close\x10\x08\x12\x16\n\x12KLFields_LastClose\x10\x10\x12\x13\n\x0fKLFields_Volume\x10 \x12\x15\n\x11KLFields_Turnover\x10@\x12\x1a\n\x15KLFields_TurnoverRate\x10\x80\x01\x12\x10\n\x0bKLFields_PE\x10\x80\x02\x12\x18\n\x13KLFields_ChangeRate\x10\x80\x04*\xea\x02\n\x07SubType\x12\x10\n\x0cSubType_None\x10\x00\x12\x11\n\rSubType_Basic\x10\x01\x12\x15\n\x11SubType_OrderBook\x10\x02\x12\x12\n\x0eSubType_Ticker\x10\x04\x12\x0e\n\nSubType_RT\x10\x05\x12\x12\n\x0eSubType_KL_Day\x10\x06\x12\x13\n\x0fSubType_KL_5Min\x10\x07\x12\x14\n\x10SubType_KL_15Min\x10\x08\x12\x14\n\x10SubType_KL_30Min\x10\t\x12\x14\n\x10SubType_KL_60Min\x10\n\x12\x13\n\x0fSubType_KL_1Min\x10\x0b\x12\x13\n\x0fSubType_KL_Week\x10\x0c\x12\x14\n\x10SubType_KL_Month\x10\r\x12\x12\n\x0eSubType_Broker\x10\x0e\x12\x16\n\x12SubType_KL_Qurater\x10\x0f\x12\x13\n\x0fSubType_KL_Year\x10\x10\x12\x13\n\x0fSubType_KL_3Min\x10\x11*}\n\x0fTickerDirection\x12\x1b\n\x17TickerDirection_Unknown\x10\x00\x12\x17\n\x13TickerDirection_Bid\x10\x01\x12\x17\n\x13TickerDirection_Ask\x10\x02\x12\x1b\n\x17TickerDirection_Neutral\x10\x03*\x9c\x07\n\nTickerType\x12\x16\n\x12TickerType_Unknown\x10\x00\x12\x18\n\x14TickerType_Automatch\x10\x01\x12\x13\n\x0fTickerType_Late\x10\x02\x12\x1c\n\x18TickerType_NoneAutomatch\x10\x03\x12\x1d\n\x19TickerType_InterAutomatch\x10\x04\x12!\n\x1dTickerType_InterNoneAutomatch\x10\x05\x12\x15\n\x11TickerType_OddLot\x10\x06\x12\x16\n\x12TickerType_Auction\x10\x07\x12\x13\n\x0fTickerType_Bulk\x10\x08\x12\x14\n\x10TickerType_Crash\x10\t\x12\x1a\n\x16TickerType_CrossMarket\x10\n\x12\x17\n\x13TickerType_BulkSold\x10\x0b\x12\x1a\n\x16TickerType_FreeOnBoard\x10\x0c\x12\x1b\n\x17TickerType_Rule127Or155\x10\r\x12\x14\n\x10TickerType_Delay\x10\x0e\x12%\n!TickerType_MarketCenterClosePrice\x10\x0f\x12\x16\n\x12TickerType_NextDay\x10\x10\x12\"\n\x1eTickerType_MarketCenterOpening\x10\x11\x12\"\n\x1eTickerType_PriorReferencePrice\x10\x12\x12$\n TickerType_MarketCenterOpenPrice\x10\x13\x12\x15\n\x11TickerType_Seller\x10\x14\x12\x10\n\x0cTickerType_T\x10\x15\x12#\n\x1fTickerType_ExtendedTradingHours\x10\x16\x12\x19\n\x15TickerType_Contingent\x10\x17\x12\x17\n\x13TickerType_AvgPrice\x10\x18\x12\x16\n\x12TickerType_OTCSold\x10\x19\x12 \n\x1cTickerType_OddLotCrossMarket\x10\x1a\x12!\n\x1dTickerType_DerivativelyPriced\x10\x1b\x12\x1e\n\x1aTickerType_ReOpeningPriced\x10\x1c\x12\x1c\n\x18TickerType_ClosingPriced\x10\x1d\x12&\n\"TickerType_ComprehensiveDelayPrice\x10\x1e\x12\x17\n\x13TickerType_Overseas\x10\x1f*M\n\nDarkStatus\x12\x13\n\x0f\x44\x61rkStatus_None\x10\x00\x12\x16\n\x12\x44\x61rkStatus_Trading\x10\x01\x12\x12\n\x0e\x44\x61rkStatus_End\x10\x02*\x94\x06\n\x0eSecurityStatus\x12\x1a\n\x16SecurityStatus_Unknown\x10\x00\x12\x19\n\x15SecurityStatus_Normal\x10\x01\x12\x1a\n\x16SecurityStatus_Listing\x10\x02\x12\x1d\n\x19SecurityStatus_Purchasing\x10\x03\x12\x1e\n\x1aSecurityStatus_Subscribing\x10\x04\x12)\n%SecurityStatus_BeforeDrakTradeOpening\x10\x05\x12\x1e\n\x1aSecurityStatus_DrakTrading\x10\x06\x12\x1f\n\x1bSecurityStatus_DrakTradeEnd\x10\x07\x12\x1b\n\x17SecurityStatus_ToBeOpen\x10\x08\x12\x1c\n\x18SecurityStatus_Suspended\x10\t\x12\x19\n\x15SecurityStatus_Called\x10\n\x12)\n%SecurityStatus_ExpiredLastTradingDate\x10\x0b\x12\x1a\n\x16SecurityStatus_Expired\x10\x0c\x12\x1b\n\x17SecurityStatus_Delisted\x10\r\x12(\n$SecurityStatus_ChangeToTemporaryCode\x10\x0e\x12(\n$SecurityStatus_TemporaryCodeTradeEnd\x10\x0f\x12\'\n#SecurityStatus_ChangedPlateTradeEnd\x10\x10\x12&\n\"SecurityStatus_ChangedCodeTradeEnd\x10\x11\x12,\n(SecurityStatus_RecoverableCircuitBreaker\x10\x12\x12.\n*SecurityStatus_UnRecoverableCircuitBreaker\x10\x13\x12#\n\x1fSecurityStatus_AfterCombination\x10\x14\x12\"\n\x1eSecurityStatus_AfterTransation\x10\x15*\x81\x01\n\x0eHolderCategory\x12\x19\n\x15HolderCategory_Unknow\x10\x00\x12\x19\n\x15HolderCategory_Agency\x10\x01\x12\x17\n\x13HolderCategory_Fund\x10\x02\x12 \n\x1cHolderCategory_SeniorManager\x10\x03*v\n\x0cPushDataType\x12\x17\n\x13PushDataType_Unknow\x10\x00\x12\x19\n\x15PushDataType_Realtime\x10\x01\x12\x1a\n\x16PushDataType_ByDisConn\x10\x02\x12\x16\n\x12PushDataType_Cache\x10\x03*\xd3\n\n\tSortField\x12\x14\n\x10SortField_Unknow\x10\x00\x12\x12\n\x0eSortField_Code\x10\x01\x12\x16\n\x12SortField_CurPrice\x10\x02\x12\x1c\n\x18SortField_PriceChangeVal\x10\x03\x12\x18\n\x14SortField_ChangeRate\x10\x04\x12\x14\n\x10SortField_Status\x10\x05\x12\x16\n\x12SortField_BidPrice\x10\x06\x12\x16\n\x12SortField_AskPrice\x10\x07\x12\x14\n\x10SortField_BidVol\x10\x08\x12\x14\n\x10SortField_AskVol\x10\t\x12\x14\n\x10SortField_Volume\x10\n\x12\x16\n\x12SortField_Turnover\x10\x0b\x12\x17\n\x13SortField_Amplitude\x10\x1e\x12\x13\n\x0fSortField_Score\x10\x0c\x12\x15\n\x11SortField_Premium\x10\r\x12\x1f\n\x1bSortField_EffectiveLeverage\x10\x0e\x12\x13\n\x0fSortField_Delta\x10\x0f\x12\x1f\n\x1bSortField_ImpliedVolatility\x10\x10\x12\x12\n\x0eSortField_Type\x10\x11\x12\x19\n\x15SortField_StrikePrice\x10\x12\x12\x1c\n\x18SortField_BreakEvenPoint\x10\x13\x12\x1a\n\x16SortField_MaturityTime\x10\x14\x12\x16\n\x12SortField_ListTime\x10\x15\x12\x1b\n\x17SortField_LastTradeTime\x10\x16\x12\x16\n\x12SortField_Leverage\x10\x17\x12\x18\n\x14SortField_InOutMoney\x10\x18\x12\x1b\n\x17SortField_RecoveryPrice\x10\x19\x12\x19\n\x15SortField_ChangePrice\x10\x1a\x12\x14\n\x10SortField_Change\x10\x1b\x12\x18\n\x14SortField_StreetRate\x10\x1c\x12\x17\n\x13SortField_StreetVol\x10\x1d\x12\x19\n\x15SortField_WarrantName\x10\x1f\x12\x14\n\x10SortField_Issuer\x10 \x12\x15\n\x11SortField_LotSize\x10!\x12\x17\n\x13SortField_IssueSize\x10\"\x12\x1e\n\x1aSortField_UpperStrikePrice\x10-\x12\x1e\n\x1aSortField_LowerStrikePrice\x10.\x12\x1f\n\x1bSortField_InLinePriceStatus\x10/\x12\x19\n\x15SortField_PreCurPrice\x10#\x12\x1b\n\x17SortField_AfterCurPrice\x10$\x12\x1f\n\x1bSortField_PrePriceChangeVal\x10%\x12!\n\x1dSortField_AfterPriceChangeVal\x10&\x12\x1b\n\x17SortField_PreChangeRate\x10\'\x12\x1d\n\x19SortField_AfterChangeRate\x10(\x12\x1a\n\x16SortField_PreAmplitude\x10)\x12\x1c\n\x18SortField_AfterAmplitude\x10*\x12\x19\n\x15SortField_PreTurnover\x10+\x12\x1b\n\x17SortField_AfterTurnover\x10,\x12\x1d\n\x19SortField_LastSettlePrice\x10\x30\x12\x16\n\x12SortField_Position\x10\x31\x12\x1c\n\x18SortField_PositionChange\x10\x32*\xbf\x03\n\x06Issuer\x12\x11\n\rIssuer_Unknow\x10\x00\x12\r\n\tIssuer_SG\x10\x01\x12\r\n\tIssuer_BP\x10\x02\x12\r\n\tIssuer_CS\x10\x03\x12\r\n\tIssuer_CT\x10\x04\x12\r\n\tIssuer_EA\x10\x05\x12\r\n\tIssuer_GS\x10\x06\x12\r\n\tIssuer_HS\x10\x07\x12\r\n\tIssuer_JP\x10\x08\x12\r\n\tIssuer_MB\x10\t\x12\r\n\tIssuer_SC\x10\n\x12\r\n\tIssuer_UB\x10\x0b\x12\r\n\tIssuer_BI\x10\x0c\x12\r\n\tIssuer_DB\x10\r\x12\r\n\tIssuer_DC\x10\x0e\x12\r\n\tIssuer_ML\x10\x0f\x12\r\n\tIssuer_NM\x10\x10\x12\r\n\tIssuer_RB\x10\x11\x12\r\n\tIssuer_RS\x10\x12\x12\r\n\tIssuer_BC\x10\x13\x12\r\n\tIssuer_HT\x10\x14\x12\r\n\tIssuer_VT\x10\x15\x12\r\n\tIssuer_KC\x10\x16\x12\r\n\tIssuer_MS\x10\x17\x12\r\n\tIssuer_GJ\x10\x18\x12\r\n\tIssuer_XZ\x10\x19\x12\r\n\tIssuer_HU\x10\x1a\x12\r\n\tIssuer_KS\x10\x1b\x12\r\n\tIssuer_CI\x10\x1c*\x97\x01\n\tIpoPeriod\x12\x14\n\x10IpoPeriod_Unknow\x10\x00\x12\x13\n\x0fIpoPeriod_Today\x10\x01\x12\x16\n\x12IpoPeriod_Tomorrow\x10\x02\x12\x16\n\x12IpoPeriod_Nextweek\x10\x03\x12\x16\n\x12IpoPeriod_Lastweek\x10\x04\x12\x17\n\x13IpoPeriod_Lastmonth\x10\x05*N\n\tPriceType\x12\x14\n\x10PriceType_Unknow\x10\x00\x12\x15\n\x11PriceType_Outside\x10\x01\x12\x14\n\x10PriceType_WithIn\x10\x02*\x9d\x01\n\rWarrantStatus\x12\x18\n\x14WarrantStatus_Unknow\x10\x00\x12\x18\n\x14WarrantStatus_Normal\x10\x01\x12\x19\n\x15WarrantStatus_Suspend\x10\x02\x12\x1b\n\x17WarrantStatus_StopTrade\x10\x03\x12 \n\x1cWarrantStatus_PendingListing\x10\x04*\xda\x01\n\nCompanyAct\x12\x13\n\x0f\x43ompanyAct_None\x10\x00\x12\x14\n\x10\x43ompanyAct_Split\x10\x01\x12\x13\n\x0f\x43ompanyAct_Join\x10\x02\x12\x14\n\x10\x43ompanyAct_Bonus\x10\x04\x12\x17\n\x13\x43ompanyAct_Transfer\x10\x08\x12\x14\n\x10\x43ompanyAct_Allot\x10\x10\x12\x12\n\x0e\x43ompanyAct_Add\x10 \x12\x17\n\x13\x43ompanyAct_Dividend\x10@\x12\x1a\n\x15\x43ompanyAct_SPDividend\x10\x80\x01*}\n\x08QotRight\x12\x13\n\x0fQotRight_Unknow\x10\x00\x12\x10\n\x0cQotRight_Bmp\x10\x01\x12\x13\n\x0fQotRight_Level1\x10\x02\x12\x13\n\x0fQotRight_Level2\x10\x03\x12\x0f\n\x0bQotRight_SF\x10\x04\x12\x0f\n\x0bQotRight_No\x10\x05*\xce\x04\n\x11PriceReminderType\x12\x1d\n\x19PriceReminderType_Unknown\x10\x00\x12\x1d\n\x19PriceReminderType_PriceUp\x10\x01\x12\x1f\n\x1bPriceReminderType_PriceDown\x10\x02\x12\"\n\x1ePriceReminderType_ChangeRateUp\x10\x03\x12$\n PriceReminderType_ChangeRateDown\x10\x04\x12&\n\"PriceReminderType_5MinChangeRateUp\x10\x05\x12(\n$PriceReminderType_5MinChangeRateDown\x10\x06\x12\x1e\n\x1aPriceReminderType_VolumeUp\x10\x07\x12 \n\x1cPriceReminderType_TurnoverUp\x10\x08\x12$\n PriceReminderType_TurnoverRateUp\x10\t\x12 \n\x1cPriceReminderType_BidPriceUp\x10\n\x12\"\n\x1ePriceReminderType_AskPriceDown\x10\x0b\x12\x1e\n\x1aPriceReminderType_BidVolUp\x10\x0c\x12\x1e\n\x1aPriceReminderType_AskVolUp\x10\r\x12&\n\"PriceReminderType_3MinChangeRateUp\x10\x0e\x12(\n$PriceReminderType_3MinChangeRateDown\x10\x0f*\x90\x01\n\x11PriceReminderFreq\x12\x1d\n\x19PriceReminderFreq_Unknown\x10\x00\x12\x1c\n\x18PriceReminderFreq_Always\x10\x01\x12\x1e\n\x1aPriceReminderFreq_OnceADay\x10\x02\x12\x1e\n\x1aPriceReminderFreq_OnlyOnce\x10\x03*\xdc\x01\n\x19PriceReminderMarketStatus\x12$\n PriceReminderMarketStatus_Unknow\x10\x00\x12\"\n\x1ePriceReminderMarketStatus_Open\x10\x01\x12#\n\x1fPriceReminderMarketStatus_USPre\x10\x02\x12%\n!PriceReminderMarketStatus_USAfter\x10\x03\x12)\n%PriceReminderMarketStatus_USOverNight\x10\x04*\xb3\x01\n\nAssetClass\x12\x15\n\x11\x41ssetClass_Unknow\x10\x00\x12\x14\n\x10\x41ssetClass_Stock\x10\x01\x12\x13\n\x0f\x41ssetClass_Bond\x10\x02\x12\x18\n\x14\x41ssetClass_Commodity\x10\x03\x12\x1d\n\x19\x41ssetClass_CurrencyMarket\x10\x04\x12\x15\n\x11\x41ssetClass_Future\x10\x05\x12\x13\n\x0f\x41ssetClass_Swap\x10\x06*\xaf\x02\n\x0f\x45xpirationCycle\x12\x1b\n\x17\x45xpirationCycle_Unknown\x10\x00\x12\x18\n\x14\x45xpirationCycle_Week\x10\x01\x12\x19\n\x15\x45xpirationCycle_Month\x10\x02\x12\x1c\n\x18\x45xpirationCycle_MonthEnd\x10\x03\x12\x1b\n\x17\x45xpirationCycle_Quarter\x10\x04\x12\x1b\n\x17\x45xpirationCycle_WeekMon\x10\x0b\x12\x1b\n\x17\x45xpirationCycle_WeekTue\x10\x0c\x12\x1b\n\x17\x45xpirationCycle_WeekWed\x10\r\x12\x1b\n\x17\x45xpirationCycle_WeekThu\x10\x0e\x12\x1b\n\x17\x45xpirationCycle_WeekFri\x10\x0f*y\n\x12OptionStandardType\x12\x1e\n\x1aOptionStandardType_Unknown\x10\x00\x12\x1f\n\x1bOptionStandardType_Standard\x10\x01\x12\"\n\x1eOptionStandardType_NonStandard\x10\x02*r\n\x14OptionSettlementMode\x12 \n\x1cOptionSettlementMode_Unknown\x10\x00\x12\x1b\n\x17OptionSettlementMode_AM\x10\x01\x12\x1b\n\x17OptionSettlementMode_PM\x10\x02*\xb4\x03\n\x08\x45xchType\x12\x14\n\x10\x45xchType_Unknown\x10\x00\x12\x19\n\x15\x45xchType_HK_MainBoard\x10\x01\x12\x18\n\x14\x45xchType_HK_GEMBoard\x10\x02\x12\x14\n\x10\x45xchType_HK_HKEX\x10\x03\x12\x14\n\x10\x45xchType_US_NYSE\x10\x04\x12\x16\n\x12\x45xchType_US_Nasdaq\x10\x05\x12\x14\n\x10\x45xchType_US_Pink\x10\x06\x12\x14\n\x10\x45xchType_US_AMEX\x10\x07\x12\x16\n\x12\x45xchType_US_Option\x10\x08\x12\x15\n\x11\x45xchType_US_NYMEX\x10\t\x12\x15\n\x11\x45xchType_US_COMEX\x10\n\x12\x14\n\x10\x45xchType_US_CBOT\x10\x0b\x12\x13\n\x0f\x45xchType_US_CME\x10\x0c\x12\x14\n\x10\x45xchType_US_CBOE\x10\r\x12\x12\n\x0e\x45xchType_CN_SH\x10\x0e\x12\x12\n\x0e\x45xchType_CN_SZ\x10\x0f\x12\x14\n\x10\x45xchType_CN_STIB\x10\x10\x12\x13\n\x0f\x45xchType_SG_SGX\x10\x11\x12\x13\n\x0f\x45xchType_JP_OSE\x10\x12*|\n\nPeriodType\x12\x16\n\x12PeriodType_Unknown\x10\x00\x12\x17\n\x13PeriodType_INTRADAY\x10\x01\x12\x12\n\x0ePeriodType_DAY\x10\x02\x12\x13\n\x0fPeriodType_WEEK\x10\x03\x12\x14\n\x10PeriodType_MONTH\x10\x04\x42@\n\x13\x63om.futu.openapi.pbZ)github.com/futuopen/ftapi4go/pb/qotcommon')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,])
 
@@ -63,11 +63,27 @@ _QOTMARKET = _descriptor.EnumDescriptor(
       name='QotMarket_JP_Security', index=7, number=41,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarket_AU_Security', index=8, number=51,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarket_MY_Security', index=9, number=61,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarket_CA_Security', index=10, number=71,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarket_FX_Security', index=11, number=81,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=4087,
-  serialized_end=4312,
+  serialized_start=4221,
+  serialized_end=4554,
 )
 _sym_db.RegisterEnumDescriptor(_QOTMARKET)
 
@@ -125,8 +141,8 @@ _SECURITYTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4315,
-  serialized_end=4597,
+  serialized_start=4557,
+  serialized_end=4839,
 )
 _sym_db.RegisterEnumDescriptor(_SECURITYTYPE)
 
@@ -160,8 +176,8 @@ _PLATESETTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4600,
-  serialized_end=4738,
+  serialized_start=4842,
+  serialized_end=4980,
 )
 _sym_db.RegisterEnumDescriptor(_PLATESETTYPE)
 
@@ -199,8 +215,8 @@ _WARRANTTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4741,
-  serialized_end=4890,
+  serialized_start=4983,
+  serialized_end=5132,
 )
 _sym_db.RegisterEnumDescriptor(_WARRANTTYPE)
 
@@ -226,8 +242,8 @@ _OPTIONTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4892,
-  serialized_end=4969,
+  serialized_start=5134,
+  serialized_end=5211,
 )
 _sym_db.RegisterEnumDescriptor(_OPTIONTYPE)
 
@@ -253,8 +269,8 @@ _INDEXOPTIONTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4971,
-  serialized_end=5072,
+  serialized_start=5213,
+  serialized_end=5314,
 )
 _sym_db.RegisterEnumDescriptor(_INDEXOPTIONTYPE)
 
@@ -284,8 +300,8 @@ _OPTIONAREATYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=5075,
-  serialized_end=5205,
+  serialized_start=5317,
+  serialized_end=5447,
 )
 _sym_db.RegisterEnumDescriptor(_OPTIONAREATYPE)
 
@@ -341,78 +357,114 @@ _QOTMARKETSTATE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_NightOpen', index=11, number=13,
+      name='QotMarketState_FUTU_SWITCH_DATE', index=11, number=12,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_NightEnd', index=12, number=14,
+      name='QotMarketState_NightOpen', index=12, number=13,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_FutureDayOpen', index=13, number=15,
+      name='QotMarketState_NightEnd', index=13, number=14,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_FutureDayBreak', index=14, number=16,
+      name='QotMarketState_FutureDayOpen', index=14, number=15,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_FutureDayClose', index=15, number=17,
+      name='QotMarketState_FutureDayBreak', index=15, number=16,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_FutureDayWaitForOpen', index=16, number=18,
+      name='QotMarketState_FutureDayClose', index=16, number=17,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_HkCas', index=17, number=19,
+      name='QotMarketState_FutureDayWaitForOpen', index=17, number=18,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_FutureNightWait', index=18, number=20,
+      name='QotMarketState_HkCas', index=18, number=19,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_FutureAfternoon', index=19, number=21,
+      name='QotMarketState_FutureNightWait', index=19, number=20,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_FutureSwitchDate', index=20, number=22,
+      name='QotMarketState_FutureAfternoon', index=20, number=21,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_FutureOpen', index=21, number=23,
+      name='QotMarketState_FutureSwitchDate', index=21, number=22,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_FutureBreak', index=22, number=24,
+      name='QotMarketState_FutureOpen', index=22, number=23,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_FutureBreakOver', index=23, number=25,
+      name='QotMarketState_FutureBreak', index=23, number=24,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_FutureClose', index=24, number=26,
+      name='QotMarketState_FutureBreakOver', index=24, number=25,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_StibAfterHoursWait', index=25, number=27,
+      name='QotMarketState_FutureClose', index=25, number=26,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_StibAfterHoursBegin', index=26, number=28,
+      name='QotMarketState_StibAfterHoursWait', index=26, number=27,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='QotMarketState_StibAfterHoursEnd', index=27, number=29,
+      name='QotMarketState_StibAfterHoursBegin', index=27, number=28,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarketState_StibAfterHoursEnd', index=28, number=29,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarketState_CLOSE_AUCTION', index=29, number=30,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarketState_AFTERNOON_END', index=30, number=31,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarketState_NIGHT', index=31, number=32,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarketState_OVERNIGHT_BEGIN', index=32, number=33,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarketState_OVERNIGHT_END', index=33, number=34,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarketState_TRADE_AT_LAST', index=34, number=35,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarketState_TRADE_AUCTION', index=35, number=36,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QotMarketState_OVERNIGHT', index=36, number=37,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=5208,
-  serialized_end=6144,
+  serialized_start=5450,
+  serialized_end=6685,
 )
 _sym_db.RegisterEnumDescriptor(_QOTMARKETSTATE)
 
@@ -458,8 +510,8 @@ _TRADEDATEMARKET = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=6147,
-  serialized_end=6375,
+  serialized_start=6688,
+  serialized_end=6916,
 )
 _sym_db.RegisterEnumDescriptor(_TRADEDATEMARKET)
 
@@ -485,8 +537,8 @@ _TRADEDATETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=6377,
-  serialized_end=6473,
+  serialized_start=6918,
+  serialized_end=7014,
 )
 _sym_db.RegisterEnumDescriptor(_TRADEDATETYPE)
 
@@ -512,8 +564,8 @@ _REHABTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=6475,
-  serialized_end=6553,
+  serialized_start=7016,
+  serialized_end=7094,
 )
 _sym_db.RegisterEnumDescriptor(_REHABTYPE)
 
@@ -575,8 +627,8 @@ _KLTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=6556,
-  serialized_end=6777,
+  serialized_start=7097,
+  serialized_end=7318,
 )
 _sym_db.RegisterEnumDescriptor(_KLTYPE)
 
@@ -634,8 +686,8 @@ _KLFIELDS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=6780,
-  serialized_end=7025,
+  serialized_start=7321,
+  serialized_end=7566,
 )
 _sym_db.RegisterEnumDescriptor(_KLFIELDS)
 
@@ -717,8 +769,8 @@ _SUBTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=7028,
-  serialized_end=7390,
+  serialized_start=7569,
+  serialized_end=7931,
 )
 _sym_db.RegisterEnumDescriptor(_SUBTYPE)
 
@@ -748,8 +800,8 @@ _TICKERDIRECTION = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=7392,
-  serialized_end=7517,
+  serialized_start=7933,
+  serialized_end=8058,
 )
 _sym_db.RegisterEnumDescriptor(_TICKERDIRECTION)
 
@@ -891,8 +943,8 @@ _TICKERTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=7520,
-  serialized_end=8444,
+  serialized_start=8061,
+  serialized_end=8985,
 )
 _sym_db.RegisterEnumDescriptor(_TICKERTYPE)
 
@@ -918,8 +970,8 @@ _DARKSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=8446,
-  serialized_end=8523,
+  serialized_start=8987,
+  serialized_end=9064,
 )
 _sym_db.RegisterEnumDescriptor(_DARKSTATUS)
 
@@ -1021,8 +1073,8 @@ _SECURITYSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=8526,
-  serialized_end=9314,
+  serialized_start=9067,
+  serialized_end=9855,
 )
 _sym_db.RegisterEnumDescriptor(_SECURITYSTATUS)
 
@@ -1052,8 +1104,8 @@ _HOLDERCATEGORY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=9317,
-  serialized_end=9446,
+  serialized_start=9858,
+  serialized_end=9987,
 )
 _sym_db.RegisterEnumDescriptor(_HOLDERCATEGORY)
 
@@ -1083,8 +1135,8 @@ _PUSHDATATYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=9448,
-  serialized_end=9566,
+  serialized_start=9989,
+  serialized_end=10107,
 )
 _sym_db.RegisterEnumDescriptor(_PUSHDATATYPE)
 
@@ -1302,8 +1354,8 @@ _SORTFIELD = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=9569,
-  serialized_end=10932,
+  serialized_start=10110,
+  serialized_end=11473,
 )
 _sym_db.RegisterEnumDescriptor(_SORTFIELD)
 
@@ -1418,11 +1470,23 @@ _ISSUER = _descriptor.EnumDescriptor(
       name='Issuer_XZ', index=25, number=25,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Issuer_HU', index=26, number=26,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Issuer_KS', index=27, number=27,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Issuer_CI', index=28, number=28,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=10935,
-  serialized_end=11337,
+  serialized_start=11476,
+  serialized_end=11923,
 )
 _sym_db.RegisterEnumDescriptor(_ISSUER)
 
@@ -1460,8 +1524,8 @@ _IPOPERIOD = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=11340,
-  serialized_end=11491,
+  serialized_start=11926,
+  serialized_end=12077,
 )
 _sym_db.RegisterEnumDescriptor(_IPOPERIOD)
 
@@ -1487,8 +1551,8 @@ _PRICETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=11493,
-  serialized_end=11571,
+  serialized_start=12079,
+  serialized_end=12157,
 )
 _sym_db.RegisterEnumDescriptor(_PRICETYPE)
 
@@ -1522,8 +1586,8 @@ _WARRANTSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=11574,
-  serialized_end=11731,
+  serialized_start=12160,
+  serialized_end=12317,
 )
 _sym_db.RegisterEnumDescriptor(_WARRANTSTATUS)
 
@@ -1573,8 +1637,8 @@ _COMPANYACT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=11734,
-  serialized_end=11952,
+  serialized_start=12320,
+  serialized_end=12538,
 )
 _sym_db.RegisterEnumDescriptor(_COMPANYACT)
 
@@ -1612,8 +1676,8 @@ _QOTRIGHT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=11954,
-  serialized_end=12079,
+  serialized_start=12540,
+  serialized_end=12665,
 )
 _sym_db.RegisterEnumDescriptor(_QOTRIGHT)
 
@@ -1691,8 +1755,8 @@ _PRICEREMINDERTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=12082,
-  serialized_end=12672,
+  serialized_start=12668,
+  serialized_end=13258,
 )
 _sym_db.RegisterEnumDescriptor(_PRICEREMINDERTYPE)
 
@@ -1722,12 +1786,47 @@ _PRICEREMINDERFREQ = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=12675,
-  serialized_end=12819,
+  serialized_start=13261,
+  serialized_end=13405,
 )
 _sym_db.RegisterEnumDescriptor(_PRICEREMINDERFREQ)
 
 PriceReminderFreq = enum_type_wrapper.EnumTypeWrapper(_PRICEREMINDERFREQ)
+_PRICEREMINDERMARKETSTATUS = _descriptor.EnumDescriptor(
+  name='PriceReminderMarketStatus',
+  full_name='Qot_Common.PriceReminderMarketStatus',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='PriceReminderMarketStatus_Unknow', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PriceReminderMarketStatus_Open', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PriceReminderMarketStatus_USPre', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PriceReminderMarketStatus_USAfter', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PriceReminderMarketStatus_USOverNight', index=4, number=4,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=13408,
+  serialized_end=13628,
+)
+_sym_db.RegisterEnumDescriptor(_PRICEREMINDERMARKETSTATUS)
+
+PriceReminderMarketStatus = enum_type_wrapper.EnumTypeWrapper(_PRICEREMINDERMARKETSTATUS)
 _ASSETCLASS = _descriptor.EnumDescriptor(
   name='AssetClass',
   full_name='Qot_Common.AssetClass',
@@ -1765,8 +1864,8 @@ _ASSETCLASS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=12822,
-  serialized_end=13001,
+  serialized_start=13631,
+  serialized_end=13810,
 )
 _sym_db.RegisterEnumDescriptor(_ASSETCLASS)
 
@@ -1789,15 +1888,97 @@ _EXPIRATIONCYCLE = _descriptor.EnumDescriptor(
       name='ExpirationCycle_Month', index=2, number=2,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ExpirationCycle_MonthEnd', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ExpirationCycle_Quarter', index=4, number=4,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ExpirationCycle_WeekMon', index=5, number=11,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ExpirationCycle_WeekTue', index=6, number=12,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ExpirationCycle_WeekWed', index=7, number=13,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ExpirationCycle_WeekThu', index=8, number=14,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ExpirationCycle_WeekFri', index=9, number=15,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=13003,
-  serialized_end=13102,
+  serialized_start=13813,
+  serialized_end=14116,
 )
 _sym_db.RegisterEnumDescriptor(_EXPIRATIONCYCLE)
 
 ExpirationCycle = enum_type_wrapper.EnumTypeWrapper(_EXPIRATIONCYCLE)
+_OPTIONSTANDARDTYPE = _descriptor.EnumDescriptor(
+  name='OptionStandardType',
+  full_name='Qot_Common.OptionStandardType',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='OptionStandardType_Unknown', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='OptionStandardType_Standard', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='OptionStandardType_NonStandard', index=2, number=2,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=14118,
+  serialized_end=14239,
+)
+_sym_db.RegisterEnumDescriptor(_OPTIONSTANDARDTYPE)
+
+OptionStandardType = enum_type_wrapper.EnumTypeWrapper(_OPTIONSTANDARDTYPE)
+_OPTIONSETTLEMENTMODE = _descriptor.EnumDescriptor(
+  name='OptionSettlementMode',
+  full_name='Qot_Common.OptionSettlementMode',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='OptionSettlementMode_Unknown', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='OptionSettlementMode_AM', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='OptionSettlementMode_PM', index=2, number=2,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=14241,
+  serialized_end=14355,
+)
+_sym_db.RegisterEnumDescriptor(_OPTIONSETTLEMENTMODE)
+
+OptionSettlementMode = enum_type_wrapper.EnumTypeWrapper(_OPTIONSETTLEMENTMODE)
 _EXCHTYPE = _descriptor.EnumDescriptor(
   name='ExchType',
   full_name='Qot_Common.ExchType',
@@ -1883,8 +2064,8 @@ _EXCHTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=13105,
-  serialized_end=13541,
+  serialized_start=14358,
+  serialized_end=14794,
 )
 _sym_db.RegisterEnumDescriptor(_EXCHTYPE)
 
@@ -1918,8 +2099,8 @@ _PERIODTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=13543,
-  serialized_end=13667,
+  serialized_start=14796,
+  serialized_end=14920,
 )
 _sym_db.RegisterEnumDescriptor(_PERIODTYPE)
 
@@ -1932,6 +2113,10 @@ QotMarket_CNSH_Security = 21
 QotMarket_CNSZ_Security = 22
 QotMarket_SG_Security = 31
 QotMarket_JP_Security = 41
+QotMarket_AU_Security = 51
+QotMarket_MY_Security = 61
+QotMarket_CA_Security = 71
+QotMarket_FX_Security = 81
 SecurityType_Unknown = 0
 SecurityType_Bond = 1
 SecurityType_Bwrt = 2
@@ -1975,6 +2160,7 @@ QotMarketState_PreMarketBegin = 8
 QotMarketState_PreMarketEnd = 9
 QotMarketState_AfterHoursBegin = 10
 QotMarketState_AfterHoursEnd = 11
+QotMarketState_FUTU_SWITCH_DATE = 12
 QotMarketState_NightOpen = 13
 QotMarketState_NightEnd = 14
 QotMarketState_FutureDayOpen = 15
@@ -1992,6 +2178,14 @@ QotMarketState_FutureClose = 26
 QotMarketState_StibAfterHoursWait = 27
 QotMarketState_StibAfterHoursBegin = 28
 QotMarketState_StibAfterHoursEnd = 29
+QotMarketState_CLOSE_AUCTION = 30
+QotMarketState_AFTERNOON_END = 31
+QotMarketState_NIGHT = 32
+QotMarketState_OVERNIGHT_BEGIN = 33
+QotMarketState_OVERNIGHT_END = 34
+QotMarketState_TRADE_AT_LAST = 35
+QotMarketState_TRADE_AUCTION = 36
+QotMarketState_OVERNIGHT = 37
 TradeDateMarket_Unknown = 0
 TradeDateMarket_HK = 1
 TradeDateMarket_US = 2
@@ -2192,6 +2386,9 @@ Issuer_KC = 22
 Issuer_MS = 23
 Issuer_GJ = 24
 Issuer_XZ = 25
+Issuer_HU = 26
+Issuer_KS = 27
+Issuer_CI = 28
 IpoPeriod_Unknow = 0
 IpoPeriod_Today = 1
 IpoPeriod_Tomorrow = 2
@@ -2241,6 +2438,11 @@ PriceReminderFreq_Unknown = 0
 PriceReminderFreq_Always = 1
 PriceReminderFreq_OnceADay = 2
 PriceReminderFreq_OnlyOnce = 3
+PriceReminderMarketStatus_Unknow = 0
+PriceReminderMarketStatus_Open = 1
+PriceReminderMarketStatus_USPre = 2
+PriceReminderMarketStatus_USAfter = 3
+PriceReminderMarketStatus_USOverNight = 4
 AssetClass_Unknow = 0
 AssetClass_Stock = 1
 AssetClass_Bond = 2
@@ -2251,6 +2453,19 @@ AssetClass_Swap = 6
 ExpirationCycle_Unknown = 0
 ExpirationCycle_Week = 1
 ExpirationCycle_Month = 2
+ExpirationCycle_MonthEnd = 3
+ExpirationCycle_Quarter = 4
+ExpirationCycle_WeekMon = 11
+ExpirationCycle_WeekTue = 12
+ExpirationCycle_WeekWed = 13
+ExpirationCycle_WeekThu = 14
+ExpirationCycle_WeekFri = 15
+OptionStandardType_Unknown = 0
+OptionStandardType_Standard = 1
+OptionStandardType_NonStandard = 2
+OptionSettlementMode_Unknown = 0
+OptionSettlementMode_AM = 1
+OptionSettlementMode_PM = 2
 ExchType_Unknown = 0
 ExchType_HK_MainBoard = 1
 ExchType_HK_GEMBoard = 2
@@ -2933,6 +3148,13 @@ _BASICQOT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='overnight', full_name='Qot_Common.BasicQot.overnight', index=24,
+      number=25, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -2946,7 +3168,7 @@ _BASICQOT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=1128,
-  serialized_end=1806,
+  serialized_end=1857,
 )
 
 
@@ -3032,8 +3254,8 @@ _TIMESHARE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1809,
-  serialized_end=1977,
+  serialized_start=1860,
+  serialized_end=2028,
 )
 
 
@@ -3119,8 +3341,8 @@ _SECURITYSTATICBASIC = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1980,
-  serialized_end=2179,
+  serialized_start=2031,
+  serialized_end=2230,
 )
 
 
@@ -3157,8 +3379,8 @@ _WARRANTSTATICEXDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2181,
-  serialized_end=2253,
+  serialized_start=2232,
+  serialized_end=2304,
 )
 
 
@@ -3225,6 +3447,27 @@ _OPTIONSTATICEXDATA = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='expirationCycle', full_name='Qot_Common.OptionStaticExData.expirationCycle', index=8,
+      number=9, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='optionStandardType', full_name='Qot_Common.OptionStaticExData.optionStandardType', index=9,
+      number=10, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='optionSettlementMode', full_name='Qot_Common.OptionStaticExData.optionSettlementMode', index=10,
+      number=11, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -3237,8 +3480,8 @@ _OPTIONSTATICEXDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2256,
-  serialized_end=2451,
+  serialized_start=2307,
+  serialized_end=2585,
 )
 
 
@@ -3282,8 +3525,8 @@ _FUTURESTATICEXDATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2453,
-  serialized_end=2548,
+  serialized_start=2587,
+  serialized_end=2682,
 )
 
 
@@ -3334,8 +3577,8 @@ _SECURITYSTATICINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2551,
-  serialized_end=2783,
+  serialized_start=2685,
+  serialized_end=2917,
 )
 
 
@@ -3393,8 +3636,8 @@ _BROKER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2785,
-  serialized_end=2865,
+  serialized_start=2919,
+  serialized_end=2999,
 )
 
 
@@ -3494,8 +3737,8 @@ _TICKER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2868,
-  serialized_end=3061,
+  serialized_start=3002,
+  serialized_end=3195,
 )
 
 
@@ -3532,8 +3775,8 @@ _ORDERBOOKDETAIL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3063,
-  serialized_end=3113,
+  serialized_start=3197,
+  serialized_end=3247,
 )
 
 
@@ -3584,8 +3827,8 @@ _ORDERBOOK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3115,
-  serialized_end=3227,
+  serialized_start=3249,
+  serialized_end=3361,
 )
 
 
@@ -3657,8 +3900,8 @@ _SHAREHOLDINGCHANGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3230,
-  serialized_end=3385,
+  serialized_start=3364,
+  serialized_end=3519,
 )
 
 
@@ -3695,8 +3938,8 @@ _SUBINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3387,
-  serialized_end=3457,
+  serialized_start=3521,
+  serialized_end=3591,
 )
 
 
@@ -3740,8 +3983,8 @@ _CONNSUBINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3459,
-  serialized_end=3556,
+  serialized_start=3593,
+  serialized_end=3690,
 )
 
 
@@ -3785,8 +4028,8 @@ _PLATEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3558,
-  serialized_end=3639,
+  serialized_start=3692,
+  serialized_end=3773,
 )
 
 
@@ -3970,8 +4213,8 @@ _REHAB = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3642,
-  serialized_end=4084,
+  serialized_start=3776,
+  serialized_end=4218,
 )
 
 _BASICQOT.fields_by_name['security'].message_type = _SECURITY
@@ -3980,6 +4223,7 @@ _BASICQOT.fields_by_name['preMarket'].message_type = _PREAFTERMARKETDATA
 _BASICQOT.fields_by_name['afterMarket'].message_type = _PREAFTERMARKETDATA
 _BASICQOT.fields_by_name['futureExData'].message_type = _FUTUREBASICQOTEXDATA
 _BASICQOT.fields_by_name['warrantExData'].message_type = _WARRANTBASICQOTEXDATA
+_BASICQOT.fields_by_name['overnight'].message_type = _PREAFTERMARKETDATA
 _SECURITYSTATICBASIC.fields_by_name['security'].message_type = _SECURITY
 _WARRANTSTATICEXDATA.fields_by_name['owner'].message_type = _SECURITY
 _OPTIONSTATICEXDATA.fields_by_name['owner'].message_type = _SECURITY
@@ -4042,8 +4286,11 @@ DESCRIPTOR.enum_types_by_name['CompanyAct'] = _COMPANYACT
 DESCRIPTOR.enum_types_by_name['QotRight'] = _QOTRIGHT
 DESCRIPTOR.enum_types_by_name['PriceReminderType'] = _PRICEREMINDERTYPE
 DESCRIPTOR.enum_types_by_name['PriceReminderFreq'] = _PRICEREMINDERFREQ
+DESCRIPTOR.enum_types_by_name['PriceReminderMarketStatus'] = _PRICEREMINDERMARKETSTATUS
 DESCRIPTOR.enum_types_by_name['AssetClass'] = _ASSETCLASS
 DESCRIPTOR.enum_types_by_name['ExpirationCycle'] = _EXPIRATIONCYCLE
+DESCRIPTOR.enum_types_by_name['OptionStandardType'] = _OPTIONSTANDARDTYPE
+DESCRIPTOR.enum_types_by_name['OptionSettlementMode'] = _OPTIONSETTLEMENTMODE
 DESCRIPTOR.enum_types_by_name['ExchType'] = _EXCHTYPE
 DESCRIPTOR.enum_types_by_name['PeriodType'] = _PERIODTYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)

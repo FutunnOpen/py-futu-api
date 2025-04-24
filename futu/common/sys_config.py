@@ -2,9 +2,9 @@
 import os
 import sys
 import traceback
-from futu.common import bytes_utf8, IS_PY2, str_utf8
-from futu.common.constant import *
-from futu.common.ft_logger import logger
+from . import bytes_utf8, IS_PY2, str_utf8
+from .constant import *
+from .ft_logger import logger
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcs1
 from Crypto import Random

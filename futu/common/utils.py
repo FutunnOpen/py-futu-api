@@ -5,9 +5,9 @@ from datetime import datetime, timedelta
 from struct import calcsize
 from google.protobuf.json_format import MessageToJson
 from threading import RLock
-from futu.common.conn_mng import *
-from futu.common.sys_config import *
-from futu.common.pbjson import json2pb
+from .conn_mng import *
+from .sys_config import *
+from .pbjson import json2pb
 
 
 ProtoInfo = collections.namedtuple('ProtoInfo', ['proto_id', 'serial_no'])
@@ -15,6 +15,14 @@ ProtoInfo = collections.namedtuple('ProtoInfo', ['proto_id', 'serial_no'])
 
 def get_message_head_len():
     return calcsize(MESSAGE_HEAD_FMT)
+
+
+def is_valid_date(date_str):
+    try:
+        datetime.strptime(date_str, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return False
 
 
 def check_date_str_format(s, default_time="00:00:00"):
@@ -42,7 +50,7 @@ def normalize_date_format(date_str, default_time="00:00:00"):
     return RET_OK, ret_data.strftime("%Y-%m-%d %H:%M:%S")
 
 
-def normalize_start_end_date(start, end, delta_days=0, default_time_start="00:00:00", default_time_end="23:59:59", prefer_end_now=True):
+def normalize_start_end_date(start, end, delta_days=0, default_time_start="00:00:00", default_time_end="23:59:59", prefer_end_now=True, only_date=False):
     """
 
     :param start:
@@ -101,8 +109,12 @@ def normalize_start_end_date(start, end, delta_days=0, default_time_start="00:00
             dt_end = datetime(year=dt_tmp.year, month=dt_tmp.month, day=dt_tmp.day, hour=hour_end, minute=min_end,
                                 second=sec_end)
 
-    start = dt_start.strftime("%Y-%m-%d %H:%M:%S")
-    end = dt_end.strftime("%Y-%m-%d %H:%M:%S")
+    if only_date:
+        start = dt_start.strftime("%Y-%m-%d")
+        end = dt_end.strftime("%Y-%m-%d")
+    else:
+        start = dt_start.strftime("%Y-%m-%d %H:%M:%S")
+        end = dt_end.strftime("%Y-%m-%d %H:%M:%S")
 
     return RET_OK, '', start, end
 
@@ -186,6 +198,14 @@ def merge_trd_mkt_stock_str(trd_sec_mkt, partial_stock_str):
         mkt_qot = Market.SG
     elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_JP:
         mkt_qot = Market.JP
+    elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_AU:
+        mkt_qot = Market.AU
+    elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_MY:
+        mkt_qot = Market.MY
+    elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_CA:
+        mkt_qot = Market.CA
+    elif trd_sec_mkt == Trd_Common_pb2.TrdSecMarket_FX:
+        mkt_qot = Market.FX
     _, mkt = Market.to_number(mkt_qot)
     return merge_qot_mkt_stock_str(mkt, partial_stock_str)
 
@@ -257,251 +277,259 @@ class ProtobufMap(dict):
     def __init__(self):
 
         """ InitConnect = 1001  # 初始化连接 """
-        from futu.common.pb.InitConnect_pb2 import Response
+        from .pb.InitConnect_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.InitConnect] = Response()
 
         """ GetGlobalState = 1002  # 获取全局状态 """
-        from futu.common.pb.GetGlobalState_pb2 import Response
+        from .pb.GetGlobalState_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.GetGlobalState] = Response()
 
         """ Notify = 1003  # 通知推送 """
-        from futu.common.pb.Notify_pb2 import Response
+        from .pb.Notify_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Notify] = Response()
 
         """ KeepAlive = 1004  # 通知推送 """
-        from futu.common.pb.KeepAlive_pb2 import Response
+        from .pb.KeepAlive_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.KeepAlive] = Response()
 
         """ GetUserInfo = 1005  # 获取全局状态 """
-        from futu.common.pb.GetUserInfo_pb2 import Response
+        from .pb.GetUserInfo_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.GetUserInfo] = Response()
 
         """ GetUserInfo = 1006  # 获取用户信息 """
-        from futu.common.pb.Verification_pb2 import Response
+        from .pb.Verification_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Verification] = Response()
 
         """ GetUserInfo = 1007  # 获取延迟统计 """
-        from futu.common.pb.GetDelayStatistics_pb2 import Response
+        from .pb.GetDelayStatistics_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.GetDelayStatistics] = Response()
 
         """ TestCmd = 1008  # 测试命令 """
-        from futu.common.pb.TestCmd_pb2 import Response
+        from .pb.TestCmd_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.TestCmd] = Response()
 
         """ Trd_GetAccList = 2001  # 获取业务账户列表 """
-        from futu.common.pb.Trd_GetAccList_pb2 import Response
+        from .pb.Trd_GetAccList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetAccList] = Response()
 
         """ Trd_UnlockTrade = 2005  # 解锁或锁定交易 """
-        from futu.common.pb.Trd_UnlockTrade_pb2 import Response
+        from .pb.Trd_UnlockTrade_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_UnlockTrade] = Response()
 
         """ Trd_SubAccPush = 2008  # 订阅业务账户的交易推送数据 """
-        from futu.common.pb.Trd_SubAccPush_pb2 import Response
+        from .pb.Trd_SubAccPush_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_SubAccPush] = Response()
 
         """  Trd_GetFunds = 2101  # 获取账户资金 """
-        from futu.common.pb.Trd_GetFunds_pb2 import Response
+        from .pb.Trd_GetFunds_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetFunds] = Response()
 
         """ Trd_GetPositionList = 2102  # 获取账户持仓 """
-        from futu.common.pb.Trd_GetPositionList_pb2 import Response
+        from .pb.Trd_GetPositionList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetPositionList] = Response()
 
         """ Trd_GetOrderList = 2201  # 获取订单列表 """
-        from futu.common.pb.Trd_GetOrderList_pb2 import Response
+        from .pb.Trd_GetOrderList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetOrderList] = Response()
 
         """ Trd_PlaceOrder = 2202  # 下单 """
-        from futu.common.pb.Trd_PlaceOrder_pb2 import Response
+        from .pb.Trd_PlaceOrder_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_PlaceOrder] = Response()
 
         """ Trd_ModifyOrder = 2205  # 修改订单 """
-        from futu.common.pb.Trd_ModifyOrder_pb2 import Response
+        from .pb.Trd_ModifyOrder_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_ModifyOrder] = Response()
 
         """ Trd_UpdateOrder = 2208  # 订单状态变动通知(推送) """
-        from futu.common.pb.Trd_UpdateOrder_pb2 import Response
+        from .pb.Trd_UpdateOrder_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_UpdateOrder] = Response()
 
         """ Trd_GetOrderFillList = 2211  # 获取成交列表 """
-        from futu.common.pb.Trd_GetOrderFillList_pb2 import Response
+        from .pb.Trd_GetOrderFillList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetOrderFillList] = Response()
 
         """ Trd_UpdateOrderFill = 2218  # 成交通知(推送) """
-        from  futu.common.pb.Trd_UpdateOrderFill_pb2 import Response
+        from  .pb.Trd_UpdateOrderFill_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_UpdateOrderFill] = Response()
 
         """ Trd_GetHistoryOrderList = 2221  # 获取历史订单列表 """
-        from futu.common.pb.Trd_GetHistoryOrderList_pb2 import Response
+        from .pb.Trd_GetHistoryOrderList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetHistoryOrderList] = Response()
 
+        """ Trd_GetOrderFee = 2225  # 获取订单费用 """
+        from .pb.Trd_GetOrderFee_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Trd_GetOrderFee] = Response()
+
         """ Trd_GetHistoryOrderFillList = 2222  # 获取历史成交列表 """
-        from futu.common.pb.Trd_GetHistoryOrderFillList_pb2 import Response
+        from .pb.Trd_GetHistoryOrderFillList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetHistoryOrderFillList] = Response()
 
         """ Qot_GetReference = 2223  获取正股相关股票，暂时只有窝轮"""
-        from futu.common.pb.Trd_GetMarginRatio_pb2 import Response
+        from .pb.Trd_GetMarginRatio_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetMarginRatio] = Response()
 
+        """ Qot_GetReference = 2226  获取资金流水"""
+        from .pb.Trd_FlowSummary_pb2 import Response
+        ProtobufMap.created_protobuf_map[ProtoId.Trd_FlowSummary] = Response()
+
         """ Qot_Sub = 3001  # 订阅或者反订阅 """
-        from futu.common.pb.Qot_Sub_pb2 import Response
+        from .pb.Qot_Sub_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_Sub] = Response()
 
         """ Qot_RegQotPush = 3002  # 注册推送 """
-        from futu.common.pb.Qot_RegQotPush_pb2 import Response
+        from .pb.Qot_RegQotPush_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_RegQotPush] = Response()
 
         """ Qot_GetSubInfo = 3003  # 获取订阅信息 """
-        from futu.common.pb.Qot_GetSubInfo_pb2 import Response
+        from .pb.Qot_GetSubInfo_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetSubInfo] = Response()
 
         """ Qot_GetBasicQot = 3004  # 获取股票基本行情 """
-        from futu.common.pb.Qot_GetBasicQot_pb2 import Response
+        from .pb.Qot_GetBasicQot_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetBasicQot] = Response()
 
         """ Qot_UpdateBasicQot = 3005  # 推送股票基本行情 """
-        from futu.common.pb.Qot_UpdateBasicQot_pb2 import Response
+        from .pb.Qot_UpdateBasicQot_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdateBasicQot] = Response()
 
         """ Qot_GetKL = 3006  # 获取K线 """
-        from futu.common.pb.Qot_GetKL_pb2 import Response
+        from .pb.Qot_GetKL_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetKL] = Response()
 
         """ Qot_UpdateKL = 3007  # 推送K线 """
-        from futu.common.pb.Qot_UpdateKL_pb2 import Response
+        from .pb.Qot_UpdateKL_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdateKL] = Response()
 
         """ Qot_GetRT = 3008  # 获取分时 """
-        from futu.common.pb.Qot_GetRT_pb2 import Response
+        from .pb.Qot_GetRT_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetRT] = Response()
 
         """ Qot_UpdateRT = 3009  # 推送分时 """
-        from futu.common.pb.Qot_UpdateRT_pb2 import Response
+        from .pb.Qot_UpdateRT_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdateRT] = Response()
 
         """ Qot_GetTicker = 3010  # 获取逐笔 """
-        from futu.common.pb.Qot_GetTicker_pb2 import Response
+        from .pb.Qot_GetTicker_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetTicker] = Response()
 
         """ Qot_UpdateTicker = 3011  # 推送逐笔 """
-        from futu.common.pb.Qot_UpdateTicker_pb2 import Response
+        from .pb.Qot_UpdateTicker_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdateTicker] = Response()
 
         """ Qot_GetOrderBook = 3012  # 获取买卖盘 """
-        from futu.common.pb.Qot_GetOrderBook_pb2 import Response
+        from .pb.Qot_GetOrderBook_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetOrderBook] = Response()
 
         """ Qot_UpdateOrderBook = 3013  # 推送买卖盘 """
-        from futu.common.pb.Qot_UpdateOrderBook_pb2 import Response
+        from .pb.Qot_UpdateOrderBook_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdateOrderBook] = Response()
 
         """ Qot_GetBroker = 3014  # 获取经纪队列 """
-        from futu.common.pb.Qot_GetBroker_pb2 import Response
+        from .pb.Qot_GetBroker_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetBroker] = Response()
 
         """ Qot_UpdateBroker = 3015  # 推送经纪队列 """
-        from futu.common.pb.Qot_UpdateBroker_pb2 import Response
+        from .pb.Qot_UpdateBroker_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdateBroker] = Response()
 
         """ Qot_UpdatePriceReminder = 3019  # 推送到价提醒 """
-        from futu.common.pb.Qot_UpdatePriceReminder_pb2 import Response
+        from .pb.Qot_UpdatePriceReminder_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_UpdatePriceReminder] = Response()
 
         """ Qot_GetSuspend = 3201  # 获取股票停牌信息 """
-        from futu.common.pb.Qot_GetSuspend_pb2 import Response
+        from .pb.Qot_GetSuspend_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetSuspend] = Response()
 
         """ Qot_GetStaticInfo = 3202  # 获取股票列表 """
-        from futu.common.pb.Qot_GetStaticInfo_pb2 import Response
+        from .pb.Qot_GetStaticInfo_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetStaticInfo] = Response()
 
         """ Qot_GetSecuritySnapshot = 3203  # 获取股票快照 """
-        from futu.common.pb.Qot_GetSecuritySnapshot_pb2 import Response
+        from .pb.Qot_GetSecuritySnapshot_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetSecuritySnapshot] = Response()
 
         """ Qot_GetPlateSet = 3204  # 获取板块集合下的板块 """
-        from futu.common.pb.Qot_GetPlateSet_pb2 import Response
+        from .pb.Qot_GetPlateSet_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetPlateSet] = Response()
 
         """ Qot_GetPlateSecurity = 3205  # 获取板块下的股票 """
-        from futu.common.pb.Qot_GetPlateSecurity_pb2 import Response
+        from .pb.Qot_GetPlateSecurity_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetPlateSecurity] = Response()
 
         """ Trd_GetMaxTrdQtys = 2111 查询最大买卖数量 """
-        from futu.common.pb.Trd_GetMaxTrdQtys_pb2 import Response
+        from .pb.Trd_GetMaxTrdQtys_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Trd_GetMaxTrdQtys] = Response()
 
         """ Qot_GetReference = 3206  获取正股相关股票，暂时只有窝轮"""
-        from futu.common.pb.Qot_GetReference_pb2 import Response
+        from .pb.Qot_GetReference_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetReference] = Response()
 
         """ Qot_GetOwnerPlate = 3207 获取股票所属板块"""
-        from futu.common.pb.Qot_GetOwnerPlate_pb2 import Response
+        from .pb.Qot_GetOwnerPlate_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetOwnerPlate] = Response()
 
         """ Qot_GetOwnerPlate = 3208 获取高管持股变动"""
-        from futu.common.pb.Qot_GetHoldingChangeList_pb2 import Response
+        from .pb.Qot_GetHoldingChangeList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetHoldingChangeList] = Response()
 
-        from futu.common.pb.Qot_RequestHistoryKL_pb2 import Response
+        from .pb.Qot_RequestHistoryKL_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_RequestHistoryKL] = Response()
 
-        from futu.common.pb.Qot_GetOptionChain_pb2 import Response
+        from .pb.Qot_GetOptionChain_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetOptionChain] = Response()
 
         """ Qot_GetWarrantData = 3210 获取窝轮 """
-        from futu.common.pb.Qot_GetWarrant_pb2 import Response as GetWarrantPBResponse
+        from .pb.Qot_GetWarrant_pb2 import Response as GetWarrantPBResponse
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetWarrant] = GetWarrantPBResponse()
 
         """ Qot_GetOrderDetail = 3104 已使用过的额度 """
-        from futu.common.pb.Qot_RequestHistoryKLQuota_pb2 import Response
+        from .pb.Qot_RequestHistoryKLQuota_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_RequestHistoryKLQuota] = Response()
 
         """获取除权信息"""
-        from futu.common.pb.Qot_RequestRehab_pb2 import Response
+        from .pb.Qot_RequestRehab_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_RequestRehab] = Response()
 
-        from futu.common.pb.Qot_GetCapitalDistribution_pb2 import Response
+        from .pb.Qot_GetCapitalDistribution_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetCapitalDistribution] = Response()
 
-        from futu.common.pb.Qot_GetCapitalFlow_pb2 import Response
+        from .pb.Qot_GetCapitalFlow_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetCapitalFlow] = Response()
 
-        from futu.common.pb.Qot_GetUserSecurity_pb2 import Response
+        from .pb.Qot_GetUserSecurity_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetUserSecurity] = Response()
 
-        from futu.common.pb.Qot_ModifyUserSecurity_pb2 import Response
+        from .pb.Qot_ModifyUserSecurity_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_ModifyUserSecurity] = Response()
 
-        from futu.common.pb.Qot_StockFilter_pb2 import Response
+        from .pb.Qot_StockFilter_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_StockFilter] = Response()
 
-        from futu.common.pb.Qot_GetCodeChange_pb2 import Response
+        from .pb.Qot_GetCodeChange_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetCodeChange] = Response()
 
-        from futu.common.pb.Qot_GetIpoList_pb2 import Response
+        from .pb.Qot_GetIpoList_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetIpoList] = Response()
         
-        from futu.common.pb.Qot_GetFutureInfo_pb2 import Response
+        from .pb.Qot_GetFutureInfo_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetFutureInfo] = Response()
 
-        from futu.common.pb.Qot_RequestTradeDate_pb2 import Response
+        from .pb.Qot_RequestTradeDate_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_RequestTradeDate] = Response()
 
-        from futu.common.pb.Qot_SetPriceReminder_pb2 import Response
+        from .pb.Qot_SetPriceReminder_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_SetPriceReminder] = Response()
 
-        from futu.common.pb.Qot_GetPriceReminder_pb2 import Response
+        from .pb.Qot_GetPriceReminder_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetPriceReminder] = Response()
 
-        from futu.common.pb.Qot_GetUserSecurityGroup_pb2 import Response
+        from .pb.Qot_GetUserSecurityGroup_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetUserSecurityGroup] = Response()
 
-        from futu.common.pb.Qot_GetMarketState_pb2 import Response
+        from .pb.Qot_GetMarketState_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetMarketState] = Response()
 
-        from futu.common.pb.Qot_GetOptionExpirationDate_pb2 import Response
+        from .pb.Qot_GetOptionExpirationDate_pb2 import Response
         ProtobufMap.created_protobuf_map[ProtoId.Qot_GetOptionExpirationDate] = Response()
 
     def __getitem__(self, key):

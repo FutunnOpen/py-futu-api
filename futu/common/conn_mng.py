@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from futu.common import bytes_utf8, IS_PY2
-from futu.common.utils import *
-from futu.common.constant import *
-from futu.common.sys_config import SysConfig
+from . import bytes_utf8, IS_PY2
+from .utils import *
+from .constant import *
+from .sys_config import SysConfig
 from Crypto.Cipher import AES
-from futu.common.constant import *
 import struct
 
 

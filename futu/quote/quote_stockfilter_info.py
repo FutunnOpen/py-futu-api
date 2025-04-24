@@ -3,8 +3,7 @@
     Market quote and trade context setting
 """
 from futu import *
-from futu.common.constant import *
-from futu.common.utils import *
+from ..common.utils import *
 
 
 class SimpleFilter(object):

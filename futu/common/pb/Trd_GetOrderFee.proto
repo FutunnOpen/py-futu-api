@@ -1,0 +1,34 @@
+syntax = "proto2";
+package Trd_GetOrderFee;
+option java_package = "com.futu.openapi.pb";
+option go_package = "github.com/futuopen/ftapi4go/pb/trdgetorderfee";
+
+import "Common.proto";
+import "Trd_Common.proto";
+
+message C2S
+{
+	required Trd_Common.TrdHeader header = 1; //交易公共参数头
+	repeated string orderIdExList = 2; // 服务器订单ID
+}
+
+message S2C
+{
+	required Trd_Common.TrdHeader header = 1; //交易公共参数头
+	repeated Trd_Common.OrderFee orderFeeList = 2; //订单费用列表
+}
+
+message Request
+{
+	required C2S c2s = 1;
+}
+
+message Response
+{
+	//以下3个字段每条协议都有，注释说明在InitConnect.proto中
+	required int32 retType = 1 [default = -400];
+	optional string retMsg = 2;
+	optional int32 errCode = 3;
+	
+	optional S2C s2c = 4;
+}

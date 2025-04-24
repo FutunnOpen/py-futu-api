@@ -30,6 +30,16 @@ enum TrdMarket
 	TrdMarket_HKCC = 4; //香港A股通市场
 	TrdMarket_Futures = 5; //期货市场
 	TrdMarket_SG = 6; //期货市场
+    TrdMarket_AU = 8; //澳洲市场
+    TrdMarket_Futures_Simulate_HK = 10; // 模拟交易期货市场
+    TrdMarket_Futures_Simulate_US = 11;
+    TrdMarket_Futures_Simulate_SG = 12;
+    TrdMarket_Futures_Simulate_JP = 13;
+    TrdMarket_JP = 15;
+    TrdMarket_MY = 111;
+    TrdMarket_CA = 112;
+	TrdMarket_HK_Fund = 113; //香港基金市场
+	TrdMarket_US_Fund = 123; //美国基金市场
 }
 
 //可交易证券所属市场，目前主要是区分A股的沪市和深市，香港和美国暂不需要细分
@@ -42,6 +52,10 @@ enum TrdSecMarket
 	TrdSecMarket_CN_SZ = 32; //深股市场(股票)
 	TrdSecMarket_SG = 41;    //新加坡市场(期货)
 	TrdSecMarket_JP = 51;    //日本市场(期货)
+    TrdSecMarket_AU = 61; // 澳大利亚
+    TrdSecMarket_MY = 71; // 马来西亚
+    TrdSecMarket_CA = 81; // 加拿大
+    TrdSecMarket_FX = 91; // 外汇
 }
 
 //交易方向
@@ -73,6 +87,10 @@ enum OrderType
     OrderType_LimitifTouched = 13; // 触及限价单（止盈）
     OrderType_TrailingStop = 14; // 跟踪止损市价单
     OrderType_TrailingStopLimit = 15; // 跟踪止损限价单
+	OrderType_TWAP_MARKET = 16; // TWAP 市价单 
+	OrderType_TWAP_LIMIT = 17;  // TWAP 限订单 
+	OrderType_VWAP_MARKET = 18; // VWAP 市价单 
+	OrderType_VWAP_LIMIT = 19;  // VWAP 限订单
 }
 
 //跟踪类型
@@ -141,6 +159,13 @@ enum TrdAccType
 	TrdAccType_Margin = 2;  //保证金账户
 };
 
+//交易账户状态
+enum TrdAccStatus
+{
+    TrdAccStatus_Active = 0;
+    TrdAccStatus_Disabled = 1;
+}
+
 //货币种类
 enum Currency
 {
@@ -151,6 +176,8 @@ enum Currency
 	Currency_JPY = 4;   // 日元
 	Currency_SGD = 5;   // 新币
 	Currency_AUD = 6;   // 澳元
+    Currency_CAD = 7; // 加拿大元
+    Currency_MYR = 8; // 马来西亚林吉特
 }
 
 //账户风险控制等级
@@ -187,6 +214,7 @@ enum SimAccType
 	SimAccType_Unknown = 0;		//未知
 	SimAccType_Stock = 1;		//股票模拟账户（仅用于交易证券类产品，不支持交易期权）
 	SimAccType_Option = 2;      //期权模拟账户（仅用于交易期权，不支持交易股票证券类产品）
+    SimAccType_Futures = 3;     //期货模拟账户
 }
 
 //风险状态，共分 9 个等级，LEVEL1是最安全，LEVEL9是最危险
@@ -219,6 +247,14 @@ message AccCashInfo
     optional int32 currency = 1;        // 货币类型，取值参考 Currency
     optional double cash = 2;           // 现金结余
     optional double availableBalance = 3;   // 现金可提金额
+	optional double netCashPower = 4;		// 现金购买力
+}
+
+//分市场资产信息
+message AccMarketInfo
+{
+    optional int32 trdMarket = 1;        // 交易市场, 参见TrdMarket的枚举定义
+    optional double assets = 2;           // 分市场资产信息
 }
 
 //交易协议公共参数头
@@ -239,6 +275,8 @@ message TrdAcc
 	optional string cardNum = 5;  //卡号
 	optional int32 securityFirm = 6; //所属券商，取值见SecurityFirm
 	optional int32 simAccType = 7; //模拟交易账号类型，取值见SimAccType
+    optional string uniCardNum = 8;  //所属综合账户卡号
+    optional int32 accStatus = 9; //账号状态，取值见TrdAccStatus
 }
 
 //账户资金结构
@@ -276,6 +314,12 @@ message Funds
 	optional double remainingDTBP = 27;		//剩余日内交易购买力
 	optional double dtCallAmount = 28;		//日内交易待缴金额
 	optional int32 dtStatus = 29;				//日内交易限制情况，取值见DTStatus
+	
+	optional double securitiesAssets = 30; // 证券资产净值
+	optional double fundAssets = 31; // 基金资产净值
+	optional double bondAssets = 32; // 债券资产净值
+    
+    repeated AccMarketInfo marketInfoList = 33; //分市场资产信息
 }
 
 //账户持仓结构
@@ -288,10 +332,10 @@ message Position
     required double qty = 5;            //持有数量，2位精度，期权单位是"张"，下同
     required double canSellQty = 6;     //可卖数量
     required double price = 7;          //市价，3位精度，期货为2位精度
-    optional double costPrice = 8;      //成本价，无精度限制，期货为2位精度，如果没传，代表此时此值无效,
+    optional double costPrice = 8;      //成本价，无精度限制，期货为2位精度，如果没传，代表此时此值无效（已废弃，请使用 dilutedCostPrice 或 averageCostPrice）
     required double val = 9;            //市值，3位精度, 期货此字段值为0
     required double plVal = 10;         //盈亏金额，3位精度，期货为2位精度
-    optional double plRatio = 11;       //盈亏百分比(如plRatio等于8.8代表涨8.8%)，无精度限制，如果没传，代表此时此值无效
+    optional double plRatio = 11;       //摊薄成本价的盈亏百分比(如plRatio等于8.8代表涨8.8%)，无精度限制，如果没传，代表此时此值无效
     optional int32 secMarket = 12;      //证券所属市场，参见TrdSecMarket的枚举定义
     
 	//以下是此持仓今日统计
@@ -306,6 +350,10 @@ message Position
     optional double realizedPL = 29;         //已实现盈亏，期货适用
 	optional int32 currency = 30;        // 货币类型，取值参考 Currency
 	optional int32 trdMarket = 31;  //交易市场, 参见TrdMarket的枚举定义
+	
+    optional double dilutedCostPrice = 32;      //摊薄成本价，仅支持证券账户使用
+    optional double averageCostPrice = 33;      //平均成本价，模拟交易证券账户不适用
+    optional double averagePlRatio = 34;        //平均成本价的盈亏百分比(如plRatio等于8.8代表涨8.8%)，无精度限制，如果没传，代表此时此值无效
 }
 
 //订单结构
@@ -337,6 +385,20 @@ message Order
 	optional double trailSpread = 24; //指定价差
 	optional int32 currency = 25;        // 货币类型，取值参考 Currency
 	optional int32 trdMarket = 26;  //交易市场, 参见TrdMarket的枚举定义
+	optional int32 session = 27; //美股订单时段, 参见Common.Session的枚举定义
+}
+
+message OrderFeeItem
+{
+	optional string title = 1; //费用名字
+	optional double value = 2; //费用金额
+}
+
+message OrderFee
+{
+    required string orderIDEx = 1; //扩展订单号
+	optional double feeAmount = 2; //费用总额
+	repeated OrderFeeItem feeList = 3; //费用明细
 }
 
 //成交结构
@@ -358,6 +420,7 @@ message OrderFill
     optional double createTimestamp = 14; //创建时间戳
     optional double updateTimestamp = 15; //最后更新时间戳
     optional int32 status = 16; //成交状态, 参见OrderFillStatus的枚举定义
+    optional int32 trdMarket = 17;  //交易市场, 参见TrdMarket的枚举定义
 }
 
 //最大可交易数量
@@ -380,4 +443,6 @@ message TrdFilterConditions
 	repeated uint64 idList = 2; //ID主键过滤，只返回包含这些ID的数据，没传不过滤，订单是orderID、成交是fillID、持仓是positionID
 	optional string beginTime = 3; //开始时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传，对持仓无效，拉历史数据必须填
 	optional string endTime = 4; //结束时间，严格按YYYY-MM-DD HH:MM:SS或YYYY-MM-DD HH:MM:SS.MS格式传，对持仓无效，拉历史数据必须填
+	repeated string orderIDExList = 5; // 服务器订单ID，可以用来替代orderID，二选一
+    optional int32 filterMarket = 6; //指定交易市场, 参见TrdMarket的枚举定义
 }

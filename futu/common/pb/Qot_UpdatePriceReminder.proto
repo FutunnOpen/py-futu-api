@@ -6,21 +6,13 @@ option go_package = "github.com/futuopen/ftapi4go/pb/qotupdatepricereminder";
 import "Common.proto";
 import "Qot_Common.proto";
 
-enum MarketStatus
-{
-	MarketStatus_Unknow = 0;
-	MarketStatus_Open = 1; // 盘中
-	MarketStatus_USPre = 2;  // 美股盘前
-	MarketStatus_USAfter = 3; // 美股盘后
-}
-
 message S2C
 {
 	required Qot_Common.Security security = 1; //股票
 	optional string name = 11; // 股票名称
 	required double price = 2; //价格
 	required double changeRate = 3; //涨跌幅
-	required int32 marketStatus = 4; //市场状态
+	required int32 marketStatus = 4; //市场状态,Qot_Common::PriceReminderMarketStatus
 	required string content = 5; //内容
 	required string note = 6; //备注仅支持 20 个以内的中文字符
 	optional int64 key = 7; // 到价提醒的标识

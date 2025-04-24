@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Common.proto',
   package='Common',
   syntax='proto2',
-  serialized_pb=_b('\n\x0c\x43ommon.proto\x12\x06\x43ommon\",\n\x08PacketID\x12\x0e\n\x06\x63onnID\x18\x01 \x02(\x04\x12\x10\n\x08serialNo\x18\x02 \x02(\r\"L\n\rProgramStatus\x12\'\n\x04type\x18\x01 \x02(\x0e\x32\x19.Common.ProgramStatusType\x12\x12\n\nstrExtDesc\x18\x02 \x01(\t*\xb6\x01\n\x07RetType\x12\x13\n\x0fRetType_Succeed\x10\x00\x12\x1b\n\x0eRetType_Failed\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_TimeOut\x10\x9c\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1f\n\x12RetType_DisConnect\x10\xb8\xfe\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Unknown\x10\xf0\xfc\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Invalid\x10\x8c\xfc\xff\xff\xff\xff\xff\xff\xff\x01*\x83\x01\n\rPacketEncAlgo\x12\x1b\n\x17PacketEncAlgo_FTAES_ECB\x10\x00\x12\x1f\n\x12PacketEncAlgo_None\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x19\n\x15PacketEncAlgo_AES_ECB\x10\x01\x12\x19\n\x15PacketEncAlgo_AES_CBC\x10\x02*4\n\x08ProtoFmt\x12\x15\n\x11ProtoFmt_Protobuf\x10\x00\x12\x11\n\rProtoFmt_Json\x10\x01*v\n\x0fUserAttribution\x12\x1b\n\x17UserAttribution_Unknown\x10\x00\x12\x16\n\x12UserAttribution_NN\x10\x01\x12\x16\n\x12UserAttribution_MM\x10\x02\x12\x16\n\x12UserAttribution_SG\x10\x03*\xf0\x03\n\x11ProgramStatusType\x12\x1a\n\x16ProgramStatusType_None\x10\x00\x12\x1c\n\x18ProgramStatusType_Loaded\x10\x01\x12\x1c\n\x18ProgramStatusType_Loging\x10\x02\x12\'\n#ProgramStatusType_NeedPicVerifyCode\x10\x03\x12)\n%ProgramStatusType_NeedPhoneVerifyCode\x10\x04\x12!\n\x1dProgramStatusType_LoginFailed\x10\x05\x12!\n\x1dProgramStatusType_ForceUpdate\x10\x06\x12*\n&ProgramStatusType_NessaryDataPreparing\x10\x07\x12(\n$ProgramStatusType_NessaryDataMissing\x10\x08\x12\'\n#ProgramStatusType_UnAgreeDisclaimer\x10\t\x12\x1b\n\x17ProgramStatusType_Ready\x10\n\x12!\n\x1dProgramStatusType_ForceLogout\x10\x0b\x12*\n&ProgramStatusType_DisclaimerPullFailed\x10\x0c\x42=\n\x13\x63om.futu.openapi.pbZ&github.com/futuopen/ftapi4go/pb/common')
+  serialized_pb=_b('\n\x0c\x43ommon.proto\x12\x06\x43ommon\",\n\x08PacketID\x12\x0e\n\x06\x63onnID\x18\x01 \x02(\x04\x12\x10\n\x08serialNo\x18\x02 \x02(\r\"L\n\rProgramStatus\x12\'\n\x04type\x18\x01 \x02(\x0e\x32\x19.Common.ProgramStatusType\x12\x12\n\nstrExtDesc\x18\x02 \x01(\t*\xb6\x01\n\x07RetType\x12\x13\n\x0fRetType_Succeed\x10\x00\x12\x1b\n\x0eRetType_Failed\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_TimeOut\x10\x9c\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1f\n\x12RetType_DisConnect\x10\xb8\xfe\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Unknown\x10\xf0\xfc\xff\xff\xff\xff\xff\xff\xff\x01\x12\x1c\n\x0fRetType_Invalid\x10\x8c\xfc\xff\xff\xff\xff\xff\xff\xff\x01*\x83\x01\n\rPacketEncAlgo\x12\x1b\n\x17PacketEncAlgo_FTAES_ECB\x10\x00\x12\x1f\n\x12PacketEncAlgo_None\x10\xff\xff\xff\xff\xff\xff\xff\xff\xff\x01\x12\x19\n\x15PacketEncAlgo_AES_ECB\x10\x01\x12\x19\n\x15PacketEncAlgo_AES_CBC\x10\x02*4\n\x08ProtoFmt\x12\x15\n\x11ProtoFmt_Protobuf\x10\x00\x12\x11\n\rProtoFmt_Json\x10\x01*\xbe\x01\n\x0fUserAttribution\x12\x1b\n\x17UserAttribution_Unknown\x10\x00\x12\x16\n\x12UserAttribution_NN\x10\x01\x12\x16\n\x12UserAttribution_MM\x10\x02\x12\x16\n\x12UserAttribution_SG\x10\x03\x12\x16\n\x12UserAttribution_AU\x10\x04\x12\x16\n\x12UserAttribution_JP\x10\x05\x12\x16\n\x12UserAttribution_HK\x10\x06*\xf0\x03\n\x11ProgramStatusType\x12\x1a\n\x16ProgramStatusType_None\x10\x00\x12\x1c\n\x18ProgramStatusType_Loaded\x10\x01\x12\x1c\n\x18ProgramStatusType_Loging\x10\x02\x12\'\n#ProgramStatusType_NeedPicVerifyCode\x10\x03\x12)\n%ProgramStatusType_NeedPhoneVerifyCode\x10\x04\x12!\n\x1dProgramStatusType_LoginFailed\x10\x05\x12!\n\x1dProgramStatusType_ForceUpdate\x10\x06\x12*\n&ProgramStatusType_NessaryDataPreparing\x10\x07\x12(\n$ProgramStatusType_NessaryDataMissing\x10\x08\x12\'\n#ProgramStatusType_UnAgreeDisclaimer\x10\t\x12\x1b\n\x17ProgramStatusType_Ready\x10\n\x12!\n\x1dProgramStatusType_ForceLogout\x10\x0b\x12*\n&ProgramStatusType_DisclaimerPullFailed\x10\x0c*e\n\x07Session\x12\x10\n\x0cSession_NONE\x10\x00\x12\x0f\n\x0bSession_RTH\x10\x01\x12\x0f\n\x0bSession_ETH\x10\x02\x12\x0f\n\x0bSession_ALL\x10\x03\x12\x15\n\x11Session_OVERNIGHT\x10\x04\x42=\n\x13\x63om.futu.openapi.pbZ&github.com/futuopen/ftapi4go/pb/common')
 )
 
 _RETTYPE = _descriptor.EnumDescriptor(
@@ -138,11 +138,23 @@ _USERATTRIBUTION = _descriptor.EnumDescriptor(
       name='UserAttribution_SG', index=3, number=3,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UserAttribution_AU', index=4, number=4,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UserAttribution_JP', index=5, number=5,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UserAttribution_HK', index=6, number=6,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=521,
-  serialized_end=639,
+  serialized_start=522,
+  serialized_end=712,
 )
 _sym_db.RegisterEnumDescriptor(_USERATTRIBUTION)
 
@@ -208,12 +220,47 @@ _PROGRAMSTATUSTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=642,
-  serialized_end=1138,
+  serialized_start=715,
+  serialized_end=1211,
 )
 _sym_db.RegisterEnumDescriptor(_PROGRAMSTATUSTYPE)
 
 ProgramStatusType = enum_type_wrapper.EnumTypeWrapper(_PROGRAMSTATUSTYPE)
+_SESSION = _descriptor.EnumDescriptor(
+  name='Session',
+  full_name='Common.Session',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='Session_NONE', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Session_RTH', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Session_ETH', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Session_ALL', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Session_OVERNIGHT', index=4, number=4,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=1213,
+  serialized_end=1314,
+)
+_sym_db.RegisterEnumDescriptor(_SESSION)
+
+Session = enum_type_wrapper.EnumTypeWrapper(_SESSION)
 RetType_Succeed = 0
 RetType_Failed = -1
 RetType_TimeOut = -100
@@ -230,6 +277,9 @@ UserAttribution_Unknown = 0
 UserAttribution_NN = 1
 UserAttribution_MM = 2
 UserAttribution_SG = 3
+UserAttribution_AU = 4
+UserAttribution_JP = 5
+UserAttribution_HK = 6
 ProgramStatusType_None = 0
 ProgramStatusType_Loaded = 1
 ProgramStatusType_Loging = 2
@@ -243,6 +293,11 @@ ProgramStatusType_UnAgreeDisclaimer = 9
 ProgramStatusType_Ready = 10
 ProgramStatusType_ForceLogout = 11
 ProgramStatusType_DisclaimerPullFailed = 12
+Session_NONE = 0
+Session_RTH = 1
+Session_ETH = 2
+Session_ALL = 3
+Session_OVERNIGHT = 4
 
 
 
@@ -329,6 +384,7 @@ DESCRIPTOR.enum_types_by_name['PacketEncAlgo'] = _PACKETENCALGO
 DESCRIPTOR.enum_types_by_name['ProtoFmt'] = _PROTOFMT
 DESCRIPTOR.enum_types_by_name['UserAttribution'] = _USERATTRIBUTION
 DESCRIPTOR.enum_types_by_name['ProgramStatusType'] = _PROGRAMSTATUSTYPE
+DESCRIPTOR.enum_types_by_name['Session'] = _SESSION
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 PacketID = _reflection.GeneratedProtocolMessageType('PacketID', (_message.Message,), dict(

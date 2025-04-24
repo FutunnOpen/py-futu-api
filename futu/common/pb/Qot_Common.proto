@@ -15,6 +15,10 @@ enum QotMarket
     QotMarket_CNSZ_Security = 22; //深股市场
 	QotMarket_SG_Security = 31; //新加坡市场
 	QotMarket_JP_Security = 41; //日本市场
+	QotMarket_AU_Security = 51; //澳大利亚市场
+	QotMarket_MY_Security = 61; //马来西亚市场
+	QotMarket_CA_Security = 71; // 加拿大市场
+	QotMarket_FX_Security = 81; // 外汇市场
 }
 
 enum SecurityType
@@ -86,6 +90,7 @@ enum QotMarketState
 	QotMarketState_PreMarketEnd = 9; // 盘前结束 
 	QotMarketState_AfterHoursBegin = 10; // 盘后
 	QotMarketState_AfterHoursEnd = 11; // 盘后结束	 
+	QotMarketState_FUTU_SWITCH_DATE      = 12;
 	QotMarketState_NightOpen = 13; // 夜市开盘 
 	QotMarketState_NightEnd = 14; // 夜市收盘 
 	QotMarketState_FutureDayOpen = 15; // 期货日市开盘 
@@ -105,6 +110,15 @@ enum QotMarketState
     QotMarketState_StibAfterHoursWait = 27; // 科创板的盘后撮合时段（已废弃）
     QotMarketState_StibAfterHoursBegin = 28; // 科创板的盘后交易开始（已废弃）
     QotMarketState_StibAfterHoursEnd = 29; // 科创板的盘后交易结束（已废弃）
+
+    QotMarketState_CLOSE_AUCTION         = 30;  // 收市竞价
+    QotMarketState_AFTERNOON_END         = 31;  // 已收盘
+    QotMarketState_NIGHT                 = 32;  // 交易中
+    QotMarketState_OVERNIGHT_BEGIN       = 33;  // 夜盘开始
+    QotMarketState_OVERNIGHT_END         = 34;  // 夜盘结束
+    QotMarketState_TRADE_AT_LAST         = 35;  // 收盘前成交（在交易时间表内）
+    QotMarketState_TRADE_AUCTION         = 36;  // 收盘前的竞价 （在交易时间表内）
+	QotMarketState_OVERNIGHT         	 = 37;  // 美股夜盘交易
 }
 
 //交易日查询市场
@@ -375,6 +389,9 @@ enum Issuer
 	Issuer_MS = 23; //摩利
 	Issuer_GJ = 24; //国君
 	Issuer_XZ = 25; //星展
+	Issuer_HU = 26; //华泰
+	Issuer_KS = 27; //韩投
+	Issuer_CI = 28; //信证
 }
 
 //窝轮上市日
@@ -460,6 +477,16 @@ enum PriceReminderFreq
     PriceReminderFreq_OnlyOnce = 3; // 仅提醒一次
 }
 
+// 提醒市场状态
+enum PriceReminderMarketStatus
+{
+	PriceReminderMarketStatus_Unknow = 0;
+	PriceReminderMarketStatus_Open = 1; // 盘中
+	PriceReminderMarketStatus_USPre = 2;  // 美股盘前
+	PriceReminderMarketStatus_USAfter = 3; // 美股盘后
+	PriceReminderMarketStatus_USOverNight = 4; // 美股夜盘
+}
+
 // 资产类别
 enum AssetClass
 {
@@ -478,6 +505,29 @@ enum ExpirationCycle
 	ExpirationCycle_Unknown = 0; //未知
 	ExpirationCycle_Week = 1; //周期权
 	ExpirationCycle_Month = 2; //月期权
+	ExpirationCycle_MonthEnd = 3;  // 月末期权
+	ExpirationCycle_Quarter = 4; //季度期权
+	ExpirationCycle_WeekMon = 11; //周一
+	ExpirationCycle_WeekTue = 12; //周二
+	ExpirationCycle_WeekWed = 13; //周三
+	ExpirationCycle_WeekThu = 14; //周四
+	ExpirationCycle_WeekFri = 15; //周五
+}
+
+// 标准期权链类型
+enum OptionStandardType
+{
+	OptionStandardType_Unknown = 0; //未知
+	OptionStandardType_Standard = 1; // 标准
+	OptionStandardType_NonStandard = 2; // 非标准
+}
+
+// 期权结算方式
+enum OptionSettlementMode
+{
+	OptionSettlementMode_Unknown = 0; //未知
+	OptionSettlementMode_AM = 1; // AM
+	OptionSettlementMode_PM = 2; // PM
 }
 
 // 所属交易所
@@ -615,6 +665,7 @@ message BasicQot
 	optional int32 secStatus = 21; //SecurityStatus, 股票状态
 	optional FutureBasicQotExData futureExData = 22; //期货特有字段
 	optional WarrantBasicQotExData warrantExData = 23; //窝轮特有字段
+	optional PreAfterMarketData overnight = 25; //夜盘数据
 }
 
 message TimeShare
@@ -659,6 +710,9 @@ message OptionStaticExData
 	required string market = 6; //发行市场名字
 	optional double strikeTimestamp = 7; //行权日时间戳
 	optional int32 indexOptionType = 8; //Qot_Common.IndexOptionType, 指数期权的类型，仅在指数期权有效
+	optional int32 expirationCycle = 9; // ExpirationCycle，交割周期
+	optional int32 optionStandardType = 10; // OptionStandardType，标准期权
+	optional int32 optionSettlementMode = 11; // OptionSettlementMode，结算方式
 }
 
 message FutureStaticExData

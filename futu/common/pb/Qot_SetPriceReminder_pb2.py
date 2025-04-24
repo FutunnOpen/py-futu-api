@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_SetPriceReminder.proto',
   package='Qot_SetPriceReminder',
   syntax='proto2',
-  serialized_pb=_b('\n\x1aQot_SetPriceReminder.proto\x12\x14Qot_SetPriceReminder\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x7f\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\n\n\x02op\x18\x02 \x02(\x05\x12\x0b\n\x03key\x18\x03 \x01(\x03\x12\x0c\n\x04type\x18\x04 \x01(\x05\x12\x0c\n\x04\x66req\x18\x07 \x01(\x05\x12\r\n\x05value\x18\x05 \x01(\x01\x12\x0c\n\x04note\x18\x06 \x01(\t\"\x12\n\x03S2C\x12\x0b\n\x03key\x18\x01 \x02(\x03\"1\n\x07Request\x12&\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x19.Qot_SetPriceReminder.C2S\"j\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12&\n\x03s2c\x18\x04 \x01(\x0b\x32\x19.Qot_SetPriceReminder.S2C*\xe9\x01\n\x12SetPriceReminderOp\x12\x1e\n\x1aSetPriceReminderOp_Unknown\x10\x00\x12\x1a\n\x16SetPriceReminderOp_Add\x10\x01\x12\x1a\n\x16SetPriceReminderOp_Del\x10\x02\x12\x1d\n\x19SetPriceReminderOp_Enable\x10\x03\x12\x1e\n\x1aSetPriceReminderOp_Disable\x10\x04\x12\x1d\n\x19SetPriceReminderOp_Modify\x10\x05\x12\x1d\n\x19SetPriceReminderOp_DelAll\x10\x06\x42J\n\x13\x63om.futu.openapi.pbZ3github.com/futuopen/ftapi4go/pb/qotsetpricereminder')
+  serialized_pb=_b('\n\x1aQot_SetPriceReminder.proto\x12\x14Qot_SetPriceReminder\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x9c\x01\n\x03\x43\x32S\x12&\n\x08security\x18\x01 \x02(\x0b\x32\x14.Qot_Common.Security\x12\n\n\x02op\x18\x02 \x02(\x05\x12\x0b\n\x03key\x18\x03 \x01(\x03\x12\x0c\n\x04type\x18\x04 \x01(\x05\x12\x0c\n\x04\x66req\x18\x07 \x01(\x05\x12\r\n\x05value\x18\x05 \x01(\x01\x12\x0c\n\x04note\x18\x06 \x01(\t\x12\x1b\n\x13reminderSessionList\x18\x08 \x03(\x05\"\x12\n\x03S2C\x12\x0b\n\x03key\x18\x01 \x02(\x03\"1\n\x07Request\x12&\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x19.Qot_SetPriceReminder.C2S\"j\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12&\n\x03s2c\x18\x04 \x01(\x0b\x32\x19.Qot_SetPriceReminder.S2C*\xe9\x01\n\x12SetPriceReminderOp\x12\x1e\n\x1aSetPriceReminderOp_Unknown\x10\x00\x12\x1a\n\x16SetPriceReminderOp_Add\x10\x01\x12\x1a\n\x16SetPriceReminderOp_Del\x10\x02\x12\x1d\n\x19SetPriceReminderOp_Enable\x10\x03\x12\x1e\n\x1aSetPriceReminderOp_Disable\x10\x04\x12\x1d\n\x19SetPriceReminderOp_Modify\x10\x05\x12\x1d\n\x19SetPriceReminderOp_DelAll\x10\x06\x42J\n\x13\x63om.futu.openapi.pbZ3github.com/futuopen/ftapi4go/pb/qotsetpricereminder')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -63,8 +63,8 @@ _SETPRICEREMINDEROP = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=393,
-  serialized_end=626,
+  serialized_start=423,
+  serialized_end=656,
 )
 _sym_db.RegisterEnumDescriptor(_SETPRICEREMINDEROP)
 
@@ -135,6 +135,13 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='reminderSessionList', full_name='Qot_SetPriceReminder.C2S.reminderSessionList', index=7,
+      number=8, type=5, cpp_type=1, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -147,8 +154,8 @@ _C2S = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=84,
-  serialized_end=211,
+  serialized_start=85,
+  serialized_end=241,
 )
 
 
@@ -178,8 +185,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=213,
-  serialized_end=231,
+  serialized_start=243,
+  serialized_end=261,
 )
 
 
@@ -209,8 +216,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=233,
-  serialized_end=282,
+  serialized_start=263,
+  serialized_end=312,
 )
 
 
@@ -261,8 +268,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=284,
-  serialized_end=390,
+  serialized_start=314,
+  serialized_end=420,
 )
 
 _C2S.fields_by_name['security'].message_type = Qot__Common__pb2._SECURITY

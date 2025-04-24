@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from futu.quote.quote_response_handler import *
-from futu.trade.trade_response_handler import *
+from ..quote.quote_response_handler import *
+from ..trade.trade_response_handler import *
 
 
 class HandlerContext:

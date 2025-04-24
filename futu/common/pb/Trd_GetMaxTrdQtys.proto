@@ -17,6 +17,7 @@ message C2S
 	optional bool adjustPrice = 6; //是否调整价格，如果价格不合法，是否调整到合法价位，true调整，false不调整
 	optional double adjustSideAndLimit = 7; //调整方向和调整幅度百分比限制，正数代表向上调整，负数代表向下调整，具体值代表调整幅度限制，如：0.015代表向上调整且幅度不超过1.5%；-0.01代表向下调整且幅度不超过1%
 	optional int32 secMarket = 8; //证券所属市场，参见TrdSecMarket的枚举定义
+	optional string orderIDEx = 9; //表示服务器订单id，可以用来代替orderID，和orderID二选一
 }
 
 message S2C

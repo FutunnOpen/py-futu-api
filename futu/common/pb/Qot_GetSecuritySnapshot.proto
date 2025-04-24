@@ -171,6 +171,7 @@ message SnapshotBasicData
 	optional Qot_Common.PreAfterMarketData afterMarket = 38; //Qot_Common::PreAfterMarketData 盘后数据
 	optional int32 secStatus = 39; //Qot_Common::SecurityStatus 股票状态
 	optional double closePrice5Minute = 40; //5分钟收盘价
+	optional Qot_Common.PreAfterMarketData overnight = 42; //Qot_Common::PreAfterMarketData 夜盘数据
 }
 
 message Snapshot

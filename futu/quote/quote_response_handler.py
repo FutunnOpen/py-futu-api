@@ -1,7 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
+
 import pandas as pd
-from futu.common import RspHandlerBase
-from futu.quote.quote_query import *
+from .quote_query import *
+from ..common import RspHandlerBase
 
 
 class StockQuoteHandlerBase(RspHandlerBase):
@@ -56,6 +57,7 @@ class StockQuoteHandlerBase(RspHandlerBase):
 
             col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_pre)
             col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_after)
+            col_list.extend(row[0] for row in pb_field_map_PreAfterMarketData_overnight)
 
             quote_frame_table = pd.DataFrame(content, columns=col_list)
 

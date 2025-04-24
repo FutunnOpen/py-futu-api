@@ -1,5 +1,5 @@
 import pandas as pd
-from futu.quote.quote_query import *
+from .quote_query import *
 
 
 class OpenQuoteTool(object):

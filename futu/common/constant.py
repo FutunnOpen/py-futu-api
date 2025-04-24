@@ -2,21 +2,22 @@
 """
     Constant collection
 """
-from futu.common.pb import Qot_GetCodeChange_pb2
-from futu.common.pb import Qot_StockFilter_pb2
-from futu.common.pb import Qot_ModifyUserSecurity_pb2
-from futu.common.pb import GetDelayStatistics_pb2
-from futu.common.pb import GetUserInfo_pb2
-from futu.common.pb import Common_pb2
-from futu.common.pb import Notify_pb2
-from futu.common.pb import Verification_pb2
-from futu.common.pb import Qot_GetReference_pb2
-from futu.common.pb import Qot_Common_pb2
-from futu.common.pb import Trd_Common_pb2
-from futu.common.pb import Qot_SetPriceReminder_pb2
-from futu.common.pb import Qot_UpdatePriceReminder_pb2
-from futu.common.pb import Qot_GetUserSecurityGroup_pb2
-from futu.common.pb import Qot_GetOptionChain_pb2
+from .pb import Qot_GetCodeChange_pb2
+from .pb import Qot_StockFilter_pb2
+from .pb import Qot_ModifyUserSecurity_pb2
+from .pb import GetDelayStatistics_pb2
+from .pb import GetUserInfo_pb2
+from .pb import Common_pb2
+from .pb import Notify_pb2
+from .pb import Verification_pb2
+from .pb import Qot_GetReference_pb2
+from .pb import Qot_Common_pb2
+from .pb import Trd_Common_pb2
+from .pb import Qot_SetPriceReminder_pb2
+from .pb import Qot_UpdatePriceReminder_pb2
+from .pb import Qot_GetUserSecurityGroup_pb2
+from .pb import Qot_GetOptionChain_pb2
+from .pb import Trd_FlowSummary_pb2
 from copy import copy
 from abc import abstractmethod
 
@@ -50,6 +51,8 @@ class ProtoId(object):
     Trd_GetHistoryOrderFillList = 2222  # 获取历史成交列表
     Trd_GetMaxTrdQtys = 2111    # 查询最大买卖数量
     Trd_GetMarginRatio = 2223  # 获取融资融券数据
+    Trd_GetOrderFee = 2225  # 获取订单费用
+    Trd_FlowSummary = 2226  # 获取现金流水
 
     # 订阅数据
     Qot_Sub = 3001  # 订阅或者反订阅
@@ -231,6 +234,26 @@ API_PROTO_VER = int(0)
 
 # 市场标识字符串
 
+# 用户归属地
+class UserAttr(FtEnum):
+    NONE = "N/A"                               # 未知
+    CN = "CN"                                  # 大陆
+    US = "US"                                  # 美国
+    SG = "SG"                                  # 新加坡
+    AU = "AU"                                  # 新加坡
+    JP = "JP"                                  # 日本
+    HK = "HK"                                  # 香港
+
+    def load_dic(self):
+        return {
+            self.NONE: Common_pb2.UserAttribution_Unknown,
+            self.CN: Common_pb2.UserAttribution_NN,
+            self.US: Common_pb2.UserAttribution_MM,
+            self.SG: Common_pb2.UserAttribution_SG,
+            self.AU: Common_pb2.UserAttribution_AU,
+            self.JP: Common_pb2.UserAttribution_JP,
+            self.HK: Common_pb2.UserAttribution_HK,
+        }
 
 class Market(FtEnum):
     """
@@ -257,6 +280,10 @@ class Market(FtEnum):
     HK_FUTURE = "HK_FUTURE"
     SG = "SG"
     JP = "JP"
+    AU = "AU"
+    MY = "MY"
+    CA = "CA"
+    FX = "FX"
 
     def load_dic(self):
         return {
@@ -267,7 +294,11 @@ class Market(FtEnum):
             self.SZ: Qot_Common_pb2.QotMarket_CNSZ_Security,
             self.HK_FUTURE: Qot_Common_pb2.QotMarket_HK_Future,
             self.SG: Qot_Common_pb2.QotMarket_SG_Security,
-            self.JP: Qot_Common_pb2.QotMarket_JP_Security
+            self.JP: Qot_Common_pb2.QotMarket_JP_Security,
+            self.AU: Qot_Common_pb2.QotMarket_AU_Security,
+            self.MY: Qot_Common_pb2.QotMarket_MY_Security,
+            self.CA: Qot_Common_pb2.QotMarket_CA_Security,
+            self.FX: Qot_Common_pb2.QotMarket_FX_Security,
         }
 
 QOT_MARKET_TO_TRD_SEC_MARKET_MAP = {
@@ -279,6 +310,10 @@ QOT_MARKET_TO_TRD_SEC_MARKET_MAP = {
     Qot_Common_pb2.QotMarket_US_Security: Trd_Common_pb2.TrdSecMarket_US,
     Qot_Common_pb2.QotMarket_SG_Security: Trd_Common_pb2.TrdSecMarket_SG,
     Qot_Common_pb2.QotMarket_JP_Security: Trd_Common_pb2.TrdSecMarket_JP,
+    Qot_Common_pb2.QotMarket_AU_Security: Trd_Common_pb2.TrdSecMarket_AU,
+    Qot_Common_pb2.QotMarket_MY_Security: Trd_Common_pb2.TrdSecMarket_MY,
+    Qot_Common_pb2.QotMarket_CA_Security: Trd_Common_pb2.TrdSecMarket_CA,
+    Qot_Common_pb2.QotMarket_FX_Security: Trd_Common_pb2.TrdSecMarket_FX,
 }
 
 
@@ -354,6 +389,9 @@ class MarketState(FtEnum):
     STIB_AFTER_HOURS_WAIT = "STIB_AFTER_HOURS_WAIT"  #科创板的盘后撮合时段
     STIB_AFTER_HOURS_BEGIN = "STIB_AFTER_HOURS_BEGIN"  # 科创板的盘后交易开始
     STIB_AFTER_HOURS_END = "STIB_AFTER_HOURS_END"  # 科创板的盘后交易结束
+    NIGHT = "NIGHT"                                  #夜市
+    TRADE_AT_LAST = "TRADE_AT_LAST"                  #盘尾交易
+    OVERNIGHT = "OVERNIGHT"                          #美股夜盘交易
 
     def load_dic(self):
         return {
@@ -385,6 +423,9 @@ class MarketState(FtEnum):
             self.STIB_AFTER_HOURS_WAIT: Qot_Common_pb2.QotMarketState_StibAfterHoursWait,
             self.STIB_AFTER_HOURS_BEGIN: Qot_Common_pb2.QotMarketState_StibAfterHoursBegin,
             self.STIB_AFTER_HOURS_END: Qot_Common_pb2.QotMarketState_StibAfterHoursEnd,
+            self.NIGHT: Qot_Common_pb2.QotMarketState_NIGHT,
+            self.TRADE_AT_LAST: Qot_Common_pb2.QotMarketState_TRADE_AT_LAST,
+            self.OVERNIGHT: Qot_Common_pb2.QotMarketState_OVERNIGHT,
         }
 
 # 股票类型
@@ -1060,7 +1101,17 @@ class TrdMarket(FtEnum):
     CN = "CN"      # 大陆市场
     HKCC = "HKCC"  # 香港A股通市场
     FUTURES = "FUTURES"  # 期货市场
-    # SG = "SG"
+    FUTURES_SIMULATE_HK = "FUTURES_SIMULATE_HK"
+    FUTURES_SIMULATE_US = "FUTURES_SIMULATE_US"
+    FUTURES_SIMULATE_SG = "FUTURES_SIMULATE_SG"
+    FUTURES_SIMULATE_JP = "FUTURES_SIMULATE_JP"
+    SG = "SG"
+    AU = "AU"
+    JP = "JP"
+    MY = "MY"
+    CA = "CA"
+    HKFUND = "HKFUND"
+    USFUND = "USFUND"
 
     def load_dic(self):
         return {
@@ -1070,7 +1121,17 @@ class TrdMarket(FtEnum):
             self.CN: Trd_Common_pb2.TrdMarket_CN,
             self.HKCC: Trd_Common_pb2.TrdMarket_HKCC,
             self.FUTURES: Trd_Common_pb2.TrdMarket_Futures,
-            # self.SG: Trd_Common_pb2.TrdMarket_SG,
+            self.SG: Trd_Common_pb2.TrdMarket_SG,
+            self.AU: Trd_Common_pb2.TrdMarket_AU,
+            self.JP: Trd_Common_pb2.TrdMarket_JP,
+            self.MY: Trd_Common_pb2.TrdMarket_MY,
+            self.CA: Trd_Common_pb2.TrdMarket_CA,
+            self.FUTURES_SIMULATE_HK: Trd_Common_pb2.TrdMarket_Futures_Simulate_HK,
+            self.FUTURES_SIMULATE_US: Trd_Common_pb2.TrdMarket_Futures_Simulate_US,
+            self.FUTURES_SIMULATE_SG: Trd_Common_pb2.TrdMarket_Futures_Simulate_SG,
+            self.FUTURES_SIMULATE_JP: Trd_Common_pb2.TrdMarket_Futures_Simulate_JP,
+            self.HKFUND: Trd_Common_pb2.TrdMarket_HK_Fund,
+            self.USFUND: Trd_Common_pb2.TrdMarket_US_Fund,
         }
 
 # 持仓方向
@@ -1106,7 +1167,7 @@ class OrderType(FtEnum):
      ..  py:attribute:: NORMAL
       普通订单(港股的增强限价单、A股限价委托、美股的限价单)
      ..  py:attribute:: MARKET
-      市价，目前仅美股
+      市价
      ..  py:attribute:: ABSOLUTE_LIMIT
       港股限价单(只有价格完全匹配才成交)
      ..  py:attribute:: AUCTION
@@ -1117,20 +1178,23 @@ class OrderType(FtEnum):
       港股特别限价(即市价IOC, 订单到达交易所后，或全部成交， 或部分成交再撤单， 或下单失败)
     """
     NONE = "N/A"
-    NORMAL = "NORMAL"                             # 普通订单(港股的增强限价单、A股限价委托、美股的限价单)
-    MARKET = "MARKET"                             # 市价，目前仅美股
-    ABSOLUTE_LIMIT = "ABSOLUTE_LIMIT"            # 港股_限价(只有价格完全匹配才成交)
-    AUCTION = "AUCTION"                           # 港股_竞价
-    AUCTION_LIMIT = "AUCTION_LIMIT"              # 港股_竞价限价
-    # 港股_特别限价(即市价IOC, 订单到达交易所后，或全部成交， 或部分成交再撤单， 或下单失败)
-    SPECIAL_LIMIT = "SPECIAL_LIMIT"
-    SPECIAL_LIMIT_ALL = "SPECIAL_LIMIT_ALL"      # 港股_特别限价(要么全部成交，要么自动撤单)
-    STOP = "STOP"                                  # 止损市价单
-    STOP_LIMIT = "STOP_LIMIT"                     # 止损限价单
-    MARKET_IF_TOUCHED = "MARKET_IF_TOUCHED"      # 触及市价单（止盈）
-    LIMIT_IF_TOUCHED = "LIMIT_IF_TOUCHED"        # 触及限价单（止盈）
-    TRAILING_STOP = "TRAILING_STOP"               # 跟踪止损市价单
-    TRAILING_STOP_LIMIT = "TRAILING_STOP_LIMIT"  #跟踪止损限价单
+    NORMAL = "NORMAL"                               # 普通订单(港股的增强限价单、A股限价委托、美股的限价单)
+    MARKET = "MARKET"                               # 市价
+    ABSOLUTE_LIMIT = "ABSOLUTE_LIMIT"               # 港股_限价(只有价格完全匹配才成交)
+    AUCTION = "AUCTION"                             # 港股_竞价
+    AUCTION_LIMIT = "AUCTION_LIMIT"                 # 港股_竞价限价
+    SPECIAL_LIMIT = "SPECIAL_LIMIT"                 # 港股_特别限价(即市价IOC, 订单到达交易所后，或全部成交， 或部分成交再撤单， 或下单失败)
+    SPECIAL_LIMIT_ALL = "SPECIAL_LIMIT_ALL"         # 港股_特别限价(要么全部成交，要么自动撤单)
+    STOP = "STOP"                                   # 止损市价单
+    STOP_LIMIT = "STOP_LIMIT"                       # 止损限价单
+    MARKET_IF_TOUCHED = "MARKET_IF_TOUCHED"         # 触及市价单(止盈)
+    LIMIT_IF_TOUCHED = "LIMIT_IF_TOUCHED"           # 触及限价单(止盈)
+    TRAILING_STOP = "TRAILING_STOP"                 # 跟踪止损市价单
+    TRAILING_STOP_LIMIT = "TRAILING_STOP_LIMIT"     # 跟踪止损限价单
+    TWAP = "TWAP"                                   # 算法订单TWAP市价单(仅展示)
+    TWAP_LIMIT = "TWAP_LIMIT"                       # 算法订单TWAP限价单(仅展示)
+    VWAP = "VWAP"                                   # 算法订单VWAP市价单(仅展示)
+    VWAP_LIMIT = "VWAP_LIMIT"                       # 算法订单VWAP限价单(仅展示)
 
     def load_dic(self):
         return {
@@ -1148,6 +1212,10 @@ class OrderType(FtEnum):
             self.LIMIT_IF_TOUCHED: Trd_Common_pb2.OrderType_LimitifTouched,
             self.TRAILING_STOP: Trd_Common_pb2.OrderType_TrailingStop,
             self.TRAILING_STOP_LIMIT: Trd_Common_pb2.OrderType_TrailingStopLimit,
+            self.TWAP: Trd_Common_pb2.OrderType_TWAP_MARKET,
+            self.TWAP_LIMIT: Trd_Common_pb2.OrderType_TWAP_LIMIT,
+            self.VWAP: Trd_Common_pb2.OrderType_VWAP_MARKET,
+            self.VWAP_LIMIT: Trd_Common_pb2.OrderType_VWAP_LIMIT,
         }
 
 # 订单类型
@@ -1369,7 +1437,13 @@ MKT_ENV_ENABLE_MAP = {
     (TrdMarket.CN, TrdEnv.SIMULATE): True,
 
     (TrdMarket.FUTURES, TrdEnv.REAL): True,
-    (TrdMarket.FUTURES, TrdEnv.SIMULATE): False
+    (TrdMarket.FUTURES, TrdEnv.SIMULATE): True,
+
+    (TrdMarket.HKFUND, TrdEnv.REAL): True,
+    (TrdMarket.HKFUND, TrdEnv.SIMULATE): False,
+
+    (TrdMarket.USFUND, TrdEnv.REAL): True,
+    (TrdMarket.USFUND, TrdEnv.SIMULATE): False,
 }
 
 class TRADE(object):
@@ -1630,6 +1704,10 @@ class Issuer(FtEnum):
     MS = "MS"                                          # 摩利
     GJ = "GJ"                                          # 国君
     XZ = "XZ"                                          # 星展
+    HU = "HU"                                          # 华泰
+    KS = "KS"                                          # 韩投
+    CI = "CI"                                          # 信证
+
 
     def load_dic(self):
         return {
@@ -1658,7 +1736,10 @@ class Issuer(FtEnum):
             self.KC: Qot_Common_pb2.Issuer_KC,
             self.MS: Qot_Common_pb2.Issuer_MS,
             self.GJ: Qot_Common_pb2.Issuer_GJ,
-            self.XZ: Qot_Common_pb2.Issuer_XZ
+            self.XZ: Qot_Common_pb2.Issuer_XZ,
+            self.HU: Qot_Common_pb2.Issuer_HU,
+            self.KS: Qot_Common_pb2.Issuer_KS,
+            self.CI: Qot_Common_pb2.Issuer_CI
         }
 
 
@@ -1946,6 +2027,17 @@ class TrdAccType(FtEnum):
             self.NONE: Trd_Common_pb2.TrdAccType_Unknown,
             self.CASH: Trd_Common_pb2.TrdAccType_Cash,
             self.MARGIN: Trd_Common_pb2.TrdAccType_Margin
+        }
+    
+# 账户状态
+class TrdAccStatus(FtEnum):
+    ACTIVE = 'ACTIVE'         # 生效账户
+    DISABLED = 'DISABLED'       # 失效账户
+
+    def load_dic(self):
+        return {
+            self.ACTIVE: Trd_Common_pb2.TrdAccStatus_Active,
+            self.DISABLED: Trd_Common_pb2.TrdAccStatus_Disabled
         }
 
 
@@ -2623,13 +2715,15 @@ class PriceReminderMarketStatus(FtEnum):
     OPEN = "OPEN"
     US_PRE = "US_PRE"
     US_AFTER = "US_AFTER"
+    US_OVERNIGHT = "US_OVERNIGHT"
 
     def load_dic(self):
         return {
-            self.NONE: Qot_UpdatePriceReminder_pb2.MarketStatus_Unknow,
-            self.OPEN: Qot_UpdatePriceReminder_pb2.MarketStatus_Open,
-            self.US_PRE: Qot_UpdatePriceReminder_pb2.MarketStatus_USPre,
-            self.US_AFTER: Qot_UpdatePriceReminder_pb2.MarketStatus_USAfter,
+            self.NONE: Qot_Common_pb2.PriceReminderMarketStatus_Unknow,
+            self.OPEN: Qot_Common_pb2.PriceReminderMarketStatus_Open,
+            self.US_PRE: Qot_Common_pb2.PriceReminderMarketStatus_USPre,
+            self.US_AFTER: Qot_Common_pb2.PriceReminderMarketStatus_USAfter,
+            self.US_OVERNIGHT: Qot_Common_pb2.PriceReminderMarketStatus_USOverNight
         }
 
 
@@ -2682,6 +2776,24 @@ class TimeInForce(FtEnum):
         }
 
 
+# 时段
+class Session(FtEnum):
+    NONE = 'N/A'   # 未知
+    RTH = 'RTH'   # 盘中
+    ETH = 'ETH'  # 盘中+盘前盘后
+    ALL = 'ALL'  # 全时段
+    OVERNIGHT = 'OVERNIGHT'  # 仅夜盘
+
+    def load_dic(self):
+        return {
+            self.NONE: Common_pb2.Session_NONE,
+            self.RTH: Common_pb2.Session_RTH,
+            self.ETH: Common_pb2.Session_ETH,
+            self.ALL: Common_pb2.Session_ALL,
+            self.OVERNIGHT: Common_pb2.Session_OVERNIGHT,
+        }
+
+
 # 券商
 class SecurityFirm(FtEnum):
     NONE = 'N/A'
@@ -2699,17 +2811,29 @@ class SecurityFirm(FtEnum):
             self.FUTUAU: Trd_Common_pb2.SecurityFirm_FutuAU,
         }
 
+
+def get_string_by_securityFirm(security_enum):
+    mapping = {
+        SecurityFirm.FUTUSECURITIES: "FUTU HK",
+        SecurityFirm.FUTUINC: "Moomoo US",
+        SecurityFirm.FUTUSG: "Moomoo SG",
+        SecurityFirm.FUTUAU: "Moomoo AU",
+    }
+    return mapping.get(security_enum, "Unknown security")
+
 # 模拟交易账号类型
 class SimAccType(FtEnum):
     NONE = 'N/A'
     STOCK = 'STOCK'
     OPTION = 'OPTION'
+    FUTURES = 'FUTURES'
 
     def load_dic(self):
         return {
             self.NONE: Trd_Common_pb2.SimAccType_Unknown,
             self.STOCK: Trd_Common_pb2.SimAccType_Stock,
-            self.OPTION: Trd_Common_pb2.SimAccType_Option
+            self.OPTION: Trd_Common_pb2.SimAccType_Option,
+            self.FUTURES: Trd_Common_pb2.SimAccType_Futures,
         }
 
 # 期权交割周期
@@ -2717,15 +2841,56 @@ class ExpirationCycle(FtEnum):
     NONE = 'N/A'
     WEEK = 'WEEK'
     MONTH = 'MONTH'
+    ENDOFMONTH = 'END_OF_MONTH'
+    QUARTERLY = 'QUARTERLY'
+    WEEKMON = 'WEEKMON'
+    WEEKTUE = 'WEEKTUE'
+    WEEKWED = 'WEEKWED'
+    WEEKTHU = 'WEEKTHU'
+    WEEKFRI = 'WEEKFRI'
 
     def load_dic(self):
         return {
             self.NONE: Qot_Common_pb2.ExpirationCycle_Unknown,
             self.WEEK: Qot_Common_pb2.ExpirationCycle_Week,
-            self.MONTH: Qot_Common_pb2.ExpirationCycle_Month
+            self.MONTH: Qot_Common_pb2.ExpirationCycle_Month,
+            self.ENDOFMONTH: Qot_Common_pb2.ExpirationCycle_MonthEnd,
+            self.QUARTERLY: Qot_Common_pb2.ExpirationCycle_Quarter,
+            self.WEEKMON: Qot_Common_pb2.ExpirationCycle_WeekMon,
+            self.WEEKTUE: Qot_Common_pb2.ExpirationCycle_WeekTue,
+            self.WEEKWED: Qot_Common_pb2.ExpirationCycle_WeekWed,
+            self.WEEKTHU: Qot_Common_pb2.ExpirationCycle_WeekThu,
+            self.WEEKFRI: Qot_Common_pb2.ExpirationCycle_WeekFri,
         }
 
 
+# 期权标准类型
+class OptionStandardType(FtEnum):
+    NONE = 'N/A'
+    STANDARD = 'STANDARD'
+    NON_STANDARD = 'NON_STANDARD'
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.OptionStandardType_Unknown,
+            self.STANDARD: Qot_Common_pb2.OptionStandardType_Standard,
+            self.NON_STANDARD: Qot_Common_pb2.OptionStandardType_NonStandard,
+        }
+
+
+# 期权结算方式
+class OptionSettlementMode(FtEnum):
+    NONE = 'N/A'
+    AM = 'AM'
+    PM = 'PM'
+
+    def load_dic(self):
+        return {
+            self.NONE: Qot_Common_pb2.OptionSettlementMode_Unknown,
+            self.AM: Qot_Common_pb2.OptionSettlementMode_AM,
+            self.PM: Qot_Common_pb2.OptionSettlementMode_PM,
+        }
+        
 class RunMode(FtEnum):
     DEFAULT = 'DEFAULT'
     QUANT = 'QUANT'
@@ -2761,4 +2926,17 @@ class PeriodType(FtEnum):
             self.DAY: Qot_Common_pb2.PeriodType_DAY,
             self.WEEK: Qot_Common_pb2.PeriodType_WEEK,
             self.MONTH: Qot_Common_pb2.PeriodType_MONTH
+        }
+
+# 获取资金流向的周期类型
+class CashFlowDirection(FtEnum):
+    NONE = 'N/A'
+    IN = 'IN'
+    OUT = 'OUT'
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_FlowSummary_pb2.TrdCashFlowDirection_Unknown,
+            self.IN: Trd_FlowSummary_pb2.TrdCashFlowDirection_In,
+            self.OUT: Trd_FlowSummary_pb2.TrdCashFlowDirection_Out,
         }

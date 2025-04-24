@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017 Futu, Inc.
+# Copyright 2024 Futu, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -97,26 +97,25 @@ _check_module('selectors2', py_version=2)
 
 
 #import data querying APIs and response handle base class
-from futu.quote.open_quote_context import OpenQuoteContext
-from futu.quote.quote_response_handler import *
-from futu.trade.trade_response_handler import *
-from futu.quote.quote_get_warrant import Request as WarrantRequest
+from .quote.open_quote_context import OpenQuoteContext
+from .quote.quote_response_handler import *
+from .trade.trade_response_handler import *
+from .quote.quote_get_warrant import Request as WarrantRequest
 
 #import HK and US trade context
-from futu.trade.open_trade_context import OpenHKTradeContext
-from futu.trade.open_trade_context import OpenUSTradeContext
-from futu.trade.open_trade_context import OpenHKCCTradeContext
-from futu.trade.open_trade_context import OpenCNTradeContext
-from futu.trade.open_trade_context import OpenFutureTradeContext
-from futu.trade.open_trade_context import OpenSecTradeContext
+from .trade.open_trade_context import OpenHKTradeContext
+from .trade.open_trade_context import OpenUSTradeContext
+from .trade.open_trade_context import OpenHKCCTradeContext
+from .trade.open_trade_context import OpenCNTradeContext
+from .trade.open_trade_context import OpenFutureTradeContext
+from .trade.open_trade_context import OpenSecTradeContext
 
 #import constant values
-from futu.common import *
-from futu.common.constant import *
-from futu.common.sys_config import SysConfig
-from futu.common.diag import print_sys_info
-from futu.common.err import Err
-from futu.quote.quote_get_warrant import Request as WarrantRequest
+from .common import *
+from .common.constant import *
+from .common.sys_config import SysConfig
+from .common.err import Err
+from .quote.quote_get_warrant import Request as WarrantRequest
 
 with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'VERSION.txt'), 'rb') as f:
     __version__ = f.read().decode('ascii').strip()

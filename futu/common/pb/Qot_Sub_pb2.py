@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Qot_Sub.proto',
   package='Qot_Sub',
   syntax='proto2',
-  serialized_pb=_b('\n\rQot_Sub.proto\x12\x07Qot_Sub\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\xf1\x01\n\x03\x43\x32S\x12*\n\x0csecurityList\x18\x01 \x03(\x0b\x32\x14.Qot_Common.Security\x12\x13\n\x0bsubTypeList\x18\x02 \x03(\x05\x12\x14\n\x0cisSubOrUnSub\x18\x03 \x02(\x08\x12\x18\n\x10isRegOrUnRegPush\x18\x04 \x01(\x08\x12\x1c\n\x14regPushRehabTypeList\x18\x05 \x03(\x05\x12\x13\n\x0bisFirstPush\x18\x06 \x01(\x08\x12\x12\n\nisUnsubAll\x18\x07 \x01(\x08\x12\x1c\n\x14isSubOrderBookDetail\x18\x08 \x01(\x08\x12\x14\n\x0c\x65xtendedTime\x18\t \x01(\x08\"\x05\n\x03S2C\"$\n\x07Request\x12\x19\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x0c.Qot_Sub.C2S\"]\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x19\n\x03s2c\x18\x04 \x01(\x0b\x32\x0c.Qot_Sub.S2CB=\n\x13\x63om.futu.openapi.pbZ&github.com/futuopen/ftapi4go/pb/qotsub')
+  serialized_pb=_b('\n\rQot_Sub.proto\x12\x07Qot_Sub\x1a\x0c\x43ommon.proto\x1a\x10Qot_Common.proto\"\x82\x02\n\x03\x43\x32S\x12*\n\x0csecurityList\x18\x01 \x03(\x0b\x32\x14.Qot_Common.Security\x12\x13\n\x0bsubTypeList\x18\x02 \x03(\x05\x12\x14\n\x0cisSubOrUnSub\x18\x03 \x02(\x08\x12\x18\n\x10isRegOrUnRegPush\x18\x04 \x01(\x08\x12\x1c\n\x14regPushRehabTypeList\x18\x05 \x03(\x05\x12\x13\n\x0bisFirstPush\x18\x06 \x01(\x08\x12\x12\n\nisUnsubAll\x18\x07 \x01(\x08\x12\x1c\n\x14isSubOrderBookDetail\x18\x08 \x01(\x08\x12\x14\n\x0c\x65xtendedTime\x18\t \x01(\x08\x12\x0f\n\x07session\x18\n \x01(\x05\"\x05\n\x03S2C\"$\n\x07Request\x12\x19\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x0c.Qot_Sub.C2S\"]\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x19\n\x03s2c\x18\x04 \x01(\x0b\x32\x0c.Qot_Sub.S2CB=\n\x13\x63om.futu.openapi.pbZ&github.com/futuopen/ftapi4go/pb/qotsub')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Qot__Common__pb2.DESCRIPTOR,])
 
@@ -98,6 +98,13 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='session', full_name='Qot_Sub.C2S.session', index=9,
+      number=10, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -111,7 +118,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=59,
-  serialized_end=300,
+  serialized_end=317,
 )
 
 
@@ -134,8 +141,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=302,
-  serialized_end=307,
+  serialized_start=319,
+  serialized_end=324,
 )
 
 
@@ -165,8 +172,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=309,
-  serialized_end=345,
+  serialized_start=326,
+  serialized_end=362,
 )
 
 
@@ -217,8 +224,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=347,
-  serialized_end=440,
+  serialized_start=364,
+  serialized_end=457,
 )
 
 _C2S.fields_by_name['securityList'].message_type = Qot__Common__pb2._SECURITY
