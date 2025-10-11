@@ -34,7 +34,7 @@ with open("README.md", "r", encoding='utf-8') as fh:
 
 install_requires = ["pandas",
                     "simplejson",
-                    "protobuf>=3.8.0,==3.*",
+                    "protobuf>=6.31.1,<7.0.0",
                     "PyCryptodome",
                     ]
 
