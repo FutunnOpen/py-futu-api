@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_GetFunds.proto',
   package='Trd_GetFunds',
   syntax='proto2',
-  serialized_pb=_b('\n\x12Trd_GetFunds.proto\x12\x0cTrd_GetFunds\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"T\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x14\n\x0crefreshCache\x18\x02 \x01(\x08\x12\x10\n\x08\x63urrency\x18\x03 \x01(\x05\"N\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12 \n\x05\x66unds\x18\x02 \x01(\x0b\x32\x11.Trd_Common.Funds\")\n\x07Request\x12\x1e\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x11.Trd_GetFunds.C2S\"b\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1e\n\x03s2c\x18\x04 \x01(\x0b\x32\x11.Trd_GetFunds.S2CBB\n\x13\x63om.futu.openapi.pbZ+github.com/futuopen/ftapi4go/pb/trdgetfunds')
+  serialized_pb=_b('\n\x12Trd_GetFunds.proto\x12\x0cTrd_GetFunds\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"k\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x14\n\x0crefreshCache\x18\x02 \x01(\x08\x12\x10\n\x08\x63urrency\x18\x03 \x01(\x05\x12\x15\n\rassetCategory\x18\x04 \x01(\x05\"N\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12 \n\x05\x66unds\x18\x02 \x01(\x0b\x32\x11.Trd_Common.Funds\")\n\x07Request\x12\x1e\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x11.Trd_GetFunds.C2S\"b\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12\x1e\n\x03s2c\x18\x04 \x01(\x0b\x32\x11.Trd_GetFunds.S2CBB\n\x13\x63om.futu.openapi.pbZ+github.com/futuopen/ftapi4go/pb/trdgetfunds')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Trd__Common__pb2.DESCRIPTOR,])
 
@@ -56,6 +56,13 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='assetCategory', full_name='Trd_GetFunds.C2S.assetCategory', index=3,
+      number=4, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -69,7 +76,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=68,
-  serialized_end=152,
+  serialized_end=175,
 )
 
 
@@ -106,8 +113,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=154,
-  serialized_end=232,
+  serialized_start=177,
+  serialized_end=255,
 )
 
 
@@ -137,8 +144,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=234,
-  serialized_end=275,
+  serialized_start=257,
+  serialized_end=298,
 )
 
 
@@ -189,8 +196,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=277,
-  serialized_end=375,
+  serialized_start=300,
+  serialized_end=398,
 )
 
 _C2S.fields_by_name['header'].message_type = Trd__Common__pb2._TRDHEADER

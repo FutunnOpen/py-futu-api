@@ -27,6 +27,7 @@ message C2S
 	optional double trailValue = 16; //跟踪金额/百分比
 	optional double trailSpread = 17; //指定价差
 	optional int32 session = 18; //美股订单时段, 参见Common.Session的枚举定义
+	optional uint64 positionID = 19; //持仓ID，JP券商查询平仓数量时使用
 }
 
 message S2C

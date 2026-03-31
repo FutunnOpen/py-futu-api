@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Trd_GetMaxTrdQtys.proto',
   package='Trd_GetMaxTrdQtys',
   syntax='proto2',
-  serialized_pb=_b('\n\x17Trd_GetMaxTrdQtys.proto\x12\x11Trd_GetMaxTrdQtys\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\xc4\x01\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x11\n\torderType\x18\x02 \x02(\x05\x12\x0c\n\x04\x63ode\x18\x03 \x02(\t\x12\r\n\x05price\x18\x04 \x02(\x01\x12\x0f\n\x07orderID\x18\x05 \x01(\x04\x12\x13\n\x0b\x61\x64justPrice\x18\x06 \x01(\x08\x12\x1a\n\x12\x61\x64justSideAndLimit\x18\x07 \x01(\x01\x12\x11\n\tsecMarket\x18\x08 \x01(\x05\x12\x11\n\torderIDEx\x18\t \x01(\t\"X\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12*\n\nmaxTrdQtys\x18\x02 \x01(\x0b\x32\x16.Trd_Common.MaxTrdQtys\".\n\x07Request\x12#\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x16.Trd_GetMaxTrdQtys.C2S\"g\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12#\n\x03s2c\x18\x04 \x01(\x0b\x32\x16.Trd_GetMaxTrdQtys.S2CBG\n\x13\x63om.futu.openapi.pbZ0github.com/futuopen/ftapi4go/pb/trdgetmaxtrdqtys')
+  serialized_pb=_b('\n\x17Trd_GetMaxTrdQtys.proto\x12\x11Trd_GetMaxTrdQtys\x1a\x0c\x43ommon.proto\x1a\x10Trd_Common.proto\"\xe9\x01\n\x03\x43\x32S\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12\x11\n\torderType\x18\x02 \x02(\x05\x12\x0c\n\x04\x63ode\x18\x03 \x02(\t\x12\r\n\x05price\x18\x04 \x02(\x01\x12\x0f\n\x07orderID\x18\x05 \x01(\x04\x12\x13\n\x0b\x61\x64justPrice\x18\x06 \x01(\x08\x12\x1a\n\x12\x61\x64justSideAndLimit\x18\x07 \x01(\x01\x12\x11\n\tsecMarket\x18\x08 \x01(\x05\x12\x11\n\torderIDEx\x18\t \x01(\t\x12\x0f\n\x07session\x18\n \x01(\x05\x12\x12\n\npositionID\x18\x0b \x01(\x04\"X\n\x03S2C\x12%\n\x06header\x18\x01 \x02(\x0b\x32\x15.Trd_Common.TrdHeader\x12*\n\nmaxTrdQtys\x18\x02 \x01(\x0b\x32\x16.Trd_Common.MaxTrdQtys\".\n\x07Request\x12#\n\x03\x63\x32s\x18\x01 \x02(\x0b\x32\x16.Trd_GetMaxTrdQtys.C2S\"g\n\x08Response\x12\x15\n\x07retType\x18\x01 \x02(\x05:\x04-400\x12\x0e\n\x06retMsg\x18\x02 \x01(\t\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\x05\x12#\n\x03s2c\x18\x04 \x01(\x0b\x32\x16.Trd_GetMaxTrdQtys.S2CBG\n\x13\x63om.futu.openapi.pbZ0github.com/futuopen/ftapi4go/pb/trdgetmaxtrdqtys')
   ,
   dependencies=[Common__pb2.DESCRIPTOR,Trd__Common__pb2.DESCRIPTOR,])
 
@@ -98,6 +98,20 @@ _C2S = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='session', full_name='Trd_GetMaxTrdQtys.C2S.session', index=9,
+      number=10, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='positionID', full_name='Trd_GetMaxTrdQtys.C2S.positionID', index=10,
+      number=11, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -111,7 +125,7 @@ _C2S = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=79,
-  serialized_end=275,
+  serialized_end=312,
 )
 
 
@@ -148,8 +162,8 @@ _S2C = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=277,
-  serialized_end=365,
+  serialized_start=314,
+  serialized_end=402,
 )
 
 
@@ -179,8 +193,8 @@ _REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=367,
-  serialized_end=413,
+  serialized_start=404,
+  serialized_end=450,
 )
 
 
@@ -231,8 +245,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=415,
-  serialized_end=518,
+  serialized_start=452,
+  serialized_end=555,
 )
 
 _C2S.fields_by_name['header'].message_type = Trd__Common__pb2._TRDHEADER

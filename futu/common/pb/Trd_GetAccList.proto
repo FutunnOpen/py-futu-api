@@ -10,7 +10,7 @@ message C2S
 {
 	required uint64 userID = 1; //历史原因，目前已废弃，填0即可
 	optional int32 trdCategory = 2; //交易品类，参考 Trd_Common.TrdCategory
-	optional bool needGeneralSecAccount = 3; //是否返回全能账户，仅SG用户需要
+	optional bool needGeneralSecAccount = 3; //是否返回综合账户 （适用于 HK/US/SG/AU 综合账户体系）
 }
 
 message S2C

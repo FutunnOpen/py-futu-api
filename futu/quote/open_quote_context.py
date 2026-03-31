@@ -14,96 +14,64 @@ from .quote_get_warrant import *
 
 class SubRecord:
     def __init__(self):
-        self.subMap = {}  # (subkey, is_orderbook_detail, extended_time) => code set
+        self.subMap = {}  # (subkey, is_orderbook_detail, extended_time, session) => code set
 
     def sub(self, code_list, subtype_list, is_orderbook_detail, extended_time, session):
-        not_is_orderbook_detail = not is_orderbook_detail
-        not_extended_time = not extended_time
         for subtype in subtype_list:
-            old_subkey = (subtype, not_is_orderbook_detail, not_extended_time)
-            old_code_set = self.subMap.get(old_subkey, set())
-            new_subkey = (subtype, is_orderbook_detail, extended_time)
-            new_code_set = self.subMap.get(new_subkey, set())
+            keys_to_remove = []
+            for key in list(self.subMap.keys()):
+                if key[0] == subtype and (
+                        key[1] != is_orderbook_detail or key[2] != extended_time or key[3] != session):
+                    keys_to_remove.append(key)
+
+            for key in keys_to_remove:
+                code_set = self.subMap[key]
+                for code in code_list:
+                    code_set.discard(code)
+                if len(code_set) == 0:
+                    del self.subMap[key]
+
             for code in code_list:
-                if code in old_code_set:
-                    old_code_set.remove(code)
-                new_code_set.add(code)
-            if len(old_code_set) == 0 and old_subkey in self.subMap:
-                del self.subMap[old_subkey]
-            self.subMap[new_subkey] = new_code_set
+                if (subtype, is_orderbook_detail, extended_time, session) not in self.subMap:
+                    self.subMap[(subtype, is_orderbook_detail, extended_time, session)] = set()
+                self.subMap[(subtype, is_orderbook_detail, extended_time, session)].add(code)
 
     def unsub(self, code_list, subtype_list):
         for subtype in subtype_list:
-            subkey1 = (subtype, True)
-            code_set1 = self.subMap.get(subkey1, set())
-            subkey2 = (subtype, False)
-            code_set2 = self.subMap.get(subkey2, set())
-            for code in code_list:
-                code_set1.discard(code)
-                code_set2.discard(code)
-            if len(code_set1) == 0 and subkey1 in self.subMap:
-                del self.subMap[subkey1]
-            if len(code_set2) == 0 and subkey2 in self.subMap:
-                del self.subMap[subkey2]
+            for key in list(self.subMap.keys()):
+                # 检查当前键的subType是否匹配
+                if key[0] == subtype:
+                    code_set = self.subMap[key]
+                    for code in code_list:
+                        code_set.discard(code)
+                    if len(code_set) == 0:
+                        del self.subMap[key]
 
     def unsub_all(self):
         self.subMap = {}
 
     def get_sub_list(self):
         """
-
-        :return: [(code_list, subtype_list, is_orderbook_detail, extended_time)]
+        :return: [(code_list, subtype_list, is_orderbook_detail, extended_time,session)]
         """
-        other_sub_list = []
-        sublist_detail_true = []
-        sublist_extend_true = []
-        sublist_extend_detail_true = []
-        for subkey, code_set in self.subMap.items():
-            if subkey[1] and subkey[2]:
-                sublist_extend_detail_true.append((subkey, code_set))
-            elif subkey[1]:
-                sublist_detail_true.append((subkey, code_set))
-            elif subkey[2]:
-                sublist_extend_true.append((subkey, code_set))
+        result = []
+        temp_map = {}
+        for key, code_set in self.subMap.items():
+            code_list = list(code_set)
+            subtype, is_orderbook_detail, extended_time, session = key
+            unique_key = (tuple(code_list), is_orderbook_detail, extended_time, session)
+            if unique_key not in temp_map:
+                temp_map[unique_key] = {
+                    'subtype_list': [subtype]
+                }
             else:
-                other_sub_list.append((subkey, code_set))
+                temp_map[unique_key]['subtype_list'].append(subtype)
 
-        result = self._merge_sub_list(other_sub_list)
-        result.extend(self._merge_sub_list(sublist_detail_true))
-        result.extend(self._merge_sub_list(sublist_extend_true))
-        result.extend(self._merge_sub_list(sublist_extend_detail_true))
+        for (code_list, is_orderbook_detail, extended_time, session), value in temp_map.items():
+            unique_subtype_list = list(set(value['subtype_list']))
+            result.append((list(code_list), unique_subtype_list, is_orderbook_detail, extended_time, session))
+
         return result
-
-    def _merge_sub_list(self, orig_sub_list):
-        """
-        将原始的订阅列表合并为适合调用subscribe函数的参数的形式，并尽量合并code列表
-        :param orig_sub_list: [(subkey, code_set)]
-        :return: [(code_list, subtype_list, is_orderbook_detail, extended_time)]
-        """
-        if len(orig_sub_list) <= 1:
-            return self._conv_sub_list(orig_sub_list)
-
-        all_code_set_same = True
-        _, first_code_set = orig_sub_list[0]
-        for idx in range(1, len(orig_sub_list)):
-            _, cur_code_set = orig_sub_list[idx]
-            if first_code_set != cur_code_set:
-                all_code_set_same = False
-                break
-        if all_code_set_same:
-            code_list = list(first_code_set)
-            subtype_list = [item[0][0] for item in orig_sub_list]
-            is_orderbook_detail = orig_sub_list[0][0][1]
-            extended_time = orig_sub_list[0][0][2]
-            return [(code_list, subtype_list, is_orderbook_detail, extended_time)]
-        else:
-            return self._conv_sub_list(orig_sub_list)
-
-    def _conv_sub_list(self, orig_sub_list):
-        sub_list = []
-        for subkey, code_set in orig_sub_list:
-            sub_list.append((list(code_set), [subkey[0]], subkey[1], subkey[2]))
-        return sub_list
 
 
 class OpenQuoteContext(OpenContextBase):
@@ -152,8 +120,7 @@ class OpenQuoteContext(OpenContextBase):
         if ret_code != RET_OK:
             logger.error(
                 "reconnect subscribe error, close connect and retry!!")
-            self._status = ContextStatus.START
-            self._wait_reconnect()
+
         return ret_code, ret_msg
 
     def request_trading_days(self, market=None, start=None, end=None, code=None):
@@ -1143,12 +1110,14 @@ class OpenQuoteContext(OpenContextBase):
         if unsubscribe_all:  # 反订阅全部别的参数不重要
             return RET_OK, None
 
-        ret_code, msg, unpush_req_str = SubscriptionQuery.pack_unpush_req(
-            code_list, subtype_list, self.get_async_conn_id())
-        if ret_code != RET_OK:
-            return RET_ERROR, msg
 
-        ret_code, msg = self._send_async_req(unpush_req_str)
+        kargs = {
+            'code_list': code_list,
+            'subtype_list': subtype_list,
+            "conn_id": self.get_async_conn_id()
+        }
+
+        ret_code, msg = self._query_async(SubscriptionQuery.pack_unpush_req, SubscriptionQuery.unpack_unpush_query_rsp, **kargs)
         if ret_code != RET_OK:
             return RET_ERROR, msg
 
@@ -1892,6 +1861,9 @@ class OpenQuoteContext(OpenContextBase):
                 add_ert                 float          增发股分母
                 stk_spo_ratio           float          增发比例
                 stk_spo_price           float          增发价格
+                spin_off_base           float          分立分子
+                spin_off_ert            float          分立分母
+                spin_off_ratio          float          分立比例
                 forward_adj_factorA     float          前复权因子A
                 forward_adj_factorB     float          前复权因子B
                 backward_adj_factorA    float          后复权因子A
@@ -1914,6 +1886,7 @@ class OpenQuoteContext(OpenContextBase):
                 'transfer_base', 'transfer_ert', 'per_share_trans_ratio', 
                 'allot_base','allot_ert', 'allotment_ratio', 'allotment_price', 
                 'add_base', 'add_ert', 'stk_spo_ratio', 'stk_spo_price',
+                'spin_off_base', 'spin_off_ert', 'spin_off_ratio',
                 'forward_adj_factorA', 'forward_adj_factorB',
                 'backward_adj_factorA', 'backward_adj_factorB',    
                    

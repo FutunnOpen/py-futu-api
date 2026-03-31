@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import threading
 import time
 from abc import ABCMeta, abstractmethod
 from collections import namedtuple
@@ -14,12 +14,45 @@ from ..quote.quote_query import InitConnect, TestCmd
 from ..quote.quote_query import GlobalStateQuery
 from ..quote.quote_query import KeepAlive, parse_head
 from .conn_mng import FutuConnMng
-from .network_manager import NetManager, PacketErr, ConnectErr, CloseReason
+from .network_manager import NetManager, PacketErr, ConnectErr, CloseReason, ConnectInfo
 from .err import Err
 from .constant import ContextStatus
 from .callback_executor import CallbackExecutor, CallbackItem
 from .ft_logger import *
 
+
+class ReqInfo:
+    def __init__(self, proto_id, serial_no, req_time, is_sync):
+        self.req_time = req_time
+        self.proto_id = proto_id
+        self.serial_no = serial_no
+        self.unpack_func = None
+        self.err = PacketErr.Ok
+        self.msg = ''
+        self.rsp = None
+        self.event = None
+        if is_sync:
+            self.event = threading.Event()
+
+    @property
+    def is_sync(self):
+        return self.event is not None
+
+    def set_result(self, err, msg, rsp):
+        self.err = err
+        self.msg = msg
+        self.rsp = rsp
+
+    def notify_finish(self):
+        if self.is_sync:
+            self.event.set()
+
+    def wait(self):
+        if self.is_sync:
+            ret = self.event.wait(timeout=20)
+            if not ret:
+                self.err = PacketErr.Timeout
+                self.msg = 'Abnormal event timeout'
 
 class OpenContextBase(object):
     """Base class for set context"""
@@ -33,31 +66,35 @@ class OpenContextBase(object):
         self._handler_ctx = HandlerContext(self._is_proc_run)
         self._lock = RLock()
         self._status = ContextStatus.START
-        self._connect_err = None  # rsa加密失败时为Err.RsaErr, 否则为str
         self._proc_run = True
-        self._sync_conn_id = 0
+        self._opend_conn_id = 0
         self._conn_id = 0
         self._keep_alive_interval = 10
-        self._last_keep_alive_time = datetime.now()
+        self._last_keep_alive_time = time.time()
+        self._last_recv_time = time.time()
+        self._conn_alive_timeout = 33
+        self._auto_reconnect = True
         self._reconnect_timer = None
-        self._reconnect_interval = 8  # 重试连接的间隔
+        self._reconnect_interval = 6  # 重试连接的间隔
         self._sync_query_connect_timeout = None
-        self._keep_alive_fail_count = 0
-        self._last_recv_time = datetime.now()
+        self._query_timeout = 12
         self._is_encrypt = is_encrypt
+        self._req_map = {}
+        self._recv_buf = bytearray()
+        self._push_handler_time_warn = 2
         if self.is_encrypt():
             assert SysConfig.INIT_RSA_FILE != '', Err.NotSetRSAFile.text
-        self._net_mgr.start()
 
         if is_async_connect:
             self._wait_reconnect(0)
         else:
             while True:
+                self._status = ContextStatus.START
                 ret = self._init_connect_sync()
                 if ret == RET_OK:
                     return
                 else:
-                    if self.status == ContextStatus.CLOSED:
+                    if not self._auto_reconnect:
                         return
                 sleep(self._reconnect_interval)
 
@@ -67,10 +104,10 @@ class OpenContextBase(object):
         :return: user id(int64)
         """
         with self._lock:
-            return FutuConnMng.get_conn_user_id(self._sync_conn_id)
+            return FutuConnMng.get_conn_user_id(self._opend_conn_id)
 
     def __del__(self):
-        self.close()
+        pass
         
     def __enter__(self):
         return self
@@ -83,16 +120,10 @@ class OpenContextBase(object):
         with self._lock:
             return self._status
 
-    @property
-    def connect_err_msg(self):
+    def conn_str(self):
         with self._lock:
-            if self._connect_err is Err.RsaErr:
-                return Err.RsaErr.text
-            return self._connect_err
-
-    @property
-    def connect_err(self):
-        return self._connect_err
+            s = f'{self._opend_conn_id}({self._conn_id})'
+        return s
 
     def set_sync_query_connect_timeout(self, timeout):
         with self._lock:
@@ -109,11 +140,24 @@ class OpenContextBase(object):
             self._reconnect_interval = value
 
     @abstractmethod
-    def close(self):
-        """
-        to call close old obj before loop create new, otherwise socket will encounter error 10053 or more!
-        """
-        self._close(False)
+    def close(self, reason=CloseReason.Close):
+        logger.info(f'call close: conn={self.conn_str()} reason={reason}')
+        with self._lock:
+            if reason is CloseReason.Close:
+                self._auto_reconnect = False
+
+            if self._status == ContextStatus.CLOSING or self._status == ContextStatus.CLOSED:
+                return
+
+            conn_id = self._conn_id
+            self._clear()
+
+            if self._status == ContextStatus.START or self._status == ContextStatus.WAIT_RECONNECT:
+                self._close_callback_executor()
+                self._status = ContextStatus.CLOSED
+            elif self._status == ContextStatus.CONNECTED or self._status == ContextStatus.READY or self._status == ContextStatus.CONNECTING:
+                self._status = ContextStatus.CLOSING
+                self._net_mgr.close(conn_id, reason=reason)
 
     @abstractmethod
     def on_api_socket_reconnected(self):
@@ -123,24 +167,37 @@ class OpenContextBase(object):
         # logger.debug("on_api_socket_reconnected obj ID={}".format(id(self)))
         return RET_OK, ''
 
-    def _close(self, is_passive):
+    def on_connect(self, conn_id, conn_info: ConnectInfo):
+        logger.debug(f'on_connect: self={id(self)} self.conn_id={self._conn_id} self.status={self._status} conn={conn_id} err={conn_info.err}')
         with self._lock:
-            if self._status == ContextStatus.CLOSED:
-                return
-            self._status = ContextStatus.CLOSED
-            net_mgr = self._net_mgr
-            conn_id = self._conn_id
-            self._conn_id = 0
-            self._net_mgr = None
-            self.stop()
-            self._callback_executor.close()
-            self._handler_ctx = None
-            if self._reconnect_timer is not None:
-                self._reconnect_timer.cancel()
-                self._reconnect_timer = None
-        if conn_id > 0 and not is_passive:
-            net_mgr.close(conn_id)
-        net_mgr.stop()
+            if self._status == ContextStatus.CONNECTING:
+                if conn_info.err == ConnectErr.Ok:
+                    self._status = ContextStatus.CONNECTED
+                else:
+                    self._status = ContextStatus.CLOSED
+            elif self._status == ContextStatus.CLOSING:
+                self._status = ContextStatus.CLOSED
+                if conn_info.err == ConnectErr.Ok:
+                    conn_info.err = ConnectErr.CallClose
+            else:
+                pass  #todo
+
+        if conn_info.is_sync:
+            conn_info.notify_finish()
+
+    def _clear(self):
+        FutuConnMng.remove_conn(self._opend_conn_id)
+        self._opend_conn_id = 0
+        if self._reconnect_timer is not None:
+            self._reconnect_timer.cancel()
+            self._reconnect_timer = None
+
+    def _close_callback_executor(self):
+        callback_executor = self._callback_executor
+        if self._auto_reconnect:
+            self._callback_executor = CallbackExecutor()
+        if callback_executor:
+            callback_executor.close()
 
     def start(self):
         """
@@ -185,9 +242,13 @@ class OpenContextBase(object):
 
     def _is_proc_run(self):
         with self._lock:
-            return self._proc_run
+            return self._proc_run  and self._status == ContextStatus.READY
 
-    def _get_sync_query_processor(self, pack_func, unpack_func, is_create_socket=True):
+    def _is_ready(self):
+        with self._lock:
+            return self._status == ContextStatus.READY
+
+    def _get_sync_query_processor(self, pack_func, unpack_func):
         """
         synchronize the query processor
         :param pack_func: back
@@ -198,11 +259,34 @@ class OpenContextBase(object):
         def sync_query_processor(**kargs):
             """sync query processor"""
             start_time = datetime.now()
+            try:
+                ret_code, msg, req_str, proto_id, serial_no = pack_func(**kargs)
+                if ret_code != RET_OK:
+                    return ret_code, msg, None
+            except Exception as ex:
+                return RET_ERROR, str(ex), None
+
             while True:
                 with self._lock:
-                    if self._status == ContextStatus.READY:
+                    if self.can_send_proto(proto_id):
                         net_mgr = self._net_mgr
                         conn_id = self._conn_id
+                        proto_info = None
+                        try:
+                            proto_info = ProtoInfo(proto_id=proto_id, serial_no=serial_no)
+                            req_info = ReqInfo(proto_id=proto_id, serial_no=serial_no, req_time=time.time(), is_sync=True)
+                            req_info.unpack_func = unpack_func
+                            self._req_map[proto_info] = req_info
+                            ret_code, msg = net_mgr.send(conn_id, req_str)
+                        except Exception as ex:
+                            ret_code, msg = RET_ERROR, str(ex)
+
+                        if ret_code != RET_OK:
+                            if proto_info:
+                                self._req_map.pop(proto_info, None)
+                            return ret_code, msg, None
+                        else:
+                            logger.info(f'Send: conn={self.conn_str()} proto={proto_id} sn={serial_no}')
                         break
                     elif self._status == ContextStatus.CLOSED:
                         return RET_ERROR, Err.ConnectionClosed.text, None
@@ -213,78 +297,141 @@ class OpenContextBase(object):
                             return RET_ERROR, 'Connect timeout', None
                 sleep(0.02)
 
+            req_info.wait()
+            if req_info.err is not PacketErr.Ok:
+                msg = req_info.msg if req_info.msg != '' else str(req_info.err)
+                return RET_ERROR, msg, None
+
             try:
-                ret_code, msg, req_str = pack_func(**kargs)
-                if ret_code != RET_OK:
-                    return ret_code, msg, None
+                ret_code, msg, data = req_info.unpack_func(req_info.rsp)
+            except Exception as ex:
+                ret_code = RET_ERROR
+                msg = str(ex)
+                data = None
 
-                ret_code, send_result = net_mgr.send(conn_id, req_str, True)
-                if ret_code != RET_OK:
-                    msg = send_result.msg if send_result.msg != '' else str(send_result.err)
-                    return ret_code, msg, None
-
-                send_result.wait()
-                if send_result.err is not PacketErr.Ok:
-                    msg = send_result.msg if send_result.msg != '' else str(send_result.err)
-                    return RET_ERROR, msg, None
-
-                with self._lock:
-                    self._last_recv_time = datetime.now()
-                ret_code, msg, content = unpack_func(send_result.rsp)
-                if ret_code != RET_OK:
-                    return ret_code, msg, None
-            except Exception as e:
-                logger.error(traceback.format_exc())
-                return RET_ERROR, str(e), None
-
-            return RET_OK, msg, content
+            return ret_code, msg, data
 
         return sync_query_processor
 
-    def _send_async_req(self, req_str):
-        conn_id = 0
-        net_mgr = None
+    def _query_sync(self, pack_func, unpack_func, **kargs):
+        try:
+            ret_code, msg, req_str, proto_id, serial_no = pack_func(**kargs)
+            if ret_code != RET_OK:
+                return ret_code, msg, None
+        except Exception as ex:
+            return RET_ERROR, str(ex), None
+
         with self._lock:
-            if self._status != ContextStatus.READY:
-                return RET_ERROR, 'Context closed or not ready'
-            conn_id = self._conn_id
-            net_mgr = self._net_mgr
-        return net_mgr.send(conn_id, req_str)
+            if self.can_send_proto(proto_id):
+                net_mgr = self._net_mgr
+                conn_id = self._conn_id
+                proto_info = None
+                try:
+                    proto_info = ProtoInfo(proto_id=proto_id, serial_no=serial_no)
+                    req_info = ReqInfo(proto_id=proto_id, serial_no=serial_no, req_time=time.time(), is_sync=True)
+                    req_info.unpack_func = unpack_func
+                    self._req_map[proto_info] = req_info
+                    ret_code, msg = net_mgr.send(conn_id, req_str)
+                except Exception as ex:
+                    ret_code, msg = RET_ERROR, str(ex)
+
+                if ret_code != RET_OK:
+                    if proto_info:
+                        self._req_map.pop(proto_info)
+                    return ret_code, msg, None
+                else:
+                    logger.info(f'Send: conn={self.conn_str()} proto={proto_id} sn={serial_no}')
+            else:
+                return RET_ERROR, 'Context status bad', None
+
+        req_info.wait()
+        if req_info.err is not PacketErr.Ok:
+            msg = req_info.msg if req_info.msg != '' else str(req_info.err)
+            return RET_ERROR, msg, None
+        try:
+            ret_code, msg, data = req_info.unpack_func(req_info.rsp)
+        except Exception as ex:
+            ret_code = RET_ERROR
+            msg = str(ex)
+            data = None
+
+        return ret_code, msg, data
+
+    def _query_async(self, pack_func, unpack_func, **kargs):
+        try:
+            ret_code, msg, req_str, proto_id, serial_no = pack_func(**kargs)
+            if ret_code != RET_OK:
+                return ret_code, msg
+        except Exception as ex:
+            return RET_ERROR, str(ex)
+
+        with self._lock:
+            if self.can_send_proto(proto_id):
+                net_mgr = self._net_mgr
+                conn_id = self._conn_id
+                proto_info = None
+                try:
+                    proto_info = ProtoInfo(proto_id=proto_id, serial_no=serial_no)
+                    req_info = ReqInfo(proto_id=proto_id, serial_no=serial_no, req_time=time.time(), is_sync=False)
+                    req_info.unpack_func = unpack_func
+                    self._req_map[proto_info] = req_info
+                    ret_code, msg = net_mgr.send(conn_id, req_str)
+                except Exception as ex:
+                    ret_code, msg = RET_ERROR, str(ex)
+
+                if ret_code != RET_OK:
+                    if proto_info is not None:
+                        self._req_map.pop(proto_info, None)
+                    return ret_code, msg
+                else:
+                    logger.info(f'Send: conn={self.conn_str()} proto={proto_id} sn={serial_no}')
+            else:
+                return RET_ERROR, 'Context status bad'
+
+        return RET_OK, ''
 
     def _init_connect_sync(self):
         with self._lock:
-            if self._status == ContextStatus.START:
-                self._status = ContextStatus.CONNECTING
-            elif self._status == ContextStatus.READY:
+            if self._status == ContextStatus.READY:
                 return RET_OK
-            elif self._status != ContextStatus.CONNECTING:
+            if self._status != ContextStatus.START:
                 return RET_ERROR
 
         ret = self._connect_sync()
         if ret != RET_OK:
             return ret
 
-        ret = self._send_init_connect_sync()
+        ret, msg = self._send_init_connect_sync()
         if ret != RET_OK:
+            logger.warning2(FTLog.BOTH_FILE_CONSOLE, f'init connect fail: conn={self.conn_str()} msg={msg} context={self}')
             return ret
-        self.on_api_socket_reconnected()
+
+        logger.info2(FTLog.BOTH_FILE_CONSOLE, f'New connect ready: conn={self.conn_str()} context={self}')
+        ret, msg = self.on_api_socket_reconnected()
+        if ret != RET_OK:
+            logger.warning(f'on_api_socket_reconnected fail: msg={msg}')
         return RET_OK
 
     def _connect_sync(self):
         with self._lock:
-            # logger.info("Start connecting: host={}; port={};".format(self.__host, self.__port))
-            self._status = ContextStatus.CONNECTING
-            ret, result = self._net_mgr.connect((self.__host, self.__port), self, 5, self.is_encrypt(), is_sync=True)
+            if self._status == ContextStatus.START:
+                self._status = ContextStatus.CONNECTING
+            elif self._status == ContextStatus.CONNECTED or self._status == ContextStatus.READY:
+                return RET_OK
+            else:
+                logger.warning(f'Not connect: status={self._status}')
+                return RET_ERROR
+            ret, result = self._net_mgr.connect((self.__host, self.__port), self, 20, self.is_encrypt(), is_sync=True)
             if ret == RET_OK:
                 self._conn_id = result.conn_id
-
+        logger.info(f'Start connect: self={id(self)} ret={ret} conn={result.conn_id}')
         result.wait()
         if result.err is ConnectErr.Ok:
-            # logger.info('Connected : conn_id={0}; '.format(self._conn_id))
+            logger.info('Connected : conn={0}; '.format(self._conn_id))
             return RET_OK
         else:
             msg = result.msg if result.msg != '' else str(result.err)
-            logger.warning('Connect fail: conn_id={}; msg={}'.format(result.conn_id, msg))
+            logger.warning2(FTLog.BOTH_FILE_CONSOLE, 'Connect fail: conn={}; msg={}; context={}'.format(self.conn_str(), msg, self))
         return RET_ERROR
 
     def _send_init_connect_sync(self):
@@ -296,29 +443,14 @@ class OpenContextBase(object):
             'push_proto_fmt': SysConfig.get_proto_fmt()
         }
 
-        ret, msg, req_str = InitConnect.pack_req(**kargs)
+        ret, msg, rsp = self._query_sync(InitConnect.pack_req, InitConnect.unpack_rsp, **kargs)
         if ret == RET_OK:
-            _, send_result = self._net_mgr.send(self._conn_id, req_str, True)
-        else:
-            logger.error('Fail to pack InitConnect')
-            return ret
-
-        send_result.wait()
-        if send_result.err is PacketErr.Ok:
-            ret, msg, conn_info = self._handle_init_connect_rsp(send_result.rsp)
-            if ret == RET_OK:
-                # logger.info('InitConnect ok: {}'.format(conn_info))
-                logger.info('InitConnect ok: conn_id={}, host={}, port={}, user_id={}'.format(self._conn_id, self.__host, self.__port, conn_info['login_user_id']))
-                return RET_OK
-
-        if msg == '':
-            msg = send_result.msg if send_result.msg != '' else str(send_result.err)
-        logger.warning('InitConnect fail: {}'.format(msg))
-        return RET_ERROR
+            self._handle_init_connect_rsp(rsp)
+        return ret, msg
 
     def get_sync_conn_id(self):
         with self._lock:
-            return self._sync_conn_id
+            return self._opend_conn_id
 
     def get_async_conn_id(self):
         return self.get_sync_conn_id()
@@ -380,128 +512,219 @@ class OpenContextBase(object):
 
     def on_disconnect(self, conn_id, reason, msg):
         if reason is CloseReason.Close:
-            logger.info('Disconnected: conn_id={0}'.format(conn_id))
-            return
+            logger.info(f'Disconnected: conn={self.conn_str()} reason=CallClose')
+            logger.info2(FTLog.ONLY_CONSOLE, f'Disconnected: conn={self.conn_str()} reason=CallClose')
         else:
-            logger.warning('Disconnected: conn_id={0} reason={1} msg={2}'.format(conn_id, str(reason), msg))
+            logger.warning(f'Disconnected: conn={self.conn_str()} reason={reason} msg={msg}')
+            logger.info2(FTLog.ONLY_CONSOLE, f'Disconnected: conn={self.conn_str()} reason={reason.name} msg={msg}')
 
         with self._lock:
-            if self._status == ContextStatus.CLOSED:
-                return
-            self._wait_reconnect()
+            self._status = ContextStatus.CLOSED
+            self._close_callback_executor()
+            self._pop_all_req_info(PacketErr.Disconnect)
+            self._clear()
+            if self._auto_reconnect:
+                self._wait_reconnect()
 
-    def on_packet(self, conn_id, proto_info, err, msg, rsp_pb):
-        with self._lock:
-            if self._status == ContextStatus.CLOSED or self._status == ContextStatus.START:
-                return
-            elif self._status == ContextStatus.CONNECTING and proto_info.proto_id != ProtoId.InitConnect:
-                return
-
-        if proto_info.proto_id == ProtoId.InitConnect:
-            self._handle_init_connect(conn_id, proto_info.proto_id, err, msg, rsp_pb)
-        elif proto_info.proto_id == ProtoId.KeepAlive:
-            self._handle_keep_alive(conn_id, proto_info.proto_id, err, msg, rsp_pb)
-        elif err is PacketErr.Ok:
-            item = CallbackItem(self, proto_info.proto_id, rsp_pb)
+    def handle_push(self, conn_id, proto_id, serial_no, rsp_pb, err, msg):
+        if err is PacketErr.Ok:
+            item = CallbackItem(self, proto_id=proto_id, serial_no=serial_no, rsp_pb=rsp_pb)
             self._callback_executor.queue.put(item)
-            with self._lock:
-                self._last_recv_time = datetime.now()
 
-    def on_tick(self, conn_id, now):
+    def handle_packet(self, conn_id, proto_id, serial_no, rsp_pb, err, msg):
+        if proto_id == ProtoId.KeepAlive:
+            pass
+        elif err is PacketErr.Ok:
+            pass  #todo
+            # item = CallbackItem(self, proto_id=proto_id, rsp_pb=rsp_pb)
+            # self._callback_executor.queue.put(item)
+
+    def _handle_recv(self):
+        while True:
+            result = parse_rsp(self._recv_buf, self._opend_conn_id, self.is_encrypt())
+            if result.err == ParseRspErr.NOT_ENOUGH_DATA:
+                return
+
+            del self._recv_buf[:result.total_len]
+
+            self._last_recv_time = time.time()
+            err = PacketErr.Ok
+            if result.err != ParseRspErr.OK:
+                err = PacketErr.Invalid
+            proto_id = result.head_dict['proto_id']
+            serial_no = result.head_dict['serial_no']
+            is_push = ProtoId.is_proto_id_push(proto_id)
+
+            if is_push:
+                logger.debug(
+                    f'Push: conn={self.conn_str()} proto={proto_id} sn={serial_no} err={err.name}')
+                self.handle_push(conn_id=self._conn_id, proto_id=proto_id, serial_no=serial_no, rsp_pb=result.rsp_pb, err=err, msg=result.msg)
+            else:
+                logger.info(
+                    f'Recv: conn={self.conn_str()} proto={proto_id} sn={serial_no} err={err.name}')
+                proto_info = ProtoInfo(proto_id=proto_id, serial_no=serial_no)
+                req_info: ReqInfo
+                req_info = self._req_map.pop(proto_info, None)
+                if req_info:
+                    if req_info.is_sync:
+                        req_info.err = err
+                        req_info.msg = result.msg
+                        req_info.rsp = result.rsp_pb
+                        req_info.notify_finish()
+                    else:
+                        self.handle_packet(conn_id=self._conn_id, proto_id=proto_id, serial_no=serial_no, rsp_pb=result.rsp_pb, err=err, msg=result.msg)
+                else:
+                    logger.warning(f'Reqinfo not found for recv package: conn={self.conn_str()} proto={proto_id} sn={serial_no}')
+                    pass  #todo
+
+    def on_recv(self, conn_id, data):
+        with self._lock:
+            if self._status != ContextStatus.CONNECTED and self._status != ContextStatus.READY:
+                return
+            if conn_id != self._conn_id:
+                return
+            self._recv_buf.extend(data)
+            self._handle_recv()
+
+    def on_tick(self, conn_id, now: float):
         with self._lock:
             if self._status != ContextStatus.READY:
                 return
+
+            if now - self._last_recv_time >= self._conn_alive_timeout:
+                logger.warning(f'Long time not recv: conn={self.conn_str()} last_recv_time={self._last_recv_time}')
+                self.close(reason=CloseReason.KeepAliveFail)
+                return
+
             time_elapsed = now - self._last_keep_alive_time
-            if time_elapsed.total_seconds() < self._keep_alive_interval:
-                return
+            if time_elapsed >= self._keep_alive_interval:
+                ret, msg = self.keep_alive()
+                if ret != RET_OK:
+                    logger.warning("KeepAlive fail: {0}".format(msg))
+                else:
+                    self._last_keep_alive_time = now
 
-            ret, msg, req = KeepAlive.pack_req(self.get_sync_conn_id())
-            if ret != RET_OK:
-                logger.warning("KeepAlive.pack_req fail: {0}".format(msg))
-                return
-            ret, result = self._net_mgr.send(conn_id, req, is_sync=False)
-            if ret != RET_OK:
-                return
+            self._check_req_timeout()
 
-            self._last_keep_alive_time = now
+    def keep_alive(self):
+        kargs = {'conn_id': self._opend_conn_id}
+        ret, msg = self._query_async(KeepAlive.pack_req, KeepAlive.unpack_rsp, **kargs)
+        return  ret, msg
 
-    def packet_callback(self, proto_id, rsp_pb):
+    def _check_req_timeout(self):
+        timeout_list = []
+        now = time.time()
+        proto_info: ProtoInfo
+        req_info: ReqInfo
+        for proto_info, req_info in self._req_map.items():
+            elapsed = now - req_info.req_time
+            if elapsed >= self._query_timeout:
+                timeout_list.append(proto_info)
+                req_info.err = PacketErr.Timeout
+                req_info.msg = str(PacketErr.Timeout)
+                logger.warning(f'Recv: conn={self.conn_str()} proto={req_info.proto_id} sn={req_info.serial_no} err=timeout')
+                if req_info.is_sync:
+                    req_info.notify_finish()
+
+        for conn_info in timeout_list:
+            self._req_map.pop(conn_info)
+
+    def packet_callback(self, proto_id, serial_no, rsp_pb):
         with self._lock:
             if self._status != ContextStatus.READY:
                 return
 
             handler_ctx = self._handler_ctx
         if handler_ctx:
-            handler_ctx.recv_func(rsp_pb, proto_id)
+            begin_time = time.time()
+            end_time = begin_time
+            try:
+                logger.debug(f'Push callback: conn={self.conn_str()} proto={proto_id} sn={serial_no}')
+                handler_ctx.recv_func(rsp_pb, proto_id)
+                end_time = time.time()
+            except Exception:
+                logger.warning(f'Exception in push callback: conn={self.conn_str()} proto={proto_id} sn={serial_no}', exc_info=True)
 
-    def _handle_init_connect(self, conn_id, proto_info, ret, msg, rsp_pb):
-        pass
+            if end_time - begin_time >= self._push_handler_time_warn:
+                logger.warning(f'Push callback use too much time: conn={self.conn_str()} proto={proto_id} sn={serial_no} time={end_time-begin_time}')
 
-    def _handle_init_connect_rsp(self, rsp):
-        ret, msg, data = InitConnect.unpack_rsp(rsp)
-        if ret != RET_OK:
-            return ret, msg, None
+    def can_send_proto(self, proto_id):
+        with self._lock:
+            if proto_id == ProtoId.InitConnect:
+                if self._status == ContextStatus.CONNECTED:
+                    return True
+            else:
+                if self._status == ContextStatus.READY:
+                    return True
+            return False
 
+    def _pop_all_req_info(self, err: PacketErr):
+        with self._lock:
+            for conn_id, req_info in self._req_map.items():
+                req_info.err = err
+                req_info.msg = err.name
+                if req_info.is_sync:
+                    req_info.notify_finish()
+            self._req_map.clear()
+
+    def _handle_init_connect_rsp(self, data):
         with self._lock:
             conn_info = copy(data)
             conn_info['is_encrypt'] = self.is_encrypt()
-            self._sync_conn_id = conn_info['conn_id']
+            self._opend_conn_id = conn_info['conn_id']
             self._keep_alive_interval = conn_info['keep_alive_interval'] * 4 / 5
-            self._net_mgr.set_conn_info(self._conn_id, conn_info)
-            now = datetime.now()
+            now = time.time()
             self._last_keep_alive_time = now
             self._last_recv_time = now
             self._status = ContextStatus.READY
             FutuConnMng.add_conn(conn_info)
-        return ret, '', conn_info
+        return conn_info
 
-    def _handle_keep_alive(self, conn_id, proto_info, err, msg, rsp_pb):
-        should_reconnect = False
-        with self._lock:
-            if err is PacketErr.Ok:
-                self._keep_alive_fail_count = 0
-            else:
-                self._keep_alive_fail_count += 1
-
-            now = datetime.now()
-
-            if self._keep_alive_fail_count >= 3:
-                if (now - self._last_recv_time).total_seconds() < self._keep_alive_interval:
-                    self._keep_alive_fail_count = 0
-                else:
-                    logger.warning('Fail to recv KeepAlive for 3 times')
-                    should_reconnect = True
-
-        if should_reconnect:
-            self._wait_reconnect()
-
-    def _wait_reconnect(self, wait_reconnect_interval=8):
-        with self._lock:
-            if self._status == ContextStatus.CLOSED or self._reconnect_timer is not None:
+    def _wait_reconnect(self, wait_reconnect_interval=6):
+        with (self._lock):
+            if not self._auto_reconnect:
+                logger.warning(f'Not reconnect: auto reconnect off')
                 return
+            if self._status == ContextStatus.CONNECTED or self._status == ContextStatus.CONNECTING or \
+                self._status == ContextStatus.CLOSING or self._reconnect_timer is not None:
+                logger.warning(f'Not reconnect: status={self._status}')
+                return
+
             logger.info('Wait reconnect in {} seconds: host={}; port={};'.format(wait_reconnect_interval,
                                                                                  self.__host,
                                                                                  self.__port))
-            net_mgr = self._net_mgr
-            conn_id = self._conn_id
-
-            self._status = ContextStatus.CONNECTING
-            self._sync_conn_id = 0
+            self._status = ContextStatus.WAIT_RECONNECT
+            self._opend_conn_id = 0
             self._conn_id = 0
-            self._keep_alive_fail_count = 0
             self._reconnect_timer = Timer(wait_reconnect_interval, self._reconnect)
             self._reconnect_timer.start()
-
-        net_mgr.close(conn_id)
 
     def _reconnect(self):
         with self._lock:
             self._reconnect_timer.cancel()
             self._reconnect_timer = None
 
-        ret = self._init_connect_sync()
+            if not self._auto_reconnect:
+                logger.info(f'cancel reconnect, auto_reconnect is false: self={id(self)}')
+                return
+            else:
+                logger.info(f'start reconnect: self={id(self)}')
+            self._status = ContextStatus.START
+
+        ret = RET_ERROR
+        try:
+            ret = self._init_connect_sync()
+        except Exception as ex:
+            pass
+
         if ret != RET_OK:
-            self._wait_reconnect(self._reconnect_interval)
+            with self._lock:
+                self._net_mgr.close(self._conn_id, reason=CloseReason.CloseNoNotify)
+                self._close_callback_executor()
+                self._pop_all_req_info(PacketErr.Disconnect)
+                self._clear()
+                if self._auto_reconnect:
+                    self._wait_reconnect(self._reconnect_interval)
 
     def test_cmd(self, cmd, params):
         query_processor = self._get_sync_query_processor(

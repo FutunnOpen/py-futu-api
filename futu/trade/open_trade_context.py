@@ -100,9 +100,13 @@ class OpenTradeContextBase(OpenContextBase):
                         "security_firm": record["security_firm"],
                         "sim_acc_type": record["sim_acc_type"],
                         "trdmarket_auth": trd_marketauth,
-                        "acc_status": record["acc_status"]})
+                        "acc_status": record["acc_status"],
+                        "acc_role": record["acc_role"],
+                        "jp_acc_type": record["jp_acc_type"]}
+                    )
 
-        col_list = ["acc_id", "trd_env", "acc_type", "uni_card_num", "card_num", "security_firm", "sim_acc_type", "trdmarket_auth", "acc_status"]
+        col_list = ["acc_id", "trd_env", "acc_type", "uni_card_num", "card_num", "security_firm", "sim_acc_type", "trdmarket_auth",
+                    "acc_status", "acc_role", "jp_acc_type"]
 
         acc_table = pd.DataFrame(copy(self.__last_acc_list), columns=col_list)
 
@@ -171,11 +175,9 @@ class OpenTradeContextBase(OpenContextBase):
             'acc_id_list': acc_id_list,
             'conn_id': self.get_async_conn_id(),
         }
-        ret_code, msg, push_req_str = SubAccPush.pack_req(**kargs)
-        if ret_code == RET_OK:
-            self._send_async_req(push_req_str)
+        ret_code, msg = self._query_async(SubAccPush.pack_req, SubAccPush.unpack_rsp, **kargs)
 
-        return RET_OK, None
+        return ret_code, msg
 
     def on_async_sub_acc_push(self, ret_code, msg):
         self.__is_acc_sub_push = ret_code == RET_OK
@@ -275,7 +277,8 @@ class OpenTradeContextBase(OpenContextBase):
                 return ret, msg, acc_id, []
         return RET_OK, "", acc_id, auth_list
 
-    def accinfo_query(self, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False, currency=Currency.HKD):
+    def accinfo_query(self, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False, currency=Currency.HKD,
+                      asset_category=AssetCategory.NONE):
         """
         :param trd_env:
         :param acc_id:
@@ -299,7 +302,8 @@ class OpenTradeContextBase(OpenContextBase):
             'trd_market': acc_auth_list[0],
             'conn_id': self.get_sync_conn_id(),
             'refresh_cache': refresh_cache,
-            'currency': currency
+            'currency': currency,
+            'asset_category': asset_category,
         }
 
         ret_code, msg, accinfo_list = query_processor(**kargs)
@@ -318,6 +322,8 @@ class OpenTradeContextBase(OpenContextBase):
             'jp_cash', 'jp_avl_withdrawal_cash', 'jpy_net_cash_power', 'jpy_assets',
             'sg_cash', 'sg_avl_withdrawal_cash', 'sgd_net_cash_power', 'sgd_assets',
             'au_cash', 'au_avl_withdrawal_cash', 'aud_net_cash_power', 'aud_assets',
+            'ca_cash', 'ca_avl_withdrawal_cash', 'cad_net_cash_power', 'cad_assets',
+            'my_cash', 'my_avl_withdrawal_cash', 'myr_net_cash_power', 'myr_assets',
             'is_pdt', 'pdt_seq', 'beginning_dtbp', 'remaining_dtbp',
             'dt_call_amount', 'dt_status',
         ]
@@ -389,8 +395,8 @@ class OpenTradeContextBase(OpenContextBase):
             error_str = ERROR_STR_PREFIX + "format of %s is wrong. (US.AAPL, HK.00700, SZ.000001)" % stock_str
             return RET_ERROR, error_str
 
-    def position_list_query(self, code='', pl_ratio_min=None,
-                            pl_ratio_max=None, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, refresh_cache=False, position_market = TrdMarket.NONE):
+    def position_list_query(self, code='', pl_ratio_min=None, pl_ratio_max=None, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0,
+                            refresh_cache=False, position_market = TrdMarket.NONE, asset_category=AssetCategory.NONE):
         """for querying the position list"""
         ret, msg = self._check_trd_env(trd_env)
         if ret != RET_OK:
@@ -416,7 +422,8 @@ class OpenTradeContextBase(OpenContextBase):
             'acc_id': acc_id,
             'conn_id': self.get_sync_conn_id(),
             'refresh_cache': refresh_cache,
-            'position_market': position_market
+            'position_market': position_market,
+            'asset_category': asset_category,
         }
         ret_code, msg, position_list = query_processor(**kargs)
 
@@ -429,7 +436,7 @@ class OpenTradeContextBase(OpenContextBase):
             "pl_ratio_valid", "pl_ratio_avg_cost", "pl_val", "pl_val_valid", "today_buy_qty",
             "today_buy_val", "today_pl_val", "today_trd_val", "today_sell_qty",
             "today_sell_val", "position_side", "unrealized_pl", "realized_pl",
-            "currency",
+            "currency", "position_id",
         ]
 
         position_list_table = pd.DataFrame(position_list, columns=col_list)
@@ -457,7 +464,7 @@ class OpenTradeContextBase(OpenContextBase):
             "order_id", "qty", "price", "create_time", "updated_time",
             "dealt_qty", "dealt_avg_price", "last_err_msg", "remark",
             "time_in_force", "fill_outside_rth", "session", "aux_price", "trail_type",
-            "trail_value", "trail_spread", "currency",
+            "trail_value", "trail_spread", "currency", "jp_acc_type",
         ]
         order_list = ret_data
         order_list_table = pd.DataFrame(order_list, columns=col_list)
@@ -519,7 +526,8 @@ class OpenTradeContextBase(OpenContextBase):
     def place_order(self, price, qty, code, trd_side, order_type=OrderType.NORMAL,
                     adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0, remark=None,
                     time_in_force=TimeInForce.DAY, fill_outside_rth=False, aux_price=None,
-                    trail_type=None, trail_value=None, trail_spread=None, session=Session.NONE):
+                    trail_type=None, trail_value=None, trail_spread=None, session=Session.NONE,
+                    jp_acc_type=SubAccType.JP_GENERAL, position_id=None):
         """
         place order
         use  set_handle(HKTradeOrderHandlerBase) to recv order push !
@@ -574,6 +582,8 @@ class OpenTradeContextBase(OpenContextBase):
             'trail_type': trail_type ,
             'trail_value': trail_value ,
             'trail_spread': trail_spread ,
+            'jp_acc_type': jp_acc_type,
+            'position_id': position_id,
         }
 
         ret_code, msg, order_id = query_processor(**kargs)
@@ -597,7 +607,7 @@ class OpenTradeContextBase(OpenContextBase):
             "order_id", "qty", "price", "create_time", "updated_time",
             "dealt_qty", "dealt_avg_price", "last_err_msg", "remark",
             "time_in_force", "fill_outside_rth", "session", 'aux_price',
-            'trail_type', 'trail_value', 'trail_spread', "currency",
+            'trail_type', 'trail_value', 'trail_spread', "currency", "jp_acc_type",
         ]
         order_list = [order_item]
         order_table = pd.DataFrame(order_list, columns=col_list)
@@ -720,7 +730,7 @@ class OpenTradeContextBase(OpenContextBase):
 
         col_list = [
             "code", "stock_name", "deal_market", "deal_id", "order_id", "qty", "price",
-            "trd_side", "create_time", "counter_broker_id", "counter_broker_name", 'status'
+            "trd_side", "create_time", "counter_broker_id", "counter_broker_name", "status", "jp_acc_type",
         ]
         deal_list_table = pd.DataFrame(deal_list, columns=col_list)
 
@@ -773,7 +783,7 @@ class OpenTradeContextBase(OpenContextBase):
             "order_id", "qty", "price", "create_time", "updated_time",
             "dealt_qty", "dealt_avg_price", "last_err_msg", "remark",
             "time_in_force", "fill_outside_rth", "session", "aux_price", "trail_type", "trail_value",
-            "trail_spread", "currency",
+            "trail_spread", "currency", "jp_acc_type",
         ]
         order_list_table = pd.DataFrame(order_list, columns=col_list)
 
@@ -852,13 +862,14 @@ class OpenTradeContextBase(OpenContextBase):
 
         col_list = [
             "code", "stock_name", "deal_market", "deal_id", "order_id", "qty", "price",
-            "trd_side", "create_time", "counter_broker_id", "counter_broker_name", 'status'
+            "trd_side", "create_time", "counter_broker_id", "counter_broker_name", "status", "jp_acc_type",
         ]
         deal_list_table = pd.DataFrame(deal_list, columns=col_list)
 
         return RET_OK, deal_list_table
 
-    def acctradinginfo_query(self, order_type, code, price, order_id=None, adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0, acc_index=0):
+    def acctradinginfo_query(self, order_type, code, price, order_id=None, adjust_limit=0, trd_env=TrdEnv.REAL, acc_id=0,
+                             acc_index=0, session=Session.NONE, jp_acc_type=SubAccType.JP_GENERAL, position_id=None):
         """
         查询账户下最大可买卖数量
         :param order_type: 订单类型，参见OrderType
@@ -869,6 +880,8 @@ class OpenTradeContextBase(OpenContextBase):
         :param trd_env: 交易环境，参见TrdEnv
         :param acc_id: 业务账号，默认0表示第1个
         :param acc_index: int，交易业务子账户ID列表所对应的下标，默认0，表示第1个业务ID
+        :param session: 交易时段，参见 Session
+        :param jp_acc_type: 交易时段，参见 SubAccType
         :return: (ret, data)
 
                 ret == RET_OK, data为pd.DataFrame，数据列如下
@@ -915,6 +928,9 @@ class OpenTradeContextBase(OpenContextBase):
             'sec_mkt_str': market_str,
             'trd_env': trd_env,
             'acc_id': acc_id,
+            'session': session,
+            'jp_acc_type': jp_acc_type,
+            'position_id': position_id,
             'conn_id': self.get_sync_conn_id()
         }
 
@@ -923,7 +939,7 @@ class OpenTradeContextBase(OpenContextBase):
             return RET_ERROR, msg
 
         col_list = ['max_cash_buy', 'max_cash_and_margin_buy', 'max_position_sell', 'max_sell_short', 'max_buy_back',
-                    'long_required_im', 'short_required_im']
+                    'long_required_im', 'short_required_im', 'session']
         acctradinginfo_table = pd.DataFrame(data, columns=col_list)
         return RET_OK, acctradinginfo_table
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import logging
+import logging, logging.handlers
 from datetime import datetime
 import os
 import platform
@@ -88,12 +88,12 @@ class FTLog(object):
         self.console_logger.setLevel(self._console_level)
         self.console_logger.propagate = False
         
-        self.formatter = logging.Formatter('%(asctime)s | %(process)d | %(message)s')
+        self.formatter = logging.Formatter('%(asctime)s | %(process)d | %(thread)d | %(message)s')
 
         if not hasattr(self, 'fileHandler'):
             file_name = 'py_' + datetime.now().strftime('%Y_%m_%d') + '.log'
             file_path = os.path.join(self.log_path, file_name)
-            self.fileHandler = logging.FileHandler(file_path)
+            self.fileHandler = logging.handlers.TimedRotatingFileHandler(file_path, when='H', interval=24, backupCount=20)
             self.fileHandler.setLevel(self._file_level)
             self.fileHandler.setFormatter(self.formatter)
             self.file_logger.addHandler(self.fileHandler)
@@ -121,10 +121,10 @@ class FTLog(object):
 
     def format_msg(self, msg):
         rv = self.findCaller()
-        if (rv is not None) and (len(rv) > 0):
+        if (rv is not None) and (len(rv) >= 3):
             filepath = rv[0]
             [_, filename] = os.path.split(filepath)
-            return "[{}] {}:{}: ".format(filename, rv[2], rv[1]) + msg
+            return "[{}:{}] {}: ".format(filename, rv[1], rv[2]) + msg
         else:
             return msg
 
@@ -168,23 +168,23 @@ class FTLog(object):
 
     def warning(self, msg, *args, **kwargs):
         # 设置黄色日志
-        self.fontColor('\033[0;33m%s\033[0m')
-        self.warning2(self.BOTH_FILE_CONSOLE, msg, *args, **kwargs)
+        #self.fontColor('\033[0;33m%s\033[0m')
+        self.warning2(self.ONLY_FILE, msg, *args, **kwargs)
 
     def error(self, msg, *args, **kwargs):
         # 设置黄色日志
-        self.fontColor('\033[0;33m%s\033[0m')
-        self.error2(self.BOTH_FILE_CONSOLE, msg, *args, **kwargs)
+        #self.fontColor('\033[0;33m%s\033[0m')
+        self.error2(self.ONLY_FILE, msg, *args, **kwargs)
 
     def debug(self, msg, *args, **kwargs):
         # 设置黑色日志
-        self.fontColor('\033[0;30m%s\033[0m')
-        self.debug2(self.BOTH_FILE_CONSOLE, msg, *args, **kwargs)
+        #self.fontColor('\033[0;30m%s\033[0m')
+        self.debug2(self.ONLY_FILE, msg, *args, **kwargs)
 
     def info(self, msg, *args, **kwargs):
         # 设置黑色日志
-        self.fontColor('\033[0;30m%s\033[0m')
-        self.info2(self.BOTH_FILE_CONSOLE, msg, *args, **kwargs)
+        #self.fontColor('\033[0;30m%s\033[0m')
+        self.info2(self.ONLY_FILE, msg, *args, **kwargs)
 
     @property
     def file_level(self):
@@ -259,6 +259,11 @@ _srcfile = os.path.normcase(logger.error2.__code__.co_filename)
 
 if __name__ == '__main__':
     _srcfile = ""
+    d = {}
+    try:
+        print(d[1])
+    except Exception:
+        logger.warning2(FTLog.ONLY_CONSOLE, 'Exception', exc_info=True)
     logger.error2(FTLog.BOTH_FILE_CONSOLE, "1111111111")
     logger.error2(FTLog.ONLY_FILE, "222222222")
     logger.error2(FTLog.ONLY_CONSOLE, "33333333")

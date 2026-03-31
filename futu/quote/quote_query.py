@@ -223,7 +223,7 @@ class RequestTradeDayQuery:
         if not r:
             error_str = ERROR_STR_PREFIX + " market is %s, which is not valid." \
                                            % (market)
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         if start_date is None: # start为往前365天
             today = datetime.today()
@@ -233,7 +233,7 @@ class RequestTradeDayQuery:
         else:
             ret, msg = normalize_date_format(start_date)
             if ret != RET_OK:
-                return ret, msg, None
+                return ret, msg, None, 0, 0
             start_date = msg
 
         if end_date is None: # end为当前时间
@@ -242,7 +242,7 @@ class RequestTradeDayQuery:
         else:
             ret, msg = normalize_date_format(end_date)
             if ret != RET_OK:
-                return ret, msg, None
+                return ret, msg, None, 0, 0
             end_date = msg
 
         """check stock_code 股票"""
@@ -252,7 +252,7 @@ class RequestTradeDayQuery:
             ret, content = split_stock_str(code)
             if ret == RET_ERROR:
                 error_str = content
-                return RET_ERROR, error_str, None
+                return RET_ERROR, error_str, None, 0, 0
             market_code, stock_code = content
 
         # pack to json
@@ -303,12 +303,12 @@ class StockBasicInfoQuery:
             if not Market.if_has_key(market):
                 error_str = ERROR_STR_PREFIX + " market is %s, which is not valid. (%s)" \
                                                % (market, Market.get_all_keys())
-                return RET_ERROR, error_str, None
+                return RET_ERROR, error_str, None, 0, 0
 
             if not SecurityType.if_has_key(stock_type) and code_list is None:
                 error_str = ERROR_STR_PREFIX + " stock_type is %s, which is not valid. (%s)" \
                                                % (stock_type, SecurityType.get_all_keys())
-                return RET_ERROR, error_str, None
+                return RET_ERROR, error_str, None, 0, 0
 
         from ..common.pb.Qot_GetStaticInfo_pb2 import Request
         req = Request()
@@ -321,7 +321,7 @@ class StockBasicInfoQuery:
                 if ret == RET_OK:
                     sec.market, sec.code = data
                 else:
-                    return RET_ERROR, data, None
+                    return RET_ERROR, data, None, 0, 0
         else:
             _, req.c2s.market = Market.to_number(market)
             _, req.c2s.secType = SecurityType.to_number(stock_type)
@@ -392,7 +392,7 @@ class MarketSnapshotQuery:
 
         if len(failure_tuple_list) > 0:
             error_str = '\n'.join([x[1] for x in failure_tuple_list])
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, ProtoId.Qot_GetSecuritySnapshot, 0
 
         from ..common.pb.Qot_GetSecuritySnapshot_pb2 import Request
         req = Request()
@@ -652,7 +652,7 @@ class RtDataQuery:
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         market_code, stock_code = content
         from ..common.pb.Qot_GetRT_pb2 import Request
@@ -744,7 +744,7 @@ class PlateStockQuery:
         if ret_code != RET_OK:
             msg = content
             error_str = ERROR_STR_PREFIX + msg
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         market, code = content
         r, v = SortField.to_number(sort_field)
@@ -795,7 +795,7 @@ class BrokerQueueQuery:
         ret_code, content = split_stock_str(code)
         if ret_code == RET_ERROR:
             error_str = content
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         market, code = content
         from ..common.pb.Qot_GetBroker_pb2 import Request
@@ -853,7 +853,7 @@ class RequestHistoryKlineQuery:
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         market_code, stock_code = content
 
@@ -861,12 +861,12 @@ class RequestHistoryKlineQuery:
         if not KLType.if_has_key(ktype):
             error_str = ERROR_STR_PREFIX + "ktype is %s, which is not valid. (%s)" \
                 % (ktype, KLType.get_all_keys())
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         if not AuType.if_has_key(autype):
             error_str = ERROR_STR_PREFIX + "autype is %s, which is not valid. (%s)" \
                 % (autype, AuType.get_all_keys())
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         from ..common.pb.Qot_RequestHistoryKL_pb2 import Request
 
@@ -1112,6 +1112,10 @@ class SubscriptionQuery:
 
         return SubscriptionQuery.pack_push_or_unpush_req(code_list, subtype_list, False, conn_id, is_first_push)
 
+    @classmethod
+    def unpack_unpush_query_rsp(cls, rsp_pb):
+        return RET_OK, "", None
+
 
 def parse_pb_BasicQot(pb):
     item = {
@@ -1188,7 +1192,7 @@ class StockQuoteQuery:
 
         if len(failure_tuple_list) > 0:
             error_str = '\n'.join([x[1] for x in failure_tuple_list])
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         from ..common.pb.Qot_GetBasicQot_pb2 import Request
         req = Request()
@@ -1226,16 +1230,16 @@ class TickerQuery:
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         if isinstance(num, int) is False:
             error_str = ERROR_STR_PREFIX + "num is %s of type %s, and the type shoud be %s" \
                                            % (num, str(type(num)), str(int))
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         if num < 0:
             error_str = ERROR_STR_PREFIX + "num is %s, which is less than 0" % num
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         market_code, stock_code = content
         from ..common.pb.Qot_GetTicker_pb2 import Request
@@ -1284,28 +1288,28 @@ class CurKlineQuery:
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         market_code, stock_code = content
 
         if not KLType.if_has_key(ktype):
             error_str = ERROR_STR_PREFIX + "ktype is %s, which is not valid. (%s)" \
                                            % (ktype, KLType.get_all_keys())
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         if not AuType.if_has_key(autype):
             error_str = ERROR_STR_PREFIX + "autype is %s, which is not valid. (%s)" \
                                            % (autype, AuType.get_all_keys())
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         if isinstance(num, int) is False:
             error_str = ERROR_STR_PREFIX + "num is %s of type %s, which type should be %s" \
                                            % (num, str(type(num)), str(int))
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         if num < 0:
             error_str = ERROR_STR_PREFIX + "num is %s, which is less than 0" % num
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
         from ..common.pb.Qot_GetKL_pb2 import Request
         req = Request()
         req.c2s.security.market = market_code
@@ -1397,7 +1401,7 @@ class OrderBookQuery:
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         market_code, stock_code = content
         from ..common.pb.Qot_GetOrderBook_pb2 import Request
@@ -1456,7 +1460,7 @@ class SuspensionQuery:
         for stock_str in code_list:
             ret, content = split_stock_str(stock_str)
             if ret == RET_ERROR:
-                return RET_ERROR, content, None
+                return RET_ERROR, content, None, 0, 0
             else:
                 list_req_stock.append(content)
 
@@ -1640,7 +1644,7 @@ class StockReferenceList:
 
         ret, content = split_stock_str(code)
         if ret != RET_OK:
-            return ret, content, None
+            return ret, content, None, 0, 0
 
         req = Request()
         req.c2s.security.market = content[0]
@@ -1711,7 +1715,7 @@ class OwnerPlateQuery:
 
         if len(failure_tuple_list) > 0:
             error_str = '\n'.join([x[1] for x in failure_tuple_list])
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         from ..common.pb.Qot_GetOwnerPlate_pb2 import Request
         req = Request()
@@ -1758,17 +1762,17 @@ class HoldingChangeList:
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         market_code, stock_code = content
 
         if start_date is None:
             msg = "The start date is none."
-            return RET_ERROR, msg, None
+            return RET_ERROR, msg, None, 0, 0
         else:
             ret, msg = normalize_date_format(start_date)
             if ret != RET_OK:
-                return ret, msg, None
+                return ret, msg, None, 0, 0
             start_date = msg
 
         if end_date is None:
@@ -1777,7 +1781,7 @@ class HoldingChangeList:
         else:
             ret, msg = normalize_date_format(end_date)
             if ret != RET_OK:
-                return ret, msg, None
+                return ret, msg, None, 0, 0
             end_date = msg
 
         from ..common.pb.Qot_GetHoldingChangeList_pb2 import Request
@@ -1877,17 +1881,17 @@ class OptionChain:
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         market_code, stock_code = content
 
         if start_date is None:
             msg = "The start date is none."
-            return RET_ERROR, msg, None
+            return RET_ERROR, msg, None, 0, 0
         else:
             ret, msg = normalize_date_format(start_date)
             if ret != RET_OK:
-                return ret, msg, None
+                return ret, msg, None, 0, 0
             start_date = msg
 
         if end_date is None:
@@ -1896,7 +1900,7 @@ class OptionChain:
         else:
             ret, msg = normalize_date_format(end_date)
             if ret != RET_OK:
-                return ret, msg, None
+                return ret, msg, None, 0, 0
             end_date = msg
 
         r, option_cond_type = OptionCondType.to_number(option_cond_type)
@@ -2087,7 +2091,7 @@ class RequestRehab:
         if ret_code != RET_OK:
             msg = content
             error_str = ERROR_STR_PREFIX + msg
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
         market, code = content
 
         from ..common.pb.Qot_RequestRehab_pb2 import Request
@@ -2111,6 +2115,7 @@ class RequestRehab:
             ADD = 32
             DIVIDED = 64
             SP_DIVIDED = 128
+            SPIN_OFF = 256
 
         rehab_list = list()
         for rehab in rsp_pb.s2c.rehabList:
@@ -2122,6 +2127,10 @@ class RequestRehab:
             stock_rehab_tmp['backward_adj_factorB'] = rehab.bwdFactorB
 
             act_flag = rehab.companyActFlag
+            if act_flag & KLRehabFlag.SPIN_OFF:
+                stock_rehab_tmp['spin_off_ratio'] = rehab.spinOffBase / rehab.spinOffErt
+                stock_rehab_tmp['spin_off_base'] = rehab.spinOffBase
+                stock_rehab_tmp['spin_off_ert'] = rehab.spinOffErt
             if act_flag & KLRehabFlag.SP_DIVIDED:
                 stock_rehab_tmp['special_dividend'] = rehab.spDividend
             if act_flag & KLRehabFlag.DIVIDED:
@@ -2156,7 +2165,6 @@ class RequestRehab:
                     rehab.splitErt
                 stock_rehab_tmp['split_base'] = rehab.splitBase
                 stock_rehab_tmp['split_ert'] = rehab.splitErt
-
             rehab_list.append(stock_rehab_tmp)
 
         return RET_OK, "", rehab_list
@@ -2275,7 +2283,7 @@ class GetCapitalDistributionQuery:
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
         market_code, stock_code = content
 
         # 开始组包
@@ -2326,13 +2334,13 @@ class GetCapitalFlowQuery:
         if not PeriodType.if_has_key(period_type):
             error_str = ERROR_STR_PREFIX + "period_type is %s, which is not valid. (%s)" \
                 % (period_type, PeriodType.get_all_keys())
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         """check stock_code 股票"""
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
         market_code, stock_code = content
 
         # 开始组包
@@ -2506,13 +2514,13 @@ class Verification:
         if ret:
             req.c2s.type = data
         else:
-            return RET_ERROR, data, None
+            return RET_ERROR, data, None, 0, 0
 
         ret, data = VerificationOp.to_number(verification_op)
         if ret:
             req.c2s.op = data
         else:
-            return RET_ERROR, data, None
+            return RET_ERROR, data, None, 0, 0
 
         if code is not None and len(code) != 0:
             req.c2s.code = code
@@ -2553,7 +2561,7 @@ class ModifyUserSecurityQuery:
             stock_tuple_list.append((market_code, stock_code))
         if len(failure_tuple_list) > 0:
             error_str = '\n'.join([x[1] for x in failure_tuple_list])
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         # 开始组包
         from ..common.pb.Qot_ModifyUserSecurity_pb2 import Request
@@ -2652,7 +2660,7 @@ class StockFilterQuery:
             if ret != RET_OK:
                 msg = str(content)
                 error_str = ERROR_STR_PREFIX + msg
-                return RET_ERROR, error_str, None
+                return RET_ERROR, error_str, None, 0, 0
             market, code = content
             req.c2s.plate.code = code
             req.c2s.plate.market = market
@@ -2681,7 +2689,7 @@ class StockFilterQuery:
                     error_str = ERROR_STR_PREFIX + "the item in filter_list is wrong"
 
         if (ret == RET_ERROR):
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         return pack_pb_req(req, ProtoId.Qot_StockFilter, conn_id)
 
@@ -2724,7 +2732,7 @@ class GetCodeChangeQuery:
             stock_tuple_list.append((market_code, stock_code))
         if len(failure_tuple_list) > 0:
             error_str = '\n'.join([x[1] for x in failure_tuple_list])
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         # 开始组包
         from ..common.pb.Qot_GetCodeChange_pb2 import Request
@@ -2843,7 +2851,7 @@ class GetFutureInfoQuery:
             stock_tuple_list.append((market_code, stock_code))
         if len(failure_tuple_list) > 0:
             error_str = '\n'.join([x[1] for x in failure_tuple_list])
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         # 开始组包
         from ..common.pb.Qot_GetFutureInfo_pb2 import Request
@@ -2989,7 +2997,7 @@ class SetPriceReminderQuery:
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
         market_code, stock_code = content
 
         # 开始组包
@@ -3041,7 +3049,7 @@ class GetPriceReminderQuery:
             ret, content = split_stock_str(code)
             if ret == RET_ERROR:
                 error_str = content
-                return RET_ERROR, error_str, None
+                return RET_ERROR, error_str, None, 0, 0
             market_code, stock_code = content
 
         # 开始组包
@@ -3148,7 +3156,7 @@ class GetMarketStateQuery:
             stock_tuple_list.append((market_code, stock_code))
         if len(failure_tuple_list) > 0:
             error_str = '\n'.join([x[1] for x in failure_tuple_list])
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         # 开始组包
         from ..common.pb.Qot_GetMarketState_pb2 import Request
@@ -3192,7 +3200,7 @@ class GetOptionExpirationDate:
         ret, content = split_stock_str(code)
         if ret == RET_ERROR:
             error_str = content
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         market_code, stock_code = content
 

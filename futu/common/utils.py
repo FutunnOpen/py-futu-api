@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from struct import calcsize
 from google.protobuf.json_format import MessageToJson
 from threading import RLock
+import enum
 from .conn_mng import *
 from .sys_config import *
 from .pbjson import json2pb
@@ -12,6 +13,19 @@ from .pbjson import json2pb
 
 ProtoInfo = collections.namedtuple('ProtoInfo', ['proto_id', 'serial_no'])
 
+class ParseRspErr(enum.Enum):
+    OK = 0
+    NOT_ENOUGH_DATA = 1
+    DECRYPT_ERR = 2
+    PARSE_PB_ERR = 3
+
+class ParseRspResult:
+    def __init__(self):
+        self.err = ParseRspErr.OK
+        self.msg = ''
+        self.head_dict = None
+        self.rsp_pb = None
+        self.total_len = 0
 
 def get_message_head_len():
     return calcsize(MESSAGE_HEAD_FMT)
@@ -592,14 +606,14 @@ def pack_pb_req(pb_req, proto_id, conn_id, serial_no=0):
         req_json = MessageToJson(pb_req)
         ret, msg, req = _joint_head(proto_id, proto_fmt, len(req_json),
                           req_json.encode(), conn_id, serial_no, is_encrypt)
-        return ret, msg, req
+        return ret, msg, req, proto_id, serial_no
 
     elif proto_fmt == ProtoFMT.Protobuf:
         ret, msg, req = _joint_head(proto_id, proto_fmt, pb_req.ByteSize(), pb_req, conn_id, serial_no, is_encrypt)
-        return ret, msg, req
+        return ret, msg, req, proto_id, serial_no
     else:
         error_str = ERROR_STR_PREFIX + 'unknown protocol format, %d' % proto_fmt
-        return RET_ERROR, error_str, None
+        return RET_ERROR, error_str, None, proto_id, serial_no
 
 
 def _joint_head(proto_id, proto_fmt_type, body_len, str_body, conn_id, serial_no, is_encrypt):
@@ -678,6 +692,34 @@ def decrypt_rsp_body(rsp_body, head_dict, conn_id, is_encrypt):
 
     return ret_code, msg, rsp_body
 
+def parse_rsp(data, conn_id, is_encrypt):
+    """
+    :return: ParseRspResult
+    """
+
+    result = ParseRspResult()
+    head_len = get_message_head_len()
+    if len(data) <= head_len:
+        result.err = ParseRspErr.NOT_ENOUGH_DATA
+        return result
+
+    head_dict = parse_head(data[:head_len])
+    result.head_dict = head_dict
+    body_len = head_dict['body_len']
+    if len(data) < head_len + body_len:
+        result.err = ParseRspErr.NOT_ENOUGH_DATA
+        return result
+
+    result.total_len = head_len + body_len
+    ret_decrypt, msg_decrypt, rsp_body = decrypt_rsp_body(data[head_len:head_len+body_len], head_dict, conn_id, is_encrypt)
+    if ret_decrypt == RET_OK:
+        result.rsp_pb = binary2pb(rsp_body, head_dict['proto_id'], head_dict['proto_fmt_type'])
+        if result.rsp_pb is None:
+            result.err = ParseRspErr.PARSE_PB_ERR
+    else:
+        result.err = ParseRspErr.DECRYPT_ERR
+        result.msg = msg_decrypt
+    return result
 
 def make_from_namedtuple(t, **kwargs):
     """

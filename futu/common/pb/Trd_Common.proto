@@ -40,6 +40,9 @@ enum TrdMarket
     TrdMarket_CA = 112;
 	TrdMarket_HK_Fund = 113; //香港基金市场
 	TrdMarket_US_Fund = 123; //美国基金市场
+	TrdMarket_SG_Fund = 124; //新加坡基金市场
+	TrdMarket_MY_Fund = 125; //马来西亚基金市场
+	TrdMarket_JP_Fund = 126; //日本基金市场
 }
 
 //可交易证券所属市场，目前主要是区分A股的沪市和深市，香港和美国暂不需要细分
@@ -157,6 +160,10 @@ enum TrdAccType
 	TrdAccType_Unknown = 0; //未知类型
 	TrdAccType_Cash = 1;    //现金账户
 	TrdAccType_Margin = 2;  //保证金账户
+	TrdAccType_TFSA = 3;    //加拿大免税账户
+	TrdAccType_RRSP = 4;    //加拿大注册退休账户
+	TrdAccType_SRRSP = 5;   //加拿大配偶退休账户
+	TrdAccType_Derivatives = 6;   //日本衍生品账户
 };
 
 //交易账户状态
@@ -164,6 +171,15 @@ enum TrdAccStatus
 {
     TrdAccStatus_Active = 0;
     TrdAccStatus_Disabled = 1;
+}
+
+// 账户类型
+enum TrdAccRole
+{
+	TrdAccRole_Unknown = 0;  //未知
+	TrdAccRole_Normal = 1;  //普通账户
+	TrdAccRole_Master = 2;  //主账户
+	TrdAccRole_IPO = 3;  //IPO 账户，仅MY券商
 }
 
 //货币种类
@@ -206,6 +222,9 @@ enum SecurityFirm
 	SecurityFirm_FutuInc = 2;        //富途证券（美国）
 	SecurityFirm_FutuSG = 3;         //富途证券（新加坡）
 	SecurityFirm_FutuAU = 4;         //富途证券（澳洲）
+	SecurityFirm_FutuCA = 5;         //富途证券（加拿大）
+	SecurityFirm_FutuMY = 6;         //富途证券（马来西亚）
+	SecurityFirm_FutuJP = 7;         //富途证券（日本）
 }
 
 //模拟交易账户类型
@@ -215,6 +234,7 @@ enum SimAccType
 	SimAccType_Stock = 1;		//股票模拟账户（仅用于交易证券类产品，不支持交易期权）
 	SimAccType_Option = 2;      //期权模拟账户（仅用于交易期权，不支持交易股票证券类产品）
     SimAccType_Futures = 3;     //期货模拟账户
+    SimAccType_StockAndOption = 4;  //股票和期权模拟账户（支持交易股票和期权）
 }
 
 //风险状态，共分 9 个等级，LEVEL1是最安全，LEVEL9是最危险
@@ -241,6 +261,40 @@ enum DTStatus
 	DTStatus_DTCall = 3;		//DT Call(当前状态有未补平的日内交易追缴金额（DTCall），需要在5个交易日内足额入金来补平 DTCall，否则会被禁止新建仓位，直到足额存入资金才会解禁)
 }
 
+//JP子账户类型
+enum TrdSubAccType
+{
+	TrdSubAccType_None = 0; //未知
+	TrdSubAccType_JP_GENERAL = 1; // 日本-一般口座-long
+	TrdSubAccType_JP_TOKUTEI = 2; // 日本-特定口座-long
+	TrdSubAccType_JP_NISA_GENERAL = 3; // 日本-一般NISA
+	TrdSubAccType_JP_NISA_TSUMITATE = 4; // 日本-累计NISA
+
+	// JP支持信用账户新增如下六种子账户类型
+	TrdSubAccType_JP_GENERAL_SHORT = 5; // 日本-一般口座-Short
+	TrdSubAccType_JP_TOKUTEI_SHORT = 6; // 日本-特定口座-Short
+	TrdSubAccType_JP_HONPO_GENERAL = 7; // 日本-本国信用交易抵押品-一般
+	TrdSubAccType_JP_GAIKOKU_GENERAL = 8; // 日本-外国信用交易抵押品-一般
+	TrdSubAccType_JP_HONPO_TOKUTEI = 9; // 日本-本国信用交易抵押品-特定
+	TrdSubAccType_JP_GAIKOKU_TOKUTEI = 10; // 日本-外国信用交易抵押品-特定
+
+	// JP支持衍生品账户新增如下六种子账户类型
+	TrdSubAccType_JP_DERIVATIVE_LONG = 11; // 日本-衍生品-Long
+	TrdSubAccType_JP_DERIVATIVE_SHORT = 12; // 日本-衍生品-Short
+	TrdSubAccType_JP_HONPO_DERIVATIVE_GENERAL = 13; // 日本-本国衍生品证据金-一般
+	TrdSubAccType_JP_GAIKOKU_DERIVATIVE_GENERAL = 14; // 日本-外国衍生品证据金-一般
+	TrdSubAccType_JP_HONPO_DERIVATIVE_TOKUTEI = 15; // 日本-本国衍生品证据金-特定
+	TrdSubAccType_JP_GAIKOKU_DERIVATIVE_TOKUTEI = 16; // 日本-外国衍生品证据金-特定
+}
+
+//日内交易限制情况
+enum TrdAssetCategory
+{
+	TrdAssetCategory_Unknown = 0; 	//未知
+	TrdAssetCategory_JP = 1;	    //本国
+	TrdAssetCategory_US = 2;	    //外国
+}
+
 //账户现金信息，目前仅用于期货账户
 message AccCashInfo
 {
@@ -263,6 +317,7 @@ message TrdHeader
 	required int32 trdEnv = 1; //交易环境, 参见TrdEnv的枚举定义
 	required uint64 accID = 2; //业务账号, 业务账号与交易环境、市场权限需要匹配，否则会返回错误
 	required int32 trdMarket = 3; //交易市场, 参见TrdMarket的枚举定义
+	optional int32 jpAccType = 4; //JP子账户类型，取值见 TrdSubAccType
 }
 
 //交易业务账户结构
@@ -277,6 +332,8 @@ message TrdAcc
 	optional int32 simAccType = 7; //模拟交易账号类型，取值见SimAccType
     optional string uniCardNum = 8;  //所属综合账户卡号
     optional int32 accStatus = 9; //账号状态，取值见TrdAccStatus
+	optional int32 accRole = 10; //账号分类，是不是主账号，取值见TrdAccRole
+	repeated int32 jpAccType = 11; //JP子账户类型，取值见 TrdSubAccType
 }
 
 //账户资金结构
@@ -386,6 +443,8 @@ message Order
 	optional int32 currency = 25;        // 货币类型，取值参考 Currency
 	optional int32 trdMarket = 26;  //交易市场, 参见TrdMarket的枚举定义
 	optional int32 session = 27; //美股订单时段, 参见Common.Session的枚举定义
+	optional int32 jpAccType = 28; //JP子账户类型，取值见 TrdSubAccType
+	
 }
 
 message OrderFeeItem
@@ -421,6 +480,7 @@ message OrderFill
     optional double updateTimestamp = 15; //最后更新时间戳
     optional int32 status = 16; //成交状态, 参见OrderFillStatus的枚举定义
     optional int32 trdMarket = 17;  //交易市场, 参见TrdMarket的枚举定义
+	optional int32 jpAccType = 18; //JP子账户类型，取值见 TrdSubAccType
 }
 
 //最大可交易数量
@@ -434,6 +494,7 @@ message MaxTrdQtys
     optional double maxBuyBack = 5;             //卖空后，需要买回的最大整手股数。因为卖空后，必须先买回已卖空的股数，还掉股票，才能再继续买多。期货不适用
 	optional double longRequiredIM = 6;         //开多仓每张合约初始保证金。当前仅期货和期权适用（最低 FutuOpenD 版本要求：5.0.1310）
 	optional double shortRequiredIM = 7;        //开空仓每张合约初始保证金。当前仅期货和期权适用（最低 FutuOpenD 版本要求：5.0.1310）
+	optional int32 session = 8;                 //美股订单时段, 参见Common.Session的枚举定义（最低 FutuOpenD 版本要求：9.4.5408）
 }
 
 //过滤条件，条件组合是"与"不是"或"，用于获取订单、成交、持仓等时二次过滤

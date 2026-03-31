@@ -57,6 +57,8 @@ class GetAccountList:
             'sim_acc_type': SimAccType.to_string2(record.simAccType) if record.HasField('simAccType') else SimAccType.NONE,# 初始化枚举类型
             'trdmarket_auth': list(record.trdMarketAuthList),
             'acc_status': TrdAccStatus.to_string2(record.accStatus) if record.HasField('accStatus') else 'N/A',# 初始化枚举类型
+            'acc_role': TrdAccRole.to_string2(record.accRole) if record.HasField('accRole') else 'N/A',# 初始化枚举类型
+            'jp_acc_type': [SubAccType.to_string2(subAccType) for subAccType in record.jpAccType],
         } for record in raw_acc_list]
 
         return RET_OK, "", acc_list
@@ -119,7 +121,7 @@ class AccInfoQuery:
         pass
 
     @classmethod
-    def pack_req(cls, acc_id, trd_market, trd_env, conn_id, refresh_cache, currency):
+    def pack_req(cls, acc_id, trd_market, trd_env, conn_id, refresh_cache, currency, asset_category):
         from ..common.pb.Trd_GetFunds_pb2 import Request
         req = Request()
         _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
@@ -127,6 +129,12 @@ class AccInfoQuery:
         _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_market)
         if refresh_cache:
             req.c2s.refreshCache = refresh_cache
+        if asset_category is not None:
+            ret, val = AssetCategory.to_number(asset_category)
+            if not ret:
+                return RET_ERROR, val, None, 0, 0
+            else:
+                req.c2s.assetCategory = val
         req.c2s.currency = Currency.to_number(currency)[1]
         return pack_pb_req(req, ProtoId.Trd_GetFunds, conn_id)
 
@@ -187,6 +195,14 @@ class AccInfoQuery:
             'au_avl_withdrawal_cash': NoneDataValue,
             'aud_net_cash_power': NoneDataValue,
             'aud_assets': NoneDataValue,
+            'ca_cash': NoneDataValue,
+            'ca_avl_withdrawal_cash': NoneDataValue,
+            'cad_net_cash_power': NoneDataValue,
+            'cad_assets': NoneDataValue,
+            'my_cash': NoneDataValue,
+            'my_avl_withdrawal_cash': NoneDataValue,
+            'myr_net_cash_power': NoneDataValue,
+            'myr_assets': NoneDataValue,
             'is_pdt':  get_pb_value(raw_funds, 'isPdt'),
             'pdt_seq': get_pb_value(raw_funds, 'pdtSeq'),
             'beginning_dtbp': get_pb_value(raw_funds, 'beginningDTBP'),
@@ -219,6 +235,14 @@ class AccInfoQuery:
                 accinfo_list[0]['au_cash'] = cashInfo.cash
                 accinfo_list[0]['au_avl_withdrawal_cash'] = cashInfo.availableBalance
                 accinfo_list[0]['aud_net_cash_power'] = cashInfo.netCashPower if cashInfo.HasField('netCashPower') else NoneDataValue
+            elif cashInfo.currency == Trd_Common_pb2.Currency_CAD:
+                accinfo_list[0]['ca_cash'] = cashInfo.cash
+                accinfo_list[0]['ca_avl_withdrawal_cash'] = cashInfo.availableBalance
+                accinfo_list[0]['cad_net_cash_power'] = cashInfo.netCashPower if cashInfo.HasField('netCashPower') else NoneDataValue
+            elif cashInfo.currency == Trd_Common_pb2.Currency_MYR:
+                accinfo_list[0]['my_cash'] = cashInfo.cash
+                accinfo_list[0]['my_avl_withdrawal_cash'] = cashInfo.availableBalance
+                accinfo_list[0]['myr_net_cash_power'] = cashInfo.netCashPower if cashInfo.HasField('netCashPower') else NoneDataValue
         for marketInfo in raw_funds.marketInfoList:
             if marketInfo.trdMarket == Trd_Common_pb2.TrdMarket_HK:
                 accinfo_list[0]['hkd_assets'] = marketInfo.assets if marketInfo.HasField('assets') else NoneDataValue
@@ -232,6 +256,10 @@ class AccInfoQuery:
                 accinfo_list[0]['sgd_assets'] = marketInfo.assets if marketInfo.HasField('assets') else NoneDataValue
             elif marketInfo.trdMarket == Trd_Common_pb2.TrdMarket_AU:
                 accinfo_list[0]['aud_assets'] = marketInfo.assets if marketInfo.HasField('assets') else NoneDataValue
+            elif marketInfo.trdMarket == Trd_Common_pb2.TrdMarket_CA:
+                accinfo_list[0]['cad_assets'] = marketInfo.assets if marketInfo.HasField('assets') else NoneDataValue
+            elif marketInfo.trdMarket == Trd_Common_pb2.TrdMarket_MY:
+                accinfo_list[0]['myr_assets'] = marketInfo.assets if marketInfo.HasField('assets') else NoneDataValue
         return RET_OK, "", accinfo_list
 
 
@@ -243,7 +271,7 @@ class PositionListQuery:
 
     @classmethod
     def pack_req(cls, code, pl_ratio_min,
-                 pl_ratio_max, trd_env, acc_id, trd_mkt, conn_id, refresh_cache, position_market):
+                 pl_ratio_max, trd_env, acc_id, trd_mkt, conn_id, refresh_cache, position_market, asset_category):
         """Convert from user request for trading days to PLS request"""
         from ..common.pb.Trd_GetPositionList_pb2 import Request
         req = Request()
@@ -259,7 +287,12 @@ class PositionListQuery:
             req.c2s.filterPLRatioMax = float(pl_ratio_max) / 100.0
         if refresh_cache:
             req.c2s.refreshCache = refresh_cache
-
+        if asset_category is not None:
+            ret, val = AssetCategory.to_number(asset_category)
+            if not ret:
+                return RET_ERROR, val, None, 0, 0
+            else:
+                req.c2s.assetCategory = val
         return pack_pb_req(req, ProtoId.Trd_GetPositionList, conn_id)
 
     @classmethod
@@ -297,6 +330,7 @@ class PositionListQuery:
                              "unrealized_pl": position.unrealizedPL if position.HasField('unrealizedPL') else NoneDataValue,
                              "realized_pl": position.realizedPL if position.HasField('realizedPL') else NoneDataValue,
                              "currency": Currency.to_string2(position.currency) if position.HasField('currency') else NoneDataValue,
+                             "position_id": position.positionID,
                          } for position in raw_position_list]
         return RET_OK, "", position_list
 
@@ -363,6 +397,7 @@ class OrderListQuery:
             "trail_value": order.trailValue if order.HasField("trailValue") else 'N/A',
             "trail_spread": order.trailSpread if order.HasField("trailSpread") else 'N/A',
             "currency": Currency.to_string2(order.currency) if order.HasField("currency") else 'N/A',
+            "jp_acc_type": SubAccType.to_string2(order.jpAccType) if order.HasField("jpAccType") else 'N/A',
         }
         return order_dict
 
@@ -385,7 +420,8 @@ class PlaceOrder:
     @classmethod
     def pack_req(cls, trd_side, order_type, price, qty,
                  code, adjust_limit, trd_env, sec_mkt_str, acc_id, trd_mkt, conn_id, remark,
-                 time_in_force, fill_outside_rth, session, aux_price, trail_type ,trail_value ,trail_spread):
+                 time_in_force, fill_outside_rth, session, aux_price, trail_type ,trail_value ,trail_spread,
+                 jp_acc_type, position_id):
         """Convert from user request for place order to PLS request"""
         from ..common.pb.Trd_PlaceOrder_pb2 import Request
         req = Request()
@@ -396,6 +432,11 @@ class PlaceOrder:
         _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
         _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
+        if jp_acc_type != SubAccType.NONE:
+            ret, val = SubAccType.to_number(jp_acc_type)
+            if not ret:
+                return RET_ERROR, val, None, 0, 0
+            req.c2s.header.jpAccType = val
 
         _, req.c2s.trdSide = TrdSide.to_number(trd_side)
         _, req.c2s.orderType = OrderType.to_number(order_type)
@@ -413,7 +454,7 @@ class PlaceOrder:
         req.c2s.secMarket = proto_trd_sec_mkt
         ret, val = TimeInForce.to_number(time_in_force)
         if not ret:
-            return RET_ERROR, val, None
+            return RET_ERROR, val, None, 0, 0
         else:
             req.c2s.timeInForce = val
         if aux_price is not None:
@@ -421,7 +462,7 @@ class PlaceOrder:
         if trail_type is not None:
             ret, val = TrailType.to_number(trail_type)
             if not ret:
-                return RET_ERROR, val, None
+                return RET_ERROR, val, None, 0, 0
             else:
                 req.c2s.trailType = val
         if trail_value is not None:
@@ -430,8 +471,13 @@ class PlaceOrder:
             req.c2s.trailSpread = trail_spread
 
         req.c2s.fillOutsideRTH = fill_outside_rth
-        _, req.c2s.session = Session.to_number(session)
-
+        ret, val = Session.to_number(session)
+        if not ret:
+            return RET_ERROR, val, None, 0, 0
+        else:
+            req.c2s.session = val
+        if position_id:
+            req.c2s.positionID = position_id
         return pack_pb_req(req, ProtoId.Trd_PlaceOrder, conn_id, serial_no)
 
     @classmethod
@@ -571,7 +617,8 @@ class DealListQuery:
             "create_time": deal.createTime,
             "counter_broker_id": deal.counterBrokerID if deal.HasField('counterBrokerID') else NoneDataValue,
             "counter_broker_name": deal.counterBrokerName if deal.HasField('counterBrokerName') else NoneDataValue,
-            "status": DealStatus.to_string2(deal.status) if deal.HasField("status") else NoneDataValue
+            "status": DealStatus.to_string2(deal.status) if deal.HasField("status") else NoneDataValue,
+            "jp_acc_type": SubAccType.to_string2(deal.jpAccType) if deal.HasField("jpAccType") else NoneDataValue,
         }
         return deal_dict
 
@@ -649,6 +696,7 @@ class HistoryOrderListQuery:
                       "trail_spread": order.trailSpread if order.HasField("trailSpread") else 'N/A',
                       "currency": Currency.to_string2(order.currency) if order.HasField('currency') else NoneDataValue,
                       "session": Session.to_string2(order.session) if order.HasField('session') else 'N/A',
+                      "jp_acc_type": SubAccType.to_string2(order.jpAccType) if order.HasField('jpAccType') else 'N/A'# 初始化枚举类型
                       } for order in raw_order_list]
         return RET_OK, "", order_list
 
@@ -741,7 +789,8 @@ class HistoryDealListQuery:
                     "create_time": deal.createTime,
                     "counter_broker_id": deal.counterBrokerID if deal.HasField('counterBrokerID') else "",
                     "counter_broker_name": deal.counterBrokerName,
-                    "status": DealStatus.to_string2(deal.status) if deal.HasField('status') else 'N/A'# 初始化枚举类型
+                    "status": DealStatus.to_string2(deal.status) if deal.HasField('status') else 'N/A',# 初始化枚举类型
+                    "jp_acc_type": SubAccType.to_string2(deal.jpAccType) if deal.HasField('jpAccType') else 'N/A'# 初始化枚举类型
                      } for deal in raw_deal_list]
 
         return RET_OK, "", deal_list
@@ -787,13 +836,18 @@ class AccTradingInfoQuery:
         pass
 
     @classmethod
-    def pack_req(cls, order_type, code, price, order_id, adjust_limit, sec_mkt_str, trd_env, acc_id, trd_mkt, conn_id):
+    def pack_req(cls, order_type, code, price, order_id, adjust_limit, sec_mkt_str, trd_env, acc_id, trd_mkt, session, jp_acc_type, position_id, conn_id):
 
         from ..common.pb.Trd_GetMaxTrdQtys_pb2 import Request
         req = Request()
         _, req.c2s.header.trdEnv = TrdEnv.to_number(trd_env)
         req.c2s.header.accID = acc_id
         _, req.c2s.header.trdMarket = TrdMarket.to_number(trd_mkt)
+        if jp_acc_type != SubAccType.NONE:
+            ret, val = SubAccType.to_number(jp_acc_type)
+            if not ret:
+                return RET_ERROR, val, None, 0, 0
+            req.c2s.header.jpAccType = val
 
         _, req.c2s.orderType = OrderType.to_number(order_type)
         req.c2s.code = code
@@ -806,13 +860,20 @@ class AccTradingInfoQuery:
             req.c2s.adjustPrice = True
             req.c2s.adjustSideAndLimit = adjust_limit
 
+        ret, val = Session.to_number(session)
+        if not ret:
+            return RET_ERROR, val, None, 0, 0
+        else:
+            req.c2s.session = val
+
         r, proto_qot_mkt = Market.to_number(sec_mkt_str)
         if not r:
             proto_qot_mkt = Qot_Common_pb2.QotMarket_Unknown
 
         proto_trd_sec_mkt = QOT_MARKET_TO_TRD_SEC_MARKET_MAP.get(proto_qot_mkt, Trd_Common_pb2.TrdSecMarket_Unknown)
         req.c2s.secMarket = proto_trd_sec_mkt
-
+        if position_id:
+            req.c2s.positionID = position_id
         return pack_pb_req(req, ProtoId.Trd_GetMaxTrdQtys, conn_id)
 
     @classmethod
@@ -830,7 +891,8 @@ class AccTradingInfoQuery:
             'max_sell_short': info.maxSellShort if info.HasField('maxSellShort') else NoneDataValue,
             'max_buy_back': info.maxBuyBack if info.HasField('maxBuyBack') else NoneDataValue,
             'long_required_im': info.longRequiredIM if info.HasField('longRequiredIM') else NoneDataValue,
-            'short_required_im': info.shortRequiredIM if info.HasField('shortRequiredIM') else NoneDataValue
+            'short_required_im': info.shortRequiredIM if info.HasField('shortRequiredIM') else NoneDataValue,
+            'session': Session.to_string2(info.session) if info.HasField('session') else NoneDataValue
         }]
 
         return RET_OK, "", data
@@ -858,7 +920,7 @@ class MarginRatio:
 
         if len(failure_tuple_list) > 0:
             error_str = '\n'.join([x[1] for x in failure_tuple_list])
-            return RET_ERROR, error_str, None
+            return RET_ERROR, error_str, None, 0, 0
 
         from ..common.pb.Trd_GetMarginRatio_pb2 import Request
         req = Request()

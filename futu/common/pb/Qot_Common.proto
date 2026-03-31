@@ -118,7 +118,7 @@ enum QotMarketState
     QotMarketState_OVERNIGHT_END         = 34;  // 夜盘结束
     QotMarketState_TRADE_AT_LAST         = 35;  // 收盘前成交（在交易时间表内）
     QotMarketState_TRADE_AUCTION         = 36;  // 收盘前的竞价 （在交易时间表内）
-	QotMarketState_OVERNIGHT         	 = 37;  // 美股夜盘交易
+	QotMarketState_OVERNIGHT         	 = 37;  // 美股夜盘交易时段
 }
 
 //交易日查询市场
@@ -434,6 +434,7 @@ enum CompanyAct
 	CompanyAct_Add = 32; //增发股
 	CompanyAct_Dividend = 64; //现金分红
 	CompanyAct_SPDividend = 128; //特别股息	
+	CompanyAct_SpinOff = 256; //分立
 }
 
 //行情权限
@@ -475,16 +476,6 @@ enum PriceReminderFreq
     PriceReminderFreq_Always = 1; // 持续提醒
     PriceReminderFreq_OnceADay = 2; // 每日一次
     PriceReminderFreq_OnlyOnce = 3; // 仅提醒一次
-}
-
-// 提醒市场状态
-enum PriceReminderMarketStatus
-{
-	PriceReminderMarketStatus_Unknow = 0;
-	PriceReminderMarketStatus_Open = 1; // 盘中
-	PriceReminderMarketStatus_USPre = 2;  // 美股盘前
-	PriceReminderMarketStatus_USAfter = 3; // 美股盘后
-	PriceReminderMarketStatus_USOverNight = 4; // 美股夜盘
 }
 
 // 资产类别
@@ -562,6 +553,15 @@ enum PeriodType
 	PeriodType_DAY = 2; // 日
 	PeriodType_WEEK = 3; // 周
 	PeriodType_MONTH = 4; // 月
+}
+
+enum PriceReminderMarketStatus
+{
+	PriceReminderMarketStatus_Unknow = 0;
+	PriceReminderMarketStatus_Open = 1; // 盘中
+	PriceReminderMarketStatus_USPre = 2;  // 美股盘前
+	PriceReminderMarketStatus_USAfter = 3; // 美股盘后
+	PriceReminderMarketStatus_USOverNight = 4; // 美股夜盘
 }
 
  //两个字段确定一支股票
@@ -826,5 +826,7 @@ message Rehab
 	optional double addPrice = 20;	
 	optional double dividend = 21; //现金分红(例如，每10股派现0.5元,则该字段值为0.05)
 	optional double spDividend = 22; //特别股息(例如，每10股派特别股息0.5元,则该字段值为0.05)
+	optional double spinOffBase = 24; // 分立
+	optional double spinOffErt = 25; //
 	optional double timestamp = 23; //时间戳
 }

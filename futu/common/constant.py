@@ -106,12 +106,12 @@ class ProtoId(object):
     Qot_GetMarketState = 3223  # 获取指定品种的市场状态
     Qot_GetOptionExpirationDate = 3224  # 获取期权到期日
 
-    All_PushId = [Notify, KeepAlive, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
+    All_PushId = [Notify, Trd_UpdateOrder, Trd_UpdateOrderFill, Qot_UpdateBroker,
                   Qot_UpdateOrderBook, Qot_UpdateKL, Qot_UpdateRT, Qot_UpdateBasicQot, Qot_UpdateTicker, Qot_UpdatePriceReminder]
 
     @classmethod
-    def is_proto_id_push(cls, id):
-        return id in ProtoId.All_PushId
+    def is_proto_id_push(cls, proto_id):
+        return proto_id in ProtoId.All_PushId
 
 
 class FtEnum(object):
@@ -1112,6 +1112,9 @@ class TrdMarket(FtEnum):
     CA = "CA"
     HKFUND = "HKFUND"
     USFUND = "USFUND"
+    SGFUND = "SGFUND"
+    MYFUND = "MYFUND"
+    JPFUND = "JPFUND"
 
     def load_dic(self):
         return {
@@ -1132,6 +1135,9 @@ class TrdMarket(FtEnum):
             self.FUTURES_SIMULATE_JP: Trd_Common_pb2.TrdMarket_Futures_Simulate_JP,
             self.HKFUND: Trd_Common_pb2.TrdMarket_HK_Fund,
             self.USFUND: Trd_Common_pb2.TrdMarket_US_Fund,
+            self.SGFUND: Trd_Common_pb2.TrdMarket_SG_Fund,
+            self.MYFUND: Trd_Common_pb2.TrdMarket_MY_Fund,
+            self.JPFUND: Trd_Common_pb2.TrdMarket_JP_Fund,
         }
 
 # 持仓方向
@@ -1439,11 +1445,24 @@ MKT_ENV_ENABLE_MAP = {
     (TrdMarket.FUTURES, TrdEnv.REAL): True,
     (TrdMarket.FUTURES, TrdEnv.SIMULATE): True,
 
+    (TrdMarket.SG, TrdEnv.REAL): True,
+    (TrdMarket.SG, TrdEnv.SIMULATE): False,
+
     (TrdMarket.HKFUND, TrdEnv.REAL): True,
     (TrdMarket.HKFUND, TrdEnv.SIMULATE): False,
 
     (TrdMarket.USFUND, TrdEnv.REAL): True,
     (TrdMarket.USFUND, TrdEnv.SIMULATE): False,
+
+    (TrdMarket.CA, TrdEnv.REAL): True,
+    (TrdMarket.CA, TrdEnv.SIMULATE): False,
+
+    (TrdMarket.MY, TrdEnv.REAL): True,
+    (TrdMarket.MY, TrdEnv.SIMULATE): False,
+
+    (TrdMarket.JP, TrdEnv.REAL): True,
+    (TrdMarket.JP, TrdEnv.SIMULATE): False,
+
 }
 
 class TRADE(object):
@@ -1857,8 +1876,11 @@ class ProgramStatusType(FtEnum):
 class ContextStatus:
     START = 'START'
     CONNECTING = 'CONNECTING'
+    CONNECTED = 'CONNECTED'
     READY = 'READY'
+    CLOSING = 'CLOSING'
     CLOSED = 'CLOSED'
+    WAIT_RECONNECT = 'WAIT_RECONNECT'
 
 
 class UserInfoField:
@@ -2021,12 +2043,20 @@ class TrdAccType(FtEnum):
     NONE = 'N/A'     # 未知类型
     CASH = 'CASH'           # 现金账户
     MARGIN = 'MARGIN'       # 保证金账户
+    TFSA = 'TFSA'       # 加拿大免税账户
+    RRSP = 'RRSP'       # 加拿大注册退休账户
+    SRRSP = 'SRRSP'       # 加拿大配偶退休账户
+    DERIVATIVES = 'DERIVATIVES'       # 日本衍生品账户
 
     def load_dic(self):
         return {
             self.NONE: Trd_Common_pb2.TrdAccType_Unknown,
             self.CASH: Trd_Common_pb2.TrdAccType_Cash,
-            self.MARGIN: Trd_Common_pb2.TrdAccType_Margin
+            self.MARGIN: Trd_Common_pb2.TrdAccType_Margin,
+            self.TFSA: Trd_Common_pb2.TrdAccType_TFSA,
+            self.RRSP: Trd_Common_pb2.TrdAccType_RRSP,
+            self.SRRSP: Trd_Common_pb2.TrdAccType_SRRSP,
+            self.DERIVATIVES: Trd_Common_pb2.TrdAccType_Derivatives,
         }
     
 # 账户状态
@@ -2038,6 +2068,22 @@ class TrdAccStatus(FtEnum):
         return {
             self.ACTIVE: Trd_Common_pb2.TrdAccStatus_Active,
             self.DISABLED: Trd_Common_pb2.TrdAccStatus_Disabled
+        }
+
+
+# 账户类型
+class TrdAccRole(FtEnum):
+    NONE = 'N/A'  # 未知类型
+    NORMAL = 'NORMAL'  # 普通账户
+    MASTER = 'MASTER'  # 主账户
+    IPO = 'IPO'
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.TrdAccRole_Unknown,
+            self.NORMAL: Trd_Common_pb2.TrdAccRole_Normal,
+            self.MASTER: Trd_Common_pb2.TrdAccRole_Master,
+            self.IPO: Trd_Common_pb2.TrdAccRole_IPO,
         }
 
 
@@ -2514,6 +2560,8 @@ class Currency(FtEnum):
     JPY = 'JPY'  # 日元
     SGD = 'SGD'  # 新元
     AUD = 'AUD'  # 澳元
+    CAD = 'CAD'  # 加元
+    MYR = 'MYR'  # 马来西亚令吉
 
     def load_dic(self):
         return {
@@ -2523,7 +2571,9 @@ class Currency(FtEnum):
             self.CNH: Trd_Common_pb2.Currency_CNH,
             self.JPY: Trd_Common_pb2.Currency_JPY,
             self.SGD: Trd_Common_pb2.Currency_SGD,
-            self.AUD: Trd_Common_pb2.Currency_AUD
+            self.AUD: Trd_Common_pb2.Currency_AUD,
+            self.CAD: Trd_Common_pb2.Currency_CAD,
+            self.MYR: Trd_Common_pb2.Currency_MYR,
         }
 
 class CltRiskLevel(FtEnum):
@@ -2801,6 +2851,9 @@ class SecurityFirm(FtEnum):
     FUTUINC = 'FUTUINC'
     FUTUSG = 'FUTUSG'
     FUTUAU = 'FUTUAU'
+    FUTUCA = 'FUTUCA'
+    FUTUMY = 'FUTUMY'
+    FUTUJP = 'FUTUJP'
 
     def load_dic(self):
         return {
@@ -2809,6 +2862,9 @@ class SecurityFirm(FtEnum):
             self.FUTUINC: Trd_Common_pb2.SecurityFirm_FutuInc,
             self.FUTUSG: Trd_Common_pb2.SecurityFirm_FutuSG,
             self.FUTUAU: Trd_Common_pb2.SecurityFirm_FutuAU,
+            self.FUTUCA: Trd_Common_pb2.SecurityFirm_FutuCA,
+            self.FUTUMY: Trd_Common_pb2.SecurityFirm_FutuMY,
+            self.FUTUJP: Trd_Common_pb2.SecurityFirm_FutuJP,
         }
 
 
@@ -2827,6 +2883,7 @@ class SimAccType(FtEnum):
     STOCK = 'STOCK'
     OPTION = 'OPTION'
     FUTURES = 'FUTURES'
+    STOCK_AND_OPTION = 'STOCK_AND_OPTION'
 
     def load_dic(self):
         return {
@@ -2834,6 +2891,7 @@ class SimAccType(FtEnum):
             self.STOCK: Trd_Common_pb2.SimAccType_Stock,
             self.OPTION: Trd_Common_pb2.SimAccType_Option,
             self.FUTURES: Trd_Common_pb2.SimAccType_Futures,
+            self.STOCK_AND_OPTION: Trd_Common_pb2.SimAccType_StockAndOption,
         }
 
 # 期权交割周期
@@ -2940,3 +2998,60 @@ class CashFlowDirection(FtEnum):
             self.IN: Trd_FlowSummary_pb2.TrdCashFlowDirection_In,
             self.OUT: Trd_FlowSummary_pb2.TrdCashFlowDirection_Out,
         }
+
+# 获取资金流向的周期类型
+class AssetCategory(FtEnum):
+    NONE = 'N/A'
+    JP = 'JP'
+    US = 'US'
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.TrdAssetCategory_Unknown,
+            self.JP: Trd_Common_pb2.TrdAssetCategory_JP,
+            self.US: Trd_Common_pb2.TrdAssetCategory_US,
+        }
+
+# JP 子账户类型
+class SubAccType(FtEnum):
+    NONE = 'N/A'
+    JP_GENERAL = 'JP_GENERAL' # 日本 - 一般口座 - long
+    JP_TOKUTEI = 'JP_TOKUTEI' # 日本 - 特定口座 - long
+    JP_NISA_GENERAL = 'JP_NISA_GENERAL' # 日本 - 一般NISA
+    JP_NISA_TSUMITATE = 'JP_NISA_TSUMITATE' # 日本 - 累计NISA
+
+    JP_GENERAL_SHORT = 'JP_GENERAL_SHORT' # 日本 - 一般口座 - Short
+    JP_TOKUTEI_SHORT = 'JP_TOKUTEI_SHORT' # 日本 - 特定口座 - Short
+    JP_HONPO_GENERAL = 'JP_HONPO_GENERAL' # 日本 - 本国信用交易抵押品 - 一般
+    JP_GAIKOKU_GENERAL = 'JP_GAIKOKU_GENERAL' # 日本 - 外国信用交易抵押品 - 一般
+    JP_HONPO_TOKUTEI = 'JP_HONPO_TOKUTEI' # 日本 - 本国信用交易抵押品 - 特定
+    JP_GAIKOKU_TOKUTEI = 'JP_GAIKOKU_TOKUTEI' # 日本 - 外国信用交易抵押品 - 特定
+
+    JP_DERIVATIVE_LONG = 'JP_DERIVATIVE_LONG' # 日本 - 衍生品 - Long
+    JP_DERIVATIVE_SHORT = 'JP_DERIVATIVE_SHORT' # 日本 - 衍生品 - Short
+    JP_HONPO_DERIVATIVE_GENERAL = 'JP_HONPO_DERIVATIVE_GENERAL' # 日本 - 本国衍生品证据金 - 一般
+    JP_GAIKOKU_DERIVATIVE_GENERAL = 'JP_GAIKOKU_DERIVATIVE_GENERAL' # 日本 - 外国衍生品证据金 - 一般
+    JP_HONPO_DERIVATIVE_TOKUTEI = 'JP_HONPO_DERIVATIVE_TOKUTEI' # 日本 - 本国衍生品证据金 - 特定
+    JP_GAIKOKU_DERIVATIVE_TOKUTEI = 'JP_GAIKOKU_DERIVATIVE_TOKUTEI' # 日本 - 外国衍生品证据金 - 特定
+
+    def load_dic(self):
+        return {
+            self.NONE: Trd_Common_pb2.TrdSubAccType_None,
+            self.JP_GENERAL: Trd_Common_pb2.TrdSubAccType_JP_GENERAL,
+            self.JP_TOKUTEI: Trd_Common_pb2.TrdSubAccType_JP_TOKUTEI,
+            self.JP_NISA_GENERAL: Trd_Common_pb2.TrdSubAccType_JP_NISA_GENERAL,
+            self.JP_NISA_TSUMITATE: Trd_Common_pb2.TrdSubAccType_JP_NISA_TSUMITATE,
+            self.JP_GENERAL_SHORT: Trd_Common_pb2.TrdSubAccType_JP_GENERAL_SHORT,
+            self.JP_TOKUTEI_SHORT: Trd_Common_pb2.TrdSubAccType_JP_TOKUTEI_SHORT,
+            self.JP_HONPO_GENERAL: Trd_Common_pb2.TrdSubAccType_JP_HONPO_GENERAL,
+            self.JP_GAIKOKU_GENERAL: Trd_Common_pb2.TrdSubAccType_JP_GAIKOKU_GENERAL,
+            self.JP_HONPO_TOKUTEI: Trd_Common_pb2.TrdSubAccType_JP_HONPO_TOKUTEI,
+            self.JP_GAIKOKU_TOKUTEI: Trd_Common_pb2.TrdSubAccType_JP_GAIKOKU_TOKUTEI,
+            self.JP_DERIVATIVE_LONG: Trd_Common_pb2.TrdSubAccType_JP_DERIVATIVE_LONG,
+            self.JP_DERIVATIVE_SHORT: Trd_Common_pb2.TrdSubAccType_JP_DERIVATIVE_SHORT,
+            self.JP_HONPO_DERIVATIVE_GENERAL: Trd_Common_pb2.TrdSubAccType_JP_HONPO_DERIVATIVE_GENERAL,
+            self.JP_GAIKOKU_DERIVATIVE_GENERAL: Trd_Common_pb2.TrdSubAccType_JP_GAIKOKU_DERIVATIVE_GENERAL,
+            self.JP_HONPO_DERIVATIVE_TOKUTEI: Trd_Common_pb2.TrdSubAccType_JP_HONPO_DERIVATIVE_TOKUTEI,
+            self.JP_GAIKOKU_DERIVATIVE_TOKUTEI: Trd_Common_pb2.TrdSubAccType_JP_GAIKOKU_DERIVATIVE_TOKUTEI,
+        }
+
