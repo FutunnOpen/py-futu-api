@@ -1,8 +1,8 @@
-# 富途 OpenAPI
+# Futu API
 
 ### 简介
 
-[​**Futu API**](https://openapi.futunn.com/futu-api-doc/)开源项目可以满足使用[**Futu OpenAPI**](https://www.futunn.com/OpenAPI)进行量化投资的需求, 并提供包括Python、Json/Protobuf协议的行情及交易接口。
+[​**Futu API**](https://openapi.futunn.com/futu-api-doc/)开源项目可以满足使用[**Futu API**](https://www.futunn.com/OpenAPI)进行量化投资的需求, 并提供包括Python、Json/Protobuf协议的行情及交易接口。
 
 - [官方在线文档](https://openapi.futunn.com/futu-api-doc/)
 
@@ -35,9 +35,8 @@ market = ft.Market.HK
 code = 'HK.00123'
 code_list = [code]
 plate = 'HK.BK1107'
-print(quote_ctx.get_trading_days(market, start=None, end=None))   # 获取交易日
+print(quote_ctx.request_trading_days(market, start=None, end=None))   # 获取交易日
 print(quote_ctx.get_stock_basicinfo(market, stock_type=ft.SecurityType.STOCK))   # 获取股票信息
-print(quote_ctx.get_autype_list(code_list))                                  # 获取复权因子
 print(quote_ctx.get_market_snapshot(code_list))                              # 获取市场快照
 print(quote_ctx.get_plate_list(market, ft.Plate.ALL))                         # 获取板块集合下的子板块列表
 print(quote_ctx.get_plate_stock(plate))                         # 获取板块下的股票列表
@@ -83,7 +82,7 @@ trade_hk_ctx.close()
 
 - set_futu_debug_model函数可以打开或关闭调试级别的log记录。
 - 如果打开记录，则会记录info级别的log并且记录所有逐笔、摆盘、券商经纪的推送记录，以便于后面排查，文件记录在%appdata%(%HOME%)\com.futunn.FutuOpenD\Log下面
-- examples\analysis下面会有对逐笔、摆盘、券商经纪的推送记录的分析脚本，与我们联系，拿到原始交易所数据后，可以载入比对（beta功能）
+- tools\analysis下面会有对逐笔、摆盘、券商经纪的推送记录的分析脚本，与我们联系，拿到原始交易所数据后，可以载入比对（beta功能）
 
 ---
 
@@ -92,75 +91,59 @@ trade_hk_ctx.close()
 ```
 .
 ├── futu
-│   ├── common #主要框架代码
-│   │   ├── callback_executor.py
-│   │   ├── comm_add_path.py
-│   │   ├── conn_key.txt
-│   │   ├── conn_mng.py
-│   │   ├── constant.py
-│   │   ├── err.py
-│   │   ├── ft_logger.py
-│   │   ├── handler_context.py
-│   │   ├── __init__.py
-│   │   ├── network_manager.py
-│   │   ├── open_context_base.py
-│   │   ├── pb
-│   │   │   └── __init__.py
-│   │   ├── pbjson.py
-│   │   ├── sys_config.py
-│   │   └── utils.py
-│   ├── examples #一些简单的演示demo
-│   │   ├── analysis
-│   │   │   ├── broker_analysis.py
-│   │   │   ├── orderbook_analysis.py
-│   │   │   └── ticker_analysis.py
-│   │   ├── check_all_get_push.py
-│   │   ├── __init__.py
-│   │   ├── loop_get_mkt_snapshot.py
-│   │   ├── macd.py
-│   │   ├── simple.py
-│   │   ├── stocksell.py
-│   │   └── tiny_quant #这里是一个历史遗留的复杂回测框架，暂时继续保留两个demo，这里建议开发者自己找好用的回测框架，不要再依赖这个破碎框架（裁剪自vnpy）
-│   │       ├── demo
-│   │       │   ├── __init__.py
-│   │       │   ├── tq_macd
-│   │       │   │   ├── __init__.py
-│   │       │   │   ├── setting.json
-│   │       │   │   └── TinyStrateMACD.py
-│   │       │   └── tq_sample
-│   │       │       ├── __init__.py
-│   │       │       ├── setting.json
-│   │       │       └── TinyStrateSample.py
-│   │       ├── __init__.py
-│   │       └── tiny_quant_frame #裁剪自vnpy
-│   │           ├── event
-│   │           │   ├── eventEngine.py
-│   │           │   ├── eventType.py
-│   │           │   └── __init__.py
-│   │           ├── FutuDataEvent.py
-│   │           ├── FutuMarketEvent.py
-│   │           ├── __init__.py
-│   │           ├── setting.json
-│   │           ├── TinyDefine.py
-│   │           ├── TinyQuantBase.py
-│   │           ├── TinyQuantFrame.py
-│   │           ├── TinyStrateBase.py
-│   │           └── TinyStrateSample.py
-│   ├── __init__.py
-│   ├── quote #行情相关接口代码
-│   │   ├── __init__.py
-│   │   ├── open_quote_context.py
-│   │   ├── quote_query.py
-│   │   └── quote_response_handler.py
-│   ├── trade #交易相关接口代码
-│   │   ├── __init__.py
-│   │   ├── open_trade_context.py
-│   │   ├── trade_query.py
-│   │   └── trade_response_handler.py
-│   └── VERSION.txt
-├── setup
-│   ├── PyCrypto-Wheels.url
-│   └── .url
+│   ├── __init__.py
+│   ├── VERSION.txt
+│   ├── common                        #主要框架代码
+│   │   ├── __init__.py
+│   │   ├── callback_executor.py
+│   │   ├── comm_add_path.py
+│   │   ├── conn_key.txt
+│   │   ├── conn_mng.py
+│   │   ├── constant.py
+│   │   ├── err.py
+│   │   ├── ft_logger.py
+│   │   ├── handler_context.py
+│   │   ├── network_manager.py
+│   │   ├── open_context_base.py
+│   │   ├── pbjson.py
+│   │   ├── sys_config.py
+│   │   ├── utils.py
+│   │   └── pb                        #Protobuf协议定义及生成文件
+│   │       ├── __init__.py
+│   │       ├── *.proto
+│   │       └── *_pb2.py
+│   ├── examples                      #示例demo
+│   │   ├── __init__.py
+│   │   ├── get_mkt_snapshot_demo.py
+│   │   ├── macd_strategy.py
+│   │   ├── quote_and_trade_demo.py
+│   │   ├── quote_push.py
+│   │   ├── simple_filter_demo.py
+│   │   └── stocksell_demo.py
+│   ├── quote                         #行情相关接口代码
+│   │   ├── __init__.py
+│   │   ├── head.html
+│   │   ├── open_quote_context.py
+│   │   ├── quote_get_warrant.py
+│   │   ├── quote_query.py
+│   │   ├── quote_response_handler.py
+│   │   ├── quote_stockfilter_info.py
+│   │   └── quote_tool.py
+│   ├── trade                         #交易相关接口代码
+│   │   ├── __init__.py
+│   │   ├── open_trade_context.py
+│   │   ├── trade_query.py
+│   │   └── trade_response_handler.py
+│   └── tools                         #工具及代码生成脚本
+│       ├── __init__.py
+│       ├── auto_generate.py
+│       ├── generate_code.py
+│       ├── load_template.py
+│       └── analysis
+│           ├── broker_analysis.py
+│           ├── orderbook_analysis.py
+│           └── ticker_analysis.py
+├── requirements.txt
 └── setup.py
 ```
 
@@ -168,19 +151,11 @@ trade_hk_ctx.close()
 
 ### 使用须知
 
-- python脚本运行前，需先启动[FutuOpenD](https://www.futunn.com/download/openAPI)网关客户端
+- python脚本运行前，需先启动[FutuOpenD](https://openapi.futunn.com/futu-api-doc/quick/opend-base.html)网关客户端
 
 ### API与FutuOpenD网关客户端的架构
 
 ![image](https://futunnopen.github.io/futu-api-doc/_images/API.png)
-
-***
-
-
-### API及FutuOpenD客户端交流方式
-
-* 富途开放API群(229850364, 108534288) 
-* 有一定交易额或特殊需求的用户请在入群后联系群主
 
 ***
 
